@@ -1,2 +1,14 @@
 # Capstone
-2021 Capstone Design
+Capstone Design I, II
+
+
+
+========
+collaborator
+- @arami98
+- @nawonhee
+- @HeeTa
+- @geon0630
+
+
+
