@@ -1,0 +1,41 @@
+package smu.capstone.paper;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+public class MainActivity extends AppCompatActivity {
+
+    Button temp_join, temp_login;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        temp_join = findViewById(R.id.temp_join);
+        temp_login = findViewById(R.id.temp_login);
+
+        temp_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent( MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        temp_join.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, JoinActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+    }
+}
