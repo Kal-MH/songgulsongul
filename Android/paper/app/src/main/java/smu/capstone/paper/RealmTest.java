@@ -41,7 +41,7 @@ public class RealmTest extends AppCompatActivity {
 
             realm.beginTransaction();
             Sticker tempItem = realm.createObject(Sticker.class,1);
-            tempItem.set(temp);
+            tempItem.setImage(temp);
             realm.commitTransaction();
 
         }

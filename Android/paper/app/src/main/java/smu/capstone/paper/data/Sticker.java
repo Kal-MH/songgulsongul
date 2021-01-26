@@ -17,7 +17,7 @@ public class Sticker extends RealmObject {
         return image;
     }
 
-    public void set( byte[] image_){
+    public void setImage( byte[] image_){
         image = image_;
     }
 
