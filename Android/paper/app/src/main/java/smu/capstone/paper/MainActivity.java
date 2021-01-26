@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button temp_join, temp_login;
+    Button temp_join, temp_login,temp_realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
         temp_join = findViewById(R.id.temp_join);
         temp_login = findViewById(R.id.temp_login);
+        temp_realm = findViewById(R.id.go_temp_realm);
 
         temp_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +37,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        temp_realm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, RealmTest.class);
+                startActivity(intent);
+
+            }
+        });
+
+
+
+
 
     }
 }
