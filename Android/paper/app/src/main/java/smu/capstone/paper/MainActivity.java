@@ -1,15 +1,17 @@
 package smu.capstone.paper;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     Button temp_join, temp_login;
+    Button temp_home;
+    Button temp_find;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
 
         temp_join = findViewById(R.id.temp_join);
         temp_login = findViewById(R.id.temp_login);
+        temp_home = findViewById(R.id.temp_home);
+        temp_find = findViewById(R.id.temp_find);
+
 
         temp_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,6 +39,22 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, JoinActivity.class);
                 startActivity(intent);
 
+            }
+        });
+
+        temp_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        temp_find.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FindAccountActivity.class);
+                startActivity(intent);
             }
         });
 
