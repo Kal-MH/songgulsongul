@@ -5,11 +5,11 @@ dotenv.config();
 
 //DB 생성
 var connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    database: process.env.DB_DATABASE,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER || "root",
+    database: process.env.DB_DATABASE || "example",
+    password: process.env.DB_PASSWORD || "Capstone0!",
+    port: process.env.DB_PORT || 3306
 });
 
 //DB connection export
