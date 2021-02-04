@@ -7,15 +7,47 @@
     android:orientation="vertical">
 
 
-    <SearchView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/comu_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="#9A93C8B4"
+        android:elevation="5dp">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Board"
+            android:textSize="20dp"></TextView>
+    </androidx.appcompat.widget.Toolbar>
+
+
+
+    <SearchView
+        android:id="@+id/comu_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:queryHint="검색"
+        />
 
     <GridView
+        android:id="@+id/comu_grid"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:columnWidth="90dp"
         android:gravity="center"
-        android:numColumns="3" />
+        android:horizontalSpacing="10dp"
+        android:numColumns="3"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" />
 
 </LinearLayout>
 

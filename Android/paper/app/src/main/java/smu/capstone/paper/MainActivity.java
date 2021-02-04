@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
     Button temp_join, temp_login;
     Button temp_home;
     Button temp_find;
+    Button temp_upload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         temp_login = findViewById(R.id.temp_login);
         temp_home = findViewById(R.id.temp_home);
         temp_find = findViewById(R.id.temp_find);
+        temp_upload = findViewById(R.id.temp_upload);
 
 
         temp_login.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FindAccountActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        temp_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, UploadActivity.class);
                 startActivity(intent);
             }
         });

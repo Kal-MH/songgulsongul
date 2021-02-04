@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 
 public class ComuImageAdapter extends BaseAdapter {
@@ -11,8 +12,8 @@ public class ComuImageAdapter extends BaseAdapter {
     private Context mContext;
 
     public int[] imageArray = {
-            R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_background
+            R.drawable.sampleimg,
+            R.drawable.sampleimg
     };
 
     public ComuImageAdapter(Context mContext) {
@@ -39,7 +40,7 @@ public class ComuImageAdapter extends BaseAdapter {
         ImageView imageView = new ImageView(mContext);
         imageView.setImageResource(imageArray[position]);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setLayoutParams(new ViewGroup.LayoutParams(340, 350));
+        imageView.setLayoutParams(new GridView.LayoutParams(340, 350));
 
         return imageView;
     }
