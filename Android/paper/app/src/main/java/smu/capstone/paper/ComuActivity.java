@@ -25,9 +25,8 @@ public class ComuActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         searchView = findViewById(R.id.comu_search);
-        gridView = (GridView)findViewById(R.id.comu_grid);
 
-        gridView.setAdapter(new ComuImageAdapter(this));
+
 
     }
 }
