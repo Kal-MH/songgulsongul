@@ -1,5 +1,6 @@
 package smu.capstone.paper;
 
+<<<<<<< Updated upstream
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -8,9 +9,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+=======
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.os.Bundle;
+import android.view.MenuItem;
+
+>>>>>>> Stashed changes
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
+    private BottomNavigationView mBottomNV;
 
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fm;
@@ -27,6 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+<<<<<<< Updated upstream
         bottomNavigationView = findViewById(R.id.home_tap);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -63,5 +77,47 @@ public class HomeActivity extends AppCompatActivity {
                 ft.commit();
                 break;
         }
+=======
+        mBottomNV = findViewById(R.id.home_tap);
+        mBottomNV.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() { //NavigationItemSelecte
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                BottomNavigate(menuItem.getItemId());
+
+
+                return true;
+            }
+        });
+        mBottomNV.setSelectedItemId(R.id.home_feed);
+    }
+
+    private void BottomNavigate(int id) {  //BottomNavigation 페이지 변경
+        String tag = String.valueOf(id);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        Fragment currentFragment = fragmentManager.getPrimaryNavigationFragment();
+        if (currentFragment != null) {
+            fragmentTransaction.hide(currentFragment);
+        }
+
+        Fragment fragment = fragmentManager.findFragmentByTag(tag);
+        if (fragment == null) {
+            if (id == R.id.home_feed) {
+                fragment = new HomeFeedFragment();
+
+            }
+
+            fragmentTransaction.add(R.id.home_content, fragment, tag);
+        } else {
+            fragmentTransaction.show(fragment);
+        }
+
+        fragmentTransaction.setPrimaryNavigationFragment(fragment);
+        fragmentTransaction.setReorderingAllowed(true);
+        fragmentTransaction.commitNow();
+
+
+>>>>>>> Stashed changes
     }
 }
