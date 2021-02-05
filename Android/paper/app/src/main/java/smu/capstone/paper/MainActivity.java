@@ -9,10 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button temp_join, temp_login;
+
+    Button temp_join;
+    Button temp_login;
     Button temp_home;
     Button temp_find;
     Button temp_upload;
+    Button temp_realm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         temp_home = findViewById(R.id.temp_home);
         temp_find = findViewById(R.id.temp_find);
         temp_upload = findViewById(R.id.temp_upload);
+        temp_realm = findViewById(R.id.go_temp_realm);
 
 
         temp_login.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
         temp_home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +73,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        temp_realm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, RealmTest.class);
+                startActivity(intent);
+
+            }
+        });
+
+
 
     }
 }
