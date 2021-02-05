@@ -34,4 +34,29 @@
 
     </Button>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="go find"
+        android:id="@+id/temp_find"
+        >
+
+    </Button>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="go home"
+        android:id="@+id/temp_home"
+        >
+    </Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="go upload"
+        android:id="@+id/temp_upload"
+        >
+    </Button>
 </LinearLayout>

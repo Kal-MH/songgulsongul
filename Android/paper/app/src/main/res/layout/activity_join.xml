@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="20dp"
@@ -11,7 +12,7 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="681dp">
 
 
         <LinearLayout
@@ -33,10 +34,9 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="60dp" >
+                android:layout_height="60dp">
 
             </Space>
-
 
 
             <LinearLayout
@@ -58,6 +58,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
+                    android:id="@+id/join_id_check_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="중복확인">
@@ -77,9 +78,9 @@
                 android:layout_height="match_parent">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/join_pw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/join_pw"
                     android:hint="비밀번호" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -115,16 +116,14 @@
                 android:layout_weight="1" />
 
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
 
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -133,13 +132,14 @@
                         android:layout_weight="1">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/join_email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/join_email"
                             android:hint="email" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <Button
+                        android:id="@+id/join_email_cert_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="인증">
@@ -149,30 +149,29 @@
 
                 </LinearLayout>
 
-                    <LinearLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+
+                    android:padding="20dp">
+
+                    <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_weight="1"
+                        android:hint="인증번호">
 
-                        android:padding="20dp">
+                    </EditText>
 
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="인증번호">
+                    <Button
+                        android:id="@+id/join_email_check_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="확인">
 
-                        </EditText>
-
-                        <Button
-                            android:id="@+id/join_email_check_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="확인">
-
-                        </Button>
-                    </LinearLayout>
-
+                    </Button>
+                </LinearLayout>
 
 
             </LinearLayout>
@@ -192,8 +191,8 @@
                     android:id="@+id/radioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="유"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:text="유" />
 
                 <RadioButton
                     android:id="@+id/radioButton2"
@@ -208,9 +207,9 @@
                 android:layout_height="match_parent">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/join_snsaddr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/join_snsaddr"
                     android:hint="sns주소" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -220,7 +219,7 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/join_button"
+                android:id="@+id/join_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
