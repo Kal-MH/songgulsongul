@@ -8,16 +8,31 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class FragHomeFeed extends Fragment {
-    private View view;
-
+    RecyclerView recyclerView;
+    HomeFeedAdapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_home_feed, container, false);
+        setHasOptionsMenu(true);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.frag_home_feed, container, false);
+        recyclerView = rootView.findViewById(R.id.frag_home_feed_recyclerview);
 
-        return view;
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new HomeFeedAdapter(getContext());
+        recyclerView.setAdapter(adapter);
+
+        return rootView;
     }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
 }
