@@ -20,25 +20,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="go join"
-        android:id="@+id/temp_join"
-        >
-
-    </Button>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="GO REALM TEST"
         android:id="@+id/go_temp_realm"
-        >
-
-    </Button>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="go find"
-        android:id="@+id/temp_find"
         >
 
     </Button>
