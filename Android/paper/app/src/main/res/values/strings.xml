@@ -3,7 +3,7 @@
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_id">ID</string>
-    <string name="prompt_password">Password</string>
+    <string name="prompt_password">PW</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
@@ -13,4 +13,6 @@
     <string name="log_in">Log in</string>
     <string name="sing_in">회원가입</string>
     <string name="find_account">계정찾기</string>
+    <string name="StringValue">image loading failed</string>
+    <string name="ok">확인</string>
 </resources>
