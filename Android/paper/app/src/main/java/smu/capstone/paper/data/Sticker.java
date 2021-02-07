@@ -3,7 +3,7 @@ package smu.capstone.paper.data;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-class Sticker extends RealmObject {
+public class Sticker extends RealmObject {
 
     @PrimaryKey
     private int id;
