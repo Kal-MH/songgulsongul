@@ -1,9 +1,11 @@
 package smu.capstone.paper;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SearchView;
 
@@ -34,8 +36,18 @@ public class FragHomeComu extends Fragment {
         };
 
         // 어뎁터 적용
-        ComuImageAdapter adapter = new ComuImageAdapter(this.getContext(),  R.layout.comu_item ,i) ;
+        ComuImageAdapter adapter = new ComuImageAdapter(this.getContext(),  R.layout.comu_item , i ) ;
         gridView.setAdapter(adapter);
+
+        //Click Listener
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                Log.d("TAG", position + "is Clicked");      // Can not getting this method.
+
+            }
+        });
 
 
 
