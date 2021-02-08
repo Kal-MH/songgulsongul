@@ -39,13 +39,6 @@
 
     </GridView>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/upload_tap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
-        app:itemTextColor="#000000"
-        app:menu="@menu/upload_bottom_menu" />
 
 
 </LinearLayout>

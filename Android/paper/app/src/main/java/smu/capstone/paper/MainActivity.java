@@ -11,7 +11,6 @@ public class MainActivity extends AppCompatActivity {
 
     Button temp_login;
     Button temp_home;
-    Button temp_upload;
     Button temp_realm;
 
 
@@ -22,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
 
         temp_login = findViewById(R.id.temp_login);
         temp_home = findViewById(R.id.temp_home);
-        temp_upload = findViewById(R.id.temp_upload);
         temp_realm = findViewById(R.id.go_temp_realm);
 
 
@@ -44,13 +42,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        temp_upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, UploadActivity.class);
-                startActivity(intent);
-            }
-        });
 
         temp_realm.setOnClickListener(new View.OnClickListener() {
             @Override
