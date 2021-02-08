@@ -1,12 +1,16 @@
-var express = require('express');
-var helmet = require('helmet');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const helmet = require('helmet');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const path = require('path');
+const cors = require('cors');
 
-var dotenv = require('dotenv');
 const routes = require('./routes');
-const userRouter = require('./Router/userRouter');
+const homeRouter = require('./Router/homeRouter');
+const apiRouter = require('./Router/apiRouter');
+
+const dotenv = require('dotenv');
 dotenv.config();
 
 
@@ -14,19 +18,21 @@ dotenv.config();
 var PORT = process.env.SERVER_PORT || 3000;
 var app = express();
 
+
 //Middlewares
 app.use(helmet());
 app.use(logger('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cors())
+
+//서버구현(웹상에서)
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 //라우팅
-app.get('/', function(req, res) {
-	res.send("Hello world!");
-});
-
-app.use(routes.user, userRouter);
+app.use(routes.home, homeRouter);
+app.use(routes.api, apiRouter);
 
 //Server listening
 app.listen(PORT, function () {
