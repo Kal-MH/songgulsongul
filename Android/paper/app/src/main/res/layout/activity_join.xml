@@ -51,7 +51,7 @@
                     android:layout_weight="1">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/join_id"
+                        android:id="@+id/join_id_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="ID" />
@@ -78,7 +78,7 @@
                 android:layout_height="match_parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/join_pw"
+                    android:id="@+id/join_pw_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="비밀번호" />
@@ -132,14 +132,14 @@
                         android:layout_weight="1">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/join_email"
+                            android:id="@+id/join_email_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="email" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <Button
-                        android:id="@+id/join_email_cert_btn"
+                        android:id="@+id/join_send_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="인증">
@@ -157,6 +157,7 @@
                     android:padding="20dp">
 
                     <EditText
+                        android:id="@+id/join_"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -165,7 +166,7 @@
                     </EditText>
 
                     <Button
-                        android:id="@+id/join_email_check_btn"
+                        android:id="@+id/join_check_key"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="확인">
@@ -183,19 +184,20 @@
                 android:layout_weight="1" />
 
             <RadioGroup
+                android:id="@+id/join_sns_radio"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/radioButton"
+                    android:id="@+id/join_sns_P"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="유" />
 
                 <RadioButton
-                    android:id="@+id/radioButton2"
+                    android:id="@+id/join_sns_N"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -207,7 +209,7 @@
                 android:layout_height="match_parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/join_snsaddr"
+                    android:id="@+id/join_sns_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="sns주소" />
