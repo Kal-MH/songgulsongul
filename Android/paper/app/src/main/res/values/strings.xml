@@ -11,7 +11,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="log_in">Log in</string>
-    <string name="sing_in">회원가입</string>
+    <string name="sign_in">회원가입</string>
     <string name="find_account">계정찾기</string>
     <string name="StringValue">image loading failed</string>
     <string name="ok">확인</string>
