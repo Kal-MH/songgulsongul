@@ -6,65 +6,46 @@
  var connection = require("../db/db");
 
  var userController = {
-     //회원가입
-     userJoinPost : function (req, res) {
-        var userEmail = req.body.userEmail;
-        var userPwd = req.body.userPwd;
-        var userName = req.body.userName;
+     // 프로필
+     userProfilePost : function (req, res) {
+       var status = req.body.status;
+       const id = req.body.id;
 
-        // 삽입을 수행하는 sql문.
-        var sql = 'INSERT INTO users (UserEmail, UserPwd, UserName) VALUES (?, ?, ?)';
-        var params = [userEmail, userPwd, userName];
-        connection.query(sql, params, function (err, result) {
-            var resultCode = 404;
-            var message = '에러가 발생했습니다';
-    
-            if (err) {
-                console.log(err);
-            } else {
-                resultCode = 200;
-                message = '회원가입에 성공했습니다.';
-            }
-    
-            res.json({
-                'code': resultCode,
-                'message': message
-            });
-        });
-    },
-    //로그인
-    userLoginPost :  function (req, res) {
-        var userEmail = req.body.userEmail;
-        var userPwd = req.body.userPwd;
-        var sql = 'select * from Users where UserEmail = ?';
-    
-        connection.query(sql, userEmail, function(err, result) {
-          var resultCode = 404;
-          var message = '에러가 발생했습니다.';
-    
-          if(err){
-            console.log(err);
-          }else{
-            if(result.length === 0){
-              resultCode = 204;
-              message = '존재하지 않는 계정입니다!';
-            }
-            else if(userPwd !== result[0].UserPwd) {
-              resultCode = 204;
-              message = '비밀번호가 틀렸습니다!';
-            }
-            else{
-              resultCode = 200;
-              message = '로그인 성공! ' + result[0].UserName + '님 환영합니다!';
-            }
-          }
-    
-          res.json({
-            'code': resultCode,
-            'message': message
-          });
-        });
-    }  
+       var follower_list[];
+       var followed_lis[];
+
+       // my profile
+       if(status === 1){
+
+         var sql1 = 'SELECT * FROM user JOIN follow ON user.login_id = WHERE user.login_id = ?''; // 팔로우, 팔로워 목록
+         var sql2 = 'SELECT * FROM user JOIN post ON user.id = post.user_id WHERE user.login_id = ?';// 게시글목록
+         var sql3 = 'SELECT * FROM user JOIN keep ON';// 보관함 목록
+
+         connection.query(sql1 + sql2 + sql3, params, function(err, rows){
+           var resultCode = 404;
+           var message = '에러가 발생했습니다.';
+
+           if (err) {
+             console.log(err);
+           }
+           else{
+             resultCode = 200;
+             for(var i = 0; i < rows[1].length(); i++){
+               follower_list.push(rows[1][i].follower_id);
+               followed_list.push(rows[1][i].followed_id);
+             }
+           }
+
+           res.json({
+             'code': resultCode,
+             'follower': follower_list,
+             'followed': followed_list,
+             'postinfo': rows[0],
+             'keepinfo': rows[2]
+           });
+         });
+       }
+     }
  }
 
  module.exports = userController;
