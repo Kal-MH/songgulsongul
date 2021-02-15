@@ -20,8 +20,8 @@ const auth = {
             if (err){
                 throw err;
             } else {
-                for(db_id in result){
-                    if (id == db_id){
+                for(var i = 0;i < result.length;i++){
+                    if (id == result[i].login_id){
                         resultCode = 204;
                         break;
                     }
