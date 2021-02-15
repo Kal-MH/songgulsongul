@@ -4,6 +4,7 @@
  */
 
  var connection = require("../db/db");
+ var apiController = require("./apiController");
 
  var userController = {
      // 프로필
@@ -21,7 +22,7 @@
          var sql2 = 'SELECT * FROM user JOIN post ON user.id = post.user_id WHERE user.login_id = ?';// 게시글목록
          var sql3 = 'SELECT * FROM user JOIN keep ON';// 보관함 목록
 
-         connection.query(sql1 + sql2 + sql3, params, function(err, rows){
+         connection.query(sql1 + sql2 + sql3, id, function(err, rows){
            var resultCode = 404;
            var message = '에러가 발생했습니다.';
 
@@ -45,6 +46,37 @@
            });
          });
        }
+     },
+
+     // 프로필수정 - 아이디 중복확인
+     profileIdCheck : function(req, res){
+       var new_id = req.query.newId;
+
+       apiController.dupIdCheck();
+     },
+
+     // 프로필수정
+     profileEdit : function(req, res) {
+       var id = req.query.id;
+       var new_id = req.query.newId;
+       var new_intro = req.query.newIntro;
+       var new_sns = req.query.newSNS;
+
+       var sql = 'SELECT * FROM user WHERE login_id = ?';
+       connection.query(sql, id, function(err, rows){
+         var resultCode = 404;
+
+         if(err){
+           console.log(err);
+         }
+         else{
+           resultCode = 200;
+           if(rows[0].login_id !== new_id){
+             sql = 'UPDATE user SET login_id = ? WHERE;
+           }
+         }
+       });
+
      }
  }
 
