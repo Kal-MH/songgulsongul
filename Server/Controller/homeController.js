@@ -5,6 +5,7 @@
 
 const connection = require("../db/db");
 const smtpTransport = require("../config/email");
+const crypto = require('crypto');
 
  var homeController = {
      //회원가입
@@ -12,59 +13,83 @@ const smtpTransport = require("../config/email");
         var email = req.body.email;
         var password = req.body.password;
         var login_id = req.body.loginId;
-
-        // 삽입을 수행하는 sql문.
-        var sql = 'INSERT INTO user (email, login_id, password) VALUES (?, ?, ?)';
-        var params = [email, login_id, password];
-        connection.query(sql, params, function (err, result) {
-            var resultCode = 204;
-    
-            if (err) {
-                console.log(err);
-            } else {
-                resultCode = 200;
-            }
-    
-            res.json({
-                'code': resultCode
+        
+        //비밀번호 암호화
+        crypto.randomBytes(64, function (err, buf) {
+          crypto.pbkdf2(password, buf.toString('base64'), 100, 64, 'sha512', function (err, key) {
+            var hashed_password = key.toString('base64');
+            var salt = buf.toString('base64');
+            // 삽입을 수행하는 sql문.
+            var sql = 'INSERT INTO user (email, login_id, password, salt) VALUES (?, ?, ?, ?)';
+            var params = [email, login_id, hashed_password, salt];
+            
+            connection.query(sql, params, function (err, result) {
+                var resultCode = 404;
+                var message = '에러가 발생했습니다';
+        
+                if (err) {
+                    console.log(err);
+                } else {
+                    resultCode = 200;
+                    message = '회원가입에 성공했습니다.';
+                }
+                console.log(result);
+        
+                res.json({
+                    'code': resultCode,
+                    'message': message
+                });
             });
-        });
+          })
+        })
     },
     //로그인
     homeLoginPost :  function (req, res) {
-        var login_id = req.body.login_id;
-        var password = req.body.password;
-        var sql = 'select * from user where login_id = ?';
+      var resultCode = 204;
+      var message = '에러가 발생했습니다.';
+  
+      if (req.user){
+          resultCode = 200;
+          message = message = '로그인 성공! ' + req.user.login_id + '님 환영합니다!';
+      }
+  
+      res.json({
+          'code' : resultCode,
+          'message' : message
+      })
+        // var login_id = req.body.login_id;
+        // var password = req.body.password;
+        // var sql = 'select * from user where login_id = ?';
 
-        console.log(login_id, password);
+        // console.log(login_id, password);
     
-        var params = [login_id];
-        connection.query(sql, params, function(err, result) {
-          var resultCode = 404;
-          var message = '에러가 발생했습니다.';
+        // var params = [login_id];
+        // connection.query(sql, params, function(err, result) {
+        //   var resultCode = 404;
+        //   var message = '에러가 발생했습니다.';
     
-          if(err){
-            console.log(err);
-          }else{
-            if(result.length === 0){
-              resultCode = 204;
-              message = '존재하지 않는 계정입니다!';
-            }
-            else if(password !== result[0].password) {
-              resultCode = 204;
-              message = '비밀번호가 틀렸습니다!';
-            }
-            else{
-              resultCode = 200;
-              message = '로그인 성공! ' + result[0].login_id + '님 환영합니다!';
-            }
-          }
+        //   if(err){
+        //     console.log(err);
+        //   }else{
+        //     if(result.length === 0){
+        //       resultCode = 204;
+        //       message = '존재하지 않는 계정입니다!';
+        //     }
+        //     else if(password !== result[0].password) {
+        //       resultCode = 204;
+        //       message = '비밀번호가 틀렸습니다!';
+        //     }
+        //     else{
+        //       resultCode = 200;
+        //       message = '로그인 성공! ' + result[0].login_id + '님 환영합니다!';
+        //     }
+        //   }
     
-          res.json({
-            'code': resultCode,
-            'message': message
-          });
-        });
+        //   res.json({
+        //     'code': resultCode,
+        //     'message': message
+        //   });
+        // });
     },
     //아이디찾기
     findId : function (req, res) {

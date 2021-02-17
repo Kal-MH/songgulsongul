@@ -6,14 +6,16 @@
  */
 
  var express = require('express');
+const passport = require('passport');
 const homeController = require('../Controller/homeController');
  var routes = require('../routes');
 
  var homeRouter = express.Router();
 
  homeRouter.post(routes.join,homeController.homeJoinPost);
- homeRouter.post(routes.login, homeController.homeLoginPost);
- homeRouter.post(routes.findId, homeController.findId);
- homeRouter.post(routes.findPassword, homeController.findPassword);
+ homeRouter.post(routes.login, passport.authenticate("local_login", {
+     failureFlash: false
+ }), homeController.homeLoginPost);
+ homeRouter.post(routes.findId, homeController.findId)
 
  module.exports = homeRouter;

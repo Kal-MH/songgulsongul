@@ -20,10 +20,9 @@ const auth = {
                 console.log(err);
                 resultCode = 404; //error
             } else {
-                for(db_id in result){
-                    console.log(db_id);
-                    if (id == db_id){
-                        resultCode = 204; //중복
+                for(var i = 0;i < result.length;i++){
+                    if (id == result[i].login_id){
+                        resultCode = 204;
                         break;
                     }
                 }
