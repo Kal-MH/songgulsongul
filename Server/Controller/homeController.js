@@ -17,19 +17,16 @@ const smtpTransport = require("../config/email");
         var sql = 'INSERT INTO user (email, login_id, password) VALUES (?, ?, ?)';
         var params = [email, login_id, password];
         connection.query(sql, params, function (err, result) {
-            var resultCode = 404;
-            var message = '에러가 발생했습니다';
+            var resultCode = 204;
     
             if (err) {
                 console.log(err);
             } else {
                 resultCode = 200;
-                message = '회원가입에 성공했습니다.';
             }
     
             res.json({
-                'code': resultCode,
-                'message': message
+                'code': resultCode
             });
         });
     },
@@ -108,6 +105,60 @@ const smtpTransport = require("../config/email");
               'message' : message
             })
             smtpTransport.close();
+          })
+        }
+      })
+    },
+    findPassword : function (req, res) {
+      const email = req.body.email;
+      const login_id = req.body.login_id;
+      
+      var sql = "select * from user where email = ? and login_id = ?";
+      var params = [email, login_id];
+      connection.query(sql, params, function (err, result) {
+        if (err){
+          res.json({
+            'code' : 404,
+            'message' : "error"
+          })
+        } else if (result.length === 0){
+          res.json({
+            'code' : 204,
+            'message' : "no exists"
+          })
+        } else {
+          var tmpPassword = Math.random().toString(20).slice(2);
+          var passwordSql = "update user set password = ? where email = ? and login_id = ?"
+          var passwordParams = [tmpPassword, email, login_id];
+          connection.query(passwordSql, passwordParams, async function (err, result) {
+            if (err){
+              res.json({
+                'code' : 404,
+                'message' : "error"
+              })
+            } else {
+              const mailOptions = {
+                from:"paper.pen.smu@gmail.com",
+                to : email,
+                subject : "임시비밀번호 발급.",
+                text : "임시비밀번호 : " + tmpPassword
+              }
+    
+              await smtpTransport.sendMail(mailOptions, function (err, response) {
+                if (err){
+                  console.log(err);
+                  resultCode = 400;
+                } else {
+                  resultCode = 200;
+                  message = "success"
+                }
+                res.json({
+                  'code' : resultCode,
+                  'message' : message
+                })
+                smtpTransport.close();
+              })
+            }
           })
         }
       })

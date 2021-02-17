@@ -11,8 +11,8 @@ const auth = require('../Controller/apiController');
 
  var apiRouter = express.Router();
 
- apiRouter.get(routes.apiDupIdCheck, auth.dupIdCheck);
+ apiRouter.post(routes.apiDupIdCheck, auth.dupIdCheck);
  apiRouter.post(routes.apiEmailAuth, auth.sendEmail);
- apiRouter.post(routes.apiEmailAuthNumber, auth.checkEmailAuthNumber)
+ apiRouter.post(routes.apiEmailAuthNumber, auth.checkEmailAuthNumber);
 
  module.exports = apiRouter;

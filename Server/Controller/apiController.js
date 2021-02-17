@@ -10,23 +10,25 @@ var generateRandom = function (min, max) {
 const auth = {
     //아이디 중복체크
     dupIdCheck : function (req, res) {
-        const id = req.query.id;
+        const id = req.body.id;
         console.log(id);
 
         var sql = "SELECT login_id from user;";
         connection.query(sql, function (err, result) {
-            console.log(result);
             var resultCode = 200;
             if (err){
-                throw err;
+                console.log(err);
+                resultCode = 404; //error
             } else {
                 for(db_id in result){
+                    console.log(db_id);
                     if (id == db_id){
-                        resultCode = 204;
+                        resultCode = 204; //중복
                         break;
                     }
                 }
             }
+            console.log(resultCode);
             res.json({
                 'code' : resultCode
             })
@@ -53,13 +55,15 @@ const auth = {
         req.app.set('authNumber', number);
 
         const result = await smtpTransport.sendMail(mailOptions, function (err, responses) {
+            var resultCode = 404;
             if (err){
-               throw err;
+               console.log(err);
             } else {
-               res.json({
-                   'code' : 200,
-               })
+                resultCode = 200;
             }
+            res.json({
+                'code' : resultCode,
+            })
             smtpTransport.close();
         })
     },
@@ -69,13 +73,13 @@ const auth = {
 
         const generatedNumber = req.app.get("authNumber");
         console.log(generatedNumber);
-        var code = 400;
+        var resultCode = 404;
 
         if (authNumber == generatedNumber){
-            code = 200;
+            resultCode = 200;
         }
         res.json({
-            'code' : code
+            'code' : resultCode
         })
     }
 }

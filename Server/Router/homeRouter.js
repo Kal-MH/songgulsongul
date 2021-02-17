@@ -13,6 +13,7 @@ const homeController = require('../Controller/homeController');
 
  homeRouter.post(routes.join,homeController.homeJoinPost);
  homeRouter.post(routes.login, homeController.homeLoginPost);
- homeRouter.post(routes.findId, homeController.findId)
+ homeRouter.post(routes.findId, homeController.findId);
+ homeRouter.post(routes.findPassword, homeController.findPassword);
 
  module.exports = homeRouter;

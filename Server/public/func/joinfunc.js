@@ -43,7 +43,17 @@ function handleDupIdBtnClick() {
     const idValue = id.value;
 
     fetch(
-        `http://localhost:3000/api/dup-idcheck?id=${idValue}`
+        `http://localhost:3000/api/dup-idcheck`,
+        {
+            method: 'POST',
+            mode : 'cors',
+            headers: {
+                'Content-Type' : 'application/json',
+            },
+            body: JSON.stringify({
+                id : idValue
+            })
+        }
     ).then(function (response) {
         return response.json();
     }).then(function (json) {
