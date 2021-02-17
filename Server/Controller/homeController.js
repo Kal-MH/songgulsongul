@@ -152,38 +152,49 @@ const crypto = require('crypto');
             'message' : "no exists"
           })
         } else {
+          //임시 비밀번호 생성
           var tmpPassword = Math.random().toString(20).slice(2);
-          var passwordSql = "update user set password = ? where email = ? and login_id = ?"
-          var passwordParams = [tmpPassword, email, login_id];
-          connection.query(passwordSql, passwordParams, async function (err, result) {
-            if (err){
-              res.json({
-                'code' : 404,
-                'message' : "error"
-              })
-            } else {
-              const mailOptions = {
-                from:"paper.pen.smu@gmail.com",
-                to : email,
-                subject : "임시비밀번호 발급.",
-                text : "임시비밀번호 : " + tmpPassword
-              }
-    
-              await smtpTransport.sendMail(mailOptions, function (err, response) {
+          //비밀번호 암호화
+          crypto.randomBytes(64, function (err, buf) {
+            crypto.pbkdf2(tmpPassword, buf.toString('base64'), 100, 64, 'sha512', function (err, key) {
+              var hashed_password = key.toString('base64');
+              var salt = buf.toString('base64');
+              // 삽입을 수행하는 sql문.
+              var passwordSql = "update user set password = ?, salt = ? where email = ? and login_id = ?"
+              var passwordParams = [hashed_password, salt, email, login_id];
+              
+              connection.query(passwordSql, passwordParams, async function (err, result) {
                 if (err){
-                  console.log(err);
-                  resultCode = 400;
+                  res.json({
+                    'code' : 404,
+                    'message' : "error"
+                  })
                 } else {
-                  resultCode = 200;
-                  message = "success"
+                  const mailOptions = {
+                    from:"paper.pen.smu@gmail.com",
+                    to : email,
+                    subject : "임시비밀번호 발급.",
+                    text : "임시비밀번호 : " + tmpPassword
+                  }
+        
+                  await smtpTransport.sendMail(mailOptions, function (err, response) {
+                    if (err){
+                      console.log(err);
+                      resultCode = 400;
+                    } else {
+                      resultCode = 200;
+                      message = "success"
+                    }
+                    res.json({
+                      'code' : resultCode,
+                      'message' : message
+                    })
+                    smtpTransport.close();
+                  })
                 }
-                res.json({
-                  'code' : resultCode,
-                  'message' : message
-                })
-                smtpTransport.close();
               })
-            }
+              
+            })
           })
         }
       })
