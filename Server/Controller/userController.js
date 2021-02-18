@@ -9,35 +9,41 @@
  var userController = {
      // 프로필
      userProfilePost : function (req, res) {
-       var status = req.body.status;
        const id = req.body.id;
 
        var param = [id];
-       var follower_list[];
-       var followed_lis[];
+       var follower_list = [];
+       var followed_lis = [];
+       var post_info = [];
 
-       // my profile
-       if(status === 1){
+       var sql1 = 'SELECT login_id FROM user JOIN follow ON follow.follower_id = user.id WHERE follow.followed_id = ?'; // 나를 팔로우 하는 목록
+       var sql2 = 'SELECT login_id FROM user JOIN follow ON follow.followed_id = user.id WHERE follow.follower_id = ?'; // 내가 팔로우 하는 목록
+       var sql3 = 'SELECT * FROM user JOIN post ON user.id = post.user_id WHERE user.login_id = ?'; // 게시글목록
 
-         var sql1 = 'SELECT login_id FROM user as u JOIN (SELECT follow.follower_id FROM user join follow ON user.id = follow.followed_id WHERE user.login_id = ?) as f where u.id = f.follower_id'; // 나를 팔로우하는 목록
-         var sql2 = 'SELECT login_id FROM user as u JOIN (SELECT follow.followed_id FROM user join follow ON user.id = follow.follower_id WHERE user.login_id = ?) as f where u.id = f.followed_id'; // 내가 팔로우 하는 목록
-         var sql3 = 'SELECT * FROM user JOIN post ON user.id = post.user_id WHERE user.login_id = ?'; // 게시글목록
-         var sql4 = 'SELECT * FROM user JOIN keep ON user.id = keep.user_id WHERE user.login_id = ?'; // 보관함 목록
-
-         connection.query(sql1 + sql2 + sql3 + sql4, param, function(err, rows){
+         connection.query(sql1 + sql2 + sql3, param, function(err, rows){
            var resultCode = 404;
-           var message = '에러가 발생했습니다.';
 
            if (err) {
              console.log(err);
            }
            else{
              resultCode = 200;
-             for(var i = 0; i < rows[0].length(); i++){
+             for(let i = 0; i < rows[0].length(); i++){
                follower_list.push(rows[0][i]);
              }
-             for(var i = 0; i < rows[1].length(); i++){
+
+             for(let i = 0; i < rows[1].length(); i++){
                followed_list.push(rows[1][i]);
+             }
+
+             for(let i = 0; i < rows[2].length(); i++){
+               var pdata = {
+                 'image': rows[2][i].image,
+                 'text' : rows[2][i].text,
+                 'post_time' : rows[2][i].post_time,
+                 'post_date' : rows[2][i].post_date
+               };
+               post_info.push(pdata);
              }
            }
 
@@ -45,15 +51,47 @@
              'code': resultCode,
              'follower': follower_list,
              'followed': followed_list,
-             'postinfo': rows[0],
-             'keepinfo': rows[2]
+             'postinfo': post_info
            });
          });
-       }
+     },
+
+     // 보관함
+     profileKeep : function(req, res){
+       var id = req.query.id;
+       var param = [id];
+       var keep_info = [];
+
+       var sql = 'SELECT * FROM post JOIN keep ON post.id = keep.post_id WHERE keep.user_id = (SELECT id FROM user WHERE user_id = ?)'; // 보관함목록
+       connection.query(sql, param, function(err, rows){
+         var resultCode = 404;
+
+         if(err){
+           console.log(err);
+         }
+         else{
+           resultCode = 200;
+
+           for(let i = 0; i < rows.length(); i++){
+             var kdata = {
+               'image' : rows[i].image,
+               'text' : rows[i].text,
+               'post_time' : rows[i].post_time,
+               'post_date' : rows[i].user_id
+             };
+             keep_info.push(kdata);
+           }
+         }
+
+         res.json({
+           'code' : resultCode,
+           'keepinfo' : keep_info
+         });
+       });
      },
 
      // 프로필수정 - 아이디 중복확인
-     profileIdCheck : function(req, res){
+     profileEditIdCheck : function(req, res){
        apiController.dupIdCheck(req, res);
      },
 
@@ -68,27 +106,54 @@
        var sql = 'SELECT * FROM user WHERE login_id = ?';
        connection.query(sql, param, function(err, rows){
          var resultCode = 404;
+         var message = 'ERROR';
 
          if(err){
            console.log(err);
          }
          else{
            resultCode = 200;
+           message = '정상적으로 수정 완료';
 
            // 기존 아이디와 비교 후 db갱신
            if(rows[0].login_id !== new_id){
              sql = 'UPDATE user SET login_id = ? WHERE login_id = ?';
              connection.query(sql, [new_id, id], function(err, rows){
+               if(err){
+                 resultCode = 400;
+                 message = 'ERROR';
+               }
              });
            }
 
            // 기존 소개글과 비교 후 db갱신
+           if(rows[0].intro !== new_intro){
+             sql = 'UPDATE user SET intro = ? WHERE login_id = ?';
+             connection.query(sql, [new_intro, id], function(err, rows){
+               if(err){
+                 resultCode = 400;
+                 message = 'ERROR';
+               }
+             });
+           }
 
            // 기존 SNS계정과 비교 후 db갱신
-
+           if(rows[0].sns !== new_sns){
+             sql = 'UPDATE user SET sns = ? WHERE login_id = ?';
+             connection.query(sql, [new_sns, id], function(err, rows){
+               if(err){
+                 resultCode = 400;
+                 message = 'ERROR';
+               }
+             });
+           }
          }
-       });
 
+         res.json({
+           'code' : resultCode,
+           'message' : message
+         });
+       });
      }
  }
 
