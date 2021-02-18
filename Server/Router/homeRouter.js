@@ -5,18 +5,33 @@
  * RESTful방식에 따라서 각각의 경로와 함수(컨트롤러)를 지정한 후, homeRouter객체에 달아줌.
  */
 
- var express = require('express');
+var express = require('express');
 const passport = require('passport');
 const homeController = require('../Controller/homeController');
- var routes = require('../routes');
+var routes = require('../routes');
 
- var homeRouter = express.Router();
+var homeRouter = express.Router();
 
- homeRouter.post(routes.join,homeController.homeJoinPost);
- homeRouter.post(routes.login, passport.authenticate("local_login", {
-     failureFlash: false
- }), homeController.homeLoginPost);
- homeRouter.post(routes.findId, homeController.findId)
- homeRouter.post(routes.findPassword, homeController.findPassword);
+homeRouter.post(routes.join,homeController.homeJoinPost);
+homeRouter.post(routes.login, function(req, res, next) {
+    passport.authenticate("local_login", function(err, user) {
+        console.log("passport authenticate")
+        if (err){
+            console.log(err);
+        }
 
- module.exports = homeRouter;
+        if (user){
+            req.login(user, function (err) {
+                if (err){
+                    console.log(err);
+                }
+            })
+            console.log("passport", req.user);
+        }
+        return next();
+    })(req, res, next);
+}, homeController.homeLoginPost);
+homeRouter.post(routes.findId, homeController.findId)
+homeRouter.post(routes.findPassword, homeController.findPassword);
+
+module.exports = homeRouter;

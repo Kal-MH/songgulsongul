@@ -13,6 +13,7 @@ const crypto = require('crypto');
         var email = req.body.email;
         var password = req.body.password;
         var login_id = req.body.loginId;
+        var sns = req.body.snsAddress;
         
         //비밀번호 암호화
         crypto.randomBytes(64, function (err, buf) {
@@ -20,8 +21,8 @@ const crypto = require('crypto');
             var hashed_password = key.toString('base64');
             var salt = buf.toString('base64');
             // 삽입을 수행하는 sql문.
-            var sql = 'INSERT INTO user (email, login_id, password, salt) VALUES (?, ?, ?, ?)';
-            var params = [email, login_id, hashed_password, salt];
+            var sql = 'INSERT INTO user (email, login_id, password, salt, sns) VALUES (?, ?, ?, ?)';
+            var params = [email, login_id, hashed_password, salt, sns];
             
             connection.query(sql, params, function (err, result) {
                 var resultCode = 404;
@@ -53,6 +54,10 @@ const crypto = require('crypto');
           message = message = '로그인 성공! ' + req.user.login_id + '님 환영합니다!';
       }
   
+      //로그인 확인을 위한 임시 로그아웃(삭제요망)
+      req.logout();
+
+
       res.json({
           'code' : resultCode,
           'message' : message
