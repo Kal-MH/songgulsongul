@@ -14,15 +14,17 @@ const crypto = require('crypto');
         var password = req.body.password;
         var login_id = req.body.loginId;
         var sns = req.body.snsAddress;
-        
+        var img_profile = req.file.path;
+
+        console.log(req.body)
         //비밀번호 암호화
         crypto.randomBytes(64, function (err, buf) {
           crypto.pbkdf2(password, buf.toString('base64'), 100, 64, 'sha512', function (err, key) {
             var hashed_password = key.toString('base64');
             var salt = buf.toString('base64');
             // 삽입을 수행하는 sql문.
-            var sql = 'INSERT INTO user (email, login_id, password, salt, sns) VALUES (?, ?, ?, ?)';
-            var params = [email, login_id, hashed_password, salt, sns];
+            var sql = 'INSERT INTO user (email, login_id, password, salt, sns, img_profile) VALUES (?, ?, ?, ?, ?, ?)';
+            var params = [email, login_id, hashed_password, salt, sns, img_profile];
             
             connection.query(sql, params, function (err, result) {
                 var resultCode = 404;
@@ -53,10 +55,6 @@ const crypto = require('crypto');
           resultCode = 200;
           message = message = '로그인 성공! ' + req.user.login_id + '님 환영합니다!';
       }
-  
-      //로그인 확인을 위한 임시 로그아웃(삭제요망)
-      req.logout();
-
 
       res.json({
           'code' : resultCode,
@@ -139,6 +137,7 @@ const crypto = require('crypto');
         }
       })
     },
+    //비밀번호 찾기
     findPassword : function (req, res) {
       const email = req.body.email;
       const login_id = req.body.login_id;
@@ -203,7 +202,22 @@ const crypto = require('crypto');
           })
         }
       })
-    }  
+    },
+    //임시 컨트롤러 - 유저 프로필 보기(img업로드 확인을 위해)
+    tmpgetMeProfile : function (req, res) {
+      const me = req.user;
+
+      if (!me){
+        res.redirect("/public/login.html");
+      } else {
+        res.render("profile.ejs", {user : me});
+      }
+
+    },
+    logout : function (req, res) {
+      req.logout();
+      res.redirect("/public/login.html");
+    }
  }
 
  module.exports = homeController;

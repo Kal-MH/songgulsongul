@@ -7,12 +7,14 @@
 
 var express = require('express');
 const passport = require('passport');
-const homeController = require('../Controller/homeController');
 var routes = require('../routes');
+
+const homeController = require('../Controller/homeController');
+const middleWares = require("../middlewares");
 
 var homeRouter = express.Router();
 
-homeRouter.post(routes.join,homeController.homeJoinPost);
+homeRouter.post(routes.join,middleWares.multerProfile, homeController.homeJoinPost);
 homeRouter.post(routes.login, function(req, res, next) {
     passport.authenticate("local_login", function(err, user) {
         console.log("passport authenticate")
@@ -33,5 +35,9 @@ homeRouter.post(routes.login, function(req, res, next) {
 }, homeController.homeLoginPost);
 homeRouter.post(routes.findId, homeController.findId)
 homeRouter.post(routes.findPassword, homeController.findPassword);
+
+//임시 라우터
+homeRouter.get(routes.me, homeController.tmpgetMeProfile)
+homeRouter.get(routes.logout, homeController.logout)
 
 module.exports = homeRouter;

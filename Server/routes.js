@@ -10,6 +10,10 @@ const FIND_ID = "/find/id";
 const FIND_PASSWORD = "/find/password";
 
 const USER = "/user";
+//웹상에서 보기위한 임시 라우터
+//로그인한 후, 내 프로필 보기
+const ME = "/me";
+const LOGOUT = "/logout";
 
 const API = "/api";
 const API_DUP_IDCHECK = "/dup-idcheck"
@@ -26,7 +30,9 @@ const routes = {
     api: API,
     apiDupIdCheck : API_DUP_IDCHECK,
     apiEmailAuth: API_EMAIL_AUTH,
-    apiEmailAuthNumber : API_EMAIL_AUTH_NUMBER
+    apiEmailAuthNumber : API_EMAIL_AUTH_NUMBER,
+    me : ME,
+    logout : LOGOUT
 }
 
 module.exports = routes;

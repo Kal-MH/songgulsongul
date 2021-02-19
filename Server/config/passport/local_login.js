@@ -30,7 +30,8 @@ module.exports = new LocalStrategy({
                       'id' : result[0].id,
                       'email' : result[0].email,
                       'login_id' : result[0].login_id,
-                      'img_profile' : result[0].img_profile
+                      'img_profile' : result[0].img_profile,
+                      'sns' : result[0].sns
                   }
                   done(null, send_result);
                 }

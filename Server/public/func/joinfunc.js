@@ -12,6 +12,7 @@ const password = document.querySelector(".password");
 
 const joinBtn = document.querySelector(".joinBtn");
 
+// form method로 대체됨
 function handleJoinBtnClick() {
     const LoginidValue = id.value;
     const passwordValue = password.value;
@@ -117,7 +118,7 @@ function init() {
     checkDupIdBtn.addEventListener("click", handleDupIdBtnClick);
     sendAuthEmailBtn.addEventListener("click", handleSendAuthEmailBtnClick)
     emailAuthNumberBtn.addEventListener("click", handleEmailAuthNumberBtnClick)
-    joinBtn.addEventListener("click", handleJoinBtnClick);
+    //joinBtn.addEventListener("click", handleJoinBtnClick);
 }
 
 init();
