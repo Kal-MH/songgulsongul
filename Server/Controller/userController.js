@@ -13,11 +13,11 @@
 
        var param = [id];
        var follower_list = [];
-       var followed_lis = [];
+       var follow_target_list = [];
        var post_info = [];
 
-       var sql1 = 'SELECT login_id FROM user JOIN follow ON follow.follower_id = user.id WHERE follow.followed_id = ?'; // 나를 팔로우 하는 목록
-       var sql2 = 'SELECT login_id FROM user JOIN follow ON follow.followed_id = user.id WHERE follow.follower_id = ?'; // 내가 팔로우 하는 목록
+       var sql1 = 'SELECT login_id FROM user JOIN follow ON follow.follower_id = user.id WHERE follow.follow_target_id = ?'; // 나를 팔로우 하는 목록
+       var sql2 = 'SELECT login_id FROM user JOIN follow ON follow.follow_target_id = user.id WHERE follow.follower_id = ?'; // 내가 팔로우 하는 목록
        var sql3 = 'SELECT * FROM user JOIN post ON user.id = post.user_id WHERE user.login_id = ?'; // 게시글목록
 
          connection.query(sql1 + sql2 + sql3, param, function(err, rows){
@@ -33,7 +33,7 @@
              }
 
              for(let i = 0; i < rows[1].length(); i++){
-               followed_list.push(rows[1][i]);
+               follow_target_list.push(rows[1][i]);
              }
 
              for(let i = 0; i < rows[2].length(); i++){
@@ -50,7 +50,7 @@
            res.json({
              'code': resultCode,
              'follower': follower_list,
-             'followed': followed_list,
+             'follow_target': follow_target_list,
              'postinfo': post_info
            });
          });

@@ -10,6 +10,10 @@ const FIND_ID = "/find/id";
 const FIND_PASSWORD = "/find/password";
 
 const USER = "/user";
+const PROFILE = "/profile";
+const PROFILE_KEEP = "/profile-keep";
+const PROFILE_EDIT = "/profile-edit";
+const PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
 
 const API = "/api";
 const API_DUP_IDCHECK = "/dup-idcheck";
@@ -23,6 +27,10 @@ const routes = {
     findId : FIND_ID,
     findPassword : FIND_PASSWORD,
     user : USER,
+    profile : PROFILE,
+    profileKeep : PROFILE_KEEP,
+    profileEditIdCheck : PROFILE_EDIT_IDCHECK,
+    profileEdit : PROFILE_EDIT,
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,
     apiEmailAuth : API_EMAIL_AUTH,

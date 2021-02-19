@@ -11,6 +11,9 @@ const userController = require('../Controller/userController');
 
  var userRouter = express.Router();
 
-userRouter.post(routes.user, userController.userProfilePost);
+userRouter.post(routes.profile, userController.userProfilePost);
+userRouter.post(routes.profileKeep, userController.profileKeep);
+userRouter.post(routes.profileEditIdCheck, userController.profileEditIdCheck);
+userRouter.post(routes.profileEdit, userController.profileEdit);
 
  module.exports = userRouter;
