@@ -36,7 +36,7 @@ public class FragHomeComu extends Fragment {
         };
 
         // 어뎁터 적용
-        ComuImageAdapter adapter = new ComuImageAdapter(this.getContext(),  R.layout.comu_item , i ) ;
+        PostImageAdapter adapter = new PostImageAdapter(this.getContext(),  R.layout.post_image_item, i ) ;
         gridView.setAdapter(adapter);
 
         //Click Listener
