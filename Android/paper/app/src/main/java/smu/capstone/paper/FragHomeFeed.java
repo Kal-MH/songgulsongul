@@ -26,7 +26,7 @@ public class FragHomeFeed extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.frag_home_feed, container, false);
-        recyclerView = rootView.findViewById(R.id.frag_home_feed_rv);
+        recyclerView = rootView.findViewById(R.id.feed_recycler);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);

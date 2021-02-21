@@ -14,7 +14,6 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import smu.capstone.paper.data.FeedData;
 
@@ -100,14 +99,14 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-            profile_image=(ImageView)itemView.findViewById(R.id.feed_item_profile_image);
+            profile_image=(ImageView)itemView.findViewById(R.id.feed_item_profile_img);
             user_id=(TextView)itemView.findViewById(R.id.feed_item_id);
-            timestamp=(TextView)itemView.findViewById(R.id.feed_item_timestamp);
-            picture=(ImageView)itemView.findViewById(R.id.feed_item_picture);
-            favorite_counter=(TextView)itemView.findViewById(R.id.feed_item_favoritecounter);
-            comment_counter=(TextView)itemView.findViewById(R.id.feed_item_commentcounter);
+            timestamp=(TextView)itemView.findViewById(R.id.feed_item_time);
+            picture=(ImageView)itemView.findViewById(R.id.feed_item_pic);
+            favorite_counter=(TextView)itemView.findViewById(R.id.feed_item_like_cnt);
+            comment_counter=(TextView)itemView.findViewById(R.id.feed_item_com_cnt);
             text=(TextView)itemView.findViewById(R.id.feed_item_text);
-            favorite = (ImageView)itemView.findViewById(R.id.feed_item_favorite);
+            favorite = (ImageView)itemView.findViewById(R.id.feed_item_like);
 
 
 

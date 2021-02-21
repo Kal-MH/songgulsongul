@@ -1,14 +1,14 @@
 package smu.capstone.paper;
 
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Bundle;
-import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
@@ -19,6 +19,7 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentTransaction ft;
     private FragHomeFeed fragHomeFeed;
     private FragHomeComu fragHomeComu;
+    private FragHomeMarket fragHomeMarket;
 
     public HomeActivity() {
 
@@ -38,8 +39,11 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.home_feed:
                         setFrag(0);
                         break;
-                    case R.id.home_comu:
+                    case R.id.home_board:
                         setFrag(1);
+                        break;
+                    case R.id.home_market:
+                        setFrag(2);
                         break;
                 }
                 return true;
@@ -48,6 +52,7 @@ public class HomeActivity extends AppCompatActivity {
 
         fragHomeFeed = new FragHomeFeed();
         fragHomeComu = new FragHomeComu();
+        fragHomeMarket = new FragHomeMarket();
 
         setFrag(0);
 
@@ -63,6 +68,10 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case 1:
                 ft.replace(R.id.home_frame, fragHomeComu);
+                ft.commit();
+                break;
+            case 2:
+                ft.replace(R.id.home_frame, fragHomeMarket);
                 ft.commit();
                 break;
         }
