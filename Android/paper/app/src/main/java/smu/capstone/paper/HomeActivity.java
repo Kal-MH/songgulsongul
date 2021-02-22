@@ -36,13 +36,13 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
-                    case R.id.home_feed:
+                    case R.id.home_market:
                         setFrag(0);
                         break;
-                    case R.id.home_board:
+                    case R.id.home_feed:
                         setFrag(1);
                         break;
-                    case R.id.home_market:
+                    case R.id.home_board:
                         setFrag(2);
                         break;
                 }
@@ -54,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
         fragHomeComu = new FragHomeComu();
         fragHomeMarket = new FragHomeMarket();
 
-        setFrag(0);
+        setFrag(1);
 
     }
 
@@ -63,15 +63,15 @@ public class HomeActivity extends AppCompatActivity {
         ft = fm.beginTransaction();
         switch (n) {
             case 0:
-                ft.replace(R.id.home_frame, fragHomeFeed);
+                ft.replace(R.id.home_frame, fragHomeMarket);
                 ft.commit();
                 break;
             case 1:
-                ft.replace(R.id.home_frame, fragHomeComu);
+                ft.replace(R.id.home_frame, fragHomeFeed);
                 ft.commit();
                 break;
             case 2:
-                ft.replace(R.id.home_frame, fragHomeMarket);
+                ft.replace(R.id.home_frame, fragHomeComu);
                 ft.commit();
                 break;
         }

@@ -23,6 +23,18 @@ public class FragHomeMarket extends Fragment {
         searchView = view.findViewById(R.id.market_search);
         GridView gridView = view.findViewById(R.id.market_grid);
 
+        HomeMarketAdapter adapter = new HomeMarketAdapter(this.getContext());
+        adapter.addItem(new HomeMarketItem(R.drawable.sampleimg, "sample1", "20p"));
+        adapter.addItem(new HomeMarketItem(R.drawable.sampleimg, "sample2", "10p"));
+        adapter.addItem(new HomeMarketItem(R.drawable.sampleimg, "sample3", "50p"));
+        adapter.addItem(new HomeMarketItem(R.drawable.sampleimg, "sample4", "60p"));
+        adapter.addItem(new HomeMarketItem(R.drawable.sampleimg, "sample5", "80p"));
+        adapter.addItem(new HomeMarketItem(R.drawable.sampleimg, "sample6", "100p"));
+        adapter.addItem(new HomeMarketItem(R.drawable.sampleimg, "sample7", "200p"));
+        adapter.addItem(new HomeMarketItem(R.drawable.sampleimg, "sample8", "30p"));
+        adapter.addItem(new HomeMarketItem(R.drawable.sampleimg, "sample9", "25p"));
+        gridView.setAdapter(adapter);
+
         return view;
     }
 }

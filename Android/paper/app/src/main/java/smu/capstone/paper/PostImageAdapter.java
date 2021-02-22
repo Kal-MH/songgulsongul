@@ -1,7 +1,6 @@
 package smu.capstone.paper;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,21 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ComuImageAdapter extends BaseAdapter {
-
+public class PostImageAdapter extends BaseAdapter {
     private Context mContext;
     int[] img;
     LayoutInflater inf;
     int layout;
 
-
-    public ComuImageAdapter(Context mContext) {
+    public PostImageAdapter(Context mContext) {
         this.mContext = mContext;
     }
-    public ComuImageAdapter(Context mContext,int layout , int[] image) {
+    public PostImageAdapter(Context mContext, int layout, int[] image) {
         this.mContext = mContext;
         inf =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.layout = layout;
@@ -51,7 +45,7 @@ public class ComuImageAdapter extends BaseAdapter {
         if (convertView==null)
             convertView = inf.inflate(layout, null);
 
-        ImageView imageView = convertView.findViewById(R.id.comu_item_image);
+        ImageView imageView = convertView.findViewById(R.id.post_image_iv);
         imageView.setImageResource(img[position]);
 
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -59,4 +53,5 @@ public class ComuImageAdapter extends BaseAdapter {
 
         return imageView;
     }
+
 }
