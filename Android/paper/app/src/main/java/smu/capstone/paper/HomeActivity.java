@@ -19,6 +19,7 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentTransaction ft;
     private FragHomeFeed fragHomeFeed;
     private FragHomeComu fragHomeComu;
+    private FragHomeProfile fragHomeProfile;
 
     public HomeActivity() {
 
@@ -41,6 +42,9 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.home_comu:
                         setFrag(1);
                         break;
+                    case R.id.home_profile:
+                        setFrag(2);
+                        break;
                 }
                 return true;
             }
@@ -48,6 +52,7 @@ public class HomeActivity extends AppCompatActivity {
 
         fragHomeFeed = new FragHomeFeed();
         fragHomeComu = new FragHomeComu();
+        fragHomeProfile = new FragHomeProfile();
 
         setFrag(0);
 
@@ -63,6 +68,10 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case 1:
                 ft.replace(R.id.home_frame, fragHomeComu);
+                ft.commit();
+                break;
+            case 2:
+                ft.replace(R.id.home_frame, fragHomeProfile);
                 ft.commit();
                 break;
         }
