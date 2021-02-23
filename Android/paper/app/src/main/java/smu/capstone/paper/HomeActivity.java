@@ -12,19 +12,12 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
-    private BottomNavigationView mBottomNV;
-
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fm;
     private FragmentTransaction ft;
     private FragHomeFeed fragHomeFeed;
     private FragHomeComu fragHomeComu;
     private FragHomeMarket fragHomeMarket;
-
-    public HomeActivity() {
-
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +29,10 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
-                    case R.id.home_market:
+                    case R.id.home_feed:
                         setFrag(0);
                         break;
-                    case R.id.home_feed:
+                    case R.id.home_market:
                         setFrag(1);
                         break;
                     case R.id.home_board:
@@ -54,7 +47,7 @@ public class HomeActivity extends AppCompatActivity {
         fragHomeComu = new FragHomeComu();
         fragHomeMarket = new FragHomeMarket();
 
-        setFrag(1);
+        setFrag(0);
 
     }
 
@@ -63,11 +56,11 @@ public class HomeActivity extends AppCompatActivity {
         ft = fm.beginTransaction();
         switch (n) {
             case 0:
-                ft.replace(R.id.home_frame, fragHomeMarket);
+                ft.replace(R.id.home_frame, fragHomeFeed);
                 ft.commit();
                 break;
             case 1:
-                ft.replace(R.id.home_frame, fragHomeFeed);
+                ft.replace(R.id.home_frame, fragHomeMarket);
                 ft.commit();
                 break;
             case 2:
