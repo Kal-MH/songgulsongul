@@ -1,29 +1,24 @@
 package smu.capstone.paper;
 
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Bundle;
-import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
-    private BottomNavigationView mBottomNV;
-
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fm;
     private FragmentTransaction ft;
     private FragHomeFeed fragHomeFeed;
     private FragHomeComu fragHomeComu;
-    private FragHomeProfile fragHomeProfile;
 
-    public HomeActivity() {
-
-    }
+    private FragHomeMarket fragHomeMarket;
 
 
     @Override
@@ -39,10 +34,12 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.home_feed:
                         setFrag(0);
                         break;
-                    case R.id.home_comu:
+                    case R.id.home_market:
                         setFrag(1);
                         break;
-                    case R.id.home_profile:
+
+                    case R.id.home_board:
+
                         setFrag(2);
                         break;
                 }
@@ -52,7 +49,9 @@ public class HomeActivity extends AppCompatActivity {
 
         fragHomeFeed = new FragHomeFeed();
         fragHomeComu = new FragHomeComu();
-        fragHomeProfile = new FragHomeProfile();
+
+        fragHomeMarket = new FragHomeMarket();
+
 
         setFrag(0);
 
@@ -67,6 +66,10 @@ public class HomeActivity extends AppCompatActivity {
                 ft.commit();
                 break;
             case 1:
+                ft.replace(R.id.home_frame, fragHomeMarket);
+                ft.commit();
+                break;
+            case 2:
                 ft.replace(R.id.home_frame, fragHomeComu);
                 ft.commit();
                 break;

@@ -1,8 +1,6 @@
 package smu.capstone.paper.data;
 
 import android.graphics.Bitmap;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class FeedData {
     Bitmap profile_image;
@@ -13,6 +11,7 @@ public class FeedData {
     private int commentCounter;
     private String text;
     private int like;
+    private int keep;
 
     public String getId(){
         return userId;
@@ -40,6 +39,9 @@ public class FeedData {
     }
     public int getLike() {
         return like;
+    }
+    public int getKeep() {
+        return keep;
     }
 
     public void setCommentCounter(int commentCounter) {
@@ -72,8 +74,9 @@ public class FeedData {
     public void minusLike(){
         this.like-=1;
     }
+    public void setKeep(int keep) {this.keep = keep;}
     public FeedData(String userId, String timeStamp, int favoriteCounter, int commentCounter, String text , int like
-                            , Bitmap picture, Bitmap profile_image) {
+                            , Bitmap picture, Bitmap profile_image, int keep) {
         this.userId = userId;
         this.timeStamp = timeStamp;
         this.favoriteCounter = favoriteCounter;
@@ -82,6 +85,7 @@ public class FeedData {
         this.like = like;
         this.picture = picture;
         this.profile_image = profile_image;
+        this.keep = keep;
     }
     public FeedData(String userId, String timeStamp, int favoriteCounter, int commentCounter, String text) {
         this.userId = userId;

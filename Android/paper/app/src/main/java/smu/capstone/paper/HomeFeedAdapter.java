@@ -14,7 +14,6 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import smu.capstone.paper.data.FeedData;
 
@@ -55,6 +54,13 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
            holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite));
        }
 
+       if(items.get(position).getKeep() == 0){
+           holder.keep.setImageDrawable(context.getDrawable(R.drawable.baseline_bookmark_border_black_18dp));
+       }
+       else{
+           holder.keep.setImageDrawable(context.getDrawable(R.drawable.baseline_bookmark_black_18dp));
+       }
+
       holder.favorite.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -73,6 +79,22 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
           }
       });
+
+       holder.keep.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               int keeping = items.get(position).getKeep();
+               if(keeping == 0){
+                   items.get(position).setKeep(1);
+               }
+               else{
+                   items.get(position).setKeep(0);
+               }
+
+               notifyDataSetChanged();
+               Log.d("TAG", "눌렸음");
+           }
+       });
 
 
 
@@ -97,18 +119,19 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         TextView favorite_counter;
         TextView comment_counter;
         TextView text;
+        ImageView keep;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-            profile_image=(ImageView)itemView.findViewById(R.id.feed_item_profile_image);
+            profile_image=(ImageView)itemView.findViewById(R.id.feed_item_profile_img);
             user_id=(TextView)itemView.findViewById(R.id.feed_item_id);
-            timestamp=(TextView)itemView.findViewById(R.id.feed_item_timestamp);
-            picture=(ImageView)itemView.findViewById(R.id.feed_item_picture);
-            favorite_counter=(TextView)itemView.findViewById(R.id.feed_item_favoritecounter);
-            comment_counter=(TextView)itemView.findViewById(R.id.feed_item_commentcounter);
+            timestamp=(TextView)itemView.findViewById(R.id.feed_item_time);
+            picture=(ImageView)itemView.findViewById(R.id.feed_item_pic);
+            favorite_counter=(TextView)itemView.findViewById(R.id.feed_item_like_cnt);
+            comment_counter=(TextView)itemView.findViewById(R.id.feed_item_com_cnt);
             text=(TextView)itemView.findViewById(R.id.feed_item_text);
-            favorite = (ImageView)itemView.findViewById(R.id.feed_item_favorite);
-
+            favorite = (ImageView)itemView.findViewById(R.id.feed_item_like);
+            keep = (ImageView)itemView.findViewById(R.id.feed_item_keep);
 
 
 

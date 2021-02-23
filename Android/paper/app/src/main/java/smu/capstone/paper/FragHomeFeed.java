@@ -26,7 +26,9 @@ public class FragHomeFeed extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.frag_home_feed, container, false);
-        recyclerView = rootView.findViewById(R.id.feed_recycle);
+
+        recyclerView = rootView.findViewById(R.id.feed_recycler);
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -36,14 +38,16 @@ public class FragHomeFeed extends Fragment {
         //임시 데이터 저장
         FeedData data = new FeedData("wonhee","21-02-07",499,204,
                 "hi everyone",0,
-                drawable2Bitmap(getResources().getDrawable(R.drawable.sampleimg)),
-                drawable2Bitmap(getResources().getDrawable(R.drawable.test)));
+
+                drawable2Bitmap(getResources().getDrawable(R.drawable.ic_baseline_emoji_emotions_24)),
+                drawable2Bitmap(getResources().getDrawable(R.drawable.sampleimg)), 0);
+
         adapter.insertItem(data);
 
         FeedData data1 = new FeedData("YUJIN","21-02-07",20,52,
                 "너무멋지다!~",0,
                 drawable2Bitmap(getResources().getDrawable(R.drawable.sampleimg)),
-                drawable2Bitmap(getResources().getDrawable(R.drawable.test)));
+                drawable2Bitmap(getResources().getDrawable(R.drawable.test)), 0);
         adapter.insertItem(data1);
 
 
