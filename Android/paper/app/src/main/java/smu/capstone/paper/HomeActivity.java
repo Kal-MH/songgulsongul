@@ -3,7 +3,8 @@ package smu.capstone.paper;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-
+import android.view.View;
+import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -17,15 +18,21 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentTransaction ft;
     private FragHomeFeed fragHomeFeed;
     private FragHomeComu fragHomeComu;
-
+    private FragHomeProfile fragHomeProfile;
     private FragHomeMarket fragHomeMarket;
-
-
+    private ImageButton profileBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        profileBtn = findViewById(R.id.home_profile);
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              setFrag(3);
+            }
+        });
         bottomNavigationView = findViewById(R.id.home_tap);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -49,8 +56,9 @@ public class HomeActivity extends AppCompatActivity {
 
         fragHomeFeed = new FragHomeFeed();
         fragHomeComu = new FragHomeComu();
-
+        fragHomeProfile = new FragHomeProfile();
         fragHomeMarket = new FragHomeMarket();
+
 
 
         setFrag(0);
@@ -73,7 +81,7 @@ public class HomeActivity extends AppCompatActivity {
                 ft.replace(R.id.home_frame, fragHomeComu);
                 ft.commit();
                 break;
-            case 2:
+            case 3:
                 ft.replace(R.id.home_frame, fragHomeProfile);
                 ft.commit();
                 break;
