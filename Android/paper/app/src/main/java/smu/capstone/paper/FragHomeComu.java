@@ -37,6 +37,7 @@ public class FragHomeComu extends Fragment {
 
         // 어뎁터 적용
         PostImageAdapter adapter = new PostImageAdapter(this.getContext(),  R.layout.post_image_item , i ) ;
+
         gridView.setAdapter(adapter);
 
         //Click Listener

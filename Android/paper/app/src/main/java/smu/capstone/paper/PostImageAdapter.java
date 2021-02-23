@@ -8,7 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+
 public class PostImageAdapter extends BaseAdapter {
+
     private Context mContext;
     int[] img;
     LayoutInflater inf;
@@ -18,6 +20,7 @@ public class PostImageAdapter extends BaseAdapter {
         this.mContext = mContext;
     }
     public PostImageAdapter(Context mContext, int layout, int[] image) {
+
         this.mContext = mContext;
         inf =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.layout = layout;
@@ -46,6 +49,7 @@ public class PostImageAdapter extends BaseAdapter {
             convertView = inf.inflate(layout, null);
 
         ImageView imageView = convertView.findViewById(R.id.post_image_iv);
+
         imageView.setImageResource(img[position]);
 
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

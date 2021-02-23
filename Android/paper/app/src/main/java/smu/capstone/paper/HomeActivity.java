@@ -17,7 +17,9 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentTransaction ft;
     private FragHomeFeed fragHomeFeed;
     private FragHomeComu fragHomeComu;
+
     private FragHomeMarket fragHomeMarket;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,9 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.home_market:
                         setFrag(1);
                         break;
+
                     case R.id.home_board:
+
                         setFrag(2);
                         break;
                 }
@@ -45,7 +49,9 @@ public class HomeActivity extends AppCompatActivity {
 
         fragHomeFeed = new FragHomeFeed();
         fragHomeComu = new FragHomeComu();
+
         fragHomeMarket = new FragHomeMarket();
+
 
         setFrag(0);
 
@@ -65,6 +71,10 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case 2:
                 ft.replace(R.id.home_frame, fragHomeComu);
+                ft.commit();
+                break;
+            case 2:
+                ft.replace(R.id.home_frame, fragHomeProfile);
                 ft.commit();
                 break;
         }
