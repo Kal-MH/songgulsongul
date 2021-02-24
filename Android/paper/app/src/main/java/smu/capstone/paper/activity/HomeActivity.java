@@ -15,6 +15,7 @@ import smu.capstone.paper.R;
 import smu.capstone.paper.fragment.FragFindId;
 import smu.capstone.paper.fragment.FragHomeComu;
 import smu.capstone.paper.fragment.FragHomeFeed;
+import smu.capstone.paper.fragment.FragHomeMarket;
 
 public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -22,7 +23,7 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentTransaction ft;
     private FragHomeFeed fragHomeFeed;
     private FragHomeComu fragHomeComu;
-    private FragFindId.FragHomeMarket fragHomeMarket;
+    private FragHomeMarket fragHomeMarket;
     private ImageButton profileBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
 
         fragHomeFeed = new FragHomeFeed();
         fragHomeComu = new FragHomeComu();
-        fragHomeMarket = new FragFindId.FragHomeMarket();
+        fragHomeMarket = new FragHomeMarket();
 
 
 
