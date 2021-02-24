@@ -1,4 +1,4 @@
-package smu.capstone.paper;
+package smu.capstone.paper.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+
+import smu.capstone.paper.R;
 
 
 public class PostImageAdapter extends BaseAdapter {

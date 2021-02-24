@@ -1,4 +1,4 @@
-package smu.capstone.paper;
+package smu.capstone.paper.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import smu.capstone.paper.R;
+import smu.capstone.paper.adapter.HomeFeedAdapter;
 import smu.capstone.paper.data.FeedData;
 
 public class FragHomeFeed extends Fragment {

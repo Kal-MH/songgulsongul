@@ -1,4 +1,4 @@
-package smu.capstone.paper;
+package smu.capstone.paper.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import smu.capstone.paper.R;
+import smu.capstone.paper.item.HomeMarketItem;
 
 public class HomeMarketAdapter extends BaseAdapter {
     ArrayList<HomeMarketItem> items;
