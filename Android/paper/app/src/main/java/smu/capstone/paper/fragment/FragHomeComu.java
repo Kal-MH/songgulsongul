@@ -13,12 +13,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import smu.capstone.paper.adapter.PostImageAdapter;
+import java.util.ArrayList;
+
 import smu.capstone.paper.R;
+import smu.capstone.paper.adapter.PostImageAdapter;
+import smu.capstone.paper.item.PostItem;
 
 public class FragHomeComu extends Fragment {
     private View view;
     private SearchView searchView;
+    ArrayList<PostItem> items = new ArrayList<PostItem>();
+
+    public void addItem(PostItem item){
+        items.add(item);
+    }
 
     @Nullable
     @Override
@@ -31,15 +39,29 @@ public class FragHomeComu extends Fragment {
         GridView gridView = view.findViewById(R.id.comu_grid);
 
         //아이템 추가
-        int[] i = {R.drawable.sampleimg,R.drawable.sampleimg,R.drawable.sampleimg,R.drawable.sampleimg,
-                R.drawable.sampleimg,R.drawable.sampleimg,R.drawable.sampleimg,R.drawable.sampleimg,
-                R.drawable.sampleimg,R.drawable.sampleimg,R.drawable.sampleimg,R.drawable.sampleimg,
-                R.drawable.sampleimg,R.drawable.sampleimg,R.drawable.sampleimg,R.drawable.sampleimg,
-                R.drawable.sampleimg,R.drawable.sampleimg,R.drawable.sampleimg,R.drawable.sampleimg
-        };
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
+        addItem(new PostItem(R.drawable.sampleimg));
 
         // 어뎁터 적용
-        PostImageAdapter adapter = new PostImageAdapter(this.getContext(),  R.layout.post_image_item , i ) ;
+        PostImageAdapter adapter = new PostImageAdapter(this.getContext(),  R.layout.post_image_item , items ) ;
 
         gridView.setAdapter(adapter);
 
