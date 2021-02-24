@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.fragment.FragFindId;
+import smu.capstone.paper.fragment.FragFindPw;
 
 public class FindAccountActivity extends AppCompatActivity {
 
@@ -46,10 +47,12 @@ public class FindAccountActivity extends AppCompatActivity {
         find_pw_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                FragFindId.FragHomeProfile.FragFindPw fragFindPw = new FragFindId.FragHomeProfile.FragFindPw();
+                FragFindPw fragFindPw = new FragFindPw();
                 transaction.replace(R.id.find_frame, fragFindPw);
                 transaction.commit();
+
             }
         });
 
