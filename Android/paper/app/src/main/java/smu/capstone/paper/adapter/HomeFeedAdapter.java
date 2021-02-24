@@ -1,4 +1,4 @@
-package smu.capstone.paper;
+package smu.capstone.paper.adapter;
 
 import android.content.Context;
 import android.os.Build;
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import smu.capstone.paper.R;
 import smu.capstone.paper.data.FeedData;
 
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHolder> {

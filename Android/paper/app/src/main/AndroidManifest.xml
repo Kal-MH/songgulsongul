@@ -12,20 +12,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".UploadActivity"/>
-        <activity android:name=".FindAccountActivity" />
+        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.HomeActivity$UploadActivity"/>
+        <activity android:name=".activity.FindAccountActivity" />
         <activity android:name=".RealmTest"></activity>
-        <activity android:name=".JoinActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.HomeActivity$JoinActivity" />
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.HomeActivity$MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
       
-        <activity android:name=".FragHomeComu" />
+        <activity android:name=".fragment.FragHomeComu" />
 
     </application>
 

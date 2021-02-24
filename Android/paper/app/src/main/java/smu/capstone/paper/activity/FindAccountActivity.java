@@ -1,4 +1,4 @@
-package smu.capstone.paper;
+package smu.capstone.paper.activity;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+
+import smu.capstone.paper.R;
+import smu.capstone.paper.fragment.FragFindId;
 
 public class FindAccountActivity extends AppCompatActivity {
 
@@ -44,7 +47,7 @@ public class FindAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                FragFindPw fragFindPw = new FragFindPw();
+                FragFindId.FragHomeProfile.FragFindPw fragFindPw = new FragFindId.FragHomeProfile.FragFindPw();
                 transaction.replace(R.id.find_frame, fragFindPw);
                 transaction.commit();
             }

@@ -1,4 +1,4 @@
-package smu.capstone.paper;
+package smu.capstone.paper.fragment;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +12,9 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import smu.capstone.paper.adapter.PostImageAdapter;
+import smu.capstone.paper.R;
 
 public class FragHomeComu extends Fragment {
     private View view;

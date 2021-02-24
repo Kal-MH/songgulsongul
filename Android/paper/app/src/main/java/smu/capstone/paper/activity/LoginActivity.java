@@ -1,4 +1,4 @@
-package smu.capstone.paper;
+package smu.capstone.paper.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import smu.capstone.paper.R;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -31,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         login_go_join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.JoinActivity.class);
                 startActivity(intent);
             }
         });

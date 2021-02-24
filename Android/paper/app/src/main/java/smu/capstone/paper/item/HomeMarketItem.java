@@ -1,4 +1,4 @@
-package smu.capstone.paper;
+package smu.capstone.paper.item;
 
 public class HomeMarketItem{
     int img;
