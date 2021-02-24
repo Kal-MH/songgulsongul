@@ -7,9 +7,9 @@
     android:layout_margin="5dp">
 
     <smu.capstone.paper.layout.RoundImageView
-        android:id="@+id/follow_img"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/follow_item_img"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,22 +23,23 @@
         android:layout_marginStart="20dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/follow_img"
+        app:layout_constraintStart_toEndOf="@+id/follow_item_img"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/follow_text"
+        android:id="@+id/follow_item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:text="TextView"
+        android:layout_marginEnd="20dp"
+        android:text="following"
+        android:textColor="#700D0D"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/follow_btn"
+        app:layout_constraintEnd_toEndOf="@+id/follow_item_btn"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/follow_btn"
+        android:id="@+id/follow_item_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"

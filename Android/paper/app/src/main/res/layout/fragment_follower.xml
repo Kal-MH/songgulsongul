@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.FragmentFollower">
+    tools:context=".fragment.FragFollower">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/follow_follwing"
+            android:id="@+id/follow_follower_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:itemCount="10"
