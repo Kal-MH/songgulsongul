@@ -37,6 +37,13 @@ public  class FragHomeMarket extends Fragment {
         searchView = view.findViewById(R.id.market_search);
         GridView gridView = view.findViewById(R.id.market_grid);
 
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setIconified(false);
+            }
+        });
+
         // 아이템 추가
         addItem(new HomeMarketItem(R.drawable.sampleimg, "sample1", "20p"));
         addItem(new HomeMarketItem(R.drawable.test, "sample2", "10p"));
