@@ -1,8 +1,8 @@
-package smu.capstone.paper.data;
+package smu.capstone.paper.item;
 
 import android.graphics.Bitmap;
 
-public class FeedData {
+public class HomeFeedItem {
     Bitmap profile_image;
     private String userId;
     private String timeStamp;
@@ -75,7 +75,7 @@ public class FeedData {
         this.like-=1;
     }
     public void setKeep(int keep) {this.keep = keep;}
-    public FeedData(String userId, String timeStamp, int favoriteCounter, int commentCounter, String text , int like
+    public HomeFeedItem(String userId, String timeStamp, int favoriteCounter, int commentCounter, String text , int like
                             , Bitmap picture, Bitmap profile_image, int keep) {
         this.userId = userId;
         this.timeStamp = timeStamp;
@@ -87,7 +87,7 @@ public class FeedData {
         this.profile_image = profile_image;
         this.keep = keep;
     }
-    public FeedData(String userId, String timeStamp, int favoriteCounter, int commentCounter, String text) {
+    public HomeFeedItem(String userId, String timeStamp, int favoriteCounter, int commentCounter, String text) {
         this.userId = userId;
         this.timeStamp = timeStamp;
         this.favoriteCounter = favoriteCounter;

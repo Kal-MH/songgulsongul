@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HomeFeedAdapter;
-import smu.capstone.paper.data.FeedData;
+import smu.capstone.paper.item.HomeFeedItem;
 
 public class FragHomeFeed extends Fragment {
     RecyclerView recyclerView;
@@ -38,7 +38,7 @@ public class FragHomeFeed extends Fragment {
         adapter = new HomeFeedAdapter(getContext());
 
         //임시 데이터 저장
-        FeedData data = new FeedData("wonhee","21-02-07",499,204,
+        HomeFeedItem data = new HomeFeedItem("wonhee","21-02-07",499,204,
                 "hi everyone",0,
 
                 drawable2Bitmap(getResources().getDrawable(R.drawable.ic_baseline_emoji_emotions_24)),
@@ -46,7 +46,7 @@ public class FragHomeFeed extends Fragment {
 
         adapter.insertItem(data);
 
-        FeedData data1 = new FeedData("YUJIN","21-02-07",20,52,
+        HomeFeedItem data1 = new HomeFeedItem("YUJIN","21-02-07",20,52,
                 "너무멋지다!~",0,
                 drawable2Bitmap(getResources().getDrawable(R.drawable.sampleimg)),
                 drawable2Bitmap(getResources().getDrawable(R.drawable.test)), 0);

@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
-import smu.capstone.paper.data.FeedData;
+import smu.capstone.paper.item.HomeFeedItem;
 
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHolder> {
     Context context;
-    ArrayList<FeedData> items = new ArrayList<FeedData>();
+    ArrayList<HomeFeedItem> items = new ArrayList<HomeFeedItem>();
 
 
     public HomeFeedAdapter (Context context){
@@ -38,7 +38,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-       FeedData item = items.get(position);
+       HomeFeedItem item = items.get(position);
        holder.text.setText(item.getText());
        holder.timestamp.setText(item.getTimeStamp());
        holder.comment_counter.setText(item.getCommentCounter()+"");
@@ -106,7 +106,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         return items.size();
     }
 
-    public void insertItem(FeedData data){
+    public void insertItem(HomeFeedItem data){
         items.add(data);
     }
 
