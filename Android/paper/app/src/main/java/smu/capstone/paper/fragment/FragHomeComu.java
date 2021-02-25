@@ -92,7 +92,6 @@ public class FragHomeComu extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
-
             }
         });
 
