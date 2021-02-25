@@ -1,6 +1,8 @@
 package smu.capstone.paper.activity;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -11,8 +13,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,14 +27,12 @@ public class FollowActivity extends AppCompatActivity {
     private FragmentTransaction ft;
 
     private TextView follow_follow;
-    private TextView follow_follwer;
+    private TextView follow_follower;
 
     private FragFollowing fragFollowing;
     private FragFollower fragFollower;
 
-    private ImageButton follow_back;
     private ImageView follow_img;
-    private TextView follow_id;
     private TextView follow_intro;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,21 +44,28 @@ public class FollowActivity extends AppCompatActivity {
 
         follow_intro = findViewById(R.id.follow_intro);
         follow_img = findViewById(R.id.follow_image);
-        follow_id = findViewById(R.id.follow_id);
         follow_follow = findViewById(R.id.follow_follow); // 내가 팔로잉 하는사람
-        follow_follwer = findViewById(R.id.follow_follower); // 나를 팔로잉 하는사람들
+        follow_follower = findViewById(R.id.follow_follower); // 나를 팔로잉 하는사람들
                                             //나의 팔로워
-        follow_back = findViewById(R.id.follow_back);
+
 
 
         fragFollower = new FragFollower();
         fragFollowing = new FragFollowing();
 
 
-        // 사용자 정보 초기화
-        follow_id.setText("user1234");
+        // 사용자 정보 초기화 및 툴바초기화
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.follow_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setTitle("user1234"); // 사용자 아이디 추가
+        actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
         follow_img.setImageBitmap(drawable2Bitmap(getResources().getDrawable(R.drawable.test)));
         follow_intro.setText("안녕하세요!\n 반갑습니다~!");
+
 
         //팔로우에 밑줄 긋고 팔로우창띄움
         SpannableString content = new SpannableString("팔로우");
@@ -78,7 +85,7 @@ public class FollowActivity extends AppCompatActivity {
                 //팔로우에 밑줄 긋고 팔로우창띄움
                 SpannableString content = new SpannableString("팔로우");
                 content.setSpan(new UnderlineSpan(), 0, content.length(), 0); follow_follow.setText(content);
-                follow_follwer.setText("팔로잉");
+                follow_follower.setText("팔로잉");
 
                 ft = fm.beginTransaction();
                 ft.replace(R.id.follow_frag, fragFollower);
@@ -86,14 +93,14 @@ public class FollowActivity extends AppCompatActivity {
             }
         });
 
-        follow_follwer.setOnClickListener(new View.OnClickListener() { // 내가 팔로잉 하는사람들 보여줌
+        follow_follower.setOnClickListener(new View.OnClickListener() { // 내가 팔로잉 하는사람들 보여줌
             @Override
             public void onClick(View view) {
 
                 //팔로우에 밑줄 긋고 팔로우창띄움
                 follow_follow.setText("팔로우");
                 SpannableString content = new SpannableString("팔로잉");
-                content.setSpan(new UnderlineSpan(), 0, content.length(), 0); follow_follwer.setText(content);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0); follow_follower.setText(content);
 
                 ft = fm.beginTransaction();
                 ft.replace(R.id.follow_frag, fragFollowing);
@@ -101,14 +108,18 @@ public class FollowActivity extends AppCompatActivity {
             }
         });
 
-        follow_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
+
+
+
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
+                finish();
+                return true;
             }
-        });
-
-
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
