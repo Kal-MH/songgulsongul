@@ -58,8 +58,7 @@ public class PostImageAdapter extends BaseAdapter {
         ImageView imageView = convertView.findViewById(R.id.post_image_iv);
 
         imageView.setImageResource(postItem.getImg());
-
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setLayoutParams(new GridView.LayoutParams(340, 350));
 
         return imageView;
