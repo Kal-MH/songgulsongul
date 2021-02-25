@@ -3,11 +3,17 @@ package smu.capstone.paper.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -24,21 +30,25 @@ public class HomeActivity extends AppCompatActivity {
     private FragHomeFeed fragHomeFeed;
     private FragHomeComu fragHomeComu;
     private FragHomeMarket fragHomeMarket;
-    private ImageButton profileBtn;
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        profileBtn = findViewById(R.id.home_profile);
-        profileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent( HomeActivity.this, ProfileActivity.class);
-                startActivity(intent);
 
-            }
-        });
+
+        toolbar = findViewById(R.id.home_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        //  actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
+        actionBar.setTitle("APP NAME");
+        actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
+
+
+
         bottomNavigationView = findViewById(R.id.home_tap);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -89,6 +99,43 @@ public class HomeActivity extends AppCompatActivity {
 
         }
 
+    }
+
+
+    @Override
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater = getMenuInflater();
+
+        menuInflater.inflate(R.menu.home_toolbar, menu);
+
+        return true;
+
+    }
+
+
+
+    // 툴바에 삽입된 메뉴에 대해서 이벤트 처리
+
+    @Override
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.home_profile:
+                Intent intent= new Intent(HomeActivity.this, ProfileActivity.class);
+                startActivity(intent);
+                return true;
+
+
+            case R.id.home_add:
+                return true;
+
+        }
+
+        return  true;
     }
 
 }

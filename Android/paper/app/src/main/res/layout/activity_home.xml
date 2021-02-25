@@ -9,59 +9,14 @@
     android:orientation="vertical">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/home_toolbar"
+        android:background="@color/cardview_shadow_start_color"
+        >
 
-
-        android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/home_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:text="APP name"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
-
-        <ImageButton
-            android:id="@+id/home_profile"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="200dp"
-            android:layout_marginEnd="8dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/StringValue"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/home_add"
-            app:layout_constraintLeft_toRightOf="@+id/home_title"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/ic_baseline_account_circle_24"
-            tools:ignore="VectorDrawableCompat" />
-
-        <ImageButton
-            android:id="@+id/home_add"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginEnd="4dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/StringValue"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/home_profile"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/ic_baseline_add_24"
-            tools:ignore="VectorDrawableCompat" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </androidx.appcompat.widget.Toolbar>
     <FrameLayout
         android:id="@+id/home_frame"
         android:layout_width="match_parent"
