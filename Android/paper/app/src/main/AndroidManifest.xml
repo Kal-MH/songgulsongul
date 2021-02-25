@@ -11,9 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-      
-        <activity android:name=".activity.FollowActivity"></activity>
-        <activity android:name=".activity.PostSearchActivity"></activity>
+        <activity android:name=".activity.SettingActivity"></activity>
+        <activity android:name=".activity.FollowActivity" />
+        <activity android:name=".activity.PostSearchActivity" />
         <activity android:name=".activity.ProfileActivity" />
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.UploadActivity" />
