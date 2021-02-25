@@ -6,10 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
-
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +14,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import smu.capstone.paper.R;
-import smu.capstone.paper.fragment.FragFindId;
 import smu.capstone.paper.fragment.FragHomeComu;
 import smu.capstone.paper.fragment.FragHomeFeed;
 import smu.capstone.paper.fragment.FragHomeMarket;
@@ -44,9 +39,6 @@ public class HomeActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         //  actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setTitle("APP NAME");
-        actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
-
 
 
         bottomNavigationView = findViewById(R.id.home_tap);
@@ -74,8 +66,6 @@ public class HomeActivity extends AppCompatActivity {
         fragHomeComu = new FragHomeComu();
         fragHomeMarket = new FragHomeMarket();
 
-
-
         setFrag(0);
 
     }
@@ -101,25 +91,14 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-
     @Override
-
     public boolean onCreateOptionsMenu(Menu menu) {
-
         MenuInflater menuInflater = getMenuInflater();
-
         menuInflater.inflate(R.menu.home_toolbar, menu);
-
         return true;
-
     }
 
-
-
-    // 툴바에 삽입된 메뉴에 대해서 이벤트 처리
-
     @Override
-
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
@@ -129,13 +108,9 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
 
-
             case R.id.home_add:
                 return true;
-
         }
-
         return  true;
     }
-
 }
