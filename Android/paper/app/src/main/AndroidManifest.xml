@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".activity.KeepActivity"></activity>
+        <activity android:name=".activity.EditProfileActivity"></activity>
+        <activity android:name=".activity.KeepActivity" />
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.FollowActivity" />
         <activity android:name=".activity.PostSearchActivity" />
