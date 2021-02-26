@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
+        <activity android:name=".activity.EditProfileActivity"></activity>
         <activity android:name=".activity.StickerDetailActivity"></activity>
         <activity android:name=".activity.StickerSearchActivity" />
         <activity android:name=".activity.KeepActivity"></activity>

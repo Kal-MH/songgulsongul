@@ -95,12 +95,12 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case android.R.id.home: // 뒤로가기 버튼 눌렀을 때
-                Log.d("TAG", "뒤로,,,");
                 finish();
                 break;
 
             case R.id.profile_edit :
-                // EditProfileActivity로 이동
+                Intent intent3 = new Intent(ProfileActivity.this, EditProfileActivity.class);
+                startActivity(intent3);
                 break;
 
             case R.id.profile_keep:
