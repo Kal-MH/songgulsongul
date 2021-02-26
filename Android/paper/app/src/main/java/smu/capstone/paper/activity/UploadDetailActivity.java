@@ -13,11 +13,18 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+
+import java.nio.charset.CharsetEncoder;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.AddItemTagAdapter;
@@ -48,24 +55,40 @@ public class UploadDetailActivity extends AppCompatActivity {
         //해쉬태그 작성
         hashtagText = findViewById(R.id.upload_hashtag);
         hashtagText.append("#");
+        hashtagText.setFilters(new InputFilter[]{new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; i++) {
+                    if(source.charAt(i) == ' ')
+                        return " #";
+                    else if(source.charAt(i) == '#')
+                        continue;
+                    else if (!Character.isLetterOrDigit(source.charAt(i))) {
+                        return "";
+                    }
+                }
+                return null;
+            }
+        }});
+
         hashtagText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.length()>1)
-                    if( charSequence.charAt(charSequence.length()-1) == ' ')
-                        hashtagText.append("#");
+                Log.d("TAG", charSequence.length() + ":" + charSequence+"");
+                if(charSequence.length()==0)
+                    hashtagText.append("#");
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                //해쉬태그 리스트로 파싱
+
             }
         });
+
+
 
         // 아이템 태그 어뎁터 설정
         itemtag_rv = findViewById(R.id.upload_itemtag_rv);
