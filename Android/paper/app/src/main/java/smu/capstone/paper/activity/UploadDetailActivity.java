@@ -20,13 +20,13 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import smu.capstone.paper.R;
-import smu.capstone.paper.adapter.ItemTagAdaptor;
+import smu.capstone.paper.adapter.AddItemTagAdapter;
 import smu.capstone.paper.item.ItemtagItem;
 
 public class UploadDetailActivity extends AppCompatActivity {
 
     RecyclerView itemtag_rv;
-    ItemTagAdaptor adapter;
+    AddItemTagAdapter adapter;
     EditText hashtagText;
 
     @Override
@@ -67,12 +67,11 @@ public class UploadDetailActivity extends AppCompatActivity {
             }
         });
 
-        // 제품태그 어뎁터 설정
-
+        // 아이템 태그 어뎁터 설정
         itemtag_rv = findViewById(R.id.upload_itemtag_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         itemtag_rv.setLayoutManager(layoutManager);
-        adapter = new ItemTagAdaptor(this);
+        adapter = new AddItemTagAdapter(this ); // 추가모드 어뎁터 세팅
 
 
         //첫 데이터는 언제나 추가 아이콘으로 세팅
