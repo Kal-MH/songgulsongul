@@ -1,3 +1,6 @@
+const http = require("http");
+const axios = require('axios');
+
 const smtpTransport = require("../config/email");
 const connection = require("../db/db");
 
@@ -80,6 +83,52 @@ const auth = {
         res.json({
             'code' : resultCode
         })
+    },
+    //itemTag naver api 사용하기
+    sendNaverAPI : async function (req, res) {
+        const itemName = encodeURI(req.query.item);
+
+        const CLIENTID = "JEvadN6iDuJaQLpKAkUf";
+        const cLIENTPASSWORD = "PzQWeURFmU";
+
+        await axios.get(`https://openapi.naver.com/v1/search/shop.json?query=${itemName}&start=1&display=10&sort=sim`,{
+            headers:{
+                "X-Naver-Client-Id" : CLIENTID,
+                "X-Naver-Client-Secret" : cLIENTPASSWORD
+            }
+        })
+        .then(function (response) {
+            console.log(response.data.items[0]);
+            res.json({
+                result : response.data.items
+            })
+        }).catch(function (error) {
+            console.log(error);
+        })
+
+        // const option = {
+        //     host : "openapi.naver.com",
+        //     path : `/v1/search/shop.json?query=${itemName}&start=1&display=10&sort=sim`,
+        //     headers : {
+        //         "X-Naver-Client-Id" : CLIENTID,
+        //         "X-Naver-Client-Secret" : cLIENTPASSWORD
+        //     }
+        // }
+        // try {      
+        //     result = await http.get(option, function (res) {
+        //         console.log(res.statusCode);
+        //         res.on('data', function (chunk) {
+        //             console.log('chunk');
+        //             console.log(chunk);
+        //         })
+        //     })
+        // } catch (error) {
+        //     console.log(error);
+        // }
+        // res.end()
+        // res.json({
+        //     'json' : result
+        // })
     }
 }
 
