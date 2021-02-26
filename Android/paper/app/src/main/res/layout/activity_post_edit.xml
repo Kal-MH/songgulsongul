@@ -6,12 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.UploadDetailActivity">
+    tools:context=".activity.PostEditActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/upload_detail_toolbar"
+        android:id="@+id/post_edit_toolbar"
         android:background="@color/cardview_shadow_start_color"> </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
@@ -31,7 +31,7 @@
                 >
 
                 <ImageView
-                    android:id="@+id/upload_detail_pic"
+                    android:id="@+id/post_edit_pic"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginStart="30dp"
@@ -42,7 +42,7 @@
 
                 <EditText
                     android:background="@android:color/transparent"
-                    android:id="@+id/upload_text"
+                    android:id="@+id/post_edit_text"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="20dp"
@@ -54,7 +54,7 @@
                     android:gravity="top|left"
                     android:hint=" 문구 입력\n여러줄을 입력할수있습니다"
                     android:textSize="14sp"
-                    app:layout_constraintStart_toEndOf="@+id/upload_detail_pic"
+                    app:layout_constraintStart_toEndOf="@+id/post_edit_pic"
                     app:layout_constraintTop_toTopOf="parent">
 
                 </EditText>
@@ -77,7 +77,7 @@
 
                 android:inputType="textMultiLine"
                 android:gravity="top|left"
-                android:id="@+id/upload_hashtag"
+                android:id="@+id/post_edit_hashtag"
                 android:hint="#tag #tag2"
 
                 >
@@ -107,7 +107,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:id="@+id/upload_itemtag_rv"
+                    android:id="@+id/post_edit_itemtag_rv"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:orientation="horizontal"
@@ -120,7 +120,7 @@
 
             <!--CCL 설정-->
             <LinearLayout
-                android:id="@+id/setting_ccl_layout"
+                android:id="@+id/post_edit_ccl_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
@@ -129,7 +129,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/upload_ccl_title"
+                    android:id="@+id/post_edit_ccl_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -143,7 +143,7 @@
                     android:layout_margin="10dp">
 
                     <TextView
-                        android:id="@+id/upload_ccl_t1"
+                        android:id="@+id/post_edit_ccl_t1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -153,7 +153,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Switch
-                        android:id="@+id/upload_detail_ccl_1"
+                        android:id="@+id/post_edit_ccl_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="50dp"
@@ -169,7 +169,7 @@
                     android:layout_margin="10dp">
 
                     <TextView
-                        android:id="@+id/upload_detail_ccl_t2"
+                        android:id="@+id/post_edit_ccl_t2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -179,7 +179,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Switch
-                        android:id="@+id/upload_detail_ccl_2"
+                        android:id="@+id/post_edit_ccl_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="50dp"
@@ -195,7 +195,7 @@
                     android:layout_margin="10dp">
 
                     <TextView
-                        android:id="@+id/upload_detail_ccl_t3"
+                        android:id="@+id/post_editl_ccl_t3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -205,7 +205,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Switch
-                        android:id="@+id/upload_detail_ccl_3"
+                        android:id="@+id/post_edit_ccl_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="50dp"
@@ -221,7 +221,7 @@
                     android:layout_margin="10dp">
 
                     <TextView
-                        android:id="@+id/upload_detail_ccl_t4"
+                        android:id="@+id/post_edit_ccl_t4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -231,7 +231,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Switch
-                        android:id="@+id/upload_detail_ccl_4"
+                        android:id="@+id/post_edit_ccl_4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="50dp"
@@ -247,7 +247,7 @@
                     android:layout_margin="10dp">
 
                     <TextView
-                        android:id="@+id/upload_detail_ccl_t5"
+                        android:id="@+id/post_edit_ccl_t5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -257,7 +257,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Switch
-                        android:id="@+id/upload_detail_ccl_5"
+                        android:id="@+id/post_edit_ccl_5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="50dp"
