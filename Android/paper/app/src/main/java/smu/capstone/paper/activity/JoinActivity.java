@@ -3,6 +3,7 @@ package smu.capstone.paper.activity;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,7 +11,9 @@ import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import smu.capstone.paper.R;
 
@@ -19,7 +22,6 @@ public  class JoinActivity extends AppCompatActivity {
     TextView join_timer;
     CountDownTimer countDownTimer;
     Button join_send_btn, join_check_key;
-    ImageButton join_back_btn;
     RadioGroup join_sns_radio;
     EditText join_sns_text;
 
@@ -32,7 +34,6 @@ public  class JoinActivity extends AppCompatActivity {
         setContentView(R.layout.activity_join);
 
         join_send_btn = (Button)findViewById(R.id.join_send_btn);
-        join_back_btn = (ImageButton)findViewById(R.id.join_back_btn);
         join_check_key = (Button)findViewById(R.id.join_check_key);
         join_timer = findViewById(R.id.join_timer);
         join_sns_radio = (RadioGroup)findViewById(R.id.join_sns_radio);
@@ -40,6 +41,18 @@ public  class JoinActivity extends AppCompatActivity {
 
         join_check_key.setEnabled(false);
         join_timer.setVisibility(View.INVISIBLE); // 인증 제한시간 숨기기
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.join_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        //  actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
+        actionBar.setTitle("Join");
+        actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
+
+
+
 
         // 이메일 인증 버튼 눌렀을 시 발생
         join_send_btn.setOnClickListener(new View.OnClickListener() {
@@ -51,12 +64,6 @@ public  class JoinActivity extends AppCompatActivity {
             }
         });
 
-        join_back_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
 
         join_sns_radio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -103,5 +110,16 @@ public  class JoinActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }
