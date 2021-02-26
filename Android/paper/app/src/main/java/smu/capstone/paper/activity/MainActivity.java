@@ -1,13 +1,14 @@
 package smu.capstone.paper.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import smu.capstone.paper.R;
-import smu.capstone.paper.RealmTest;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import smu.capstone.paper.R;
+import smu.capstone.paper.RealmTest;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
         temp_login = findViewById(R.id.temp_login);
         temp_home = findViewById(R.id.temp_home);
         temp_realm = findViewById(R.id.go_temp_realm);
-
 
         temp_login.setOnClickListener(new View.OnClickListener() {
             @Override
