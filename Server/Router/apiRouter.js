@@ -6,13 +6,14 @@
  */
 
 var express = require('express');
-const auth = require('../Controller/apiController');
+const apiController = require('../Controller/apiController');
  var routes = require('../routes');
 
  var apiRouter = express.Router();
 
- apiRouter.post(routes.apiDupIdCheck, auth.dupIdCheck);
- apiRouter.post(routes.apiEmailAuth, auth.sendEmail);
- apiRouter.post(routes.apiEmailAuthNumber, auth.checkEmailAuthNumber);
+ apiRouter.post(routes.apiDupIdCheck, apiController.dupIdCheck);
+ apiRouter.post(routes.apiEmailAuth, apiController.sendEmail);
+ apiRouter.post(routes.apiEmailAuthNumber, apiController.checkEmailAuthNumber);
+ apiRouter.get(routes.apiNaverItemtag, apiController.sendNaverAPI);
 
  module.exports = apiRouter;
