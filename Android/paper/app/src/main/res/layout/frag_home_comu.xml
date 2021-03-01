@@ -7,15 +7,6 @@
     android:orientation="vertical">
 
 
-    <TextView
-        android:id="@+id/textView2"
-        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Board"
-        android:textSize="30dp"
-        tools:layout_editor_absoluteX="166dp"></TextView>
-
     <SearchView
         android:id="@+id/comu_search"
         android:layout_width="match_parent"
@@ -36,8 +27,7 @@
         android:numColumns="3"
         android:stretchMode="columnWidth"
         android:verticalSpacing="5dp"
-        tools:layout_editor_absoluteY="108dp"
-        tools:listitem="@layout/comu_item" />
+        tools:listitem="@layout/post_image_item" />
 
 </LinearLayout>
 

@@ -1,96 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FindAccountActivity">
+    android:orientation="vertical"
+    tools:context=".activity.FindAccountActivity">
 
-    <ImageButton
-        android:id="@+id/find_back_btn"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="55dp"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/find_account_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:contentDescription="@string/StringValue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_arrow_back_ios_new_24"
-        tools:ignore="VectorDrawableCompat" />
+        android:background="@color/cardview_shadow_start_color">
 
-    <TextView
-        android:id="@+id/find_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="292dp"
-        android:layout_marginRight="292dp"
-        android:layout_weight="1"
-        android:text="@string/find_account"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/find_back_btn"
-        app:layout_constraintTop_toTopOf="parent" />
+    </androidx.appcompat.widget.Toolbar>
 
-    <ImageView
-        android:id="@+id/find_image"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="96dp"
-        android:contentDescription="@string/StringValue"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_group_24"
-        tools:ignore="VectorDrawableCompat" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="47dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/find_image">
+        <FrameLayout
+            android:id="@+id/find_frame"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/find_account_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/find_image">
+
+            <Button
+                android:id="@+id/find_id_btn"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="@string/prompt_id" />
+
+            <Button
+                android:id="@+id/find_pw_btn"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="@string/prompt_password" />
+        </LinearLayout>
 
         <Button
-            android:id="@+id/find_id_btn"
-            android:layout_width="130dp"
+            android:id="@+id/find_account_btn"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
-            android:text="@string/prompt_id" />
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="@string/ok"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/find_pw_btn"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:text="@string/prompt_password" />
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/find_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="100dp"
+            android:contentDescription="@string/StringValue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_group_24"
+            tools:ignore="VectorDrawableCompat" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
-        android:id="@+id/find_frame"
-        android:layout_width="297dp"
-        android:layout_height="205dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-    </FrameLayout>
-
-    <Button
-        android:id="@+id/find_account_btn"
-        android:layout_width="260dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/ok"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/find_frame" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

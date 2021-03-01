@@ -11,22 +11,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".UploadActivity"/>
-        <activity android:name=".FindAccountActivity" />
-        <activity android:name=".RealmTest"></activity>
-        <activity android:name=".JoinActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.PostEditActivity"></activity>
+        <activity android:name=".activity.UploadDetailActivity" />
+        <activity android:name=".activity.EditProfileActivity" />
+        <activity android:name=".activity.StickerDetailActivity" />
+        <activity android:name=".activity.StickerSearchActivity" />
+        <activity android:name=".activity.KeepActivity" />
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.FollowActivity" />
+        <activity android:name=".activity.PostSearchActivity" />
+        <activity android:name=".activity.ProfileActivity" />
+        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.UploadActivity" />
+        <activity android:name=".activity.FindAccountActivity" />
+        <activity android:name=".RealmTest" />
+        <activity android:name=".activity.JoinActivity" />
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-      
-        <activity android:name=".FragHomeComu" />
-
     </application>
 
 </manifest>

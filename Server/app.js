@@ -1,19 +1,20 @@
-const express = require('express');
-const helmet = require('helmet');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
+var express = require('express');
+var helmet = require('helmet');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+
 const path = require('path');
 const cors = require('cors');
 const expressSession = require('express-session');
 const MySQLStore = require('express-mysql-session');
-
-const routes = require('./routes');
 const homeRouter = require('./Router/homeRouter');
 const apiRouter = require('./Router/apiRouter');
-
-const dotenv = require('dotenv');
 const passport = require('passport');
+
+var dotenv = require('dotenv');
+const routes = require('./routes');
+const userRouter = require('./Router/userRouter');
 
 dotenv.config();
 
@@ -31,13 +32,12 @@ app.use(helmet());
 app.use(logger('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(cors())
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //sesssion
 app.use(expressSession({
     secret: '1234DSFs@adf1234!@#$asd',
-    resave:false,
+    resave: false,
     saveUninitialized: true,
     store: new MySQLStore({
         host: process.env.DB_HOST,
@@ -67,8 +67,7 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.use("/upload", express.static("upload"))
 
 //라우팅
-app.use(routes.home, homeRouter);
-app.use(routes.api, apiRouter);
+app.use(routes.user, userRouter);
 
 //Server listening
 app.listen(PORT, function () {
