@@ -20,6 +20,11 @@
         <item>어플리케이션 로고</item>
     </string-array>
 
+    <string-array name="image_size">
+        <item>원본</item>
+        <item>30mmX40mm</item>
+        <item>35mmX45mm</item>
+    </string-array>
 
 
 
