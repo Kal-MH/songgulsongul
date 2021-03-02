@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     Button temp_home;
     Button temp_realm;
     Button temp_postedit;
+    Button temp_post;
 
     Button temp_item;
     Button temp_save;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         temp_home = findViewById(R.id.temp_home);
         temp_realm = findViewById(R.id.go_temp_realm);
         temp_postedit = findViewById(R.id.temp_edit);
+        temp_post = findViewById(R.id.temp_post);
 
         temp_item = findViewById(R.id.temp_item);
         temp_save = findViewById(R.id.temp_save);
@@ -73,6 +75,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        temp_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, PostActivity.class);
+                startActivity(intent);
+
+
 
         temp_item.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, SaveImageActivity.class);
                 intent.putExtra("image", R.drawable.sampleimg);
                 startActivity(intent);
+
             }
         });
 

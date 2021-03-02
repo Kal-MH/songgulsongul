@@ -35,6 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
     ArrayList<PostItem> items = new ArrayList<PostItem>();
     private LinearLayout profile_follows;
     private ImageButton profile_menu_btn;
+    private ImageView post_image_item;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

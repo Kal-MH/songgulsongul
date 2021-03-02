@@ -54,7 +54,8 @@
         android:layout_margin="20dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        app:srcCompat="@drawable/ic_baseline_emoji_emotions_24" />
+        app:srcCompat="@drawable/ic_baseline_emoji_emotions_24"
+        tools:ignore="VectorDrawableCompat" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -85,7 +86,8 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            tools:ignore="MissingConstraints" />
 
         <ImageView
             android:id="@+id/feed_item_keep"

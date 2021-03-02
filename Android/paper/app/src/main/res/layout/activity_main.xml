@@ -45,6 +45,15 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="go post"
+        android:id="@+id/temp_post"
+        >
+    </Button>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
         android:text="go item detail"
         android:id="@+id/temp_item"/>
