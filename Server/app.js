@@ -1,20 +1,23 @@
-var express = require('express');
-var helmet = require('helmet');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-
+const express = require('express');
+const helmet = require('helmet');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 const expressSession = require('express-session');
 const MySQLStore = require('express-mysql-session');
-const homeRouter = require('./Router/homeRouter');
-const apiRouter = require('./Router/apiRouter');
-const passport = require('passport');
 
-var dotenv = require('dotenv');
+const passport = require('passport');
+const configPassport = require("./config/passport");
+
 const routes = require('./routes');
 const userRouter = require('./Router/userRouter');
+const homeRouter = require('./Router/homeRouter');
+const apiRouter = require('./Router/apiRouter');
+const postRouter = require('./Router/postRouter');
+const { localMiddlewares } = require('./middlewares');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -34,7 +37,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//sesssion
+//sesssion & passport
 app.use(expressSession({
     secret: '1234DSFs@adf1234!@#$asd',
     resave: false,
@@ -43,22 +46,16 @@ app.use(expressSession({
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE
+        database: process.env.DB_DATABASE,
+        port : process.env.DB_PORT
     })
 }))
-
 app.use(passport.initialize());
 app.use(passport.session());
-
-var configPassport = require("./config/passport");
 configPassport();
 
-app.use(function (req, res, next) {
-    // sess = req.session;
-    // console.log(sess.userId);
-    console.log(req.user);
-    next();
-})
+//localMiddlewares to remember app name
+app.use(localMiddlewares);
 
 //서버구현(웹상에서)
 app.use("/public", express.static(path.join(__dirname, "public")));
@@ -67,9 +64,14 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.use("/upload", express.static("upload"))
 
 //라우팅
+app.use(routes.home, homeRouter);
+app.use(routes.api, apiRouter);
 app.use(routes.user, userRouter);
+app.use(routes.post, postRouter);
 
 //Server listening
 app.listen(PORT, function () {
     console.log('Server is listening : ', PORT);
+}).on('error', function (err) {
+    console.log(err)
 });

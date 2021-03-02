@@ -10,7 +10,7 @@ var generateRandom = function (min, max) {
     return randomNum;
 }
 
-const auth = {
+const apiController = {
     //아이디 중복체크
     dupIdCheck : function (req, res) {
         const id = req.body.id;
@@ -132,4 +132,4 @@ const auth = {
     }
 }
 
-module.exports = auth;
+module.exports = apiController;

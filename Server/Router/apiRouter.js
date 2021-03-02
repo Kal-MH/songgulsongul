@@ -5,9 +5,9 @@
  * RESTful방식에 따라서 각각의 경로와 함수(컨트롤러)를 지정한 후, apiRouter객체에 달아줌.
  */
 
-var express = require('express');
+const express = require('express');
 const apiController = require('../Controller/apiController');
- var routes = require('../routes');
+const routes = require('../routes');
 
  var apiRouter = express.Router();
 

@@ -7,7 +7,7 @@
 
 var express = require('express');
 const passport = require('passport');
-var routes = require('../routes');
+const routes = require('../routes');
 
 const homeController = require('../Controller/homeController');
 const middleWares = require("../middlewares");

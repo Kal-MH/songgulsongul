@@ -3,31 +3,38 @@
  * routes라는 객체에 담아서 export
  */
 
+//home Router
 const HOME = "/";
 const JOIN = "/join";
 const LOGIN = "/login";
 const FIND_ID = "/find/id";
 const FIND_PASSWORD = "/find/password";
 
+//user Router
 const USER = "/user";
 const PROFILE = "/profile";
 const PROFILE_KEEP = "/profile-keep";
 const PROFILE_EDIT = "/profile-edit";
 const PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
 
-//웹상에서 보기위한 임시 라우터
-//로그인한 후, 내 프로필 보기
-const ME = "/me";
-const LOGOUT = "/logout";
+//post Router
+const POST = "/post";
+const POST_HOMEFEED = "/home-feed";
 
+//api Router
 const API = "/api";
 const API_DUP_IDCHECK = "/dup-idcheck";
 const API_EMAIL_AUTH = "/email-auth";
 const API_EMAIL_AUTH_NUMBER = "/email-auth-number";
 
+//img tag api temporary
 const API_NAVER_ITEM_TAG = "/naver/item-tag";
 const API_NAVER_ITEM_TAG_CALLBACK = "/naver/item-tag/callback";
 
+//웹상에서 보기위한 임시 라우터
+//로그인한 후, 내 프로필 보기
+const ME = "/me";
+const LOGOUT = "/logout";
 const routes = {
     home : HOME,
     join : JOIN,
@@ -39,6 +46,8 @@ const routes = {
     profileKeep : PROFILE_KEEP,
     profileEditIdCheck : PROFILE_EDIT_IDCHECK,
     profileEdit : PROFILE_EDIT,
+    post : POST,
+    postHomeFeed : POST_HOMEFEED,
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,
     apiEmailAuth: API_EMAIL_AUTH,

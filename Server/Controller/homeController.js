@@ -60,39 +60,6 @@ const crypto = require('crypto');
           'code' : resultCode,
           'message' : message
       })
-        // var login_id = req.body.login_id;
-        // var password = req.body.password;
-        // var sql = 'select * from user where login_id = ?';
-
-        // console.log(login_id, password);
-    
-        // var params = [login_id];
-        // connection.query(sql, params, function(err, result) {
-        //   var resultCode = 404;
-        //   var message = '에러가 발생했습니다.';
-    
-        //   if(err){
-        //     console.log(err);
-        //   }else{
-        //     if(result.length === 0){
-        //       resultCode = 204;
-        //       message = '존재하지 않는 계정입니다!';
-        //     }
-        //     else if(password !== result[0].password) {
-        //       resultCode = 204;
-        //       message = '비밀번호가 틀렸습니다!';
-        //     }
-        //     else{
-        //       resultCode = 200;
-        //       message = '로그인 성공! ' + result[0].login_id + '님 환영합니다!';
-        //     }
-        //   }
-    
-        //   res.json({
-        //     'code': resultCode,
-        //     'message': message
-        //   });
-        // });
     },
     //아이디찾기
     findId : function (req, res) {
