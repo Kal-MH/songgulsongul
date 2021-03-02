@@ -49,6 +49,7 @@ public  class FragHomeMarket extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) { // 검색 버튼 눌렀을 시 발생
                 Intent intent = new Intent(getActivity(), StickerSearchActivity.class);
+                intent.putExtra("search", query); // 검색한 내용 전달
                 startActivity(intent);
                 return true;
             }

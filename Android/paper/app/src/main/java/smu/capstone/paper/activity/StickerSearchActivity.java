@@ -1,5 +1,6 @@
 package smu.capstone.paper.activity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -30,10 +31,12 @@ public class StickerSearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sticker_search);
 
+        Intent intent = getIntent();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.sticker_search_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("검색한 제품명");
+        actionBar.setTitle(intent.getStringExtra("search"));
 
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
@@ -44,7 +47,7 @@ public class StickerSearchActivity extends AppCompatActivity {
         addItem(new StickerItem(R.drawable.test, "sample1", "10p"));
         addItem(new StickerItem(R.drawable.ic_favorite, "sample2", "20p"));
         addItem(new StickerItem(R.drawable.ic_favorite_border, "sample3", "30p"));
-        addItem(new StickerItem(R.drawable.sampleimg, "sample3", "30p"));
+        addItem(new StickerItem(R.drawable.sampleimg, "sample4", "40p"));
 
         StickerSearchAdapter adapter = new StickerSearchAdapter(this, items);
         recyclerView.setAdapter(adapter);
