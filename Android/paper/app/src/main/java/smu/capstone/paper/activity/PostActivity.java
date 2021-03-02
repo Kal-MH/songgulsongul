@@ -1,40 +1,32 @@
 package smu.capstone.paper.activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EdgeEffect;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
 import smu.capstone.paper.R;
+import smu.capstone.paper.adapter.AddItemTagAdapter;
 import smu.capstone.paper.adapter.ItemTagAdapter;
 import smu.capstone.paper.adapter.PostCmtAdapter;
-import smu.capstone.paper.item.HomeMarketItem;
-import smu.capstone.paper.item.PostCmtItem;
-import smu.capstone.paper.item.PostItem;
+import smu.capstone.paper.item.ItemtagItem;
 
 public class PostActivity extends AppCompatActivity {
     ImageButton post_back_btn;
@@ -55,31 +47,53 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.post_toolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.post_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         //  actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
+
         // 아이템 태그 어뎁터 설정
         post_itemtag_rv = findViewById(R.id.post_itemtag_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         post_itemtag_rv.setLayoutManager(layoutManager);
+        itemTagAdapter = new AddItemTagAdapter(this ); // 추가모드 어뎁터 세팅
+
+        itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
+        itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
+        itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
+        itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
+        itemTagAdapter.insertItem( new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
+
+        post_itemtag_rv.setAdapter(itemTagAdapter);
+
+
+
+
+
+
 
         //해쉬 태그 어뎁터 설정
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         post_hashtag_rv = findViewById(R.id.post_hashtag_rv);
-        post_hashtag_rv.setLayoutManager(layoutManager);
+        post_hashtag_rv.setLayoutManager(layoutManager2);
 
         //코멘트 어뎁터 설정
         cmt_adapter = new PostCmtAdapter();
         post_cmt_list = (ListView) findViewById(R.id.post_cmt_list);
-        post_cmt_list.setAdapter(cmt_adapter);
+
 
         //아이템 추가
         cmt_adapter.addItem("wonhee", "멋져요");
         cmt_adapter.addItem("yujin", "안녕하세요");
-        cmt_adapter.notifyDataSetChanged(); //어댑터의 변경을 알림.
+        cmt_adapter.addItem("yujin", "안녕하세요");
+        cmt_adapter.addItem("yujin", "안녕하세요ㅎㅎ");
+        cmt_adapter.addItem("yujin", "안녕하세요애호!@");
+        cmt_adapter.addItem("yujin", "안녕하세요야호!!");
+
+        post_cmt_list.setAdapter(cmt_adapter);
 
         post_setting_btn = (ImageButton) findViewById(R.id.post_setting_btn);
         post_setting_btn.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +130,7 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 post_like_btn.setSelected(!post_like_btn.isSelected());
+                post_like_btn.setPressed(!post_like_btn.isSelected());
             }
         });
 
@@ -150,5 +165,29 @@ public class PostActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    public static Bitmap drawable2Bitmap(Drawable drawable) {
+        Bitmap bitmap = Bitmap
+                .createBitmap(
+                        drawable.getIntrinsicWidth(),
+                        drawable.getIntrinsicHeight(),
+                        drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+                                : Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 }
