@@ -9,10 +9,11 @@
 <body>
     <h1>Calligraphy</h1>
     <div>
+        <form action="/join" method="post" enctype="multipart/form-data">
             <table>
                 <tr>
-                    <input type="text" class="id" name="id" placeholder="ID">
-                    <button class="checkDupIdBtn">중복확인</button>
+                    <input type="text" class="id" name="loginId" placeholder="ID">
+                    <button type="button" class="checkDupIdBtn">중복확인</button>
                     <span class="dupIdSpan"></span>
                 </tr>
                 <tr>
@@ -26,22 +27,27 @@
                 <tr>
                     <div>
                         <input type="email" class="email" name="email" placeholder="email">
-                        <button class="sendAuthEmailBtn">인증</button>
+                        <button type="button" class="sendAuthEmailBtn">인증</button>
                     </div>
                     <div>
                         <input type="text"class="emailAuthNumber"  name="authnumber" placeholder="인증번호">
-                        <button class="emailAuthBtn">확인</button>
+                        <button type="button" class="emailAuthBtn">확인</button>
+                    </div>
+                    <div>
+                        <label for="file">Profile Image</label>
+                        <input type="file" id="file" name="img_profile" accept="image/*" >
                     </div>
                 </tr>
                 <tr>
                     <div>
                         <input type="checkbox" name="yes"> 유
                         <input type="checkbox" name="no"> 무
-                        <input type="text" name="snsaddress" placeholder="sns 주소">
+                        <input type="text" name="snsAddress" placeholder="sns 주소">
                     </div>
                 </tr>
             </table>
-            <button class="joinBtn"> 회원가입</button>
+            <input type="submit" value="Join">
+        </form>
         <button href="/public/home.html">Home</button>
     </div>
     <script src="./func/joinfunc.js"></script>

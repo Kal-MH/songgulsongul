@@ -26,7 +26,6 @@ public class StickerDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.sticker_detail_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("제품명");
 
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
@@ -36,6 +35,8 @@ public class StickerDetailActivity extends AppCompatActivity {
         sticker_name.setText(intent.getStringExtra("name"));
         sticker_price.setText(intent.getStringExtra("price"));
         sticker_img.setImageResource(intent.getIntExtra("image",0));
+
+        actionBar.setTitle(intent.getStringExtra("name"));
 
     }
 

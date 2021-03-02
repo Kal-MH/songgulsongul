@@ -18,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
     Button temp_postedit;
     Button temp_post;
 
+    Button temp_item;
+    Button temp_save;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         temp_realm = findViewById(R.id.go_temp_realm);
         temp_postedit = findViewById(R.id.temp_edit);
         temp_post = findViewById(R.id.temp_post);
+
+        temp_item = findViewById(R.id.temp_item);
+        temp_save = findViewById(R.id.temp_save);
+
 
         temp_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +79,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, PostActivity.class);
+                startActivity(intent);
+
+
+
+        temp_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ItemDetailActivity.class);
+                // 선택한 item 정보 전달
+                intent.putExtra("name", "item1");
+                intent.putExtra("image", R.drawable.ic_baseline_create_24);
+                intent.putExtra("co", "모나미");
+                intent.putExtra("price","500원");
+                intent.putExtra("link", "http://shopping.naver.com");
+                startActivity(intent);
+            }
+        });
+
+
+        temp_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SaveImageActivity.class);
+                intent.putExtra("image", R.drawable.sampleimg);
                 startActivity(intent);
 
             }

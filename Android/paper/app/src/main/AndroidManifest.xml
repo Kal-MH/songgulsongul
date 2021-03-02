@@ -11,8 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
         <activity android:name=".activity.PostActivity"></activity>
         <activity android:name=".activity.PostEditActivity"></activity>
+        <activity android:name=".activity.ItemDetailActivity" android:theme="@android:style/Theme.DeviceDefault.Dialog"></activity>
+        <activity android:name=".activity.SaveImageActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog"
+           ></activity>
+        <activity android:name=".activity.PostEditActivity" />
         <activity android:name=".activity.UploadDetailActivity" />
         <activity android:name=".activity.EditProfileActivity" />
         <activity android:name=".activity.StickerDetailActivity" />

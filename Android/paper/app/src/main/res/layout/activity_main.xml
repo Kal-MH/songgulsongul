@@ -41,6 +41,7 @@
         android:id="@+id/temp_edit"
         >
     </Button>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,4 +49,19 @@
         android:id="@+id/temp_post"
         >
     </Button>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="go item detail"
+        android:id="@+id/temp_item"/>
+
+  <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="save image"
+        android:id="@+id/temp_save"/>
+
 </LinearLayout>
