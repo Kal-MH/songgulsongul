@@ -80,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, PostActivity.class);
                 startActivity(intent);
-
+            }
+        });
 
 
         temp_item.setOnClickListener(new View.OnClickListener() {
