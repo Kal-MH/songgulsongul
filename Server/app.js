@@ -23,6 +23,10 @@ dotenv.config();
 var PORT = process.env.SERVER_PORT || 3000;
 var app = express();
 
+//뷰 엔진 설정 - 웹상에서 확인하기 위해 설치, 이후에 삭제 예정
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+
 //Middlewares
 app.use(helmet());
 app.use(logger('dev'));
@@ -58,6 +62,9 @@ app.use(function (req, res, next) {
 
 //서버구현(웹상에서)
 app.use("/public", express.static(path.join(__dirname, "public")));
+
+//서버에서 저장한 이미지 불러오기 -> 이후, S3로 확장 가능성 있음
+app.use("/upload", express.static("upload"))
 
 //라우팅
 app.use(routes.user, userRouter);

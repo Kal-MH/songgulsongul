@@ -16,7 +16,10 @@ public class MainActivity extends AppCompatActivity {
     Button temp_home;
     Button temp_realm;
     Button temp_postedit;
+
     Button temp_item;
+    Button temp_save;
+
 
 
     @Override
@@ -28,7 +31,10 @@ public class MainActivity extends AppCompatActivity {
         temp_home = findViewById(R.id.temp_home);
         temp_realm = findViewById(R.id.go_temp_realm);
         temp_postedit = findViewById(R.id.temp_edit);
+
         temp_item = findViewById(R.id.temp_item);
+        temp_save = findViewById(R.id.temp_save);
+
 
         temp_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         temp_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +84,16 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("co", "모나미");
                 intent.putExtra("price","500원");
                 intent.putExtra("link", "http://shopping.naver.com");
+                startActivity(intent);
+            }
+        });
+
+
+        temp_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SaveImageActivity.class);
+                intent.putExtra("image", R.drawable.sampleimg);
                 startActivity(intent);
             }
         });

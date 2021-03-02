@@ -15,10 +15,18 @@ const PROFILE_KEEP = "/profile-keep";
 const PROFILE_EDIT = "/profile-edit";
 const PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
 
+//웹상에서 보기위한 임시 라우터
+//로그인한 후, 내 프로필 보기
+const ME = "/me";
+const LOGOUT = "/logout";
+
 const API = "/api";
 const API_DUP_IDCHECK = "/dup-idcheck";
 const API_EMAIL_AUTH = "/email-auth";
 const API_EMAIL_AUTH_NUMBER = "/email-auth-number";
+
+const API_NAVER_ITEM_TAG = "/naver/item-tag";
+const API_NAVER_ITEM_TAG_CALLBACK = "/naver/item-tag/callback";
 
 const routes = {
     home : HOME,
@@ -33,8 +41,12 @@ const routes = {
     profileEdit : PROFILE_EDIT,
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,
-    apiEmailAuth : API_EMAIL_AUTH,
-    apiEmailAuthNumber : API_EMAIL_AUTH_NUMBER
-};
+    apiEmailAuth: API_EMAIL_AUTH,
+    apiEmailAuthNumber : API_EMAIL_AUTH_NUMBER,
+    apiNaverItemtag : API_NAVER_ITEM_TAG,
+    apiNaverItemtagCallback : API_NAVER_ITEM_TAG_CALLBACK,
+    me : ME,
+    logout : LOGOUT
+}
 
 module.exports = routes;
