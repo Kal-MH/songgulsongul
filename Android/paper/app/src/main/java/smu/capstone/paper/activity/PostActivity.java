@@ -54,6 +54,7 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.post_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
