@@ -8,7 +8,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,7 +31,6 @@ import smu.capstone.paper.adapter.PostCmtAdapter;
 import smu.capstone.paper.item.ItemtagItem;
 
 public class PostActivity extends AppCompatActivity {
-    ImageButton post_back_btn;
     ImageButton post_setting_btn;
     ImageButton post_like_btn;
     ImageButton post_keep_btn;
@@ -60,17 +61,12 @@ public class PostActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         post_itemtag_rv.setLayoutManager(layoutManager);
         itemTagAdapter = new AddItemTagAdapter(this ); // 추가모드 어뎁터 세팅
-
         itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
         itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
         itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
         itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
         itemTagAdapter.insertItem( new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
-
         post_itemtag_rv.setAdapter(itemTagAdapter);
-
-
-
 
 
 
@@ -83,6 +79,7 @@ public class PostActivity extends AppCompatActivity {
         //코멘트 어뎁터 설정
         cmt_adapter = new PostCmtAdapter();
         post_cmt_list = (ListView) findViewById(R.id.post_cmt_list);
+
 
 
         //아이템 추가
@@ -126,22 +123,24 @@ public class PostActivity extends AppCompatActivity {
         });
 
         post_like_btn = (ImageButton) findViewById(R.id.post_like_btn);
+        post_like_btn.setSelected(true);
         post_like_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 post_like_btn.setSelected(!post_like_btn.isSelected());
-                post_like_btn.setPressed(!post_like_btn.isSelected());
+                Log.d("TAG", "하트라고;"+ post_like_btn.isSelected());
             }
         });
 
         post_keep_btn=(ImageButton)findViewById(R.id.post_keep_btn);
+        post_keep_btn.setSelected(true);
         post_keep_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 post_keep_btn.setSelected(!post_keep_btn.isSelected());
+                Log.d("TAG", "KEEP "+ post_keep_btn.isSelected());
             }
         });
-
         post_input = (EditText) findViewById(R.id.post_input);
         post_write = (Button) findViewById(R.id.post_write);
 

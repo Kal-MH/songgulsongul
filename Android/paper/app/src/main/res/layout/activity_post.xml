@@ -106,13 +106,16 @@
                         android:layout_height="35dp"
                         android:layout_marginStart="30dp"
 
-                        android:background="#00FFFFFF"
+                        android:background="@null"
                         android:scaleType="fitCenter"
                         android:src="@drawable/like_btn"
 
+                        android:clickable="true"
+
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        />
 
                     <ImageButton
                         android:id="@+id/post_cmt"
@@ -175,9 +178,11 @@
                         android:id="@+id/post_keep_btn"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_gravity="right"
                         android:layout_marginEnd="10dp"
-                        android:background="@drawable/keep_btn"
+                        android:src="@drawable/keep_btn"
+                        android:scaleType="fitCenter"
+                        android:background="@null"
+                        android:clickable="true"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
