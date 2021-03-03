@@ -1,13 +1,55 @@
 const connection = require("../db/db");
-const sql = require("../db/sql");
 
 const postController = {
-    getHomeFeed : function (req, res) {
+    getMainFeed : function (req, res) {
         const appName = res.locals.appName;
         const user = res.locals.loggedUser;
 
-        //이후에 req.json()으로 바꿔야 한다.
-        res.render("homefeed.ejs", {appName : appName, user : user});
+        var sql = "select * from post order by post_time desc, post_date desc;"
+
+        connection.query(sql, function (err, result) {
+            if (err){
+                res.json({
+                    'code' : 204
+                })
+            } else {
+                //이후에 res.json()으로 바꿔야 한다.
+                res.render("mainfeed.ejs", {appName : appName, user : user, posts : result});
+            }
+        })
+
+    },
+    postSearchTag : function (req, res) {
+        var searchKeyword = req.body.searchKeyword;
+
+        var sql = `select h.post_id, h.text, p.image, p.post_time, p.post_date from hash_tag as h join Post as p on h.post_id = p.id and h.text like "${searchKeyword}%" order by post_time desc, post_date desc;`;
+        connection.query(sql, function (err, result) {
+            if (err){
+                console.log(err);
+                res.json({
+                    'code' : 204
+                })
+            } else {
+                //이후에 res.json으로 수정
+                res.render("search.ejs", {searchKeyword : searchKeyword, posts : result})
+            }
+        })
+    },
+    postSearchId : function (req, res) {
+        var searchKeyword = req.body.searchKeyword;
+
+        var sql = `select * from user where login_id="${searchKeyword}";`;
+        connection.query(sql, function (err, result) {
+            if (err){
+                console.log(err);
+                res.json({
+                    'code' : 204
+                })
+            } else {
+                //이후에 res.json으로 수정
+                res.render("searchid.ejs", {searchKeyword : searchKeyword, posts : result})
+            }
+        })
     },
     postUpload : function (req, res) {
         var loggedUser = res.locals.loggedUser;

@@ -19,8 +19,10 @@ const PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
 
 //post Router
 const POST = "/post";
-const POST_HOMEFEED = "/home-feed";
+const POST_MAINFEED = "/main-feed";
 const POST_UPLOAD = "/upload";
+const POST_SEARCH_TAG = "/search/tag";
+const POST_SEARCH_ID = "/search/id"
 
 //api Router
 const API = "/api";
@@ -48,8 +50,10 @@ const routes = {
     profileEditIdCheck : PROFILE_EDIT_IDCHECK,
     profileEdit : PROFILE_EDIT,
     post : POST,
-    postHomeFeed : POST_HOMEFEED,
+    postMainFeed : POST_MAINFEED,
     postUpload : POST_UPLOAD,
+    postSearchTag : POST_SEARCH_TAG,
+    postSearchId : POST_SEARCH_ID,
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,
     apiEmailAuth: API_EMAIL_AUTH,
