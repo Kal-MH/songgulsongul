@@ -36,6 +36,7 @@ app.use(logger('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 //sesssion & passport
 app.use(expressSession({
@@ -56,6 +57,11 @@ configPassport();
 
 //localMiddlewares to remember app name
 app.use(localMiddlewares);
+
+app.use(function (req, res, next) {
+    console.log(req.user);
+    next();
+})
 
 //서버구현(웹상에서)
 app.use("/public", express.static(path.join(__dirname, "public")));

@@ -20,6 +20,7 @@ const PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
 //post Router
 const POST = "/post";
 const POST_HOMEFEED = "/home-feed";
+const POST_UPLOAD = "/upload";
 
 //api Router
 const API = "/api";
@@ -48,6 +49,7 @@ const routes = {
     profileEdit : PROFILE_EDIT,
     post : POST,
     postHomeFeed : POST_HOMEFEED,
+    postUpload : POST_UPLOAD,
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,
     apiEmailAuth: API_EMAIL_AUTH,
