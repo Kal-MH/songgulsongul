@@ -23,12 +23,19 @@ const POST_MAINFEED = "/main-feed";
 const POST_UPLOAD = "/upload";
 const POST_SEARCH_TAG = "/search/tag";
 const POST_SEARCH_ID = "/search/id"
+const POST_DETAIL = "/:id";
+const POST_UPDATE = "/update/:id"
 
 //api Router
 const API = "/api";
 const API_DUP_IDCHECK = "/dup-idcheck";
 const API_EMAIL_AUTH = "/email-auth";
 const API_EMAIL_AUTH_NUMBER = "/email-auth-number";
+
+const API_POST_LIKE = "/like/:id";
+const API_POST_KEEP = "/keep/:id";
+const API_POST_COMMENT_INSERT = "/comment/:postid/:userid";
+const API_POST_COMMENT_DELETE = "/comment/:postid/:userid";
 
 //img tag api temporary
 const API_NAVER_ITEM_TAG = "/naver/item-tag";
@@ -54,10 +61,16 @@ const routes = {
     postUpload : POST_UPLOAD,
     postSearchTag : POST_SEARCH_TAG,
     postSearchId : POST_SEARCH_ID,
+    postDetail : POST_DETAIL,
+    postUpdate : POST_UPDATE,
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,
     apiEmailAuth: API_EMAIL_AUTH,
     apiEmailAuthNumber : API_EMAIL_AUTH_NUMBER,
+    apiPostLike : API_POST_LIKE,
+    apiPostKeep : API_POST_KEEP,
+    apiPostCommentInsert : API_POST_COMMENT_INSERT,
+    apiPostCommentDelete : API_POST_COMMENT_DELETE,
     apiNaverItemtag : API_NAVER_ITEM_TAG,
     apiNaverItemtagCallback : API_NAVER_ITEM_TAG_CALLBACK,
     me : ME,

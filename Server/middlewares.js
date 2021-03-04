@@ -10,6 +10,16 @@ var middleWares = {
         res.locals.appName = "Calligraphy";
         res.locals.loggedUser = req.user || null ;
         next();
+    },
+    onlyPrivate : function (req, res, next) {
+        if (req.user){
+            next();
+        } else {
+            res.json({
+                'code' : 204,
+                'message' : 'login please'
+            })
+        }
     }
 }
 

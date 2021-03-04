@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+		
+		<title>Main Feed</title>
+		
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    	
+    	<style>
+        	body        { padding-top:80px; }
+    	</style>
+    
+	</head>
+	<body>
+		
+		<div class="container">			
+						
+			<div class="page-header text-center">
+		        <h1><span class="fa fa-book"></span> <%= options.appName %> </h1>
+                <% if(options.user) { %> 
+                    <a href="/me">
+                        <img src="/<%= options.user.img_profile %>" width="50" height="50">
+                    </a>
+                    <a href="#">+</a>
+		            <a href="/logout" class="btn btn-default btn-sm">로그아웃</a>
+                <% } %> 
+                <% if (options.postUser.user_id == options.user.id) { %>
+                    <h4>Update</h4>
+                    <form action="/post/update/<%= options.postUser.id %> " method="post" enctype="multipart/form-data">
+                        <label for="file">Image</label>
+                        <input type="file" name="img_post" id="file" accept="image/*" >
+                        <input type="text" name="img_post_link" id="file" value="<%= options.postUser.image %> ">
+                        <br>
+                        <input type="text" name="text" id="text" value="<%= options.postUser.text %> ">
+                        <br>
+                        <% for( let i = 0; i < options.hashs.length; i++ ) { %>
+                            <span> #</span>
+                            <input type="text" name="hashTags" value="<%= options.hashs[i].text %>">
+                        <% } %>
+                        <% for( let i = 0; i < options.items.length; i++ ) { %>
+                            <input type="text" class="itemName" name="itemName" value="<%= options.items[0].name %> "> <br><br>
+                            <input type="text" class="itemLowprice" name="itemLowprice" value="<%= options.items[0].lowprice %> "> <br><br>
+                            <input type="text" class="itemHighprice" name="itemHighprice" value="<%= options.items[0].highprice %> "> <br><br>
+                            <input type="text" class="itemLink" name="itemLink" value="<%= options.items[0].url %> "> <br><br>
+                            <input type="text" class="itemImg" name="itemImg" value="<%= options.items[0].picture %> "> <br><br>
+                        <% } %>
+                        <input type="submit" value="update">
+                    </form>
+                <% } %>
+		    </div>
+			<br>
+		    <div class="row">
+		
+		        <div class="col-sm-6">
+		            <div class="well">
+						<a href="#">
+                            <img src="/<%= options.postUser.img_profile %> " width="100" height="100">
+                            <h5><%= options.postUser.login_id %> </h5>
+                        </a>
+                        <h5><%= options.postUser.post_date %> </h5>
+		            </div>
+					<div class="well">
+						<img src="/<%= options.postUser.image %> " width="100" height="100">
+                        <br>
+                        <% if (likeOnset) { %>
+                            <span>♥ <% options.likeNum %> </span>
+                        <% } else {%>
+                            <span>♡ <% options.likeNum %> </span>
+                        <% } %>
+                        <% if (keepOnset) { %>
+                            <span>■ </span>
+                        <% } else {%>
+                            <span>□ </span>
+                        <% } %> 
+                        <% if (options.user) { %>
+                            <form action="/api/like/<%= options.postUser.id %> " method="get">
+                                <input type="submit" value="like">
+                            </form>
+                            <form action="/api/keep/<%= options.postUser.id %> " method="get">
+                                <input type="submit" value="keep">
+                            </form>
+                        <% } %>
+                        <!-- <form action="/api/like/<%= options.postUser.id %> " method="get">
+                            <input type="submit" value="like">
+                        </form>
+                        <form action="/api/keep/<%= options.postUser.id %> " method="get">
+                            <input type="submit" value="keep">
+                        </form> -->
+                        <h5><%= options.postUser.text %> </h5>
+					</div>
+                    <div class="well">
+                        <% for( let i = 0; i < options.hashs.length; i++ ) { %>
+                            <span>#<%= options.hashs[i].text %>  </span>
+                            <span> </span>
+                        <% } %>
+                    </div>
+                    <div class="well">
+                        <% for( let i = 0; i < options.items.length; i++ ) { %>
+                            <div>
+                                <h5><%= options.items[i].name %> </h5>
+                                <img src="<%= options.items[i].picture %> " alt="">
+                                <br>
+                                <span><%= options.items[i].lowprice %> - </span>
+                                <span><%= options.items[i].highprice %> </span>
+                                <br>
+                                <a href="<%= options.items[i].url %> ">url</a>
+                            </div>
+                        <% } %>
+                    </div>
+                    <div class="well">
+                        <h4>comments <%= options.comments.length %> </h4>
+                        <% for( let i = 0; i < options.comments.length; i++ ) { %>
+                            <img src="/<%= options.comments[i].img_profile %> " alt="" width="50" height="50">
+                            <h5> <%= options.comments[i].login_id %> </h5>
+                            <h5> <%= options.comments[i].text %> </h5>
+                            <% if (options.comments[i].user_id == options.user.id) { %>
+                                <form action="/api/comment/<%= options.postUser.id %>/<%= options.user.id %>" method="get">
+                                    <input type="submit" value="delete">
+                                </form>
+                            <% } %>
+                        <% } %>
+                        
+                        <% if (options.user) { %>
+                            <form action="/api/comment/<%= options.postUser.id %>/<%= options.user.id %>  " method="post">
+                                <input type="text" name="comment" id="comment">
+                                <input type="submit" value="comment">
+                            </form>
+                        <% } %>
+                    </div>
+		        </div>
+		
+		    </div>
+			
+		</div>	
+			
+	</body>
+</html>

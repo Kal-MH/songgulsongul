@@ -1,6 +1,70 @@
 const connection = require("../db/db");
 
 const postController = {
+    getPostDetail : function (req, res) {
+        const postId = req.params.id;
+        const appName = res.locals.appName;
+        const loggedUser = res.locals.loggedUser;
+
+        var postAndUserSql = `select p.id, p.image, p.text, p.post_date, p.user_id, u.login_id, u.img_profile from post as p join user as u on p.id = ${postId} and p.user_id = u.id;`;
+        var hashSql = `select text from hash_tag where post_id=${postId};`;
+        var itemSql = `select * from item_tag where post_id=${postId};`;
+        connection.query(postAndUserSql + hashSql + itemSql, function (err, result) {
+            if (err){
+                console.log(err);
+                res.json({
+                    'code' : 204
+                })
+            } else {
+                var postUser = result[0][0];
+                var hashs = result[1];
+                var items = result[2];
+
+                var likesSql = `select * from likes where post_id=${postId};`;
+                var commentsSql = `select c.user_id, c.text, u.img_profile, u.login_id from comment as c join user as u on c.post_id=${postId} and c.user_id=u.id;`;
+                connection.query(likesSql + commentsSql, function (err, result) {
+                    if (err){
+                        console.log(err);
+                        res.json({
+                            'code' : 204
+                        })
+                    } else {
+                        var options = {
+                            appName : appName,
+                            user : loggedUser,
+                            postUser : postUser,
+                            hashs : hashs,
+                            items : items, 
+                            likeNum : result[0].length,
+                            comments : result[1]
+                        }
+
+                        if (loggedUser){
+                            var meLikesSql = `select * from likes where post_id=${postId} and user_id=${(loggedUser) ? loggedUser.id : -1};`;
+                            var meKeepsSql = `select * from keep where post_id=${postId} and user_id=${(loggedUser) ? loggedUser.id : -1};`;
+                            connection.query(meLikesSql + meKeepsSql, function (err, result) {
+                                if (err){
+                                    console.log(err);
+                                    res.json({
+                                        'code' : 204
+                                    })
+                                } else {
+                                    var likeOnset = (result[0].length == 0) ? 0 : 1 ;
+                                    var keepOnset = (result[1].length == 0) ? 0 : 1 ;
+                                    
+                                    res.render("postDetail.ejs", {options : options, likeOnset : likeOnset, keepOnset : keepOnset});
+                                }
+                            })
+                        }
+                        res.render("postDetail.ejs", {options : options, likeOnset : 0, keepOnset : 0});
+                    }
+                })
+                
+                
+            }
+        })
+
+    },
     getMainFeed : function (req, res) {
         const appName = res.locals.appName;
         const user = res.locals.loggedUser;
@@ -22,7 +86,7 @@ const postController = {
     postSearchTag : function (req, res) {
         var searchKeyword = req.body.searchKeyword;
 
-        var sql = `select h.post_id, h.text, p.image, p.post_time, p.post_date from hash_tag as h join Post as p on h.post_id = p.id and h.text like "${searchKeyword}%" order by post_time desc, post_date desc;`;
+        var sql = `select h.post_id, h.text, p.image, p.post_time, p.post_date from hash_tag as h join post as p on h.post_id = p.id and h.text like "${searchKeyword}%" order by post_time desc, post_date desc;`;
         connection.query(sql, function (err, result) {
             if (err){
                 console.log(err);
@@ -72,10 +136,10 @@ const postController = {
         var postImages = req.files[0].path;
 
         //post
-        var sqlPost = "insert into post (image, text, post_time, post_date, user_id) values (?, ?, now(), now(), ?);";
-        var postParams = [postImages, text, loggedUser.id];
+        var insertPostSql = "insert into post (image, text, post_time, post_date, user_id) values (?, ?, curtime(), curdate(), ?);";
+        var insertPostParams = [postImages, text, loggedUser.id];
 
-        connection.query(sqlPost, postParams, function (err, result) {
+        connection.query(insertPostSql, insertPostParams, function (err, result) {
             if (err){
                 console.log(err);
                 res.json({
@@ -85,11 +149,11 @@ const postController = {
                 var postId = result.insertId;
                 
                 //hashTag
-                var sqlHash = "";
+                var insertHashSql = "";
                 for(var i = 0;i < hashTags.length; i++){
-                    sqlHash += `insert into hash_tag (post_id, text) values (${postId}, ?);`
+                    insertHashSql += `insert into hash_tag (post_id, text) values (${postId}, ?);`
                 }
-                connection.query(sqlHash, hashTags, function (err, result) {
+                connection.query(insertHashSql, hashTags, function (err, result) {
                     if (err){
                         console.log(err);
                         res.json({
@@ -97,8 +161,8 @@ const postController = {
                         })
                     }
                     else{
-                         //itemTag
-                        var itemSql = "insert into item_tag(post_id, name, lowprice, highprice, url, picture) values(?, ?, ?, ?, ?, ?);";
+                         //itemTag - 현재는 단수로 되어 있지만, 이후에 액티비티랑 연동할 때, 복수로 바꿔야 한다.
+                        var itemSql = "insert into item_tag (post_id, name, lowprice, highprice, url, picture) values(?, ?, ?, ?, ?, ?);";
                         var itemParams = [postId, item.name, item.lowprice, item.highprice, item.itemLink, item.itemImg()]
     
                         connection.query(itemSql, itemParams, function (err, result) {
@@ -113,6 +177,74 @@ const postController = {
                                 })
                             }
                         })                                                     
+                    }
+                })
+            }
+        })
+    },
+    postUpdate : function (req, res) {
+        var postId = req.params.id;
+        var loggedUser = res.locals.loggedUser;
+        var files = req.files;
+
+        console.log(req.body);
+
+        //안드로이드에서 넘어오는 값에 따라서 수정이 필요한 부분
+        //또한, 지금은 이미지를 하나만 받고 있기 때문에 반복문으로 처리해야 할 수도 있다.
+        var image = (files.length == 0) ? req.body.img_post_link : req.files[0].path; 
+        var updatePostSql = `update post set image=?, text=?, post_time=curtime(), post_date=curdate(), user_id=? where id=${postId};`;
+        var updatePostParams = [image, req.body.text, loggedUser.id];
+
+        connection.query(updatePostSql, updatePostParams, function (err, result) {
+            if (err){
+                console.log(err);
+                res.json({
+                    'code' : 204
+                })
+            } else {
+                //hashTag
+                var deleteHashTagsSql = `delete from hash_tag where post_id=${postId};`;
+                var insertHashSql = "";
+                var hashTags = req.body.hashTags;
+                for(var i = 0;i < hashTags.length; i++){
+                    //현재는 input을 동적으로 조정할 수 없기 때문에 추가된 if문 
+                    //이후에는 삭제되면 클라이언트에서 넘어온 배열을 기준으로 sql문을 작성하게 된다.
+                    if (hashTags[i] != '')
+                        insertHashSql += `insert into hash_tag (post_id, text) values (${postId}, ?);`
+                }
+                connection.query(deleteHashTagsSql + insertHashSql, hashTags, function (err, result) {
+                    if (err){
+                        console.log(err);
+                        res.json({
+                            'code' : 204
+                        })
+                    } else {
+                        //itemTag - 현재는 단수로 되어 있지만, 이후에 액티비티랑 연동할 때, 복수로 바꿔야 한다.
+                        var item = {
+                            name : req.body.itemName,
+                            lowprice : Number(req.body.itemLowprice),
+                            highprice : Number(req.body.itemHighprice),
+                            itemLink : req.body.itemLink,
+                            itemImg : function () {
+                                if (req.body.itemImg == '')
+                                    return "/public/default/to-do-list.png";
+                                else 
+                                    return req.body.itemImg;
+                            }
+                        }
+                        var deleteItemTagSql = `delete from item_tag where post_id=${postId};`;
+                        var insertItemSql = "insert into item_tag (post_id, name, lowprice, highprice, url, picture) values(?, ?, ?, ?, ?, ?);";
+                        var itemParams = [postId, item.name, item.lowprice, item.highprice, item.itemLink, item.itemImg()]
+                        connection.query(deleteItemTagSql + insertItemSql, itemParams, function (err, result) {
+                            if (err){
+                                console.log(err);
+                                res.json({
+                                    'code' : 204
+                                })
+                            } else {
+                                res.redirect(`/post/${postId}`);
+                            }
+                        })
                     }
                 })
             }
