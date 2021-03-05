@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/upload_camview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activity.HomeActivity$UploadActivity">
+    tools:context=".activity.UploadActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/upload_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#9A93C8B4"
-        android:elevation="5dp"></androidx.appcompat.widget.Toolbar>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="272dp">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@mipmap/ic_launcher" />
-    </FrameLayout>
-
-    <GridView
-        android:id="@+id/upload_grid"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="90dp"
-        android:fadeScrollbars="false"
-        android:gravity="center"
-        android:numColumns="2"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp"
-        tools:layout_editor_absoluteY="108dp">
+        android:orientation="vertical">
 
-    </GridView>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/upload_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cardview_shadow_start_color">
+
+        </androidx.appcompat.widget.Toolbar>
 
 
+        <FrameLayout
+            android:id="@+id/upload_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-</LinearLayout>
+        </FrameLayout>
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/upload_tap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemIconTint="#ffffff"
+            app:itemTextColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/upload_bottom_menu"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="201dp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
