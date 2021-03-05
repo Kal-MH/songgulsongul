@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="smu.capstone.paper">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -11,14 +14,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
-        <activity android:name=".activity.PostActivity"></activity>
-        <activity android:name=".activity.PostEditActivity"></activity>
-        <activity android:name=".activity.ItemDetailActivity" android:theme="@android:style/Theme.DeviceDefault.Dialog"></activity>
-        <activity android:name=".activity.SaveImageActivity"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog"
-           ></activity>
+        <activity android:name=".activity.EditActivity"></activity>
+        <activity android:name=".activity.PostActivity" />
         <activity android:name=".activity.PostEditActivity" />
+        <activity
+            android:name=".activity.ItemDetailActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog" />
+        <activity
+            android:name=".activity.SaveImageActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog" />
         <activity android:name=".activity.UploadDetailActivity" />
         <activity android:name=".activity.EditProfileActivity" />
         <activity android:name=".activity.StickerDetailActivity" />
