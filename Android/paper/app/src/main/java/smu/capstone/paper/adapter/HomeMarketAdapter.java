@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
@@ -55,9 +57,10 @@ public class HomeMarketAdapter extends BaseAdapter {
         TextView nameText = convertView.findViewById(R.id.market_item_name);
         TextView costText = convertView.findViewById(R.id.market_item_cost);
 
-        imageView.setImageResource(homeMarketItem.getImg());
-        nameText.setText(homeMarketItem.getIname());
-        costText.setText(homeMarketItem.getIcost());
+        // 받아온 데이터로 마켓 아이템 내용 셋팅
+        Glide.with(mContext).load(homeMarketItem.getImg()).into(imageView); // 사진
+        nameText.setText(homeMarketItem.getIname()); // 상품명
+        costText.setText(homeMarketItem.getIcost()); // 가격
 
         return convertView;
     }

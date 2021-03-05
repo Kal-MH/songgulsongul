@@ -48,6 +48,10 @@ public  class FragHomeMarket extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) { // 검색 버튼 눌렀을 시 발생
+                // 서버에 query객체 전달 코드 작성
+                // ----------------------------
+
+                // if resultCode == 200
                 Intent intent = new Intent(getActivity(), StickerSearchActivity.class);
                 intent.putExtra("search", query); // 검색한 내용 전달
                 startActivity(intent);
@@ -60,7 +64,7 @@ public  class FragHomeMarket extends Fragment {
             }
         });
 
-        // 아이템 추가
+        // 아이템 추가 --> server에서 전달한 data로 marketitem객체 초기화 (반복수행)
         addItem(new HomeMarketItem(R.drawable.sampleimg, "sample1", "20p"));
         addItem(new HomeMarketItem(R.drawable.test, "sample2", "10p"));
         addItem(new HomeMarketItem(R.drawable.ic_favorite, "sample3", "50p"));

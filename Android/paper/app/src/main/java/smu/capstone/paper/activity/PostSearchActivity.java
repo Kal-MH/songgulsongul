@@ -1,5 +1,6 @@
 package smu.capstone.paper.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -51,6 +52,25 @@ public class PostSearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 searchView.setIconified(false);
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // 서버에 query객체 전달 코드 작성
+                // ----------------------------
+
+                // if resultCode == 200
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
 

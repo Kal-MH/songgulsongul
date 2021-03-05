@@ -34,6 +34,7 @@ public class FragPostAccount extends Fragment {
 
         GridView gridView = view.findViewById(R.id.frag_account_grid);
 
+        //임시 데이터 저장 --> server에서 전달한 data로 postitem객체 초기화 (반복수행)
         addItem(new PostItem(R.drawable.sampleimg));
         addItem(new PostItem(R.drawable.sampleimg));
         addItem(new PostItem(R.drawable.sampleimg));

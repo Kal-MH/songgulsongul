@@ -37,7 +37,7 @@ public class FragHomeFeed extends Fragment {
 
         adapter = new HomeFeedAdapter(getContext());
 
-        //임시 데이터 저장
+        //임시 데이터 저장 --> server에서 전달한 data로 feeditem객체 초기화 (반복수행)
         HomeFeedItem data = new HomeFeedItem("wonhee","21-02-07",499,204,
                 "hi everyone",0,
 

@@ -104,6 +104,10 @@ public class HomeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.home_profile:
+                // 서버에 user객체 전달 코드 작성
+                // ----------------------------
+
+                // if resultCode == 200
                 Intent intent= new Intent(HomeActivity.this, ProfileActivity.class);
                 startActivity(intent);
                 return true;

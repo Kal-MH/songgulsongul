@@ -45,6 +45,10 @@ public class FragHomeComu extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) { // 검색 버튼 눌렀을 시 발생
+                // 서버에 query객체 전달 코드 작성
+                // ----------------------------
+
+                // if resultCode == 200
                 Intent intent = new Intent(getActivity(), PostSearchActivity.class);
                 startActivity(intent);
                 return true;
@@ -59,7 +63,7 @@ public class FragHomeComu extends Fragment {
         // view에서 id 찾아야함
         GridView gridView = view.findViewById(R.id.comu_grid);
 
-        //아이템 추가
+        //임시 데이터 저장 --> server에서 전달한 data로 postitem객체 초기화 (반복수행)
         addItem(new PostItem(R.drawable.sampleimg));
         addItem(new PostItem(R.drawable.sampleimg));
         addItem(new PostItem(R.drawable.sampleimg));
