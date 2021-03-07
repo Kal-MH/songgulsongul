@@ -83,11 +83,19 @@ public  class FragHomeMarket extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                // 서버에 스티커 아이템 id 전달
+                //-------------------------
+
+                //if resultCode == 200
                 Intent intent = new Intent(getContext(), StickerDetailActivity.class);
                 intent.putExtra("image",items.get(position).getImg());
                 intent.putExtra("name", items.get(position).getIname());
                 intent.putExtra("price", items.get(position).getIcost());
                 startActivity(intent);
+
+                //if resultCode == 400
+                //Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+
                 //Log.d("TAG", position + "is Clicked");      // Can not getting this method.
 
             }

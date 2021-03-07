@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
+import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.activity.PostSearchActivity;
 import smu.capstone.paper.adapter.PostImageAdapter;
 import smu.capstone.paper.item.PostItem;
@@ -95,6 +96,16 @@ public class FragHomeComu extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                // 서버에 게시글 id 전달
+                //---------------------
+
+                //if resultCode == 200
+                Intent intent = new Intent(getContext(), PostActivity.class);
+                startActivity(intent);
+
+                //if resultCode == 404
+                //Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
             }
         });
