@@ -27,13 +27,13 @@ const crypto = require('crypto');
             var params = [email, login_id, hashed_password, salt, sns, img_profile];
             
             connection.query(sql, params, function (err, result) {
-                var resultCode = 404;
+                var resultCode = 500; //internal server error
                 var message = '에러가 발생했습니다';
         
                 if (err) {
                     console.log(err);
                 } else {
-                    resultCode = 200;
+                    resultCode = 200; //ok
                     message = '회원가입에 성공했습니다.';
                 }
                 console.log(result);
@@ -71,7 +71,7 @@ const crypto = require('crypto');
       connection.query(sql, email, async function (err, result) {
         if (err){
           res.json({
-            'code' : 400,
+            'code' : 500,
             'message' : "error"
           })
         } else if (result.length === 0){
@@ -90,7 +90,7 @@ const crypto = require('crypto');
           await smtpTransport.sendMail(mailOptions, function (err, response) {
             if (err){
               console.log(err);
-              resultCode = 400;
+              resultCode = 500;
             } else {
               resultCode = 200;
               message = "success"
@@ -114,7 +114,7 @@ const crypto = require('crypto');
       connection.query(sql, params, function (err, result) {
         if (err){
           res.json({
-            'code' : 404,
+            'code' : 500,
             'message' : "error"
           })
         } else if (result.length === 0){
@@ -137,7 +137,7 @@ const crypto = require('crypto');
               connection.query(passwordSql, passwordParams, async function (err, result) {
                 if (err){
                   res.json({
-                    'code' : 404,
+                    'code' : 500,
                     'message' : "error"
                   })
                 } else {
@@ -151,7 +151,7 @@ const crypto = require('crypto');
                   await smtpTransport.sendMail(mailOptions, function (err, response) {
                     if (err){
                       console.log(err);
-                      resultCode = 400;
+                      resultCode = 500;
                     } else {
                       resultCode = 200;
                       message = "success"

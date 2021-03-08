@@ -21,7 +21,7 @@ const apiController = {
             var resultCode = 200;
             if (err){
                 console.log(err);
-                resultCode = 404; //error
+                resultCode = 500; //error
             } else {
                 for(var i = 0;i < result.length;i++){
                     if (id == result[i].login_id){
@@ -57,7 +57,7 @@ const apiController = {
         req.app.set('authNumber', number);
 
         const result = await smtpTransport.sendMail(mailOptions, function (err, responses) {
-            var resultCode = 404;
+            var resultCode = 500;
             if (err){
                console.log(err);
             } else {
@@ -65,6 +65,7 @@ const apiController = {
             }
             res.json({
                 'code' : resultCode,
+                'authNumber' : number
             })
             smtpTransport.close();
         })
