@@ -56,6 +56,32 @@
          });
      },
 
+     // 언팔로우
+     userUnfollowPost : function(req,res){
+       const login_id = req.body.loginId;
+       const user_id = req.body.userId;
+
+       var params = [login_id, user_id];
+
+       var sql = 'DELETE FROM follow WHERE follower_id = ? AND follow_target_id = ?';
+       connection.query(sql, params, function(err, rows){
+         var resultCode = 404;
+         var message = 'ERROR';
+
+         if(err){
+           console.log(err);
+         }
+         else{
+           resultCode = 200;
+           message = 'OK';
+         }
+
+         res.json({
+           'code' : resultCode,
+           'message' : message
+         })
+       });
+     },
      // 보관함
      profileKeep : function(req, res){
        var id = req.query.id;

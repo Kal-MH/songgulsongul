@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
@@ -30,6 +32,13 @@ public class PostImageAdapter extends BaseAdapter {
         inf =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.layout = layout;
         this.items = items;
+    }
+
+    public void setItem(ImageView imageView, PostItem item){
+        // 받아온 데이터로 게시글 내용 셋팅
+        Glide.with(mContext).load(item.getImg()).into(imageView); // 게시물 사진
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        imageView.setLayoutParams(new GridView.LayoutParams(340, 350));
     }
 
 
@@ -56,10 +65,7 @@ public class PostImageAdapter extends BaseAdapter {
             convertView = inf.inflate(layout, null);
 
         ImageView imageView = convertView.findViewById(R.id.post_image_iv);
-
-        imageView.setImageResource(postItem.getImg());
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        imageView.setLayoutParams(new GridView.LayoutParams(340, 350));
+        setItem(imageView, postItem);
 
         return imageView;
     }
