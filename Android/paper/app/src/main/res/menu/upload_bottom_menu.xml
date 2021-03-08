@@ -3,11 +3,11 @@
     <item
         android:id="@+id/upload_cam"
         android:enabled="true"
-        android:title="카메라"/>
+        android:title="사진촬영"/>
 
     <item
         android:id="@+id/upload_gal"
         android:enabled="true"
-        android:title="갤러리"/>
+        android:title="라이브러리"/>
 
 </menu>

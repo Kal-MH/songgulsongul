@@ -11,8 +11,8 @@
     <smu.capstone.paper.layout.SquareImageView
         android:id="@+id/upload_gal_pick"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
          />
 
     <androidx.recyclerview.widget.RecyclerView
