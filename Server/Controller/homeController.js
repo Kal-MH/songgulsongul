@@ -6,6 +6,7 @@
 const connection = require("../db/db");
 const smtpTransport = require("../config/email");
 const crypto = require('crypto');
+const statusCode = require("../config/serverStatusCode");
 
  var homeController = {
      //회원가입
@@ -27,13 +28,13 @@ const crypto = require('crypto');
             var params = [email, login_id, hashed_password, salt, sns, img_profile];
             
             connection.query(sql, params, function (err, result) {
-                var resultCode = 500; //internal server error
+                var resultCode = statusCode.CLIENT_ERROR;
                 var message = '에러가 발생했습니다';
         
                 if (err) {
                     console.log(err);
                 } else {
-                    resultCode = 200; //ok
+                    resultCode = statusCode.OK; //ok
                     message = '회원가입에 성공했습니다.';
                 }
                 console.log(result);
@@ -48,11 +49,11 @@ const crypto = require('crypto');
     },
     //로그인
     homeLoginPost :  function (req, res) {
-      var resultCode = 204;
+      var resultCode = statusCode.CLIENT_ERROR;
       var message = '에러가 발생했습니다.';
   
       if (req.user){
-          resultCode = 200;
+          resultCode = statusCode.OK;
           message = message = '로그인 성공! ' + req.user.login_id + '님 환영합니다!';
       }
 
@@ -71,12 +72,12 @@ const crypto = require('crypto');
       connection.query(sql, email, async function (err, result) {
         if (err){
           res.json({
-            'code' : 500,
+            'code' : statusCode.SERVER_ERROR,
             'message' : "error"
           })
         } else if (result.length === 0){
           res.json({
-            'code' : 204,
+            'code' : statusCode.CLIENT_ERROR,
             'message' : "no exists"
           })
         } else {
@@ -90,9 +91,9 @@ const crypto = require('crypto');
           await smtpTransport.sendMail(mailOptions, function (err, response) {
             if (err){
               console.log(err);
-              resultCode = 500;
+              resultCode = statusCode.SERVER_ERROR;
             } else {
-              resultCode = 200;
+              resultCode = statusCode.OK;
               message = "success"
             }
             res.json({
@@ -114,12 +115,12 @@ const crypto = require('crypto');
       connection.query(sql, params, function (err, result) {
         if (err){
           res.json({
-            'code' : 500,
+            'code' : statusCode.SERVER_ERROR,
             'message' : "error"
           })
         } else if (result.length === 0){
           res.json({
-            'code' : 204,
+            'code' : statusCode.CLIENT_ERROR,
             'message' : "no exists"
           })
         } else {
@@ -137,7 +138,7 @@ const crypto = require('crypto');
               connection.query(passwordSql, passwordParams, async function (err, result) {
                 if (err){
                   res.json({
-                    'code' : 500,
+                    'code' : statusCode.SERVER_ERROR,
                     'message' : "error"
                   })
                 } else {
@@ -151,9 +152,9 @@ const crypto = require('crypto');
                   await smtpTransport.sendMail(mailOptions, function (err, response) {
                     if (err){
                       console.log(err);
-                      resultCode = 500;
+                      resultCode = statusCode.SERVER_ERROR;
                     } else {
-                      resultCode = 200;
+                      resultCode = statusCode.OK;
                       message = "success"
                     }
                     res.json({

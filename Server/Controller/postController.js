@@ -1,3 +1,4 @@
+const statusCode = require("../config/serverStatusCode");
 const connection = require("../db/db");
 
 const postController = {
@@ -13,7 +14,7 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : 204
+                    'code' : statusCode.CLIENT_ERROR
                 })
             } else {
                 var postUser = result[0][0];
@@ -26,7 +27,7 @@ const postController = {
                     if (err){
                         console.log(err);
                         res.json({
-                            'code' : 204
+                            'code' : statusCode.CLIENT_ERROR
                         })
                     } else {
                         var options = {
@@ -46,7 +47,7 @@ const postController = {
                                 if (err){
                                     console.log(err);
                                     res.json({
-                                        'code' : 204
+                                        'code' : statusCode.CLIENT_ERROR
                                     })
                                 } else {
                                     var likeOnset = (result[0].length == 0) ? 0 : 1 ;
@@ -69,12 +70,13 @@ const postController = {
         const appName = res.locals.appName;
         const user = res.locals.loggedUser;
 
+        //20개만 받아오기
         var sql = "select * from post order by post_time desc, post_date desc;"
 
         connection.query(sql, function (err, result) {
             if (err){
                 res.json({
-                    'code' : 204
+                    'code' : statusCode.CLIENT_ERROR
                 })
             } else {
                 //이후에 res.json()으로 바꿔야 한다.
@@ -91,7 +93,7 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : 204
+                    'code' : statusCode.CLIENT_ERROR
                 })
             } else {
                 //이후에 res.json으로 수정
@@ -107,7 +109,7 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : 204
+                    'code' : statusCode.CLIENT_ERROR
                 })
             } else {
                 //이후에 res.json으로 수정
@@ -143,7 +145,7 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : 204
+                    'code' : statusCode.SERVER_ERROR
                 })
             } else {
                 var postId = result.insertId;
@@ -157,7 +159,7 @@ const postController = {
                     if (err){
                         console.log(err);
                         res.json({
-                            'code' : 204
+                            'code' : statusCode.SERVER_ERROR
                         })
                     }
                     else{
@@ -169,11 +171,11 @@ const postController = {
                             if (err){
                                 console.log(err);
                                 res.json({
-                                    'code' : 204
+                                    'code' : statusCode.SERVER_ERROR
                                 })
                             } else {
                                 res.json({
-                                    'code' : 200
+                                    'code' : statusCode.OK
                                 })
                             }
                         })                                                     
@@ -199,7 +201,7 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : 204
+                    'code' : statusCode.SERVER_ERROR
                 })
             } else {
                 //hashTag
@@ -216,7 +218,7 @@ const postController = {
                     if (err){
                         console.log(err);
                         res.json({
-                            'code' : 204
+                            'code' : statusCode.SERVER_ERROR
                         })
                     } else {
                         //itemTag - 현재는 단수로 되어 있지만, 이후에 액티비티랑 연동할 때, 복수로 바꿔야 한다.
@@ -239,7 +241,7 @@ const postController = {
                             if (err){
                                 console.log(err);
                                 res.json({
-                                    'code' : 204
+                                    'code' : statusCode.SERVER_ERROR
                                 })
                             } else {
                                 res.redirect(`/post/${postId}`);
