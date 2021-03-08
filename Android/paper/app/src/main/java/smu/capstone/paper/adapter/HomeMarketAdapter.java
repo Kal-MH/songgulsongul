@@ -31,6 +31,13 @@ public class HomeMarketAdapter extends BaseAdapter {
         this.items = items;
     }
 
+    public void setItem(HomeMarketItem item, ImageView imageView, TextView nameText, TextView costText){
+        // 받아온 데이터로 마켓 아이템 내용 셋팅
+        Glide.with(mContext).load(item.getImg()).into(imageView); // 사진
+        nameText.setText(item.getIname()); // 상품명
+        costText.setText(item.getIcost()); // 가격
+    }
+
     @Override
     public int getCount() {
         return items.size();
@@ -57,10 +64,7 @@ public class HomeMarketAdapter extends BaseAdapter {
         TextView nameText = convertView.findViewById(R.id.market_item_name);
         TextView costText = convertView.findViewById(R.id.market_item_cost);
 
-        // 받아온 데이터로 마켓 아이템 내용 셋팅
-        Glide.with(mContext).load(homeMarketItem.getImg()).into(imageView); // 사진
-        nameText.setText(homeMarketItem.getIname()); // 상품명
-        costText.setText(homeMarketItem.getIcost()); // 가격
+        setItem(homeMarketItem, imageView, nameText, costText);
 
         return convertView;
     }

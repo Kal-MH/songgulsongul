@@ -112,8 +112,8 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
 
-            case R.id.home_add: //일단 업로드디테일로 이동
-                Intent intent2= new Intent(HomeActivity.this, UploadDetailActivity.class);
+            case R.id.home_add:
+                Intent intent2= new Intent(HomeActivity.this, UploadActivity.class);
                 startActivity(intent2);
                 return true;
         }

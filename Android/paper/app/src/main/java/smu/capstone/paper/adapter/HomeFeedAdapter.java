@@ -28,8 +28,20 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     ArrayList<HomeFeedItem> items = new ArrayList<HomeFeedItem>();
 
 
-    public HomeFeedAdapter (Context context){
+    public HomeFeedAdapter (Context context, ArrayList<HomeFeedItem> items){
         this.context = context;
+        this.items = items;
+    }
+
+    public void setItem(@NonNull ViewHolder holder, HomeFeedItem item){
+        // 받아온 데이터로 게시글 내용 셋팅
+        holder.text.setText(item.getText()); // 글 내용
+        holder.timestamp.setText(item.getTimeStamp()); // 게시 시간
+        holder.comment_counter.setText(item.getCommentCounter()+""); // 댓글 수
+        holder.favorite_counter.setText(item.getFavoriteCounter()+""); // 좋아요 수
+        holder.user_id.setText(item.getUserId()); // 게시자 id
+        Glide.with(context).load(item.getProfile_image()).into(holder.profile_image); // 게시자 프로필 사진
+        Glide.with(context).load(item.getPicture()).into(holder.picture); // 게시물 사진
     }
 
     @NonNull
@@ -44,15 +56,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
        HomeFeedItem item = items.get(position);
-
-       // 받아온 데이터로 게시글 내용 셋팅
-       holder.text.setText(item.getText()); // 글 내용
-       holder.timestamp.setText(item.getTimeStamp()); // 게시 시간
-       holder.comment_counter.setText(item.getCommentCounter()+""); // 댓글 수
-       holder.favorite_counter.setText(item.getFavoriteCounter()+""); // 좋아요 수
-       holder.user_id.setText(item.getUserId()); // 게시자 id
-       Glide.with(context).load(item.getProfile_image()).into(holder.profile_image); // 게시자 프로필 사진
-       Glide.with(context).load(item.getPicture()).into(holder.picture); // 게시물 사진
+       setItem(holder, item);
 
        if(items.get(position).getLike() == 0){
            holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_border));
@@ -197,12 +201,5 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
 
         }
-
-
-
-        public void setItem(Object item){
-
-        }
-
     }
 }

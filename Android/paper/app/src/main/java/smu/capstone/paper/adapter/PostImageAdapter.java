@@ -34,6 +34,13 @@ public class PostImageAdapter extends BaseAdapter {
         this.items = items;
     }
 
+    public void setItem(ImageView imageView, PostItem item){
+        // 받아온 데이터로 게시글 내용 셋팅
+        Glide.with(mContext).load(item.getImg()).into(imageView); // 게시물 사진
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        imageView.setLayoutParams(new GridView.LayoutParams(340, 350));
+    }
+
 
     @Override
     public int getCount() {
@@ -58,11 +65,7 @@ public class PostImageAdapter extends BaseAdapter {
             convertView = inf.inflate(layout, null);
 
         ImageView imageView = convertView.findViewById(R.id.post_image_iv);
-
-        // 받아온 데이터로 게시글 내용 셋팅
-        Glide.with(mContext).load(postItem.getImg()).into(imageView); // 게시물 사진
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        imageView.setLayoutParams(new GridView.LayoutParams(340, 350));
+        setItem(imageView, postItem);
 
         return imageView;
     }
