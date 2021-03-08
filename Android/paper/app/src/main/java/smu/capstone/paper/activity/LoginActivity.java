@@ -46,6 +46,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //일단 바로 홈화면으로 전환
+        login_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
         // 텍스트 입력시 로그인 버튼 활성화
         login_username.addTextChangedListener(new TextWatcher() {
             @Override
