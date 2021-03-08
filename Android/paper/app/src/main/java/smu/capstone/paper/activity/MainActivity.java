@@ -1,11 +1,16 @@
 package smu.capstone.paper.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.RealmTest;
@@ -21,11 +26,19 @@ public class MainActivity extends AppCompatActivity {
     Button temp_save;
 
 
+    private int RESULT_PERMISSIONS=100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+        // 퍼미션 체킹
+        requestPermissionCamera();
+
+
 
         temp_login = findViewById(R.id.temp_login);
         temp_home = findViewById(R.id.temp_home);
@@ -100,4 +113,44 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
+    public boolean requestPermissionCamera(){
+        int sdkVersion = Build.VERSION.SDK_INT;
+        if(sdkVersion >= Build.VERSION_CODES.M) {
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED   ) {
+
+                ActivityCompat.requestPermissions(
+                        MainActivity.this,
+                        new String[]{Manifest.permission.CAMERA , Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        RESULT_PERMISSIONS
+                );
+
+            }
+
+        }else{  // version 6 이하일때
+            // setInit();
+            return true;
+        }
+        return true;
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+
+        if (RESULT_PERMISSIONS == requestCode) {
+
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한 허가시
+                //setInit();
+            } else {
+                // 권한 거부시
+            }
+            return;
+        }
+
+    }
+
 }

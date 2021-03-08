@@ -116,6 +116,7 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intent2= new Intent(HomeActivity.this, UploadActivity.class);
                 startActivity(intent2);
                 return true;
+
         }
         return  true;
     }
