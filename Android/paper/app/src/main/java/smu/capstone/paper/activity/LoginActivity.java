@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                 //일단 바로 홈화면으로 전환
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(intent);
-
+                finish();
 
             }
         });
