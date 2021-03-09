@@ -39,7 +39,7 @@ public  class FragHomeMarket extends Fragment {
 
         searchView = view.findViewById(R.id.market_search);
         GridView gridView = view.findViewById(R.id.market_grid);
-        //final ArrayList<HomeMarketItem> items = getMarketData();
+
         final JSONObject obj = getMarketData();
 
         searchView.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +93,7 @@ public  class FragHomeMarket extends Fragment {
                     e.printStackTrace();
                 }
 
-                //if resultCode == 400
+                //if resultCode == 500 (server err)
                 //Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
 
                 //Log.d("TAG", position + "is Clicked");      // Can not getting this method.
@@ -103,32 +103,6 @@ public  class FragHomeMarket extends Fragment {
 
         return view;
     }
-
-    //server에서 전달한 data로 marketitem객체 초기화 (반복수행)
-/*    public ArrayList<HomeMarketItem> getMarketData(){
-        // 임시 아이템 추가
-        ArrayList<HomeMarketItem> items = new ArrayList<HomeMarketItem>();
-        HomeMarketItem data1 = new HomeMarketItem(R.drawable.sampleimg, "sample1", "20p");
-        items.add(data1);
-        HomeMarketItem data2 = new HomeMarketItem(R.drawable.test, "sample2", "10p");
-        items.add(data2);
-        HomeMarketItem data3 = new HomeMarketItem(R.drawable.ic_favorite, "sample3", "50p");
-        items.add(data3);
-        HomeMarketItem data4 = new HomeMarketItem(R.drawable.test, "sample4", "60p");
-        items.add(data4);
-        HomeMarketItem data5 = new HomeMarketItem(R.drawable.test, "sample5", "80p");
-        items.add(data5);
-        HomeMarketItem data6 = new HomeMarketItem(R.drawable.test, "sample6", "100p");
-        items.add(data6);
-        HomeMarketItem data7 = new HomeMarketItem(R.drawable.test, "sample7", "200p");
-        items.add(data7);
-        HomeMarketItem data8 = new HomeMarketItem(R.drawable.test, "sample8", "30p");
-        items.add(data8);
-        HomeMarketItem data9 = new HomeMarketItem(R.drawable.test, "sample9", "25p");
-        items.add(data9);
-
-        return items;
-    }*/
 
     //server에서 data전달
     public JSONObject getMarketData(){
@@ -154,6 +128,36 @@ public  class FragHomeMarket extends Fragment {
             obj3.put("name", "sample3");
             obj3.put("price", "50p");
             arr.put(obj3);
+
+            JSONObject obj4 = new JSONObject();
+            obj4.put("marketImage", R.drawable.ic_favorite_border);
+            obj4.put("name", "sample4");
+            obj4.put("price", "40p");
+            arr.put(obj4);
+
+            JSONObject obj5 = new JSONObject();
+            obj5.put("marketImage", R.drawable.sampleimg);
+            obj5.put("name", "sample5");
+            obj5.put("price", "20p");
+            arr.put(obj5);
+
+            JSONObject obj6 = new JSONObject();
+            obj6.put("marketImage", R.drawable.test);
+            obj6.put("name", "sample6");
+            obj6.put("price", "10p");
+            arr.put(obj6);
+
+            JSONObject obj7 = new JSONObject();
+            obj7.put("marketImage", R.drawable.ic_favorite);
+            obj7.put("name", "sample7");
+            obj7.put("price", "50p");
+            arr.put(obj7);
+
+            JSONObject obj8 = new JSONObject();
+            obj8.put("marketImage", R.drawable.ic_favorite_border);
+            obj8.put("name", "sample8");
+            obj8.put("price", "40p");
+            arr.put(obj8);
 
             item.put("data", arr);
         }catch (JSONException e){

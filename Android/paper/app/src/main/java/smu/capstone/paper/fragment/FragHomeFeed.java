@@ -73,26 +73,6 @@ public class FragHomeFeed extends Fragment {
         return bitmap;
     }
 
-    // server에서 전달한 data로 feeditem객체 초기화 (반복수행)
- /*   public ArrayList<HomeFeedItem> getFeedData(){
-        ArrayList<HomeFeedItem> items = new ArrayList<HomeFeedItem>();
-
-        //임시 데이터 저장
-        HomeFeedItem data = new HomeFeedItem("wonhee","21-02-07",499,204,
-                "hi everyone",0,
-                drawable2Bitmap(getResources().getDrawable(R.drawable.ic_baseline_emoji_emotions_24)),
-                drawable2Bitmap(getResources().getDrawable(R.drawable.sampleimg)), 0);
-        items.add(data);
-
-        HomeFeedItem data1 = new HomeFeedItem("YUJIN","21-02-07",20,52,
-                "너무멋지다!~",0,
-                drawable2Bitmap(getResources().getDrawable(R.drawable.sampleimg)),
-                drawable2Bitmap(getResources().getDrawable(R.drawable.test)), 0);
-        items.add(data1);
-
-        return items;
-    }*/
-
     // server에서 data전달
     public JSONObject GetFeedData(){
         JSONObject item = new JSONObject();
