@@ -101,11 +101,14 @@ public class UploadActivity extends AppCompatActivity {
                 ft.replace(R.id.upload_frame, fragUploadCam);
                 ft.commit();
                 frag_status = CAMERA;
+                invalidateOptionsMenu();
+
                 break;
             case GALLERY:
                 ft.replace(R.id.upload_frame, fragUploadGal);
                 ft.commit();
                 frag_status = GALLERY ;
+                invalidateOptionsMenu();
                 break;
 
         }
@@ -116,6 +119,12 @@ public class UploadActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.next_toolbar, menu);
+        if(frag_status == CAMERA){
+            menu.findItem(R.id.toolbar_next).setVisible(false);
+        }
+        else{
+            menu.findItem(R.id.toolbar_next).setVisible(true);
+        }
         return true;
     }
 
