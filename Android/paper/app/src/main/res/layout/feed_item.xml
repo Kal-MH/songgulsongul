@@ -47,15 +47,23 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <ImageView
-        android:id="@+id/feed_item_pic"
+    <smu.capstone.paper.layout.SquareLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/ic_baseline_emoji_emotions_24"
-        tools:ignore="VectorDrawableCompat" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/feed_item_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_baseline_emoji_emotions_24"
+            tools:ignore="VectorDrawableCompat" />
+    </smu.capstone.paper.layout.SquareLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
