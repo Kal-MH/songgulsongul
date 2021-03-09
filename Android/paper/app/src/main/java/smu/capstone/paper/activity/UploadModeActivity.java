@@ -27,18 +27,14 @@ public class UploadModeActivity extends Activity {
         normalbtn= findViewById(R.id.upload_mode_normal_btn);
 
 
-      /*  Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        int width = (int)(display.getWidth()* 0.9);
-        int height = (int)(display.getHeight() * 0.9);
-        getWindow().getAttributes().width = width;
-        getWindow().getAttributes().height = height;
-*/
 
         quickbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(UploadModeActivity.this, UploadActivity.class);
+                intent.putExtra("isQuick",true);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -46,7 +42,9 @@ public class UploadModeActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(UploadModeActivity.this, UploadActivity.class);
+                intent.putExtra("isQuick", false);
                 startActivity(intent);
+                finish();
             }
         });
 

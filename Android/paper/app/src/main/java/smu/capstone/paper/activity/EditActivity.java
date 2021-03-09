@@ -14,6 +14,8 @@ import java.io.IOException;
 
 import smu.capstone.paper.R;
 
+
+// 카메라 촬영및 갤러리에서 선택후 임시로 전달할 Activity
 public class EditActivity extends AppCompatActivity {
 
     @Override
