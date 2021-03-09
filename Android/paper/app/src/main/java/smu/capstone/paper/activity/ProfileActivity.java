@@ -114,12 +114,13 @@ public class ProfileActivity extends AppCompatActivity {
                 // LogoutAction
                 LoginSharedPreference.clearUserName(ProfileActivity.this);
                 Intent intent3 = new Intent(ProfileActivity.this, LoginActivity.class);
+                intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent3);
 
                 break;
             case R.id.profile_setting:
-                Intent intent = new Intent(ProfileActivity.this , SettingActivity.class);
-                startActivity(intent);
+                Intent intent4 = new Intent(ProfileActivity.this , SettingActivity.class);
+                startActivity(intent4);
                 break;
         }
         return super.onOptionsItemSelected(item);
