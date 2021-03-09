@@ -8,12 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -34,6 +31,9 @@ import smu.capstone.paper.fragment.FragUploadGal;
 public class UploadActivity extends AppCompatActivity {
     private int RESULT_PERMISSIONS=100;
 
+    final private int GALLERY = 123;
+    final private int CAMERA = 456;
+
     private BottomNavigationView bottomNavigationView;
     FragUploadCam fragUploadCam;
     FragUploadGal fragUploadGal;
@@ -41,11 +41,18 @@ public class UploadActivity extends AppCompatActivity {
     private FragmentManager fm;
     private FragmentTransaction ft;
 
+    int frag_status;
+    boolean isQuick;
+
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
+
+        //편집모드 체킹
+        isQuick = getIntent().getBooleanExtra("isQuick",false);
 
 
         //툴바 세팅
@@ -70,10 +77,10 @@ public class UploadActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
                     case R.id.upload_cam:
-                        setFrag(0);
+                        setFrag(CAMERA);
                         break;
                     case R.id.upload_gal:
-                        setFrag(1);
+                        setFrag(GALLERY);
                         break;
                 }
                 return true;
@@ -82,8 +89,7 @@ public class UploadActivity extends AppCompatActivity {
 
 
 
-
-        setFrag(0);
+        setFrag(CAMERA);
 
     }
 
@@ -91,15 +97,18 @@ public class UploadActivity extends AppCompatActivity {
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
         switch (n) {
-            case 0:
+            case CAMERA:
                 ft.replace(R.id.upload_frame, fragUploadCam);
                 ft.commit();
-                Log.d("TAG","카메라");
+                frag_status = CAMERA;
+                invalidateOptionsMenu();
+
                 break;
-            case 1:
+            case GALLERY:
                 ft.replace(R.id.upload_frame, fragUploadGal);
                 ft.commit();
-                Log.d("TAG","갤러리");
+                frag_status = GALLERY ;
+                invalidateOptionsMenu();
                 break;
 
         }
@@ -110,6 +119,12 @@ public class UploadActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.next_toolbar, menu);
+        if(frag_status == CAMERA){
+            menu.findItem(R.id.toolbar_next).setVisible(false);
+        }
+        else{
+            menu.findItem(R.id.toolbar_next).setVisible(true);
+        }
         return true;
     }
 
@@ -123,9 +138,19 @@ public class UploadActivity extends AppCompatActivity {
                 return true;
             }
 
-            case R.id.toolbar_next: //일단 업로드디테일로 이동
-                //Intent intent= new Intent(UploadActivitiy.this, ??Activity.class);
-                // startActivity(intent);
+            case R.id.toolbar_next:
+                if( frag_status == GALLERY){
+
+                    String filePath= fragUploadGal.getPicked_path();
+                    Intent intent = new Intent(this, EditActivity.class);
+                    intent.putExtra("path", filePath);
+                    startActivity(intent);
+
+                }
+                else if( frag_status == CAMERA){
+                    //  Not happened!
+
+                }
                 return true;
 
         }

@@ -30,6 +30,8 @@ public class FragUploadGal extends Fragment {
     GridLayoutManager gridLayoutManager;
 
     ImageView picked;
+    String picked_path;
+
     private View view;
     ArrayList<GalleryItem> items;
 
@@ -52,12 +54,15 @@ public class FragUploadGal extends Fragment {
 
         //첫 사진을 메인으로띄움
         Glide.with(view.getContext()).load(imageUrlList.get(0).getPath()).into(picked);
+        picked_path = imageUrlList.get(0).getPath();
+
 
         //선택시 선택사진으로 전환환다
         galleryAdapter.setWhenClickListener(new GalleryAdapter.OnItemsClickListener() {
             @Override
             public void onItemClick(GalleryItem galleryItem) {
                 Glide.with(view.getContext()).load(galleryItem.getPath()).into(picked);
+                picked_path = galleryItem.getPath();
             }
         });
 
@@ -65,42 +70,6 @@ public class FragUploadGal extends Fragment {
 
         return view;
     }
-
-    /*public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        try{
-            // 사진을 선택하고 왔을 때만 처리한다.
-            if(resultCode == RESULT_OK){
-                // 선택한 이미지를 지칭하는 Uri 객체를 얻어온다.
-                Uri uri = data.getData();
-                // Uri 객체를 통해서 컨텐츠 프로바이더를 통해 이미지의 정보를 가져온다.
-                ContentResolver resolver = getActivity().getContentResolver();
-                Cursor cursor = resolver.query(uri, null, null, null, null);
-                cursor.moveToNext();
-
-                // 사용자가 선택한 이미지의 경로 데이터를 가져온다.
-                int index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-                String source = cursor.getString(index);
-
-                // 경로 데이터를 통해서 이미지 객체를 생성한다
-                Bitmap bitmap = BitmapFactory.decodeFile(source);
-
-                // 이미지의 크기를 조정한다.
-                Bitmap bitmap2 = resizeBitmap(1024, bitmap);
-
-                // 회전 각도 값을 가져온다.
-                float degree = getDegree(source);
-                Bitmap bitmap3 = rotateBitmap(bitmap2, degree);
-
-//                fragUploadImg.setImageBitmap(bitmap3);
-
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-*/
 
     private ArrayList<GalleryItem> getPathOfAllImages() {
         ArrayList<GalleryItem> result = new ArrayList<>();
@@ -133,7 +102,7 @@ public class FragUploadGal extends Fragment {
         return result;
     }
 
-
-
-
+    public String getPicked_path(){
+        return picked_path;
+    }
 }
