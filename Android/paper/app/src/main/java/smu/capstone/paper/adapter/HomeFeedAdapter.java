@@ -215,7 +215,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         TextView text;
         ImageView keep;
         ImageView comment;
-        TextView more;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);

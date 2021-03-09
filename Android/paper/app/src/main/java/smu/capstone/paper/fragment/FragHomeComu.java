@@ -86,7 +86,7 @@ public class FragHomeComu extends Fragment {
                 Intent intent = new Intent(getContext(), PostActivity.class);
                 startActivity(intent);
 
-                //if resultCode == 404
+                //if resultCode == 500 (sever err)
                 //Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
 
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
@@ -97,43 +97,6 @@ public class FragHomeComu extends Fragment {
 
         return view;
     }
-
-    //server에서 전달한 data로 postitem객체 초기화 (반복수행)
- /*   public ArrayList<PostItem> getPostData(){
-        ArrayList<PostItem> items = new ArrayList<PostItem>();
-
-        //임시 데이터 저장
-        PostItem data = new PostItem(R.drawable.sampleimg);
-        items.add(data);
-        PostItem data1 = new PostItem(R.drawable.sampleimg);
-        items.add(data1);
-        PostItem data2 = new PostItem(R.drawable.sampleimg);
-        items.add(data2);
-        PostItem data3 = new PostItem(R.drawable.sampleimg);
-        items.add(data3);
-        PostItem data4 = new PostItem(R.drawable.sampleimg);
-        items.add(data4);
-        PostItem data5 = new PostItem(R.drawable.sampleimg);
-        items.add(data5);
-        PostItem data6 = new PostItem(R.drawable.sampleimg);
-        items.add(data6);
-        PostItem data7 = new PostItem(R.drawable.sampleimg);
-        items.add(data7);
-        PostItem data8 = new PostItem(R.drawable.sampleimg);
-        items.add(data8);
-        PostItem data9 = new PostItem(R.drawable.sampleimg);
-        items.add(data9);
-        PostItem data10 = new PostItem(R.drawable.sampleimg);
-        items.add(data10);
-        PostItem data11 = new PostItem(R.drawable.sampleimg);
-        items.add(data11);
-        PostItem data12 = new PostItem(R.drawable.sampleimg);
-        items.add(data12);
-        PostItem data13 = new PostItem(R.drawable.sampleimg);
-        items.add(data13);
-
-        return items;
-    }*/
 
     //server에서 data전달
     public JSONObject getPostData(){
