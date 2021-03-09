@@ -14,6 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
@@ -26,6 +30,7 @@ import smu.capstone.paper.item.HomeMarketItem;
 public  class FragHomeMarket extends Fragment {
     private View view;
     private SearchView searchView;
+    HomeMarketAdapter adapter;
 
     @Nullable
     @Override
@@ -34,7 +39,8 @@ public  class FragHomeMarket extends Fragment {
 
         searchView = view.findViewById(R.id.market_search);
         GridView gridView = view.findViewById(R.id.market_grid);
-        final ArrayList<HomeMarketItem> items = getMarketData();
+        //final ArrayList<HomeMarketItem> items = getMarketData();
+        final JSONObject obj = getMarketData();
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +66,12 @@ public  class FragHomeMarket extends Fragment {
                 return false;
             }
         });
-        HomeMarketAdapter adapter = new HomeMarketAdapter(this.getContext(), R.layout.market_item, items);
+
+        try {
+           adapter = new HomeMarketAdapter(this.getContext(), R.layout.market_item, obj);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         gridView.setAdapter(adapter);
 
         //Click Listener
@@ -73,10 +84,14 @@ public  class FragHomeMarket extends Fragment {
 
                 //if resultCode == 200
                 Intent intent = new Intent(getContext(), StickerDetailActivity.class);
-                intent.putExtra("image",items.get(position).getImg());
-                intent.putExtra("name", items.get(position).getIname());
-                intent.putExtra("price", items.get(position).getIcost());
-                startActivity(intent);
+                try {
+                    intent.putExtra("image", obj.getJSONArray("data").getJSONObject(position).getInt("marketImage"));
+                    intent.putExtra("name", obj.getJSONArray("data").getJSONObject(position).getString("name"));
+                    intent.putExtra("price", obj.getJSONArray("data").getJSONObject(position).getString("price"));
+                    startActivity(intent);
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
 
                 //if resultCode == 400
                 //Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
@@ -90,7 +105,7 @@ public  class FragHomeMarket extends Fragment {
     }
 
     //server에서 전달한 data로 marketitem객체 초기화 (반복수행)
-    public ArrayList<HomeMarketItem> getMarketData(){
+/*    public ArrayList<HomeMarketItem> getMarketData(){
         // 임시 아이템 추가
         ArrayList<HomeMarketItem> items = new ArrayList<HomeMarketItem>();
         HomeMarketItem data1 = new HomeMarketItem(R.drawable.sampleimg, "sample1", "20p");
@@ -113,5 +128,38 @@ public  class FragHomeMarket extends Fragment {
         items.add(data9);
 
         return items;
+    }*/
+
+    //server에서 data전달
+    public JSONObject getMarketData(){
+        JSONObject item = new JSONObject();
+        JSONArray arr= new JSONArray();
+
+        //임시 데이터 저장
+        try{
+            JSONObject obj = new JSONObject();
+            obj.put("marketImage", R.drawable.sampleimg);
+            obj.put("name", "sample1");
+            obj.put("price", "20p");
+            arr.put(obj);
+
+            JSONObject obj2 = new JSONObject();
+            obj2.put("marketImage", R.drawable.test);
+            obj2.put("name", "sample2");
+            obj2.put("price", "10p");
+            arr.put(obj2);
+
+            JSONObject obj3 = new JSONObject();
+            obj3.put("marketImage", R.drawable.ic_favorite);
+            obj3.put("name", "sample3");
+            obj3.put("price", "50p");
+            arr.put(obj3);
+
+            item.put("data", arr);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return item;
     }
+
 }

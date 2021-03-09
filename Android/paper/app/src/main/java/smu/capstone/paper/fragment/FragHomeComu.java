@@ -14,6 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
@@ -26,6 +30,7 @@ import smu.capstone.paper.item.PostItem;
 public class FragHomeComu extends Fragment {
     private View view;
     private SearchView searchView;
+    PostImageAdapter adapter;
 
     @Nullable
     @Override
@@ -59,11 +64,14 @@ public class FragHomeComu extends Fragment {
 
         // view에서 id 찾아야함
         GridView gridView = view.findViewById(R.id.comu_grid);
-        ArrayList<PostItem> items = getPostData();
+        JSONObject obj = getPostData();
 
         // 어뎁터 적용
-        PostImageAdapter adapter = new PostImageAdapter(this.getContext(),  R.layout.post_image_item , items ) ;
-
+        try {
+            adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, obj);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         gridView.setAdapter(adapter);
 
         //Click Listener
@@ -91,7 +99,7 @@ public class FragHomeComu extends Fragment {
     }
 
     //server에서 전달한 data로 postitem객체 초기화 (반복수행)
-    public ArrayList<PostItem> getPostData(){
+ /*   public ArrayList<PostItem> getPostData(){
         ArrayList<PostItem> items = new ArrayList<PostItem>();
 
         //임시 데이터 저장
@@ -125,6 +133,25 @@ public class FragHomeComu extends Fragment {
         items.add(data13);
 
         return items;
+    }*/
+
+    //server에서 data전달
+    public JSONObject getPostData(){
+        JSONObject item = new JSONObject();
+        JSONArray arr= new JSONArray();
+
+        //임시 데이터 저장
+        try{
+            for(int i = 0; i < 20; i++){
+                JSONObject obj = new JSONObject();
+                obj.put("postImage", R.drawable.sampleimg);
+                arr.put(obj);
+            }
+            item.put("data", arr);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return item;
     }
 
 }

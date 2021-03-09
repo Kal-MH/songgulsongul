@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,15 +47,23 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <ImageView
-        android:id="@+id/feed_item_pic"
+    <smu.capstone.paper.layout.SquareLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/ic_baseline_emoji_emotions_24"
-        tools:ignore="VectorDrawableCompat" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/feed_item_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_baseline_emoji_emotions_24"
+            tools:ignore="VectorDrawableCompat" />
+    </smu.capstone.paper.layout.SquareLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -132,7 +140,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
         <TextView
@@ -142,13 +150,6 @@
             android:layout_marginLeft="20dp"
             android:text="글 내용" />
 
-        <TextView
-            android:id="@+id/feed_item_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="더 보기"
-            android:textColor="#D3D3D3"/>
     </LinearLayout>
 
 
