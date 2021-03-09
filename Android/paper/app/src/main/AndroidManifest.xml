@@ -14,7 +14,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".activity.EditActivity"></activity>
+        <activity android:name=".activity.FirstAuthActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.UploadModeActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog"></activity>
+        <activity android:name=".activity.EditActivity" />
         <activity android:name=".activity.PostActivity" />
         <activity android:name=".activity.PostEditActivity" />
         <activity
@@ -37,14 +47,7 @@
         <activity android:name=".activity.FindAccountActivity" />
         <activity android:name=".RealmTest" />
         <activity android:name=".activity.JoinActivity" />
-        <activity android:name=".activity.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
+        <activity android:name=".activity.LoginActivity"/>
     </application>
 
 </manifest>

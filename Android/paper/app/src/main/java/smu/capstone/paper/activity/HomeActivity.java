@@ -113,7 +113,7 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
 
             case R.id.home_add:
-                Intent intent2= new Intent(HomeActivity.this, UploadActivity.class);
+                Intent intent2= new Intent(HomeActivity.this, UploadModeActivity.class);
                 startActivity(intent2);
                 return true;
 

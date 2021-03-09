@@ -106,7 +106,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/baseline_bookmark_border_black_18dp" />
+            android:background="@null"
+            app:srcCompat="@drawable/ic_baseline_bookmark_border_24"
+            tools:ignore="VectorDrawableCompat" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

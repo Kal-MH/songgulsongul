@@ -99,14 +99,16 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite));
            }
 
+
            if(iconInfo.get(position).getKeep() == 0){
-               holder.keep.setImageDrawable(context.getDrawable(R.drawable.baseline_bookmark_border_black_18dp));
+               holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_border_24));
            }
            else{
-               holder.keep.setImageDrawable(context.getDrawable(R.drawable.baseline_bookmark_black_18dp));
+               holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_24));
            }
        } catch (JSONException e){
            e.printStackTrace();
+
        }
 
         // 좋아요 listener

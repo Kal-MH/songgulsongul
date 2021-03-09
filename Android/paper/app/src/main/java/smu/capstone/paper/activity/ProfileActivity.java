@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.PostImageAdapter;
 import smu.capstone.paper.item.PostItem;
@@ -100,8 +101,8 @@ public class ProfileActivity extends AppCompatActivity {
                 break;
 
             case R.id.profile_edit :
-                Intent intent3 = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                startActivity(intent3);
+                Intent intent1 = new Intent(ProfileActivity.this, EditProfileActivity.class);
+                startActivity(intent1);
                 break;
 
             case R.id.profile_keep:
@@ -111,10 +112,15 @@ public class ProfileActivity extends AppCompatActivity {
 
             case R.id.profile_logout:
                 // LogoutAction
+                LoginSharedPreference.clearUserName(ProfileActivity.this);
+                Intent intent3 = new Intent(ProfileActivity.this, LoginActivity.class);
+                intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent3);
+
                 break;
             case R.id.profile_setting:
-                Intent intent = new Intent(ProfileActivity.this , SettingActivity.class);
-                startActivity(intent);
+                Intent intent4 = new Intent(ProfileActivity.this , SettingActivity.class);
+                startActivity(intent4);
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -46,12 +47,27 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        //일단 바로 홈화면으로 전환
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(true){ //로그인 성공시
+
+                    LoginSharedPreference.setUserName(LoginActivity.this, "administer");
+
+                    //로그인 기록 저장
+                    //LoginSharedPreference.setUserName(LoginActivity.this, login_username.getText().toString());
+                }
+                else{ //로그인 실패
+
+                    // 로그인 실패 알림
+                }
+
+                //일단 바로 홈화면으로 전환
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(intent);
+                finish();
+
             }
         });
         // 텍스트 입력시 로그인 버튼 활성화
