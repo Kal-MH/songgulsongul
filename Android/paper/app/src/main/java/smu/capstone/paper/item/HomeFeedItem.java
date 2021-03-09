@@ -96,4 +96,10 @@ public class HomeFeedItem {
         this.commentCounter=commentCounter;
         this.text=text;
     }
+
+    public HomeFeedItem(int like, int favoriteCounter, int keep){
+       this.like = like;
+       this.favoriteCounter = favoriteCounter;
+       this.keep = keep;
+    }
 }
