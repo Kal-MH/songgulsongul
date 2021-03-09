@@ -66,10 +66,10 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
        }
 
        if(items.get(position).getKeep() == 0){
-           holder.keep.setImageDrawable(context.getDrawable(R.drawable.baseline_bookmark_border_black_18dp));
+           holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_border_24));
        }
        else{
-           holder.keep.setImageDrawable(context.getDrawable(R.drawable.baseline_bookmark_black_18dp));
+           holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_24));
        }
 
       holder.favorite.setOnClickListener(new View.OnClickListener() {
