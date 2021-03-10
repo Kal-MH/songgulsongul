@@ -34,8 +34,8 @@ import smu.capstone.paper.item.PostItem;
 
 
 public class ProfileActivity extends AppCompatActivity {
-    public int Status = 1;
-    TextView follow_count, follower_count, points, intro, snsurl;
+    public int Status = 3;
+    TextView feed_count, follow_count, follower_count, points, intro, snsurl;
 
     ArrayList<PostItem> items = new ArrayList<PostItem>();
     private LinearLayout profile_follows;
@@ -47,6 +47,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        feed_count = findViewById(R.id.profile_feed_cnt);
         follow_count = findViewById(R.id.profile_follow_cnt);
         follower_count = findViewById(R.id.profile_follower_cnt);
         points = findViewById(R.id.profile_point);
@@ -92,7 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
         follower_count.setText("34");
         points.setText("100pt");
         intro.setText("안녕");
-        snsurl.setText("htt[s://www.google.com");
+        snsurl.setText("https://www.google.com");
 
         // view에서 id 찾아야함
         GridView gridView = findViewById(R.id.profile_grid);
@@ -104,6 +105,8 @@ public class ProfileActivity extends AppCompatActivity {
         items.add(new PostItem(R.drawable.sampleimg));
         items.add(new PostItem(R.drawable.ic_favorite));
         items.add(new PostItem(R.drawable.sampleimg));
+
+        feed_count.setText("" + items.size());
 
         // 어뎁터 적용
         PostImageAdapter adapter = new PostImageAdapter(this,  R.layout.post_image_item , items ) ;
