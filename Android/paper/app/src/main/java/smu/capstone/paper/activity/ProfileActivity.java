@@ -18,10 +18,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -32,6 +34,8 @@ import smu.capstone.paper.item.PostItem;
 
 
 public class ProfileActivity extends AppCompatActivity {
+    public int Status = 3;
+    TextView feed_count, follow_count, follower_count, points, intro, snsurl;
 
     ArrayList<PostItem> items = new ArrayList<PostItem>();
     private LinearLayout profile_follows;
@@ -43,6 +47,15 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        feed_count = findViewById(R.id.profile_feed_cnt);
+        follow_count = findViewById(R.id.profile_follow_cnt);
+        follower_count = findViewById(R.id.profile_follower_cnt);
+        points = findViewById(R.id.profile_point);
+        intro = findViewById(R.id.profile_intro);
+        snsurl = findViewById(R.id.profile_snsurl);
+
+        Button follow_btn = findViewById(R.id.profile_follow_btn);
+        LinearLayout pointview = findViewById(R.id.profile_pointview);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
@@ -52,6 +65,35 @@ public class ProfileActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
+        //Status에 떄라 버튼과 포인트 visibility와 enable 설정
+        switch(Status){
+            //본인의 계정 프로필
+            case 1:
+                follow_btn.setEnabled(false);
+                follow_btn.setVisibility(View.INVISIBLE);
+                pointview.setVisibility(View.VISIBLE);
+                break;
+            //팔로우 한 타인의 프로필
+            case 2:
+                follow_btn.setEnabled(false);
+                follow_btn.setVisibility(View.VISIBLE);
+                pointview.setVisibility(View.INVISIBLE);
+                break;
+            //팔로우 하지 않은 타인의 프로필
+            case 3:
+                follow_btn.setEnabled(true);
+                follow_btn.setVisibility(View.VISIBLE);
+                pointview.setVisibility(View.INVISIBLE);
+                break;
+            default:
+                break;
+        }
+
+        follow_count.setText("12");
+        follower_count.setText("34");
+        points.setText("100pt");
+        intro.setText("안녕");
+        snsurl.setText("https://www.google.com");
 
         // view에서 id 찾아야함
         GridView gridView = findViewById(R.id.profile_grid);
@@ -64,15 +106,13 @@ public class ProfileActivity extends AppCompatActivity {
         items.add(new PostItem(R.drawable.ic_favorite));
         items.add(new PostItem(R.drawable.sampleimg));
 
+        feed_count.setText("" + items.size());
+
         // 어뎁터 적용
         PostImageAdapter adapter = new PostImageAdapter(this,  R.layout.post_image_item , items ) ;
         gridView.setAdapter(adapter);
 
-
-
-
         profile_follows = findViewById(R.id.profile_follows);
-
 
         profile_follows.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,9 +121,6 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
     }
 
     @Override

@@ -41,6 +41,7 @@ public class PostImageAdapter extends BaseAdapter {
         dataList = obj.getJSONArray("data");
         itemCnt = dataList.length();
     }
+
     //삭제할 코드 --> 컴파일용 임시로 둠
     public PostImageAdapter(Context mContext, int layout, ArrayList<PostItem> items) {
         this.mContext = mContext;
