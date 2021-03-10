@@ -7,13 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +20,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
@@ -34,53 +34,71 @@ import smu.capstone.paper.item.PostItem;
 
 
 public class ProfileActivity extends AppCompatActivity {
-    public int Status = 3;
-    TextView feed_count, follow_count, follower_count, points, intro, snsurl;
+    public int Status;
 
-    ArrayList<PostItem> items = new ArrayList<PostItem>();
+    final int MY = 1;
+    final int FOLLOWING = 2;
+    final int UNFOLLOWING = 3;
+
+    private GridView gridView;
+    private PostImageAdapter adapter;
+    private TextView feed_count_tv, follow_count_tv, follower_count_tv, points_tv, intro_tv, sns_tv;
+    private Button follow_btn;
     private LinearLayout profile_follows;
-    private ImageButton profile_menu_btn;
-    private ImageView post_image_item;
+    private LinearLayout pointview;
+    private JSONObject post_item,profile_item;
+    private ImageView profile_userimage;
+
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        feed_count = findViewById(R.id.profile_feed_cnt);
-        follow_count = findViewById(R.id.profile_follow_cnt);
-        follower_count = findViewById(R.id.profile_follower_cnt);
-        points = findViewById(R.id.profile_point);
-        intro = findViewById(R.id.profile_intro);
-        snsurl = findViewById(R.id.profile_snsurl);
 
-        Button follow_btn = findViewById(R.id.profile_follow_btn);
-        LinearLayout pointview = findViewById(R.id.profile_pointview);
+        // Find view by ID
+        feed_count_tv = findViewById(R.id.profile_feed_cnt);
+        follow_count_tv = findViewById(R.id.profile_follow_cnt);
+        follower_count_tv = findViewById(R.id.profile_follower_cnt);
+        points_tv = findViewById(R.id.profile_point);
+        intro_tv = findViewById(R.id.profile_intro);
+        sns_tv = findViewById(R.id.profile_snsurl);
+        follow_btn = findViewById(R.id.profile_follow_btn);
+        pointview = findViewById(R.id.profile_pointview);
+        gridView = findViewById(R.id.profile_grid);
+        profile_userimage = findViewById(R.id.profile_userimage);
 
+        //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-      //  actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setTitle("User ID");
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
+
+
+
+        setProfileData();
+        setPostData();
+
         //Status에 떄라 버튼과 포인트 visibility와 enable 설정
         switch(Status){
             //본인의 계정 프로필
-            case 1:
+            case MY:
                 follow_btn.setEnabled(false);
                 follow_btn.setVisibility(View.INVISIBLE);
                 pointview.setVisibility(View.VISIBLE);
                 break;
             //팔로우 한 타인의 프로필
-            case 2:
+            case FOLLOWING :
                 follow_btn.setEnabled(false);
                 follow_btn.setVisibility(View.VISIBLE);
                 pointview.setVisibility(View.INVISIBLE);
                 break;
             //팔로우 하지 않은 타인의 프로필
-            case 3:
+            case UNFOLLOWING:
                 follow_btn.setEnabled(true);
                 follow_btn.setVisibility(View.VISIBLE);
                 pointview.setVisibility(View.INVISIBLE);
@@ -89,28 +107,6 @@ public class ProfileActivity extends AppCompatActivity {
                 break;
         }
 
-        follow_count.setText("12");
-        follower_count.setText("34");
-        points.setText("100pt");
-        intro.setText("안녕");
-        snsurl.setText("https://www.google.com");
-
-        // view에서 id 찾아야함
-        GridView gridView = findViewById(R.id.profile_grid);
-        //아이템 추가
-        items.add(new PostItem(R.drawable.sampleimg));
-        items.add(new PostItem(R.drawable.test));
-        items.add(new PostItem(R.drawable.ic_baseline_emoji_emotions_24));
-        items.add(new PostItem(R.drawable.test));
-        items.add(new PostItem(R.drawable.sampleimg));
-        items.add(new PostItem(R.drawable.ic_favorite));
-        items.add(new PostItem(R.drawable.sampleimg));
-
-        feed_count.setText("" + items.size());
-
-        // 어뎁터 적용
-        PostImageAdapter adapter = new PostImageAdapter(this,  R.layout.post_image_item , items ) ;
-        gridView.setAdapter(adapter);
 
         profile_follows = findViewById(R.id.profile_follows);
 
@@ -121,6 +117,89 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+
+
+    // server에서 data전달
+    public JSONObject getProfileData(){
+
+        profile_item = new JSONObject();
+
+        // 임시 데이터 저장
+        try{
+            JSONObject obj = new JSONObject();
+            obj.put("follow_count", 100);
+            obj.put("follower_count", 291);
+            obj.put("point", 4002);
+            obj.put("sns", "https://www.google.com");
+            obj.put("intro", "Good to see you Buddy!");
+            obj.put("picture", R.drawable.ic_baseline_emoji_emotions_24); //추후에 url 세팅으로변경
+
+            return obj;
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return profile_item;
+    }
+
+    public void setProfileData(){
+
+        JSONObject data = getProfileData();
+        try {
+            follow_count_tv.setText(data.getInt("follow_count") +"");
+            follower_count_tv.setText(data.getInt("follower_count" )+"");
+            points_tv.setText(data.getInt("point") + "p");
+            intro_tv.setText(data.getString("intro"));
+            sns_tv.setText(data.getString("sns"));
+            Glide.with(this).load(data.getInt("picture")).into(profile_userimage); // 게시물 사진
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public JSONObject getPostData(){
+        post_item = new JSONObject();
+        JSONArray arr= new JSONArray();
+
+
+        // 임시 데이터 저장
+        try{
+            JSONObject obj = new JSONObject();
+            obj.put("postId", "111");
+            obj.put("postImage", R.drawable.ic_favorite);
+            arr.put(obj);
+
+            JSONObject obj2 = new JSONObject();
+            obj2.put("postId", "123");
+            obj2.put("postImage", R.drawable.ic_favorite_border);
+            arr.put(obj2);
+
+            JSONObject obj3 = new JSONObject();
+            obj3.put("postId", "144");
+            obj3.put("postImage", R.drawable.ic_favorite);
+            arr.put(obj3);
+
+            post_item.put("data", arr);
+
+        }catch (JSONException e){ e.printStackTrace(); }
+
+        return post_item;
+    }
+
+    // 서버에서 데이터가져온후 어뎁터에 세팅
+    public void setPostData(){
+        JSONObject data = getPostData();
+        try {
+            JSONArray arr = data.getJSONArray("data");
+            feed_count_tv.setText(arr.length()+"");
+            adapter = new PostImageAdapter(this,  R.layout.post_image_item , data ) ;
+            gridView.setAdapter(adapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
