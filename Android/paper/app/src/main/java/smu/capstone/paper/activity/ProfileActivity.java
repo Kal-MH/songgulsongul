@@ -71,11 +71,15 @@ public class ProfileActivity extends AppCompatActivity {
         gridView = findViewById(R.id.profile_grid);
         profile_userimage = findViewById(R.id.profile_userimage);
 
+
         //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("User ID");
+
+        // 아이디 세팅
+        actionBar.setTitle(LoginSharedPreference.getUserName(this));
+
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
@@ -196,6 +200,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     public void setProfileData(){
+
         JSONObject data = getProfileData();
         try {
             follow_count_tv.setText(data.getInt("follow_count") +"");
