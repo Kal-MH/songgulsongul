@@ -85,7 +85,7 @@ public class FollowActivity extends AppCompatActivity {
                 //팔로우에 밑줄 긋고 팔로우창띄움
                 SpannableString content = new SpannableString("팔로우");
                 content.setSpan(new UnderlineSpan(), 0, content.length(), 0); follow_follow.setText(content);
-                follow_follower.setText("팔로잉");
+                follow_follower.setText("팔로워");
 
                 ft = fm.beginTransaction();
                 ft.replace(R.id.follow_frag, fragFollower);
@@ -99,7 +99,7 @@ public class FollowActivity extends AppCompatActivity {
 
                 //팔로우에 밑줄 긋고 팔로우창띄움
                 follow_follow.setText("팔로우");
-                SpannableString content = new SpannableString("팔로잉");
+                SpannableString content = new SpannableString("팔로워");
                 content.setSpan(new UnderlineSpan(), 0, content.length(), 0); follow_follower.setText(content);
 
                 ft = fm.beginTransaction();

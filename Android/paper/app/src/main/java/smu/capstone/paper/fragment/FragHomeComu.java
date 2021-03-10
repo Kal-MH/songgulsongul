@@ -108,7 +108,7 @@ public class FragHomeComu extends Fragment {
 
         //임시 데이터 저장
         try{
-            for(int i = 0; i < 20; i++){
+            for(int i = 0; i < 10; i++){
                 JSONObject obj = new JSONObject();
                 obj.put("postImage", R.drawable.sampleimg);
                 obj.put("postId", pid);
