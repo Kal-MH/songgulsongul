@@ -90,9 +90,7 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHold
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(context, Activity.class); 검색결과 화면
 
-                //context.startActivity(intent);
             }
         });
 
