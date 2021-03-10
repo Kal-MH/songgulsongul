@@ -1,5 +1,6 @@
 package smu.capstone.paper.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -24,8 +25,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.AddItemTagAdapter;
+import smu.capstone.paper.adapter.HashTagAdapter;
+import smu.capstone.paper.adapter.HomeFeedAdapter;
 import smu.capstone.paper.adapter.ItemTagAdapter;
 import smu.capstone.paper.adapter.PostCmtAdapter;
 import smu.capstone.paper.item.ItemtagItem;
@@ -41,11 +48,16 @@ public class PostActivity extends AppCompatActivity {
     EditText post_input;
     Button post_write;
     ItemTagAdapter itemTagAdapter;
+    HashTagAdapter hashTagAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        JSONObject obj = getPostData();
+        JSONObject obj2 = getHashtagData();
+        JSONObject obj3 = getItemtagData();
+        JSONObject obj4 = getCmtData();
 
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.post_toolbar);
@@ -66,9 +78,13 @@ public class PostActivity extends AppCompatActivity {
         itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
         itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
         itemTagAdapter.insertItem( new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
+
+        try {
+            itemTagAdapter = new ItemTagAdapter(post_itemtag_rv.getContext(), obj);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         post_itemtag_rv.setAdapter(itemTagAdapter);
-
-
 
 
         //해쉬 태그 어뎁터 설정
@@ -76,8 +92,18 @@ public class PostActivity extends AppCompatActivity {
         post_hashtag_rv = findViewById(R.id.post_hashtag_rv);
         post_hashtag_rv.setLayoutManager(layoutManager2);
 
+        hashTagAdapter = new HashTagAdapter(post_hashtag_rv.getContext(), obj);
+        post_hashtag_rv.setAdapter(hashTagAdapter);
+
+
         //코멘트 어뎁터 설정
-        cmt_adapter = new PostCmtAdapter();
+        try {
+            cmt_adapter = new PostCmtAdapter(post_cmt_list.getContext(), obj);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        post_cmt_list.setAdapter(cmt_adapter);
+
         post_cmt_list = (ListView) findViewById(R.id.post_cmt_list);
 
 
@@ -90,7 +116,6 @@ public class PostActivity extends AppCompatActivity {
         cmt_adapter.addItem("yujin", "안녕하세요애호!@");
         cmt_adapter.addItem("yujin", "안녕하세요야호!!");
 
-        post_cmt_list.setAdapter(cmt_adapter);
 
         post_setting_btn = (ImageButton) findViewById(R.id.post_setting_btn);
         post_setting_btn.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +191,7 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -189,4 +215,98 @@ public class PostActivity extends AppCompatActivity {
         drawable.draw(canvas);
         return bitmap;
     }
+
+    //server에서 data전달
+    public JSONObject getPostData(){
+        JSONObject item = new JSONObject();
+
+        // 임시 데이터 저장
+        try{
+            item.put("userId", "wonhee");
+            item.put("timeStamp", "21-02-07");
+            item.put("likeCnt", 499);
+            item.put("comCnt", 204);
+            item.put("text", "hi everyone");
+            item.put("profileImg",R.drawable.ic_baseline_emoji_emotions_24);
+            item.put("postImg",R.drawable.sampleimg);
+            item.put("like", 0);
+            item.put("keep",0);
+            item.put("ccl1",0);
+            item.put("ccl2",0);
+            item.put("ccl3",0);
+            item.put("ccl4",0);
+            item.put("ccl5",0);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return item;
+    }
+
+    //server에서 data전달
+    public JSONObject getHashtagData(){
+        JSONObject item = new JSONObject();
+        JSONArray arr= new JSONArray();
+
+        //임시 데이터 저장
+        try{
+            for(int i = 0; i < 5; i++){
+                JSONObject obj = new JSONObject();
+                obj.put("content", "#캘리그라피");
+                arr.put(obj);
+            }
+            item.put("data", arr);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return item;
+    }
+
+    //server에서 data전달
+    public JSONObject getItemtagData(){
+        JSONObject item = new JSONObject();
+        JSONArray arr= new JSONArray();
+
+        //임시 데이터 저장
+        try{
+            for(int i = 0; i < 5; i++){
+                JSONObject obj = new JSONObject();
+                obj.put("Image", R.drawable.sampleimg);
+                arr.put(obj);
+            }
+            item.put("data", arr);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return item;
+    }
+
+    // server에서 data전달
+    public JSONObject getCmtData(){
+        JSONObject item = new JSONObject();
+        JSONArray arr= new JSONArray();
+
+        // 임시 데이터 저장
+        try{
+            JSONObject obj = new JSONObject();
+            obj.put("userId", "wonhee");
+            obj.put("cmt", "와 정말 멋져요");
+            arr.put(obj);
+
+            JSONObject obj2 = new JSONObject();
+            obj2.put("userId", "YUJIN");
+            obj2.put("cmt", "좋아요 누르고 갑니다~");
+            arr.put(obj2);
+
+            JSONObject obj3 = new JSONObject();
+            obj2.put("userId", "YUJIN");
+            obj2.put("cmt", "안녕하세요");
+            arr.put(obj2);
+
+            item.put("data", arr);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return item;
+    }
+
 }
