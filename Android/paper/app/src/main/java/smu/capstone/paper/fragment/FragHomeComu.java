@@ -74,6 +74,7 @@ public class FragHomeComu extends Fragment {
         }
         gridView.setAdapter(adapter);
 
+
         //Click Listener
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
