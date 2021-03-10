@@ -90,6 +90,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
        try {
            final JSONObject item = dataList.getJSONObject(position);
            iconInfo.add(new HomeFeedItem(item.getInt("like"), item.getInt("likeCnt"), item.getInt("keep")));
+           final int postId = item.getInt("postId");
            setItem(holder, item, position);
 
            if(iconInfo.get(position).getLike() == 0){
@@ -106,6 +107,31 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
            else{
                holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_24));
            }
+
+           holder.comment.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   Intent intent = new Intent(context, PostActivity.class);
+
+                   // 게시글 id 넘겨주기
+                   intent.putExtra("postId", postId);
+
+                   context.startActivity(intent);
+               }
+           });
+
+           holder.text.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   Intent intent = new Intent(context, PostActivity.class);
+
+                   // 게시글 id 넘겨주기
+                   intent.putExtra("postId", postId);
+
+                   context.startActivity(intent);
+               }
+           });
+
        } catch (JSONException e){
            e.printStackTrace();
 
@@ -172,29 +198,27 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             }
         });
 
-       holder.comment.setOnClickListener(new View.OnClickListener() {
+/*       holder.comment.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Intent intent = new Intent(context, PostActivity.class);
+
+               // 게시글 id 넘겨주기
+               //intent.putExtra("postId", item.getInt("postId"));
+               context.startActivity(intent);
+           }
+       });*/
+
+/*       holder.text.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
                Intent intent = new Intent(context, PostActivity.class);
 
                // 게시글 id 넘겨주기
                //intent.putExtra("postId", items.get(position).getPostId());
-
                context.startActivity(intent);
            }
-       });
-
-       holder.text.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               Intent intent = new Intent(context, PostActivity.class);
-
-               // 게시글 id 넘겨주기
-               //intent.putExtra("postId", items.get(position).getPostId());
-
-               context.startActivity(intent);
-           }
-       });
+       });*/
 
     }
 

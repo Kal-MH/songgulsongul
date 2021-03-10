@@ -64,7 +64,7 @@ public class FragHomeComu extends Fragment {
 
         // view에서 id 찾아야함
         GridView gridView = view.findViewById(R.id.comu_grid);
-        JSONObject obj = getPostData();
+        final JSONObject obj = getPostData();
 
         // 어뎁터 적용
         try {
@@ -79,16 +79,17 @@ public class FragHomeComu extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                // 서버에 게시글 id 전달
-                //---------------------
-
-                //if resultCode == 200
                 Intent intent = new Intent(getContext(), PostActivity.class);
+
+                // 게시글 id 전달
+                try {
+                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("postId");
+                    intent.putExtra("postId", postId);
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
                 startActivity(intent);
-
-                //if resultCode == 500 (sever err)
-                //Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
             }
         });
@@ -102,12 +103,15 @@ public class FragHomeComu extends Fragment {
     public JSONObject getPostData(){
         JSONObject item = new JSONObject();
         JSONArray arr= new JSONArray();
+        int pid = 1;
 
         //임시 데이터 저장
         try{
             for(int i = 0; i < 20; i++){
                 JSONObject obj = new JSONObject();
                 obj.put("postImage", R.drawable.sampleimg);
+                obj.put("postId", pid);
+                pid++;
                 arr.put(obj);
             }
             item.put("data", arr);

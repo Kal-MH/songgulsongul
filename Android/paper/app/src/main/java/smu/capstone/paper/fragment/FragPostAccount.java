@@ -37,7 +37,7 @@ public class FragPostAccount extends Fragment {
 
         GridView gridView = view.findViewById(R.id.frag_account_grid);
 
-        JSONObject obj = getAccountData();
+        final JSONObject obj = getAccountData();
 
         try {
             adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, obj);
@@ -50,15 +50,17 @@ public class FragPostAccount extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                // 서버에 게시글 id 전달
-                //---------------------
-
-                //if resultCode == 200
                 Intent intent = new Intent(getContext(), PostActivity.class);
-                startActivity(intent);
 
-                //if resultCode == 500 (sever err)
-                //Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                // 게시글 id 전달
+                try {
+                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("postId");
+                    intent.putExtra("postId", postId);
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                startActivity(intent);
 
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
 
@@ -71,12 +73,15 @@ public class FragPostAccount extends Fragment {
     public JSONObject getAccountData(){
         JSONObject item = new JSONObject();
         JSONArray arr= new JSONArray();
+        int pid = 1;
 
         //임시 데이터 저장
         try{
             for(int i = 0; i < 14; i++){
                 JSONObject obj = new JSONObject();
                 obj.put("postImage", R.drawable.ic_favorite_border);
+                obj.put("postId", pid);
+                pid++;
                 arr.put(obj);
             }
             item.put("data", arr);

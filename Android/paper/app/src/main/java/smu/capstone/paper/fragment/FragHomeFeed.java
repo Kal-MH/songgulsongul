@@ -90,6 +90,7 @@ public class FragHomeFeed extends Fragment {
             obj.put("postImg",R.drawable.sampleimg);
             obj.put("like", 0);
             obj.put("keep",0);
+            obj.put("postId", 1);
             arr.put(obj);
 
             JSONObject obj2 = new JSONObject();
@@ -102,6 +103,7 @@ public class FragHomeFeed extends Fragment {
             obj2.put("postImg", R.drawable.test);
             obj2.put("like", 0);
             obj2.put("keep", 0);
+            obj2.put("postId",2);
             arr.put(obj2);
 
             item.put("data", arr);
