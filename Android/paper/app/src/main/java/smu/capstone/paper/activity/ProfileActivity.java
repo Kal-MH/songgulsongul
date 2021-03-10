@@ -9,10 +9,12 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -117,6 +119,27 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        //Click Listener
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                Intent intent = new Intent(ProfileActivity.this, PostActivity.class);
+
+                // 게시글 id 전달
+                try {
+                    int postId = post_item.getJSONArray("data").getJSONObject(position).getInt("postId");
+                    intent.putExtra("postId", postId);
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                startActivity(intent);
+                Log.d("TAG", position + "is Clicked");      // Can not getting this method.
+            }
+        });
     }
 
 
@@ -142,24 +165,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
         return profile_item;
     }
-
-    public void setProfileData(){
-
-        JSONObject data = getProfileData();
-        try {
-            follow_count_tv.setText(data.getInt("follow_count") +"");
-            follower_count_tv.setText(data.getInt("follower_count" )+"");
-            points_tv.setText(data.getInt("point") + "p");
-            intro_tv.setText(data.getString("intro"));
-            sns_tv.setText(data.getString("sns"));
-            Glide.with(this).load(data.getInt("picture")).into(profile_userimage); // 게시물 사진
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public JSONObject getPostData(){
         post_item = new JSONObject();
         JSONArray arr= new JSONArray();
@@ -189,7 +194,22 @@ public class ProfileActivity extends AppCompatActivity {
         return post_item;
     }
 
-    // 서버에서 데이터가져온후 어뎁터에 세팅
+
+    public void setProfileData(){
+        JSONObject data = getProfileData();
+        try {
+            follow_count_tv.setText(data.getInt("follow_count") +"");
+            follower_count_tv.setText(data.getInt("follower_count" )+"");
+            points_tv.setText(data.getInt("point") + "p");
+            intro_tv.setText(data.getString("intro"));
+            sns_tv.setText(data.getString("sns"));
+            Glide.with(this).load(data.getInt("picture")).into(profile_userimage); // 게시물 사진
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
     public void setPostData(){
         JSONObject data = getPostData();
         try {
