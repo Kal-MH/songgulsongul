@@ -12,6 +12,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
@@ -20,10 +24,7 @@ import smu.capstone.paper.item.StickerItem;
 
 public class StickerSearchActivity extends AppCompatActivity {
 
-    ArrayList<StickerItem> items = new ArrayList<StickerItem>();
-    public void addItem(StickerItem item){
-        items.add(item);
-    }
+    StickerSearchAdapter adapter;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -44,14 +45,59 @@ public class StickerSearchActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.sticker_search_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        addItem(new StickerItem(R.drawable.test, "sample1", "10p"));
-        addItem(new StickerItem(R.drawable.ic_favorite, "sample2", "20p"));
-        addItem(new StickerItem(R.drawable.ic_favorite_border, "sample3", "30p"));
-        addItem(new StickerItem(R.drawable.sampleimg, "sample4", "40p"));
+        JSONObject obj = getStickerData();
 
-        StickerSearchAdapter adapter = new StickerSearchAdapter(this, items);
+        try {
+            adapter = new StickerSearchAdapter(this, obj);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         recyclerView.setAdapter(adapter);
 
+    }
+
+    public JSONObject getStickerData(){
+        JSONObject item = new JSONObject();
+        JSONArray arr= new JSONArray();
+
+        // fraghomemarket activity에서 넘겨받은 query로 서버와 통신
+        // ------------------------------------------------------
+
+        try{
+            JSONObject obj1 = new JSONObject();
+            obj1.put("stickerName", "sample1");
+            obj1.put("stickerPrice", "10p");
+            obj1.put("stickerImage", R.drawable.test);
+            obj1.put("stickerId", 1);
+            arr.put(obj1);
+
+            JSONObject obj2 = new JSONObject();
+            obj2.put("stickerName", "sample2");
+            obj2.put("stickerPrice", "20p");
+            obj2.put("stickerImage", R.drawable.ic_favorite);
+            obj2.put("stickerId", 2);
+            arr.put(obj2);
+
+            JSONObject obj3 = new JSONObject();
+            obj3.put("stickerName", "sample3");
+            obj3.put("stickerPrice", "30p");
+            obj3.put("stickerImage", R.drawable.ic_favorite_border);
+            obj3.put("stickerId", 3);
+            arr.put(obj3);
+
+            JSONObject obj4 = new JSONObject();
+            obj4.put("stickerName", "sample4");
+            obj4.put("stickerPrice", "40p");
+            obj4.put("stickerImage", R.drawable.sampleimg);
+            obj4.put("stickerId", 4);
+            arr.put(obj4);
+
+            item.put("data", arr);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return item;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

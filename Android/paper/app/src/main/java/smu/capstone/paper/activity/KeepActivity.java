@@ -61,7 +61,7 @@ public class KeepActivity extends AppCompatActivity {
         }
         gridView.setAdapter(adapter);
 
-        // PostActivity에서 전달받은 프로필 사진으로 셋팅
+        // ProfileActivity에서 전달받은 프로필 사진으로 셋팅
         //Intent intent = getIntent();
         //keep_imae.setImageResource(intent.getIntExtra("profileImg", 0));
 
