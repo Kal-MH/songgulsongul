@@ -2,6 +2,14 @@ const statusCode = require("../config/serverStatusCode");
 const connection = require("../db/db");
 
 const postController = {
+    /*
+     * 특정피드를 포함해서 20개 가져오기
+     * - 특정피드를 첫번째로 해서 20개를 가져오자
+     * api : /post/:id?offset=0
+     * 1안 : select * from post order by field(post_id, 1) desc, post_time desc //특정 피드를 제일 먼저 올리고 나머지는 최신순으로
+     *       SELECT * FROM 테이블 order by project_name asc LIMIT 10 OFFSET 300000;
+     * 2안 : select * from post where id >= (select id from post where id = 8) limit 20 offset 0;
+     */
     getPostDetail : function (req, res) {
         const postId = req.params.id;
         const appName = res.locals.appName;
@@ -66,6 +74,51 @@ const postController = {
         })
 
     },
+    /*
+     * api plane
+     * mainFeed : /post/feed?category=main&offset=20
+     * homeFeed(follow feed) : /post/feed?category=home&offset=20
+     * keepFeed : /post/feed?category=keep&offset=20
+     * 
+     * const category = req.query.category
+     * const offset = req.query.offset
+     * 
+     * <로그인 정보 불필요>
+     * mainFeed sql : select * from post order by post_time desc, post_date desc limit 20 offset 20
+     * 
+     * <로그인 정보 필요>
+     * homeFeed sql : follow table과 post table 조인해서 넘겨줌
+     * keepFeed sql : keep table, post table 조인해서 넘겨줌
+     * 
+     * 넘겨줄 데이터
+     *  - postid, image, text, user_id(작성자 아이디)
+     */
+    getHomeFeed : function (req, res) {
+        var loggedUser = res.locals.loggedUser;
+
+        var selectFollowSql = `select follow_target_id from follower where follower_id = ${loggedUser.id};`;
+        connection.query(selectFollowSql, function (err, result) {
+            if (err){
+                //set error handling
+            } else {
+                var selectPostJoinSql = `select * from post where `;
+                for(var i = 0;i < sql.length - 1;i++){
+                    selectPostJoinSql += `id = ${result[i]} or`
+                }
+                selectPostJoinSql += `id = ${result[result.length - 1]} order by post_time desc, post_date desc;`;
+
+                connection.query(selectPostJoinSql, function (req, result) {
+                    if (err){
+                        //set error handling
+                    } else {
+                        res.json({
+                            'data' : result
+                        })
+                    }
+                })
+            }
+        })
+    },
     getMainFeed : function (req, res) {
         const appName = res.locals.appName;
         const user = res.locals.loggedUser;
@@ -85,6 +138,14 @@ const postController = {
         })
 
     },
+    /*
+     * api plane
+     * 
+     * 1. 그냥 이대로 라우터를 태그검색과 아이디 검색을 분리해서 관리할 지
+     * 2. api 하나에 쿼리값을 달리해서 구분할 지
+     *      - api : /post/search?method=tag&keyword=searchKeyword (GET) 
+     *              or /post/search?method=tag (POST)
+     */
     postSearchTag : function (req, res) {
         var searchKeyword = req.body.searchKeyword;
 
