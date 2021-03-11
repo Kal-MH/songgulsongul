@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 import smu.capstone.paper.R;
@@ -75,19 +76,30 @@ public class FragUploadCam extends Fragment {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
 
-                File outputDir = context.getCacheDir();
-                File tempFile = new File(outputDir, "temp.dat");
+                File tempFile;
                 try {
+                    tempFile = File.createTempFile("temp", null, context.getCacheDir());
+
                     OutputStream os = new FileOutputStream(tempFile);
                     os.write(data);
                     os.flush();
                     os.close();
-                } catch (Exception e) { Log.e(context.getClass().getSimpleName(), "Error writing file", e);}
 
-                String filePath= tempFile.getAbsolutePath();
-                Intent intent = new Intent(context, EditActivity.class);
-                intent.putExtra("path", filePath);
-                startActivity(intent);
+
+                    String filePath= tempFile.getAbsolutePath();
+                    Intent intent = new Intent(context, EditActivity.class);
+                    intent.putExtra("path", filePath);
+                    startActivity(intent);
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                catch ( Exception ee){
+
+                }
+
+
 
             }
         });
