@@ -1,5 +1,7 @@
 const statusCode = require("../config/serverStatusCode");
 const connection = require("../db/db");
+const postController_subFunc = require("./postController_sub");
+const db_config = require("../db/db_config");
 
 const postController = {
     /*
@@ -8,7 +10,7 @@ const postController = {
      * api : /post/:id?offset=0
      * 1안 : select * from post order by field(post_id, 1) desc, post_time desc //특정 피드를 제일 먼저 올리고 나머지는 최신순으로
      *       SELECT * FROM 테이블 order by project_name asc LIMIT 10 OFFSET 300000;
-     * 2안 : select * from post where id >= (select id from post where id = 8) limit 20 offset 0;
+     * 2안 : post_id를 첫번째 레코드로 row_num테이블을 만들어서 20개 뽑아오기
      */
     getPostDetail : function (req, res) {
         const postId = req.params.id;
@@ -93,10 +95,11 @@ const postController = {
      * 넘겨줄 데이터
      *  - postid, image, text, user_id(작성자 아이디)
      */
-    getHomeFeed : function (req, res) {
-        var loggedUser = res.locals.loggedUser;
+    getHomeFeeds : function (req, res) {
+        const loggedUser = res.locals.loggedUser;
+        const offset = req.query.offset;
 
-        var selectFollowSql = `select follow_target_id from follower where follower_id = ${loggedUser.id};`;
+        const selectFollowSql = `select follow_target_id from follower where follower_id = ${loggedUser.id} limit ${db_config.limitation} offset ${offset};`;
         connection.query(selectFollowSql, function (err, result) {
             if (err){
                 //set error handling
@@ -119,12 +122,13 @@ const postController = {
             }
         })
     },
-    getMainFeed : function (req, res) {
+    getMainFeeds : function (req, res) {
         const appName = res.locals.appName;
         const user = res.locals.loggedUser;
+        const offset = req.query.offset;
 
         //20개만 받아오기
-        var sql = "select * from post order by post_time desc, post_date desc;"
+        var sql = `select * from post order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`
 
         connection.query(sql, function (err, result) {
             if (err){
@@ -146,37 +150,14 @@ const postController = {
      *      - api : /post/search?method=tag&keyword=searchKeyword (GET) 
      *              or /post/search?method=tag (POST)
      */
-    postSearchTag : function (req, res) {
-        var searchKeyword = req.body.searchKeyword;
+    postSearch : function (req, res) {
+        const method = req.query.method;
 
-        var sql = `select h.post_id, h.text, p.image, p.post_time, p.post_date from hash_tag as h join post as p on h.post_id = p.id and h.text like "${searchKeyword}%" order by post_time desc, post_date desc;`;
-        connection.query(sql, function (err, result) {
-            if (err){
-                console.log(err);
-                res.json({
-                    'code' : statusCode.CLIENT_ERROR
-                })
-            } else {
-                //이후에 res.json으로 수정
-                res.render("search.ejs", {searchKeyword : searchKeyword, posts : result})
-            }
-        })
-    },
-    postSearchId : function (req, res) {
-        var searchKeyword = req.body.searchKeyword;
-
-        var sql = `select * from user where login_id="${searchKeyword}";`;
-        connection.query(sql, function (err, result) {
-            if (err){
-                console.log(err);
-                res.json({
-                    'code' : statusCode.CLIENT_ERROR
-                })
-            } else {
-                //이후에 res.json으로 수정
-                res.render("searchid.ejs", {searchKeyword : searchKeyword, posts : result})
-            }
-        })
+        if (method == 'tag'){
+            postController_subFunc.postSearchTag(req, res);
+        } else if (method == 'id'){
+            postController_subFunc.postSearchId(req, res);
+        }
     },
     postUpload : function (req, res) {
         var loggedUser = res.locals.loggedUser;

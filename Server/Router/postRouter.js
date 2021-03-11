@@ -5,9 +5,9 @@ const routes = require('../routes');
 
 var postRouter = express.Router();
 
-postRouter.get(routes.postMainFeed, postController.getMainFeed);
-postRouter.post(routes.postSearchTag, postController.postSearchTag);
-postRouter.post(routes.postSearchId, postController.postSearchId);
+postRouter.get(routes.postFeedsMain, postController.getMainFeeds);
+postRouter.get(routes.postFeedsHome, postController.getHomeFeeds);
+postRouter.post(routes.postSearch, postController.postSearch);
 postRouter.get(routes.postDetail, postController.getPostDetail);
 
 //사용자 로그인상태 확인

@@ -19,10 +19,14 @@ const PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
 
 //post Router
 const POST = "/post";
-const POST_MAINFEED = "/main-feed";
+const POST_FEEDS_MAIN = "/feeds/main";
+const POST_FEEDS_HOME = "/feeds/home";
 const POST_UPLOAD = "/upload";
+const POST_SEARCH = "/search";
+//----------------------delete---------------
 const POST_SEARCH_TAG = "/search/tag";
 const POST_SEARCH_ID = "/search/id"
+//----------------------delete---------------
 const POST_DETAIL = "/:id";
 const POST_UPDATE = "/update/:id"
 
@@ -57,8 +61,10 @@ const routes = {
     profileEditIdCheck : PROFILE_EDIT_IDCHECK,
     profileEdit : PROFILE_EDIT,
     post : POST,
-    postMainFeed : POST_MAINFEED,
+    postFeedsMain : POST_FEEDS_MAIN,
+    postFeedsHome : POST_FEEDS_HOME,
     postUpload : POST_UPLOAD,
+    postSearch : POST_SEARCH,
     postSearchTag : POST_SEARCH_TAG,
     postSearchId : POST_SEARCH_ID,
     postDetail : POST_DETAIL,
