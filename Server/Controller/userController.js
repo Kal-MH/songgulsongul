@@ -38,7 +38,7 @@
              for(let i = 0; i < rows[2].length(); i++){
                var pdata = {
                  'image': rows[2][i].image,
-                 'postId': rows[2][i].id
+                 'postId': rows[2][i].id,
                };
                post_info.push(pdata);
              }
@@ -46,11 +46,11 @@
              var prodata = {
                'profile_image': rows[3].img_profile,
                'intro': rows[3].intro,
-               'sns': rows[3].sns_url,
+               'sns': rows[3].sns_url
              }
 
              if(status === 1){ // 로그인한 사용자의 프로필일 경우
-               prodata.push(rows[3].point);
+               prodata.'point' = rows[3].point;
              }
              profile_info.push(prodata);
            }
@@ -118,68 +118,152 @@
        });
      },
 
+     // 팔로우, 팔로워 리스트는 로그인한 사용자와 선택한 사용자의 리스트를 모두 보내 프론트에서 비교하도록 구현 --> 추후 변경 가능
+     // status가 1일 경우에는 로그인한 사용자의 리스트만 보냄
+
      // 팔로우 리스트
      userFollowList : function(req, res){
+       const login_id = req.body.loginId;
        const user_id = req.body.userId;
-       var param = [user_id];
-       var follow_info = [];
+       const status = req.body.status;
+       var params = [login_id, user_id];
+       var login_follow_info = [];
+       var user_follow_info = [];
 
-       var sql = 'SELECT * FROM user JOIN follow ON follow.follow_target_id = user.id WHERE follow.follower_id = ?'; // 팔로우 리스트
-       connection.query(sql, param, function(err, rows){
-         var resultCode = statusCode.CLIENT_ERROR;
+       var sql1 = 'SELECT * FROM user JOIN follow ON follow.follow_target_id = user.id WHERE follow.follower_id = ?'; // 로그인한 사용자의 팔로우 리스트
+       var sql2 = 'SELECT * FROM user JOIN follow ON follow.follow_target_id = user.id WHERE follow.follower_id = ?'; // 선택한 사용자의 팔로우 리스트
 
-         if(err){
-           console.log(err);
-         }
-         else{
-           resultCode = statusCode.OK;
+       if(status === 1) { // 로그인한 사용자일 경우
+         connection.query(sql1, [login_id], function(err, rows){
+           var resultCode = statusCode.CLIENT_ERROR;
 
-           for(let i = 0; i < rows.length(); i++){
-             var followInfo = {
-               'image': rows[i].img_profile,
-               'userid': rows[i].login_id;
-             };
-             follow_info.put(followInfo);
+           if(err){
+             console.log(err);
            }
-         }
+           else{
+             resultCode = statusCode.OK;
 
-         res.json({
-           'code': resultCode,
-           'followinfo': follow_info
+             for(let i = 0; i < rows.length(); i++){
+               var followInfo = {
+                 'image': rows[i].img_profile,
+                 'userid': rows[i].login_id
+               };
+               login_follow_info.put(followInfo);
+             }
+           }
+
+           res.json({
+             'code': resultCode,
+             'followinfo': login_follow_info
+           })
          })
-       })
+       }
+       else{
+         connection.query(sql1 + sql2, params, function(err, rows){
+           var resultCode = statusCode.CLIENT_ERROR;
+
+           if(err){
+             console.log(err);
+           }
+           else{
+             resultCode = statusCode.OK;
+
+             for(let i = 0; i < rows[0].length(); i++){
+               var loginFollowInfo = {
+                 'image': rows[0][i].img_profile,
+                 'userid': rows[0][i].login_id
+               };
+               login_follow_info.put(loginFollowInfo);
+             }
+
+             for(let i = 0; i < rows[1].length(); i++){
+               var userFollowInfo = {
+                 'image': rows[1][i].img_profile,
+                 'userId': rows[1][i].login_id
+               };
+               user_follow_info.put(userFollowInfo);
+             }
+           }
+
+           res.json({
+             'code': resultCode,
+             'loginfollowinfo': login_follow_info,
+             'userfollowinfo': user_follow_info
+           })
+         })
+       }
      },
 
      // 팔로워 리스트
      userFollowerList : function(req, res){
+       const login_id = req.body.loginId;
        const user_id = req.body.userId;
-       var param = [user_id];
-       var follower_info = [];
+       const status = req.body.status;
+       var params = [login_id, user_id];
+       var login_follower_info = [];
+       var user_follower_info = [];
 
-       var sql = 'SELECT COUNT(*) FROM user JOIN follow ON follow.follower_id = user.id WHERE follow.follow_target_id = ?'; // 팔로워 리스트
-       connection.query(sql, param, function(err, rows){
-         var resultCode = statusCode.CLIENT_ERROR;
+       var sql1 = 'SELECT COUNT(*) FROM user JOIN follow ON follow.follower_id = user.id WHERE follow.follow_target_id = ?'; // 로그인한 사용자의 팔로워 리스트
+       var sql2 = 'SELECT COUNT(*) FROM user JOIN follow ON follow.follower_id = user.id WHERE follow.follow_target_id = ?'; // 선택한 사용자의 팔로워 리스트
 
-         if(err){
-           console.log(err);
-         }
-         else{
-           resultCode = statusCode.OK;
+       if(status === 1) { // 로그인한 사용자일 경우
+         connection.query(sql1, [login_id], function(err, rows){
+           var resultCode = statusCode.CLIENT_ERROR;
 
-           for(let i = 0; i < rows.length(); i++){
-             var followerInfo = {
-               'image': rows[i].img_profile,
-               'userid': rows[i].login_id;
-             };
-             follower_info.put(followerInfo);
+           if(err){
+             console.log(err);
            }
-         }
+           else{
+             resultCode = statusCode.OK;
 
-         res.json({
-           'code': resultCode,
-           'followerinfo': follower_info
+             for(let i = 0; i < rows.length(); i++){
+               var followerInfo = {
+                 'image': rows[i].img_profile,
+                 'userid': rows[i].login_id
+               };
+               login_follower_info.put(followerInfo);
+             }
+           }
+
+           res.json({
+             'code': resultCode,
+             'followerinfo': login_follower_info
+           })
          })
-       })
+       }
+       else{
+         connection.query(sql1 + sql2, params, function(err, rows){
+           var resultCode = statusCode.CLIENT_ERROR;
+
+           if(err){
+             console.log(err);
+           }
+           else{
+             resultCode = statusCode.OK;
+
+             for(let i = 0; i < rows[0].length(); i++){
+               var loginFollowerInfo = {
+                 'image': rows[0][i].img_profile,
+                 'userid': rows[0][i].login_id
+               };
+               login_follower_info.put(lgoinFollowerInfo);
+             }
+             for(let i = 0; i < rows[1].length(); i++){
+               var userFollowerInfo = {
+                 'image': rows[1][i].img_profile,
+                 'userId': rows[1][i].login_id
+               };
+               user_follower_info.put(userFollowerInfo);
+             }
+           }
+
+           res.json({
+             'code': resultCode,
+             'loginfollowerinfo': login_follower_info,
+             'userfollowerinfo': user_follower_info
+           })
+         })
+       }
      },
 
      // 보관함

@@ -98,6 +98,7 @@ public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdap
                             intent.putExtra("image", item.getInt("stickerImage"));
                             intent.putExtra("name", item.getString("stickerName"));
                             intent.putExtra("price", item.getString("stickerPrice"));
+                            intent.putExtra("comment", item.getString("comment"));
 
                             context.startActivity(intent);
                         }
