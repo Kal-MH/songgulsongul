@@ -100,12 +100,6 @@ public class PostActivity extends AppCompatActivity {
         post_itemtag_rv = findViewById(R.id.post_itemtag_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         post_itemtag_rv.setLayoutManager(layoutManager);
-        itemTagAdapter = new AddItemTagAdapter(this ); // 추가모드 어뎁터 세팅
-        itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
-        itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
-        itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
-        itemTagAdapter.insertItem(new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
-        itemTagAdapter.insertItem( new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" ));
 
         try {
             itemTagAdapter = new ItemTagAdapter(post_itemtag_rv.getContext(), obj);

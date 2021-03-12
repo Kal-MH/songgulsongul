@@ -4,13 +4,18 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import smu.capstone.paper.activity.PostEditActivity;
 import smu.capstone.paper.item.ItemtagItem;
 
 
 
 public class AddItemTagAdapter extends ItemTagAdapter {
-    public AddItemTagAdapter(Context context) {
-        super(context);
+    public AddItemTagAdapter(Context context, JSONObject obj) throws JSONException {
+        super(context, obj);
     }
 
     @Override
