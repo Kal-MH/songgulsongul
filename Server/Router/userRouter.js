@@ -15,5 +15,10 @@ userRouter.post(routes.profile, userController.userProfilePost);
 userRouter.post(routes.profileKeep, userController.profileKeep);
 userRouter.post(routes.profileEditIdCheck, userController.profileEditIdCheck);
 userRouter.post(routes.profileEdit, userController.profileEdit);
+userRouter.post(routes.userFollow, userController.userFollowPost);
+userRouter.post(routes.userUnfollow, userController.userUnfollowPost);
+userRouter.post(routes.userFollowList, userController.userFollowList);
+userRouter.post(routes.userFollowerList, userController.userFollowerList);
+userRouter.post(routes.userDataDelete, userController.userDataDelete);
 
  module.exports = userRouter;
