@@ -52,7 +52,7 @@ public class PostActivity extends AppCompatActivity {
     HashTagAdapter hashTagAdapter;
     JSONObject post_item, post_itemtag_item, post_hashtag_item, post_cmt_item;
     TextView post_user_id, post_like_cnt, post_cmt_cnt, post_text;
-    ImageView post_profile_img;
+    ImageView post_profile_img, post_ccl_cc, post_ccl_a, post_ccl_nc, post_ccl_nd, post_ccl_sa;
     int status;
 
     final int MY = 1;
@@ -68,6 +68,11 @@ public class PostActivity extends AppCompatActivity {
         post_cmt_cnt = findViewById(R.id.post_cmt_cnt);
         post_text = findViewById(R.id.post_text);
         post_profile_img = findViewById(R.id.post_profile);
+        post_ccl_cc = findViewById(R.id.post_ccl_cc);
+        post_ccl_a = findViewById(R.id.post_ccl_a);
+        post_ccl_nc = findViewById(R.id.post_ccl_nc);
+        post_ccl_nd = findViewById(R.id.post_ccl_nd);
+        post_ccl_sa = findViewById(R.id.post_ccl_sa);
 
         JSONObject obj1 = getPostData();
         JSONObject obj2 = getHashtagData();

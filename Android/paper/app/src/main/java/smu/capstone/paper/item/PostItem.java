@@ -12,11 +12,11 @@ public class PostItem {
     int commentCounter;
     int like;
     int keep;
-    int ccl1;
-    int ccl2;
-    int ccl3;
-    int ccl4;
-    int ccl5;
+    int ccl_cc;
+    int ccl_a;
+    int ccl_nc;
+    int ccl_nd;
+    int ccl_sa;
     String text;
     int postId;
 
@@ -29,7 +29,7 @@ public class PostItem {
         this.pid = pid;
     }
     public PostItem(String userId, String timeStamp, int favoriteCounter, int commentCounter, String text , int like
-            , Bitmap profile_image, int keep, int ccl1, int ccl2, int ccl3, int ccl4, int ccl5) {
+            , Bitmap profile_image, int keep, int ccl_cc, int ccl_a, int ccl_nc, int ccl_nd, int ccl_sa) {
         this.userId = userId;
         this.timeStamp = timeStamp;
         this.favoriteCounter = favoriteCounter;
@@ -38,11 +38,11 @@ public class PostItem {
         this.like = like;
         this.profile_image = profile_image;
         this.keep = keep;
-        this.ccl1 = ccl1;
-        this.ccl2 = ccl2;
-        this.ccl3 = ccl3;
-        this.ccl4 = ccl4;
-        this.ccl5 = ccl5;
+        this.ccl_cc = ccl_cc;
+        this.ccl_a = ccl_a;
+        this.ccl_nc = ccl_nc;
+        this.ccl_nd = ccl_nd;
+        this.ccl_sa = ccl_sa;
     }
 
     public int getImg() {
@@ -75,11 +75,11 @@ public class PostItem {
     public int getKeep() {
         return keep;
     }
-    public int getCcl1(){return ccl1;}
-    public int getCcl2(){return ccl2;}
-    public int getCcl3(){return ccl3;}
-    public int getCcl4(){return ccl4;}
-    public int getCcl5(){return ccl5;}
+    public int getCcl1(){return ccl_cc;}
+    public int getCcl2(){return ccl_a;}
+    public int getCcl3(){return ccl_nc;}
+    public int getCcl4(){return ccl_nd;}
+    public int getCcl5(){return ccl_sa;}
     public int getPostId(){return postId;}
 
     public void setImg(int img) {
@@ -116,9 +116,9 @@ public class PostItem {
         this.like-=1;
     }
     public void setKeep(int keep) {this.keep = keep;}
-    public void setCcl1(int ccl1) {this.ccl1 = ccl1;}
-    public void setCcl2(int ccl2) {this.ccl2 = ccl2;}
-    public void setCcl3(int ccl3) {this.ccl3 = ccl3;}
-    public void setCcl4(int ccl4) {this.ccl4 = ccl4;}
-    public void setCcl5(int ccl5) {this.ccl5 = ccl5;}
+    public void setCcl1(int ccl1) {this.ccl_cc = ccl_cc;}
+    public void setCcl2(int ccl2) {this.ccl_a = ccl_a;}
+    public void setCcl3(int ccl3) {this.ccl_nc = ccl_nc;}
+    public void setCcl4(int ccl4) {this.ccl_nd = ccl_nd;}
+    public void setCcl5(int ccl5) {this.ccl_sa = ccl_sa;}
 }
