@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,6 +22,8 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -58,6 +61,7 @@ public class PostActivity extends AppCompatActivity {
     final int MY = 1;
     final int OTHER = 2;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,18 +78,15 @@ public class PostActivity extends AppCompatActivity {
         post_ccl_nd = findViewById(R.id.post_ccl_nd);
         post_ccl_sa = findViewById(R.id.post_ccl_sa);
 
-        JSONObject obj1 = getPostData();
-        JSONObject obj2 = getHashtagData();
-        JSONObject obj3 = getItemtagData();
-        JSONObject obj4 = getCmtData();
-
         Intent intent = getIntent();
-        JSONObject obj = null;
-        try {
-            obj = new JSONObject(String.valueOf(intent.getIntExtra("postId",1)));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
+
+        JSONObject post_obj = getPostData();
+        JSONObject hashtag_obj = getHashtagData();
+        JSONObject itemtag_obj = getItemtagData();
+        JSONObject cmt_obj = getCmtData();
+
+
 
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.post_toolbar);
@@ -102,7 +103,7 @@ public class PostActivity extends AppCompatActivity {
         post_itemtag_rv.setLayoutManager(layoutManager);
 
         try {
-            itemTagAdapter = new ItemTagAdapter(post_itemtag_rv.getContext(), obj);
+            itemTagAdapter = new ItemTagAdapter(post_itemtag_rv.getContext(), itemtag_obj);
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -114,13 +115,14 @@ public class PostActivity extends AppCompatActivity {
         post_hashtag_rv = findViewById(R.id.post_hashtag_rv);
         post_hashtag_rv.setLayoutManager(layoutManager2);
 
-        hashTagAdapter = new HashTagAdapter(post_hashtag_rv.getContext(), obj);
+        hashTagAdapter = new HashTagAdapter(post_hashtag_rv.getContext(), hashtag_obj);
         post_hashtag_rv.setAdapter(hashTagAdapter);
 
 
+        post_cmt_list = findViewById(R.id.post_cmt_list);
         //코멘트 어뎁터 설정
         try {
-            cmt_adapter = new PostCmtAdapter(post_cmt_list.getContext(), obj);
+            cmt_adapter = new PostCmtAdapter(post_cmt_list.getContext(), cmt_obj );
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -294,6 +296,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     //server에서 data전달
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public JSONObject getItemtagData(){
         post_itemtag_item = new JSONObject();
         JSONArray arr= new JSONArray();
@@ -302,7 +305,7 @@ public class PostActivity extends AppCompatActivity {
         try{
             for(int i = 0; i < 5; i++){
                 JSONObject obj = new JSONObject();
-                obj.put("Image", R.drawable.sampleimg);
+                obj.put("Image", drawable2Bitmap( getDrawable(R.drawable.sampleimg)) );
                 arr.put(obj);
             }
             post_itemtag_item.put("data", arr);

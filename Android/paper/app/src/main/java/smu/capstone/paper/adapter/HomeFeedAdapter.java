@@ -44,7 +44,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
     public HomeFeedAdapter (Context context, JSONObject obj) throws JSONException{
         this.context = context;
-        this.items = items;
+ //       this.items = items;
         this.obj = obj;
 
         dataList = obj.getJSONArray("data");
@@ -199,32 +199,26 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             }
         });
 
-/*       holder.comment.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               Intent intent = new Intent(context, PostActivity.class);
 
-               // 게시글 id 넘겨주기
+        View.OnClickListener goPostActivity = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, PostActivity.class);
+                // 게시글 id 전달
+                try {
+                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("postId");
+                    intent.putExtra("postId", postId);
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
 
-               intent.putExtra("postId", items.get(position).getPostId());
+                context.startActivity(intent);
+            }
+        };
 
-               context.startActivity(intent);
-           }
-       });*/
-
-/*       holder.text.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               Intent intent = new Intent(context, PostActivity.class);
-
-               // 게시글 id 넘겨주기
-
-               intent.putExtra("postId", items.get(position).getPostId());
-
-
-               context.startActivity(intent);
-           }
-       });*/
+       holder.comment.setOnClickListener(goPostActivity);
+       holder.picture.setOnClickListener(goPostActivity);
+       holder.text.setOnClickListener(goPostActivity);
 
     }
 

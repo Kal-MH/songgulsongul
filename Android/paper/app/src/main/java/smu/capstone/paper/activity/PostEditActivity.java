@@ -1,6 +1,7 @@
 package smu.capstone.paper.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -22,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,7 +37,9 @@ public class PostEditActivity extends AppCompatActivity {
     RecyclerView itemtag_rv;
     AddItemTagAdapter adapter;
     EditText hashtagText;
+    JSONObject itemtag_obj;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,20 +93,20 @@ public class PostEditActivity extends AppCompatActivity {
         });
 
 
+        itemtag_obj = getItemtagData();
 
         // 아이템 태그 어뎁터 설정
         itemtag_rv = findViewById(R.id.post_edit_itemtag_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         itemtag_rv.setLayoutManager(layoutManager);
         try {
-            JSONObject obj = null;
-            adapter = new AddItemTagAdapter(itemtag_rv.getContext(), obj); // 추가모드 어뎁터 세팅
+            adapter = new AddItemTagAdapter(itemtag_rv.getContext(), itemtag_obj); // 추가모드 어뎁터 세팅
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
-        //첫 데이터는 언제나 추가 아이콘으로 세팅
+/*        //첫 데이터는 언제나 추가 아이콘으로 세팅
         adapter.insertItem(
                 new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_baseline_add_24)),0,"add","add" )
         );
@@ -120,7 +125,7 @@ public class PostEditActivity extends AppCompatActivity {
         );
         adapter.insertItem(
                 new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" )
-        );
+        );*/
 
         // 적용
         itemtag_rv.setAdapter(adapter);
@@ -128,7 +133,30 @@ public class PostEditActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public JSONObject getItemtagData(){
+        JSONObject post_itemtag_item = new JSONObject();
+        JSONArray arr= new JSONArray();
 
+        //임시 데이터 저장
+        try{
+
+
+            JSONObject obj2 = new JSONObject();
+            obj2.put("Image", drawable2Bitmap( getDrawable(R.drawable.ic_baseline_add_24)) );
+            arr.put(obj2);
+
+            for(int i = 0; i < 5; i++){
+                JSONObject obj = new JSONObject();
+                obj.put("Image", drawable2Bitmap( getDrawable(R.drawable.sampleimg)) );
+                arr.put(obj);
+            }
+            post_itemtag_item.put("data", arr);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return post_itemtag_item;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

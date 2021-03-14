@@ -2,6 +2,7 @@ package smu.capstone.paper.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -36,7 +37,6 @@ import smu.capstone.paper.item.PostItem;
 
 public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHolder> {
     Context context;
-    ArrayList<ItemtagItem> items;
     JSONObject obj = new JSONObject();
     JSONArray dataList;
     LayoutInflater inf;
@@ -76,12 +76,11 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         try {
             final JSONObject item = dataList.getJSONObject(position);
+            holder.pic.setImageBitmap((Bitmap) item.get("Image"));
         } catch (JSONException e){
             e.printStackTrace();
 
         }
-        ItemtagItem item = items.get(position);
-        holder.pic.setImageBitmap(item.getPic());
 
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,12 +95,12 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return dataList.length();
     }
-
+/*
     public void insertItem(ItemtagItem data){
         items.add(data);
-    }
+    }*/
 
     static class ViewHolder extends RecyclerView.ViewHolder{
 
