@@ -20,7 +20,6 @@ import smu.capstone.paper.R;
 import smu.capstone.paper.item.HomeMarketItem;
 
 public class HomeMarketAdapter extends BaseAdapter {
-    //ArrayList<HomeMarketItem> items;
     JSONObject obj = new JSONObject();
     JSONArray dataList;
     private Context mContext;
@@ -43,7 +42,7 @@ public class HomeMarketAdapter extends BaseAdapter {
     // 받아온 데이터로 마켓 아이템 내용 셋팅
     public void setItem(JSONObject item, ImageView imageView, TextView nameText, TextView costText){
         try {
-            Glide.with(mContext).load(item.getInt("marketImage")).into(imageView); // 사진
+            Glide.with(mContext).load(item.getInt("stickerImage")).into(imageView); // 사진
             nameText.setText(item.getString("name")); // 상품명
             costText.setText(item.getString("price")); // 가격
         } catch (JSONException e){
@@ -74,7 +73,6 @@ public class HomeMarketAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //HomeMarketItem homeMarketItem = items.get(position);
         JSONObject item = new JSONObject();
         try{
             item = dataList.getJSONObject(position);

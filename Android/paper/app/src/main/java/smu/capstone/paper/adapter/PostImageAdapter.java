@@ -41,6 +41,7 @@ public class PostImageAdapter extends BaseAdapter {
         dataList = obj.getJSONArray("data");
         itemCnt = dataList.length();
     }
+
     //삭제할 코드 --> 컴파일용 임시로 둠
     public PostImageAdapter(Context mContext, int layout, ArrayList<PostItem> items) {
         this.mContext = mContext;
@@ -53,8 +54,6 @@ public class PostImageAdapter extends BaseAdapter {
     public void setItem(ImageView imageView, JSONObject item){
         try {
             Glide.with(mContext).load(item.getInt("postImage")).into(imageView); // 게시물 사진
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            imageView.setLayoutParams(new GridView.LayoutParams(340, 350));
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -96,12 +95,14 @@ public class PostImageAdapter extends BaseAdapter {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         if (convertView == null)
             convertView = inf.inflate(layout, null);
 
         ImageView imageView = convertView.findViewById(R.id.post_image_iv);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        imageView.setLayoutParams(new GridView.LayoutParams(350, 350));
         setItem(imageView, item);
-
         return imageView;
     }
 

@@ -40,6 +40,7 @@
             android:gravity="center">
 
             <LinearLayout
+                android:id="@+id/profile_pointview"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -197,6 +198,7 @@
         android:numColumns="3"
         android:stretchMode="columnWidth"
         android:verticalSpacing="5dp"
+        android:visibility="visible"
         tools:layout_editor_absoluteY="108dp"
         tools:listitem="@layout/post_image_item" />
 
