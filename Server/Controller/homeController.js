@@ -13,35 +13,32 @@ const statusCode = require("../config/serverStatusCode");
      homeJoinPost : function (req, res) {
         var email = req.body.email;
         var password = req.body.password;
-        var login_id = req.body.loginId;
-        var sns = req.body.snsAddress;
-        var img_profile = req.file.path;
+        var loginId = req.body.login_id;
+        var snsUrl = req.body.sns_url;
+        var imgProfile = req.file.path;
 
         console.log(req.body)
         //비밀번호 암호화
         crypto.randomBytes(64, function (err, buf) {
           crypto.pbkdf2(password, buf.toString('base64'), 100, 64, 'sha512', function (err, key) {
-            var hashed_password = key.toString('base64');
+            var hashedPassword = key.toString('base64');
             var salt = buf.toString('base64');
             // 삽입을 수행하는 sql문.
-            var sql = 'INSERT INTO user (email, login_id, password, salt, sns, img_profile) VALUES (?, ?, ?, ?, ?, ?)';
-            var params = [email, login_id, hashed_password, salt, sns, img_profile];
+            var sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, point) VALUES (?, ?, ?, ?, ?, ?, 0)';
+            var params = [email, loginId, hashedPassword, salt, snsUrl, imgProfile];
             
             connection.query(sql, params, function (err, result) {
                 var resultCode = statusCode.CLIENT_ERROR;
-                var message = '에러가 발생했습니다';
-        
+             
                 if (err) {
                     console.log(err);
                 } else {
                     resultCode = statusCode.OK; //ok
-                    message = '회원가입에 성공했습니다.';
                 }
                 console.log(result);
         
                 res.json({
                     'code': resultCode,
-                    'message': message
                 });
             });
           })
@@ -50,16 +47,13 @@ const statusCode = require("../config/serverStatusCode");
     //로그인
     homeLoginPost :  function (req, res) {
       var resultCode = statusCode.CLIENT_ERROR;
-      var message = '에러가 발생했습니다.';
-  
+      
       if (req.user){
           resultCode = statusCode.OK;
-          message = message = '로그인 성공! ' + req.user.login_id + '님 환영합니다!';
       }
 
       res.json({
           'code' : resultCode,
-          'message' : message
       })
     },
     //아이디찾기
@@ -73,12 +67,10 @@ const statusCode = require("../config/serverStatusCode");
         if (err){
           res.json({
             'code' : statusCode.SERVER_ERROR,
-            'message' : "error"
           })
         } else if (result.length === 0){
           res.json({
             'code' : statusCode.CLIENT_ERROR,
-            'message' : "no exists"
           })
         } else {
           const mailOptions = {
@@ -94,11 +86,9 @@ const statusCode = require("../config/serverStatusCode");
               resultCode = statusCode.SERVER_ERROR;
             } else {
               resultCode = statusCode.OK;
-              message = "success"
             }
             res.json({
               'code' : resultCode,
-              'message' : message
             })
             smtpTransport.close();
           })
@@ -108,20 +98,18 @@ const statusCode = require("../config/serverStatusCode");
     //비밀번호 찾기
     findPassword : function (req, res) {
       const email = req.body.email;
-      const login_id = req.body.login_id;
+      const loginId = req.body.login_id;
       
       var sql = "select * from user where email = ? and login_id = ?";
-      var params = [email, login_id];
+      var params = [email, loginId];
       connection.query(sql, params, function (err, result) {
         if (err){
           res.json({
             'code' : statusCode.SERVER_ERROR,
-            'message' : "error"
           })
         } else if (result.length === 0){
           res.json({
             'code' : statusCode.CLIENT_ERROR,
-            'message' : "no exists"
           })
         } else {
           //임시 비밀번호 생성
@@ -129,17 +117,16 @@ const statusCode = require("../config/serverStatusCode");
           //비밀번호 암호화
           crypto.randomBytes(64, function (err, buf) {
             crypto.pbkdf2(tmpPassword, buf.toString('base64'), 100, 64, 'sha512', function (err, key) {
-              var hashed_password = key.toString('base64');
+              var hashedPassword = key.toString('base64');
               var salt = buf.toString('base64');
               // 삽입을 수행하는 sql문.
               var passwordSql = "update user set password = ?, salt = ? where email = ? and login_id = ?"
-              var passwordParams = [hashed_password, salt, email, login_id];
+              var passwordParams = [hashedPassword, salt, email, loginId];
               
               connection.query(passwordSql, passwordParams, async function (err, result) {
                 if (err){
                   res.json({
                     'code' : statusCode.SERVER_ERROR,
-                    'message' : "error"
                   })
                 } else {
                   const mailOptions = {
@@ -155,11 +142,9 @@ const statusCode = require("../config/serverStatusCode");
                       resultCode = statusCode.SERVER_ERROR;
                     } else {
                       resultCode = statusCode.OK;
-                      message = "success"
                     }
                     res.json({
                       'code' : resultCode,
-                      'message' : message
                     })
                     smtpTransport.close();
                   })

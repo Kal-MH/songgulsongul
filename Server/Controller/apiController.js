@@ -14,7 +14,7 @@ var generateRandom = function (min, max) {
 const apiController = {
     //아이디 중복체크
     dupIdCheck : function (req, res) {
-        const id = req.body.id;
+        const id = req.body.login_id;
         console.log(id);
 
         var sql = "SELECT login_id from user;";
@@ -22,7 +22,7 @@ const apiController = {
             var resultCode = statusCode.OK;
             if (err){
                 console.log(err);
-                resultCode = statusCode.SERVER_ERROR; //error
+                resultCode = statusCode.SERVER_ERROR;
             } else {
                 for(var i = 0;i < result.length;i++){
                     if (id == result[i].login_id){
@@ -69,6 +69,7 @@ const apiController = {
             smtpTransport.close();
         })
     },
+    //authNumber를 클라이언트에게 보내주기 때문에 추후에 삭제될 수 있음.
     checkEmailAuthNumber : function (req, res) {
         const authNumber = req.body.authNumber;
         console.log(authNumber);

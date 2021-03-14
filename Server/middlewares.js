@@ -20,6 +20,16 @@ var middleWares = {
                 'message' : 'login please'
             })
         }
+    },
+    onlyPublic : function (req, res, next) {
+        if (req.user){
+            res.json({
+                'code' : 204,
+                'message' : 'only public'
+            })
+        } else {
+            next();
+        }
     }
 }
 
