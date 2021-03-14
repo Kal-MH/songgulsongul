@@ -27,7 +27,7 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
     ImageView zoom_background;
     String filePath;
     FrameLayout zoomFrame;
-
+    ZoomView zoomView;
 
     ImageView dot1,dot2,dot3, dot4;
 
@@ -50,7 +50,7 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
         View view = inflater.inflate(R.layout.zoom_item, null, false);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        ZoomView zoomView = new ZoomView((Context)this);
+        zoomView = new ZoomView((Context)this);
         zoomView.addView(view);
         zoomView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
         zoomView.setMaxZoom(4.0F);
