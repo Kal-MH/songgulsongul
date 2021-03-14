@@ -27,7 +27,7 @@
                     <a href="#">+</a>
 		            <a href="/logout" class="btn btn-default btn-sm">로그아웃</a>
                 <% } %> 
-                <% if (options.postUser.user_id == options.user.id) { %>
+                <% if (options.postUser.login_id == options.user.id) { %>
                     <h4>Update</h4>
                     <form action="/post/update/<%= options.postUser.id %> " method="post" enctype="multipart/form-data">
                         <label for="file">Image</label>
@@ -57,13 +57,13 @@
 		        <div class="col-sm-6">
 		            <div class="well">
 						<a href="#">
-                            <img src="/<%= options.postUser.img_profile %> " width="100" height="100">
-                            <h5><%= options.postUser.login_id %> </h5>
+                            <img src="/<%= options.user.img_profile %> " width="100" height="100">
+                            <h5><%= options.user.login_id %> </h5>
                         </a>
-                        <h5><%= options.postUser.post_date %> </h5>
+                        <h5><%= options.post.post_date %> </h5>
 		            </div>
 					<div class="well">
-						<img src="/<%= options.postUser.image %> " width="100" height="100">
+						<img src="/<%= options.post.image %> " width="100" height="100">
                         <br>
                         <% if (likeOnset) { %>
                             <span>♥ <% options.likeNum %> </span>
@@ -76,10 +76,10 @@
                             <span>□ </span>
                         <% } %> 
                         <% if (options.user) { %>
-                            <form action="/api/like/<%= options.postUser.id %> " method="get">
+                            <form action="/api/like/<%= options.post.id %> " method="get">
                                 <input type="submit" value="like">
                             </form>
-                            <form action="/api/keep/<%= options.postUser.id %> " method="get">
+                            <form action="/api/keep/<%= options.post.id %> " method="get">
                                 <input type="submit" value="keep">
                             </form>
                         <% } %>
@@ -89,31 +89,31 @@
                         <form action="/api/keep/<%= options.postUser.id %> " method="get">
                             <input type="submit" value="keep">
                         </form> -->
-                        <h5><%= options.postUser.text %> </h5>
+                        <h5><%= options.post.text %> </h5>
 					</div>
                     <div class="well">
-                        <% for( let i = 0; i < options.hashs.length; i++ ) { %>
-                            <span>#<%= options.hashs[i].text %>  </span>
+                        <% for( let i = 0; i < options.hashTags.length; i++ ) { %>
+                            <span>#<%= options.hashTags[i].text %>  </span>
                             <span> </span>
                         <% } %>
                     </div>
                     <div class="well">
-                        <% for( let i = 0; i < options.items.length; i++ ) { %>
+                        <% for( let i = 0; i < options.itemTags.length; i++ ) { %>
                             <div>
-                                <h5><%= options.items[i].name %> </h5>
-                                <img src="<%= options.items[i].picture %> " alt="">
+                                <h5><%= options.itemTags[i].name %> </h5>
+                                <img src="<%= options.itemTags[i].picture %>" alt="">
                                 <br>
-                                <span><%= options.items[i].lowprice %> - </span>
-                                <span><%= options.items[i].highprice %> </span>
+                                <span><%= options.itemTags[i].lprice %> - </span>
+                                <span><%= options.itemTags[i].hprice %> </span>
                                 <br>
-                                <a href="<%= options.items[i].url %> ">url</a>
+                                <a href="<%= options.itemTags[i].url %>">url</a>
                             </div>
                         <% } %>
                     </div>
                     <div class="well">
                         <h4>comments <%= options.comments.length %> </h4>
                         <% for( let i = 0; i < options.comments.length; i++ ) { %>
-                            <img src="/<%= options.comments[i].img_profile %> " alt="" width="50" height="50">
+                            <img src="/<%= options.comments[i].img_profile %>" alt="" width="50" height="50">
                             <h5> <%= options.comments[i].login_id %> </h5>
                             <h5> <%= options.comments[i].text %> </h5>
                             <% if (options.comments[i].user_id == options.user.id) { %>
