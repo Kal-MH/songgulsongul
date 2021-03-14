@@ -24,6 +24,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.nio.charset.CharsetEncoder;
 
 import smu.capstone.paper.R;
@@ -94,7 +97,12 @@ public class UploadDetailActivity extends AppCompatActivity {
         itemtag_rv = findViewById(R.id.upload_itemtag_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         itemtag_rv.setLayoutManager(layoutManager);
-        adapter = new AddItemTagAdapter(this ); // 추가모드 어뎁터 세팅
+        JSONObject obj = null;
+        try {
+            adapter = new AddItemTagAdapter(itemtag_rv.getContext(),obj ); // 추가모드 어뎁터 세팅
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
         //첫 데이터는 언제나 추가 아이콘으로 세팅

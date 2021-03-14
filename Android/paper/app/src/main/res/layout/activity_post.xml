@@ -138,38 +138,38 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:id="@+id/post_ccl1"
+                            android:id="@+id/post_ccl_cc"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
-                            app:srcCompat="@drawable/ic_baseline_emoji_emotions_24"
+                            app:srcCompat="@drawable/ccl_cc"
                             tools:ignore="VectorDrawableCompat" />
 
                         <ImageView
-                            android:id="@+id/post_ccl2"
+                            android:id="@+id/post_ccl_a"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
-                            app:srcCompat="@drawable/ic_baseline_emoji_emotions_24"
+                            app:srcCompat="@drawable/ccl_attribution"
                             tools:ignore="VectorDrawableCompat" />
 
                         <ImageView
-                            android:id="@+id/post_ccl3"
+                            android:id="@+id/post_ccl_nc"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
-                            app:srcCompat="@drawable/ic_baseline_emoji_emotions_24"
+                            app:srcCompat="@drawable/ccl_noncommercial"
                             tools:ignore="VectorDrawableCompat" />
 
                         <ImageView
-                            android:id="@+id/post_ccl4"
+                            android:id="@+id/post_ccl_nd"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
-                            app:srcCompat="@drawable/ic_baseline_emoji_emotions_24"
+                            app:srcCompat="@drawable/ccl_no_derivative"
                             tools:ignore="VectorDrawableCompat" />
 
                         <ImageView
-                            android:id="@+id/post_ccl5"
+                            android:id="@+id/post_ccl_sa"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
-                            app:srcCompat="@drawable/ic_baseline_emoji_emotions_24"
+                            app:srcCompat="@drawable/ccl_share_alike"
                             tools:ignore="VectorDrawableCompat" />
                     </LinearLayout>
 
