@@ -20,5 +20,6 @@ userRouter.post(routes.userUnfollow, userController.userUnfollowPost);
 userRouter.post(routes.userFollowList, userController.userFollowList);
 userRouter.post(routes.userFollowerList, userController.userFollowerList);
 userRouter.post(routes.userDataDelete, userController.userDataDelete);
+userRouter.post(routes.userLFollowList, userController.userLFollowList);
 
  module.exports = userRouter;
