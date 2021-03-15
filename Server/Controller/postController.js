@@ -9,33 +9,39 @@ const postController = {
      * 특정피드를 포함해서 20개 가져오기
      * - 특정피드를 첫번째로 해서 20개를 가져오자
      * api : /post/:id?offset=0
-     * 1안 : select * from post order by field(post_id, 1) desc, post_time desc //특정 피드를 제일 먼저 올리고 나머지는 최신순으로
-     *       SELECT * FROM 테이블 order by project_name asc LIMIT 10 OFFSET 300000;
-     * 2안 : post_id를 첫번째 레코드로 row_num테이블을 만들어서 20개 뽑아오기
+     * 
+     * 가장 상단에 있는 것이 클릭한 피드.
+     * (클릭한 피드가 최신순이 되기 위해서 해당 피드의 아이디보다 작은 것들로 20개를 긁어온다.) 
      */
     getPostDetail : function (req, res) {
+        const loggedUser = res.locals.loggedUser;
         const postId = req.params.id;
         const offset = req.query.offset ? req.query.offset : 0;
 
-        var selectPostSql = `select * from post where id >= ${postId} order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`;
+        var selectPostSql = `select * from post where id <= ${postId} order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`;
         connection.query(selectPostSql, function (err, result) {
-            var code = statusCode.SERVER_ERROR
             if (err){
                console.log(err)
+               res.json({
+                'code' : statusCode.SERVER_ERROR
+            })
             } else {
                 var posts = result;
 
                 var selectUserSql = "";
-                for(var i = 0; i < result.length; i++) {
-                    selectUserSql += `select login_id, img_profile from user where id = ${result[i].user_id}; `;
-                    selectUserSql += `select text from hash_tag where post_id=${result[i].id};`;
-                    selectUserSql += `select * from item_tag where post_id=${result[i].id};`;
-                    selectUserSql += `select * from likes where post_id=${result[i].id};`;
-                    selectUserSql += `select c.user_id, c.text, u.img_profile, u.login_id from comment as c join user as u on c.post_id=${result[i].id} and c.user_id=u.id;`;
+                for(var i = 0; i < posts.length; i++) {
+                    selectUserSql += `select login_id, img_profile from user where id = ${posts[i].user_id}; `;
+                    selectUserSql += `select text from hash_tag where post_id=${posts[i].id};`;
+                    selectUserSql += `select * from item_tag where post_id=${posts[i].id};`;
+                    selectUserSql += `select * from likes where post_id=${posts[i].id};`;
+                    selectUserSql += `select c.user_id, c.text, u.img_profile, u.login_id from comment as c join user as u on c.post_id=${posts[i].id} and c.user_id=u.id;`;
                 }
                 connection.query(selectUserSql, function (err, result) {
                     if (err){
                         console.log(err);
+                        res.json({
+                            'code' : statusCode.SERVER_ERROR
+                        })
                     } else {
                         /*
                          * To-do
@@ -43,53 +49,66 @@ const postController = {
                          * 2. 보내지는 데이터 확인하기
                          * 3. api문서 마무리 하기
                          * 4. db수정사항과 고려사항 정리하기
+                         * 5. 아이템 태그 default이미지로 저장되는 지 확인하기(o)
+                         * 6. 좋아요, 댓글, 보관함 api확인하기                                                                                               
                          */
+                        var hashItemLikeComments = result;
                         if (loggedUser){
-                            var meLikesSql = `select * from likes where post_id=${postId} and user_id=${(loggedUser) ? loggedUser.id : -1};`;
-                            var meKeepsSql = `select * from keep where post_id=${postId} and user_id=${(loggedUser) ? loggedUser.id : -1};`;
-                            connection.query(meLikesSql + meKeepsSql, function (err, result) {
+                            var selectMeLikesKeepSql = "";
+
+                            for(var i =0;i < posts.length; i++){
+                                selectMeLikesKeepSql += `select * from likes where post_id=${posts[i].id} and user_id=${loggedUser.id};`;
+                                selectMeLikesKeepSql += `select * from keep where post_id=${posts[i].id} and user_id=${loggedUser.id};`;
+                            }
+
+                            connection.query(selectMeLikesKeepSql, function (err, result) {
                                 if (err){
                                     console.log(err);
-                                    res.json({
-                                        'code' : statusCode.CLIENT_ERROR
-                                    })
                                 } else {
-                                    var likeOnset = (result[0].length == 0) ? 0 : 1 ;
-                                    var keepOnset = (result[1].length == 0) ? 0 : 1 ;
+                                    var likeArray = [];
+                                    var keepArray = [];
+
+                                    for(var i =0; i < result.length; i++){
+                                        likeArray.push(result[i * 2]);
+                                        keepArray.push(result[(i * 2) + 1]);
+                                    }
+
+                                    //send Data if user is login
+                                    //postController_subFunc.getPostDetailSendData(req, res, statusCode.OK, posts, hashItemLikeComments, likeArray, keepArray);
                                     
-                                    res.render("postDetail.ejs", {options : options, likeOnset : likeOnset, keepOnset : keepOnset});
+                                    var data = [];
+                                    for(var i = 0;i < posts.length;i++){
+                                        var post = {
+                                            post : posts[i],
+                                            user : hashItemLikeComments[i * 5],
+                                            hashTags : hashItemLikeComments[(i * 5) + 1],
+                                            itemTags : hashItemLikeComments[(i * 5) + 2],
+                                            likeNum : hashItemLikeComments[(i * 5) + 3].length,
+                                            comments : hashItemLikeComments[(i * 5) + 4],
+                                            likeOnset : (likeArray && (likeArray[i] != undefined && likeArray[i].length > 0) ? 1 : 0),
+                                            keepOnset : (keepArray && (keepArray[i] != undefined && keepArray[i].length > 0) ? 1 : 0)
+                                        }
+                                        data.push(post);
+                                    }
+                                    var options = {
+                                        appName : "Caligraphy",
+                                        user : res.locals.loggedUser,
+                                        post : data[0].post,
+                                        postUser : data[0].user,
+                                        hashTags : data[0].hashTags,
+                                        itemTags : data[0].itemTags, 
+                                        likeNum : data[0].likeNum,
+                                        comments : data[0].comments
+                                    }
+
+                                    res.render("postDetail.ejs", {options : options, likeOnset : data[0].likeOnset, keepOnset : data[0].keepOnset});
                                 }
                             })
+                        } else {
+                            //send Data if user is not login
+                            postController_subFunc.getPostDetailSendData(req, res, statusCode.OK, posts, hashItemLikeComments);
                         }
-                        var data = [];
-                        for(var i = 0;i < posts.length;i++){
-                            var post = {
-                                post : posts[i],
-                                user : result[i * 5],
-                                hashTags : result[(i * 5) + 1],
-                                itemTags : result[(i * 5) + 2],
-                                likeNum : result[(i * 5) + 3].length,
-                                comments : result[(i * 5) + 4]
-                            }
-                            data.push(post);
-                        }
-                        code = statusCode.OK;
-                        var options = {
-                            appName : "Caligraphy",
-                            user : res.locals.loggedUser,
-                            post : data[0].post,
-                            postUser : data[0].user,
-                            hashTags : data[0].hashTags,
-                            itemTags : data[0].itemTags, 
-                            likeNum : data[0].likeNum,
-                            comments : data[0].comments
-                        }
-                        res.render("postDetail.ejs", {options : options, likeOnset : 0, keepOnset : 0});
                     }
-                    // res.json({
-                    //     'code' : code,
-                    //     'data' : data
-                    // })
                 })
             }
         })
@@ -238,13 +257,13 @@ const postController = {
      *      - api : /post/search?method=tag&keyword=searchKeyword (GET) 
      *              or /post/search?method=tag (POST)
      */
-    postSearch : function (req, res) {
+    getSearch : function (req, res) {
         const method = req.query.method;
 
         if (method == 'tag'){
-            postController_subFunc.postSearchTag(req, res);
+            postController_subFunc.getSearchTag(req, res);
         } else if (method == 'id'){
-            postController_subFunc.postSearchId(req, res);
+            postController_subFunc.getSearchId(req, res);
         }
     },
     postUpload : function (req, res) {
@@ -266,7 +285,7 @@ const postController = {
          */
         var loggedUser = res.locals.loggedUser;
         var text = req.body.text;
-        var hashTags = req.body.hash_tag;
+        var hashTagsAndItemTags = req.body.hash_tag;
         var items = {
             name : req.body.item_name,
             lowprice : req.body.item_lowprice,
@@ -277,7 +296,6 @@ const postController = {
 
         // post이미지를 여러 개 받을 수 있다는 경우의 수를 고려해서 일단은 multer.array & files로 받는다.
         var postImages = req.files;
-        console.log(postImages[0].path);
         
         var insertPostSql = "";
         var insertPostParams = [];
@@ -310,24 +328,25 @@ const postController = {
                 
                 //hashTag
                 var insertHashSql = "";
-                for(var i = 0;i < hashTags.length; i++){
+                for(var i = 0;i < hashTagsAndItemTags.length; i++){
                     insertHashSql += `insert into hash_tag (post_id, text) values (${postId}, ?);`
                 }
+                //itemTag
+                //배열로 넘겨주기 위해 해시태그와 item태그를 한 배열로 넣는다.(해시태그 먼저, 아이템 태그는 그 뒤에)
                  var insertItemSql = "";
-                 var insertItemParams = [];
                  for(var i = 0;i < items.name.length; i++) {
                      insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, url, picture) 
-                     values(${postId}, '${items.name[i]}', ${items.lowprice[i]}, ${items.highprice[i]}, '${items.itemLink[i]}', ?);`;
+                     values(${postId}, '${items.name[i]}', ${items.lowprice[i]}, ${items.highprice[i]}, ?, ?);`;
                      
+                     hashTagsAndItemTags.push(items.itemLink[i]);
                      if (items.itemImg[i]){
-                         insertItemParams.push(items.itemImg[i])
+                         hashTagsAndItemTags.push(items.itemImg[i])
                      } else {
-                         insertItemParams.push(serverConfig.defaultImg);
+                         hashTagsAndItemTags.push(serverConfig.defaultImg);
                      }
 
                  }
-                
-                 connection.query(insertHashSql + insertItemSql, hashTags + insertItemParams, function (err, result) {
+                 connection.query(insertHashSql + insertItemSql, hashTagsAndItemTags, function (err, result) {
                     if (err){
                         console.log(err);
                         res.json({

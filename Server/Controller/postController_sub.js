@@ -3,7 +3,7 @@ const connection = require("../db/db");
 const statusCode = require("../config/serverStatusCode");
 
 const postController_subFunc = {
-    postSearchTag : function (req, res) {
+    getSearchTag : function (req, res) {
         var searchKeyword = req.query.keyword;
         var offset = req.query.offset;
 
@@ -25,7 +25,7 @@ const postController_subFunc = {
             }
         })
     },
-    postSearchId : function (req, res) {
+    getSearchId : function (req, res) {
         var searchKeyword = req.query.keyword;
         var offset = req.query.offset;
 
@@ -46,6 +46,27 @@ const postController_subFunc = {
             }
         })
     },
+    getPostDetailSendData : function (req, res, statusCode, posts, hashItemLikeComments, likeArray, keepArray) {
+        var data = [];
+
+        for(var i = 0;i < posts.length;i++){
+            var post = {
+                post : posts[i],
+                user : hashItemLikeComments[i * 5],
+                hashTags : hashItemLikeComments[(i * 5) + 1],
+                itemTags : hashItemLikeComments[(i * 5) + 2],
+                likeNum : hashItemLikeComments[(i * 5) + 3].length,
+                comments : hashItemLikeComments[(i * 5) + 4],
+                likeOnset : (likeArray && (likeArray[i] != undefined && likeArray[i].length > 0) ? 1 : 0),
+                keepOnset : (keepArray && (keepArray[i] != undefined && keepArray[i].length > 0) ? 1 : 0)
+            }
+            data.push(post);
+        }
+        res.json({
+            'code' : statusCode,
+            'data' : data
+        })
+    }
 }
 
 module.exports = postController_subFunc;

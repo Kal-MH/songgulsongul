@@ -15,8 +15,10 @@ const routes = require('../routes');
  apiRouter.post(routes.apiDupIdCheck, apiController.dupIdCheck);
  apiRouter.post(routes.apiEmailAuth, apiController.sendEmail);
  apiRouter.post(routes.apiEmailAuthNumber, apiController.checkEmailAuthNumber);
+
  apiRouter.get(routes.apiPostLike, middleWares.onlyPrivate, apiController.setPostLike);
  apiRouter.get(routes.apiPostKeep, middleWares.onlyPrivate, apiController.setPostKeep);
+ 
  apiRouter.post(routes.apiPostCommentInsert,apiController.insertPostComment);
  apiRouter.get(routes.apiPostCommentDelete, apiController.deletePostComment);
 
