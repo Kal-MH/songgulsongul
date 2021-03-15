@@ -11,18 +11,23 @@
         android:layout_height="match_parent"
         android:scaleType="fitCenter" />
 
+    <ImageView
+        android:id="@+id/zoomfocus"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:srcCompat="@drawable/ic_baseline_face_24" />
+
     <FrameLayout
         android:id="@+id/dots"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/dot1"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            app:tint="#6E2ED6"
             android:src="@drawable/ic_favorite"
-            android:id="@+id/dot1"
-            >
+            app:tint="#6E2ED6">
 
         </ImageView>
 

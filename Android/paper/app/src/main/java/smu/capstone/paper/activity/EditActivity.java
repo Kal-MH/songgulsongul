@@ -1,12 +1,18 @@
 package smu.capstone.paper.activity;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,13 +34,15 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
     String filePath;
     FrameLayout zoomFrame;
     ZoomView zoomView;
-
-    ImageView dot1,dot2,dot3, dot4;
+    Toolbar toolbar;
+    ImageView dot1,dot2,dot3, dot4 ;
 
     float oldXvalue;
     float oldYvalue;
 
     ArrayList<int[]> pos;
+
+    ImageView zoomf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +68,14 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
         zoom_background = findViewById(R.id.zoom_background);
 
 
+        //툴바 세팅
+        toolbar = findViewById(R.id.edit_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
+        actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
+
+
 
 
 
@@ -69,7 +85,7 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
         dot4 = findViewById(R.id.dot4);
 
 
-
+        zoomf = findViewById(R.id.zoomfocus);
         setDots();
 
 
@@ -119,9 +135,6 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
     public void onWindowFocusChanged(boolean hasFocus) {
         //이미지 배경화면세팅
         Glide.with(this).load(filePath).into(zoom_background);
-
-
-
         super.onWindowFocusChanged(hasFocus);
     }
 
@@ -129,24 +142,37 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
     public boolean onTouch(View v, MotionEvent event) {
         int width = ((ViewGroup) v.getParent()).getWidth() ;
         int height = ((ViewGroup) v.getParent()).getHeight();
+        int tb_height = toolbar.getHeight();
+        int tb = ((ViewGroup)toolbar.getParent()).getHeight();
+        float zoom = zoomView.getZoom();
 
-        Log.d("point" , "touch  !  " + event.getRawX()   +", " + event.getRawY() );
+        float startX = zoomView.getSmoothZoomX() - width/zoom*0.5f ;
+        float startY =zoomView.getSmoothZoomY() - height/zoom*0.5f;
+
+       // zoomf.setX(startX);
+       // zoomf.setY(startY);
+
+        Log.d("point", "toolbar height " + tb + ", " + tb_height ) ;
+        Log.d("point", "smooth zoom    " + startX + ", " + startY ) ;
+
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
+            oldXvalue = event.getX();
+            oldYvalue = event.getY();
         }
         else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            v.setX( event.getRawX() -  oldXvalue);
-            v.setY( event.getRawY() - (oldYvalue + v.getHeight()));
+//            v.setX( event.getRawX() -  oldXvalue);
+//            v.setY( event.getRawY() - (oldYvalue + v.getHeight() + tb_height)  );
+
+            v.setX( startX + (event.getRawX()/zoom) - oldXvalue);
+            v.setY( startY + ((event.getRawY()-tb_height)/zoom) - (oldYvalue + v.getHeight()/zoom )   );
 
 
-
-
-         //   Log.d("point" , "raw : " + event.getRawX()  +", " + event.getRawY() );
+            Log.d("point", "old val    " + oldXvalue + ", " + oldYvalue ) ;
 
         }
         else if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (v.getX() > width && v.getY() > height) {
+/*            if (v.getX() > width && v.getY() > height) {
                 v.setX(width);
                 v.setY(height);
             }
@@ -154,13 +180,13 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
                 v.setX(0);
                 v.setY(height);
             }
-            else if (v.getX() > width && v.getY() < 0) {
+            else if (v.getX() > width && v.getY() < tb_height) {
                 v.setX(width);
-                v.setY(0);
+                v.setY(tb_height);
             }
-            else if (v.getX() < 0 && v.getY() < 0) {
+            else if (v.getX() < 0 && v.getY() <tb_height ) {
                 v.setX(0);
-                v.setY(0);
+                v.setY(tb_height);
             }
             else if (v.getX() < 0 || v.getX() > width) {
                 if (v.getX() < 0) {
@@ -180,8 +206,36 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
                     v.setX(event.getRawX() - oldXvalue);
                     v.setY(height);
                 }
-            }
+            }*/
         }
         return true;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.next_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
+                finish();
+                return true;
+            }
+
+            case R.id.toolbar_next:
+
+
+                return true;
+
+        }
+        return  true;
+    }
+
+
 }

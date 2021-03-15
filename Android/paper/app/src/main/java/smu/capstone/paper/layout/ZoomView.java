@@ -144,6 +144,11 @@ public class ZoomView extends FrameLayout {
     public float getZoomFocusY() {
         return zoomY * zoom;
     }
+    public float getZoomX(){return zoomX;}
+    public float getZoomY(){return zoomY;}
+
+    public float getSmoothZoomX(){return smoothZoomX;}
+    public float getSmoothZoomY(){return smoothZoomY;}
     @Override
     public boolean dispatchTouchEvent(final MotionEvent ev) {
         // single touch
