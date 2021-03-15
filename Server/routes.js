@@ -65,7 +65,11 @@ const routes = {
     profileKeep : PROFILE_KEEP,
     profileEditIdCheck : PROFILE_EDIT_IDCHECK,
     profileEdit : PROFILE_EDIT,
-<<<<<<< HEAD
+    userFollow : USER_FOLLOW,
+    userUnfollow : USER_UNFOLLOW,
+    userFollowList : USER_FOLLOW_LIST,
+    userFollowerList : USER_FOLLOWER_LIST,
+    userDataDelete : USER_DATA_DELETE,
     post : POST,
     postCommunity : POST_COMMUNITY,
     postFeeds : POST_FEEDS,
@@ -75,13 +79,6 @@ const routes = {
     postSearchId : POST_SEARCH_ID,
     postDetail : POST_DETAIL,
     postUpdate : POST_UPDATE,
-=======
-    userFollow : USER_FOLLOW,
-    userUnfollow : USER_UNFOLLOW,
-    userFollowList : USER_FOLLOW_LIST,
-    userFollowerList : USER_FOLLOWER_LIST,
-    userDataDelete : USER_DATA_DELETE,
->>>>>>> main
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,
     apiEmailAuth: API_EMAIL_AUTH,
