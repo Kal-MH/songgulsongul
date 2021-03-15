@@ -19,7 +19,7 @@ const postController_subFunc = {
                 //이후에 res.json으로 수정
                 res.json({
                     'code' : statusCode.OK,
-                    'posts' : result
+                    'data' : result
                 })
                 //res.render("search.ejs", {searchKeyword : searchKeyword, posts : result})
             }
@@ -40,7 +40,7 @@ const postController_subFunc = {
                 //이후에 res.json으로 수정
                 res.json({
                     'code' : statusCode.OK,
-                    'posts' : result
+                    'data' : result
                 })
                 //res.render("searchid.ejs", {searchKeyword : searchKeyword, posts : result})
             }

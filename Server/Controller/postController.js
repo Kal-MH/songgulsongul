@@ -217,7 +217,7 @@ const postController = {
                     } else {
                         res.json({
                             'code' : statusCode.OK,
-                            'data' : result
+                            'data' : result //result ? result : null로 합쳐서 에러에 있는 res.json과 합치자
                         })
                     }
                 })
