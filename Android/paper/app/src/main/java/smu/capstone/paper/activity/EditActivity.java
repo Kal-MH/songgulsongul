@@ -127,33 +127,42 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        int width = ((ViewGroup) v.getParent()).getWidth() - v.getWidth();
-        int height = ((ViewGroup) v.getParent()).getHeight() - v.getHeight();
+        int width = ((ViewGroup) v.getParent()).getWidth() ;
+        int height = ((ViewGroup) v.getParent()).getHeight();
+
+        Log.d("point" , "touch  !  " + event.getRawX()   +", " + event.getRawY() );
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            oldXvalue = event.getX();
-            oldYvalue = event.getY();
-            //  Log.i("Tag1", "Action Down X" + event.getX() + "," + event.getY());
-            Log.i("Tag1", "Action Down rX " + event.getRawX() + "," + event.getRawY());
-        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            v.setX(event.getRawX() - oldXvalue);
-            v.setY(event.getRawY() - (oldYvalue + v.getHeight()));
-            //  Log.i("Tag2", "Action Down " + me.getRawX() + "," + me.getRawY());
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
 
+        }
+        else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            v.setX( event.getRawX() -  oldXvalue);
+            v.setY( event.getRawY() - (oldYvalue + v.getHeight()));
+
+
+
+
+         //   Log.d("point" , "raw : " + event.getRawX()  +", " + event.getRawY() );
+
+        }
+        else if (event.getAction() == MotionEvent.ACTION_UP) {
             if (v.getX() > width && v.getY() > height) {
                 v.setX(width);
                 v.setY(height);
-            } else if (v.getX() < 0 && v.getY() > height) {
+            }
+            else if (v.getX() < 0 && v.getY() > height) {
                 v.setX(0);
                 v.setY(height);
-            } else if (v.getX() > width && v.getY() < 0) {
+            }
+            else if (v.getX() > width && v.getY() < 0) {
                 v.setX(width);
                 v.setY(0);
-            } else if (v.getX() < 0 && v.getY() < 0) {
+            }
+            else if (v.getX() < 0 && v.getY() < 0) {
                 v.setX(0);
                 v.setY(0);
-            } else if (v.getX() < 0 || v.getX() > width) {
+            }
+            else if (v.getX() < 0 || v.getX() > width) {
                 if (v.getX() < 0) {
                     v.setX(0);
                     v.setY(event.getRawY() - oldYvalue - v.getHeight());
@@ -161,17 +170,17 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
                     v.setX(width);
                     v.setY(event.getRawY() - oldYvalue - v.getHeight());
                 }
-            } else if (v.getY() < 0 || v.getY() > height) {
+            }
+            else if (v.getY() < 0 || v.getY() > height) {
                 if (v.getY() < 0) {
                     v.setX(event.getRawX() - oldXvalue);
                     v.setY(0);
-                } else {
+                }
+                else {
                     v.setX(event.getRawX() - oldXvalue);
                     v.setY(height);
                 }
             }
-
-
         }
         return true;
     }
