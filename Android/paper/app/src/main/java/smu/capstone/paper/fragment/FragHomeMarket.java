@@ -3,6 +3,7 @@ package smu.capstone.paper.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +15,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.StickerDetailActivity;
 import smu.capstone.paper.activity.StickerSearchActivity;
 import smu.capstone.paper.adapter.HomeMarketAdapter;
+import smu.capstone.paper.item.HomeFeedItem;
 import smu.capstone.paper.item.HomeMarketItem;
 
 public  class FragHomeMarket extends Fragment {
     private View view;
     private SearchView searchView;
-    ArrayList<HomeMarketItem> items = new ArrayList<HomeMarketItem>();
-
-    public void addItem(HomeMarketItem item){
-        items.add(item);
-    }
+    HomeMarketAdapter adapter;
 
     @Nullable
     @Override
@@ -38,6 +40,8 @@ public  class FragHomeMarket extends Fragment {
 
         searchView = view.findViewById(R.id.market_search);
         GridView gridView = view.findViewById(R.id.market_grid);
+
+        final JSONObject obj = getMarketData();
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +53,7 @@ public  class FragHomeMarket extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) { // 검색 버튼 눌렀을 시 발생
                 Intent intent = new Intent(getActivity(), StickerSearchActivity.class);
+                intent.putExtra("search", query); // 검색한 내용 전달
                 startActivity(intent);
                 return true;
             }
@@ -59,18 +64,11 @@ public  class FragHomeMarket extends Fragment {
             }
         });
 
-        // 아이템 추가
-        addItem(new HomeMarketItem(R.drawable.sampleimg, "sample1", "20p"));
-        addItem(new HomeMarketItem(R.drawable.test, "sample2", "10p"));
-        addItem(new HomeMarketItem(R.drawable.ic_favorite, "sample3", "50p"));
-        addItem(new HomeMarketItem(R.drawable.test, "sample4", "60p"));
-        addItem(new HomeMarketItem(R.drawable.test, "sample5", "80p"));
-        addItem(new HomeMarketItem(R.drawable.test, "sample6", "100p"));
-        addItem(new HomeMarketItem(R.drawable.test, "sample7", "200p"));
-        addItem(new HomeMarketItem(R.drawable.test, "sample8", "30p"));
-        addItem(new HomeMarketItem(R.drawable.test, "sample9", "25p"));
-
-        HomeMarketAdapter adapter = new HomeMarketAdapter(this.getContext(), R.layout.market_item, items);
+        try {
+           adapter = new HomeMarketAdapter(this.getContext(), R.layout.market_item, obj);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         gridView.setAdapter(adapter);
 
         //Click Listener
@@ -79,15 +77,102 @@ public  class FragHomeMarket extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 Intent intent = new Intent(getContext(), StickerDetailActivity.class);
-                intent.putExtra("image",items.get(position).getImg());
-                intent.putExtra("name", items.get(position).getIname());
-                intent.putExtra("price", items.get(position).getIcost());
-                startActivity(intent);
-                //Log.d("TAG", position + "is Clicked");      // Can not getting this method.
+                // 임시로 내용 전달 --> 실제로는 stickerId만 전달
+                try {
+                    intent.putExtra("stickerId",  obj.getJSONArray("data").getJSONObject(position).getInt("stickerId"));
+                    intent.putExtra("image", obj.getJSONArray("data").getJSONObject(position).getInt("stickerImage"));
+                    intent.putExtra("name", obj.getJSONArray("data").getJSONObject(position).getString("name"));
+                    intent.putExtra("price", obj.getJSONArray("data").getJSONObject(position).getString("price"));
+                    intent.putExtra("comment", obj.getJSONArray("data").getJSONObject(position).getString("comment"));
+                    startActivity(intent);
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                Log.d("TAG", position + "is Clicked");      // Can not getting this method.
 
             }
         });
 
         return view;
     }
+
+    //server에서 data전달
+    public JSONObject getMarketData(){
+        JSONObject item = new JSONObject();
+        JSONArray arr= new JSONArray();
+
+        //임시 데이터 저장
+        try{
+            JSONObject obj = new JSONObject();
+            obj.put("stickerImage", R.drawable.sampleimg);
+            obj.put("name", "sample1");
+            obj.put("price", "20p");
+            obj.put("stickerId", 1);
+            obj.put("comment", "스티커 샘플 1 입니다~");
+            arr.put(obj);
+
+            JSONObject obj2 = new JSONObject();
+            obj2.put("stickerImage", R.drawable.test);
+            obj2.put("name", "sample2");
+            obj2.put("price", "10p");
+            obj2.put("stickerId", 2);
+            obj2.put("comment", "스티커 샘플 2 입니다~");
+            arr.put(obj2);
+
+            JSONObject obj3 = new JSONObject();
+            obj3.put("stickerImage", R.drawable.ic_favorite);
+            obj3.put("name", "sample3");
+            obj3.put("price", "50p");
+            obj3.put("stickerId", 3);
+            obj3.put("comment", "스티커 샘플 3 입니다~");
+            arr.put(obj3);
+
+            JSONObject obj4 = new JSONObject();
+            obj4.put("stickerImage", R.drawable.ic_favorite_border);
+            obj4.put("name", "sample4");
+            obj4.put("price", "40p");
+            obj4.put("stickerId", 4);
+            obj4.put("comment", "스티커 샘플 4 입니다~");
+            arr.put(obj4);
+
+            JSONObject obj5 = new JSONObject();
+            obj5.put("stickerImage", R.drawable.sampleimg);
+            obj5.put("name", "sample5");
+            obj5.put("price", "20p");
+            obj5.put("stickerId", 5);
+            obj5.put("comment", "스티커 샘플 5 입니다~");
+            arr.put(obj5);
+
+            JSONObject obj6 = new JSONObject();
+            obj6.put("stickerImage", R.drawable.test);
+            obj6.put("name", "sample6");
+            obj6.put("price", "10p");
+            obj6.put("stickerId", 6);
+            obj6.put("comment", "스티커 샘플 6 입니다~");
+            arr.put(obj6);
+
+            JSONObject obj7 = new JSONObject();
+            obj7.put("stickerImage", R.drawable.ic_favorite);
+            obj7.put("name", "sample7");
+            obj7.put("price", "50p");
+            obj7.put("stickerId", 7);
+            obj7.put("comment", "스티커 샘플 7 입니다~");
+            arr.put(obj7);
+
+            JSONObject obj8 = new JSONObject();
+            obj8.put("stickerImage", R.drawable.ic_favorite_border);
+            obj8.put("name", "sample8");
+            obj8.put("price", "40p");
+            obj8.put("stickerId", 8);
+            obj8.put("comment", "스티커 샘플 8 입니다~");
+            arr.put(obj8);
+
+            item.put("data", arr);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return item;
+    }
+
 }

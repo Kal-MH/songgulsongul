@@ -8,6 +8,12 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
@@ -18,29 +24,62 @@ public class PostImageAdapter extends BaseAdapter {
 
     private Context mContext;
     ArrayList<PostItem> items;
+    JSONObject obj = new JSONObject();
+    JSONArray dataList;
     LayoutInflater inf;
+    int itemCnt;
     int layout;
 
     public PostImageAdapter(Context mContext) {
         this.mContext = mContext;
     }
-    public PostImageAdapter(Context mContext, int layout, ArrayList<PostItem> items) {
-
+    public PostImageAdapter(Context mContext, int layout, JSONObject obj) throws JSONException{
         this.mContext = mContext;
         inf =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.layout = layout;
+        this.obj = obj;
+        dataList = obj.getJSONArray("data");
+        itemCnt = dataList.length();
+    }
+
+    //삭제할 코드 --> 컴파일용 임시로 둠
+    public PostImageAdapter(Context mContext, int layout, ArrayList<PostItem> items) {
+        this.mContext = mContext;
+        inf = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.layout = layout;
         this.items = items;
     }
 
+    // 받아온 데이터로 게시글 내용 셋팅
+    public void setItem(ImageView imageView, JSONObject item){
+        try {
+            Glide.with(mContext).load(item.getInt("postImage")).into(imageView); // 게시물 사진
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    //삭제할 코드 --> 컴파일용 임시로 둠
+    public void setItem2(ImageView imageView,  PostItem item){
+        Glide.with(mContext).load(item.getImg()).into(imageView); // 게시물 사진
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        imageView.setLayoutParams(new GridView.LayoutParams(340, 350));
+    }
 
     @Override
     public int getCount() {
-        return items.size();
+        return itemCnt;
     }
 
     @Override
     public Object getItem(int position) {
-        return items.get(position);
+        JSONObject item = new JSONObject();
+        try {
+            item = dataList.getJSONObject(position);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return item;
     }
 
     @Override
@@ -50,17 +89,20 @@ public class PostImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        PostItem postItem = items.get(position);
+        JSONObject item = new JSONObject();
+        try {
+            item = dataList.getJSONObject(position);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        if (convertView==null)
+        if (convertView == null)
             convertView = inf.inflate(layout, null);
 
         ImageView imageView = convertView.findViewById(R.id.post_image_iv);
-
-        imageView.setImageResource(postItem.getImg());
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        imageView.setLayoutParams(new GridView.LayoutParams(340, 350));
-
+        imageView.setLayoutParams(new GridView.LayoutParams(350, 350));
+        setItem(imageView, item);
         return imageView;
     }
 

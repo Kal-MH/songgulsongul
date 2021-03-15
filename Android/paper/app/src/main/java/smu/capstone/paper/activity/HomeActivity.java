@@ -104,14 +104,19 @@ public class HomeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.home_profile:
+                // 서버에 user객체 전달 코드 작성
+                // ----------------------------
+
+                // if resultCode == 200
                 Intent intent= new Intent(HomeActivity.this, ProfileActivity.class);
                 startActivity(intent);
                 return true;
 
-            case R.id.home_add: //일단 업로드디테일로 이동
-                Intent intent2= new Intent(HomeActivity.this, UploadDetailActivity.class);
+            case R.id.home_add:
+                Intent intent2= new Intent(HomeActivity.this, UploadModeActivity.class);
                 startActivity(intent2);
                 return true;
+
         }
         return  true;
     }

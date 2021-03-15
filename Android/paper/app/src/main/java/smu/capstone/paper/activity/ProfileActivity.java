@@ -7,34 +7,51 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.PostImageAdapter;
 import smu.capstone.paper.item.PostItem;
 
 
 public class ProfileActivity extends AppCompatActivity {
+    public int Status;
 
-    ArrayList<PostItem> items = new ArrayList<PostItem>();
+    final int MY = 1;
+    final int FOLLOWING = 2;
+    final int UNFOLLOWING = 3;
+
+    private GridView gridView;
+    private PostImageAdapter adapter;
+    private TextView feed_count_tv, follow_count_tv, follower_count_tv, points_tv, intro_tv, sns_tv;
+    private Button follow_btn;
     private LinearLayout profile_follows;
-    private ImageButton profile_menu_btn;
+    private LinearLayout pointview;
+    private JSONObject post_item,profile_item;
+    private ImageView profile_userimage;
+
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,35 +59,62 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
 
+        // Find view by ID
+        feed_count_tv = findViewById(R.id.profile_feed_cnt);
+        follow_count_tv = findViewById(R.id.profile_follow_cnt);
+        follower_count_tv = findViewById(R.id.profile_follower_cnt);
+        points_tv = findViewById(R.id.profile_point);
+        intro_tv = findViewById(R.id.profile_intro);
+        sns_tv = findViewById(R.id.profile_snsurl);
+        follow_btn = findViewById(R.id.profile_follow_btn);
+        pointview = findViewById(R.id.profile_pointview);
+        gridView = findViewById(R.id.profile_grid);
+        profile_userimage = findViewById(R.id.profile_userimage);
+
+
+        //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-      //  actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
-        actionBar.setTitle("User ID");
+
+        // 아이디 세팅
+        actionBar.setTitle(LoginSharedPreference.getUserName(this));
+
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
 
-        // view에서 id 찾아야함
-        GridView gridView = findViewById(R.id.profile_grid);
-        //아이템 추가
-        items.add(new PostItem(R.drawable.sampleimg));
-        items.add(new PostItem(R.drawable.test));
-        items.add(new PostItem(R.drawable.ic_baseline_emoji_emotions_24));
-        items.add(new PostItem(R.drawable.test));
-        items.add(new PostItem(R.drawable.sampleimg));
-        items.add(new PostItem(R.drawable.ic_favorite));
-        items.add(new PostItem(R.drawable.sampleimg));
-
-        // 어뎁터 적용
-        PostImageAdapter adapter = new PostImageAdapter(this,  R.layout.post_image_item , items ) ;
-        gridView.setAdapter(adapter);
 
 
+        setProfileData();
+        setPostData();
+
+        //Status에 떄라 버튼과 포인트 visibility와 enable 설정
+        switch(Status){
+            //본인의 계정 프로필
+            case MY:
+                follow_btn.setEnabled(false);
+                follow_btn.setVisibility(View.INVISIBLE);
+                pointview.setVisibility(View.VISIBLE);
+                break;
+            //팔로우 한 타인의 프로필
+            case FOLLOWING :
+                follow_btn.setEnabled(false);
+                follow_btn.setVisibility(View.VISIBLE);
+                pointview.setVisibility(View.INVISIBLE);
+                break;
+            //팔로우 하지 않은 타인의 프로필
+            case UNFOLLOWING:
+                follow_btn.setEnabled(true);
+                follow_btn.setVisibility(View.VISIBLE);
+                pointview.setVisibility(View.INVISIBLE);
+                break;
+            default:
+                break;
+        }
 
 
         profile_follows = findViewById(R.id.profile_follows);
-
 
         profile_follows.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +125,106 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
+        //Click Listener
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                Intent intent = new Intent(ProfileActivity.this, PostActivity.class);
+
+                // 게시글 id 전달
+                try {
+                    int postId = post_item.getJSONArray("data").getJSONObject(position).getInt("postId");
+                    intent.putExtra("postId", postId);
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                startActivity(intent);
+                Log.d("TAG", position + "is Clicked");      // Can not getting this method.
+            }
+        });
+    }
+
+
+
+    // server에서 data전달
+    public JSONObject getProfileData(){
+
+        profile_item = new JSONObject();
+
+        // 임시 데이터 저장
+        try{
+            JSONObject obj = new JSONObject();
+            obj.put("follow_count", 100);
+            obj.put("follower_count", 291);
+            obj.put("point", 4002);
+            obj.put("sns", "https://www.google.com");
+            obj.put("intro", "Good to see you Buddy!");
+            obj.put("picture", R.drawable.ic_baseline_emoji_emotions_24); //추후에 url 세팅으로변경
+
+            return obj;
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return profile_item;
+    }
+    public JSONObject getPostData(){
+        post_item = new JSONObject();
+        JSONArray arr= new JSONArray();
+
+
+        // 임시 데이터 저장
+        try{
+            JSONObject obj = new JSONObject();
+            obj.put("postId", "111");
+            obj.put("postImage", R.drawable.ic_favorite);
+            arr.put(obj);
+
+            JSONObject obj2 = new JSONObject();
+            obj2.put("postId", "123");
+            obj2.put("postImage", R.drawable.ic_favorite_border);
+            arr.put(obj2);
+
+            JSONObject obj3 = new JSONObject();
+            obj3.put("postId", "144");
+            obj3.put("postImage", R.drawable.ic_favorite);
+            arr.put(obj3);
+
+            post_item.put("data", arr);
+
+        }catch (JSONException e){ e.printStackTrace(); }
+
+        return post_item;
+    }
+
+
+    public void setProfileData(){
+
+        JSONObject data = getProfileData();
+        try {
+            follow_count_tv.setText(data.getInt("follow_count") +"");
+            follower_count_tv.setText(data.getInt("follower_count" )+"");
+            points_tv.setText(data.getInt("point") + "p");
+            intro_tv.setText(data.getString("intro"));
+            sns_tv.setText(data.getString("sns"));
+            Glide.with(this).load(data.getInt("picture")).into(profile_userimage); // 게시물 사진
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void setPostData(){
+        JSONObject data = getPostData();
+        try {
+            JSONArray arr = data.getJSONArray("data");
+            feed_count_tv.setText(arr.length()+"");
+            adapter = new PostImageAdapter(this,  R.layout.post_image_item , data ) ;
+            gridView.setAdapter(adapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -99,8 +242,8 @@ public class ProfileActivity extends AppCompatActivity {
                 break;
 
             case R.id.profile_edit :
-                Intent intent3 = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                startActivity(intent3);
+                Intent intent1 = new Intent(ProfileActivity.this, EditProfileActivity.class);
+                startActivity(intent1);
                 break;
 
             case R.id.profile_keep:
@@ -110,10 +253,15 @@ public class ProfileActivity extends AppCompatActivity {
 
             case R.id.profile_logout:
                 // LogoutAction
+                LoginSharedPreference.clearUserName(ProfileActivity.this);
+                Intent intent3 = new Intent(ProfileActivity.this, LoginActivity.class);
+                intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent3);
+
                 break;
             case R.id.profile_setting:
-                Intent intent = new Intent(ProfileActivity.this , SettingActivity.class);
-                startActivity(intent);
+                Intent intent4 = new Intent(ProfileActivity.this , SettingActivity.class);
+                startActivity(intent4);
                 break;
         }
         return super.onOptionsItemSelected(item);

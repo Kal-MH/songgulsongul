@@ -1,5 +1,6 @@
 package smu.capstone.paper.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -44,8 +45,6 @@ public class PostSearchActivity extends AppCompatActivity {
         SpannableString content = new SpannableString("태그");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0); p_search_tag.setText(content);
 
-
-
         // search view 전체 영역 터치 가능
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +53,28 @@ public class PostSearchActivity extends AppCompatActivity {
             }
         });
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // 서버에 query객체 전달 코드 작성
+                // ----------------------------
 
+                // 재검색
+                // if resultCode == 200
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+
+        // tag search button listener
         p_search_tag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,6 +82,10 @@ public class PostSearchActivity extends AppCompatActivity {
                 content.setSpan(new UnderlineSpan(), 0, content.length(), 0); p_search_tag.setText(content);
                 p_search_id.setText("계정");
 
+                // 서버에 태그검색 요청 코드 작성
+                // ----------------------------
+
+                //if resultCode == 200
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 FragPostTag fragPostTag = new FragPostTag();
                 transaction.replace(R.id.post_search_frame, fragPostTag);
@@ -69,6 +93,7 @@ public class PostSearchActivity extends AppCompatActivity {
             }
         });
 
+        // id search button listener
         p_search_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +101,10 @@ public class PostSearchActivity extends AppCompatActivity {
                 content.setSpan(new UnderlineSpan(), 0, content.length(), 0); p_search_id.setText(content);
                 p_search_tag.setText("태그");
 
+                // 서버에 계정검색 요청 코드 작성
+                // ---------------------------
+
+                //if resultCode == 200
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 FragPostAccount fragPostAccount = new FragPostAccount();
                 transaction.replace(R.id.post_search_frame, fragPostAccount);
@@ -83,6 +112,7 @@ public class PostSearchActivity extends AppCompatActivity {
             }
         });
 
+        // 기본 fragment작동
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         FragPostTag fragPostTag = new FragPostTag();
         transaction.replace(R.id.post_search_frame, fragPostTag);

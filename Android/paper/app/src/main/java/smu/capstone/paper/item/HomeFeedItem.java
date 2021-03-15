@@ -12,6 +12,7 @@ public class HomeFeedItem {
     private String text;
     private int like;
     private int keep;
+    private int postId;
 
     public String getId(){
         return userId;
@@ -43,6 +44,7 @@ public class HomeFeedItem {
     public int getKeep() {
         return keep;
     }
+    public int getPostId(){return postId;}
 
     public void setCommentCounter(int commentCounter) {
         this.commentCounter = commentCounter;
@@ -93,5 +95,11 @@ public class HomeFeedItem {
         this.favoriteCounter = favoriteCounter;
         this.commentCounter=commentCounter;
         this.text=text;
+    }
+
+    public HomeFeedItem(int like, int favoriteCounter, int keep){
+       this.like = like;
+       this.favoriteCounter = favoriteCounter;
+       this.keep = keep;
     }
 }

@@ -8,13 +8,14 @@
     <ImageView
         android:id="@+id/stk_sitem_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         app:srcCompat="@drawable/test" />
 
     <TextView
         android:id="@+id/stk_sitem_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:text="제품명"
         android:textSize="20dp" />
 
@@ -22,6 +23,7 @@
         android:id="@+id/stk_sitem_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:text="가격"
         android:textSize="20dp" />
 
