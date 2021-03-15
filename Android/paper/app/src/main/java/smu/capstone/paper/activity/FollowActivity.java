@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
@@ -18,6 +19,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.fragment.FragFollower;
 import smu.capstone.paper.fragment.FragFollowing;
@@ -54,17 +58,19 @@ public class FollowActivity extends AppCompatActivity {
         fragFollowing = new FragFollowing();
 
 
+
         // 사용자 정보 초기화 및 툴바초기화
+        Intent intent = getIntent();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.follow_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
 
-        actionBar.setTitle("user1234"); // 사용자 아이디 추가
+        actionBar.setTitle(LoginSharedPreference.getUserName(this)); // 사용자 아이디 추가
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
-        follow_img.setImageBitmap(drawable2Bitmap(getResources().getDrawable(R.drawable.test)));
-        follow_intro.setText("안녕하세요!\n 반갑습니다~!");
+        Glide.with(FollowActivity.this).load(intent.getIntExtra("picture", 0)).into(follow_img);
+        follow_intro.setText(intent.getStringExtra("intro"));
 
 
         //팔로우에 밑줄 긋고 팔로우창띄움
@@ -74,7 +80,7 @@ public class FollowActivity extends AppCompatActivity {
         fm = getSupportFragmentManager();
 
         ft = fm.beginTransaction();
-        ft.replace(R.id.follow_frag, fragFollower);
+        ft.replace(R.id.follow_frag, fragFollowing);
         ft.commit();
 
 
@@ -88,7 +94,7 @@ public class FollowActivity extends AppCompatActivity {
                 follow_follower.setText("팔로워");
 
                 ft = fm.beginTransaction();
-                ft.replace(R.id.follow_frag, fragFollower);
+                ft.replace(R.id.follow_frag, fragFollowing);
                 ft.commit();
             }
         });
@@ -103,7 +109,7 @@ public class FollowActivity extends AppCompatActivity {
                 content.setSpan(new UnderlineSpan(), 0, content.length(), 0); follow_follower.setText(content);
 
                 ft = fm.beginTransaction();
-                ft.replace(R.id.follow_frag, fragFollowing);
+                ft.replace(R.id.follow_frag, fragFollower);
                 ft.commit();
             }
         });
