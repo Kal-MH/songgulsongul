@@ -36,7 +36,7 @@ import smu.capstone.paper.item.PostItem;
 
 
 public class ProfileActivity extends AppCompatActivity {
-    public int Status;
+    public int Status = 1;
 
     final int MY = 1;
     final int FOLLOWING = 2;
@@ -71,6 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
         gridView = findViewById(R.id.profile_grid);
         profile_userimage = findViewById(R.id.profile_userimage);
 
+        Intent intent = getIntent();
 
         //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
@@ -78,7 +79,10 @@ public class ProfileActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
 
         // 아이디 세팅
-        actionBar.setTitle(LoginSharedPreference.getUserName(this));
+        if(Status == MY)
+            actionBar.setTitle(LoginSharedPreference.getUserName(this));
+        else
+            actionBar.setTitle(intent.getStringExtra("userid"));
 
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
@@ -120,7 +124,17 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent( ProfileActivity.this, FollowActivity.class);
-                startActivity(intent);
+
+                // intro, picture 전달
+                try{
+                    JSONObject obj = getProfileData();
+                    intent.putExtra("intro", obj.getString("intro"));
+                    intent.putExtra("picture", obj.getInt("picture"));
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+               startActivity(intent);
             }
         });
 

@@ -36,7 +36,6 @@ import smu.capstone.paper.item.HomeMarketItem;
 
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHolder> {
     Context context;
-    ArrayList<HomeFeedItem> items = new ArrayList<HomeFeedItem>();
     ArrayList<HomeFeedItem> iconInfo = new ArrayList<HomeFeedItem>(); // 좋아요, 보관 상태에 따른 아이콘 변경 때문에 필요할듯 함,,
     JSONObject obj = new JSONObject();
     JSONArray dataList;
@@ -44,7 +43,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
     public HomeFeedAdapter (Context context, JSONObject obj) throws JSONException{
         this.context = context;
- //       this.items = items;
         this.obj = obj;
 
         dataList = obj.getJSONArray("data");

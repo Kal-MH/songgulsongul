@@ -21,6 +21,7 @@ const USER_UNFOLLOW = "/user-unfollow";
 const USER_FOLLOW_LIST = "/user-follow-list";
 const USER_FOLLOWER_LIST = "/user-follower-list";
 const USER_DATA_DELETE = "/user-data-delete";
+const USER_LFOLLOW_LIST = "/user-lfollow-list";
 
 //post Router
 const POST = "/post";
@@ -70,6 +71,7 @@ const routes = {
     userFollowList : USER_FOLLOW_LIST,
     userFollowerList : USER_FOLLOWER_LIST,
     userDataDelete : USER_DATA_DELETE,
+
     post : POST,
     postCommunity : POST_COMMUNITY,
     postFeeds : POST_FEEDS,
@@ -79,6 +81,9 @@ const routes = {
     postSearchId : POST_SEARCH_ID,
     postDetail : POST_DETAIL,
     postUpdate : POST_UPDATE,
+
+    userLFollowList : USER_LFOLLOW_LIST,
+
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,
     apiEmailAuth: API_EMAIL_AUTH,

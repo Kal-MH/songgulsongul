@@ -15,6 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.FollowAdapter;
 import smu.capstone.paper.item.FollowItem;
@@ -24,6 +28,9 @@ public class FragFollower extends Fragment {
 
     RecyclerView rv;
     FollowAdapter adapter;
+    FragFollowing following = new FragFollowing();
+    JSONObject followingObj =  following.login_following_list; // 로그인한 사용자의 following 리스트 가져오기
+    int status = 1; // 로그인한 사용자 가정
 
 
     @Nullable
@@ -39,17 +46,13 @@ public class FragFollower extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rv.setLayoutManager(layoutManager);
 
-        adapter = new FollowAdapter(getContext());
+        JSONObject obj = getFollowerData();
 
-        //임시 데이터 저장
-        FollowItem data = new FollowItem(true,"yujin1292", drawable2Bitmap(getResources().getDrawable(R.drawable.ic_baseline_emoji_emotions_24)));
-        adapter.insertItem(data);
-        FollowItem data2 = new FollowItem(true,"arami98", drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)));
-        adapter.insertItem(data2);
-        FollowItem data3 = new FollowItem(false,"wonhee123", drawable2Bitmap(getResources().getDrawable(R.drawable.ic_chat_black)));
-        adapter.insertItem(data3);
-
-
+        try {
+            adapter = new FollowAdapter(getContext(), obj);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
 
         rv.setAdapter(adapter);
 
@@ -75,4 +78,117 @@ public class FragFollower extends Fragment {
         return bitmap;
     }
 
+    // server에서 data전달
+    public JSONObject getFollowerData(){
+        JSONObject item = new JSONObject();
+        JSONArray arr= new JSONArray();
+        JSONArray user_arr = new JSONArray();
+
+        // 임시 데이터 저장 -- 로그인한 사용자의 팔로워 리스트
+        try{
+            JSONObject obj1 = new JSONObject();
+            obj1.put("userid", "yujin1292");
+            obj1.put("image", R.drawable.ic_baseline_emoji_emotions_24);
+            arr.put(obj1);
+
+            JSONObject obj2 = new JSONObject();
+            obj2.put("userid", "arami98");
+            obj2.put("image", R.drawable.ic_favorite);
+            arr.put(obj2);
+
+            JSONObject obj3 = new JSONObject();
+            obj3.put("userid", "wonhee123");
+            obj3.put("image", R.drawable.ic_chat_black);
+            arr.put(obj3);
+
+            JSONObject obj4 = new JSONObject();
+            obj4.put("userid", "rulurala");
+            obj4.put("image", R.drawable.ic_favorite_border);
+            arr.put(obj4);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        switch (status){
+            // 로그인한 사용자의 리스트만 전달
+            case 1:
+                try{
+                    // 팔로워 리스트에 있는 사용자를 팔로우 했는지 체크
+                    JSONArray following_list = followingObj.getJSONArray("data");
+                    for(int i = 0; i < arr.length(); i++){
+                        for(int j = 0; j < following_list.length(); j++){
+                            int check = 0;
+                            String following_id = following_list.getJSONObject(j).getString("userid");
+                            String follower_id = arr.getJSONObject(i).getString("userid");
+
+                            // Following
+                            if(following_id == follower_id) {
+                                arr.getJSONObject(i).put("flag", 1);
+                                check = 1;
+                                break;
+                            }
+
+                            // Unfollowing
+                            if (check == 0)
+                                arr.getJSONObject(i).put("flag", 0);
+                        }
+                    }
+                    item.put("data", arr);
+
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                break;
+
+            // 로그인한 사용자가 아닐경우 (로그인한 사용자의 리스트 + 선택한 사용자의 리스트 전달)
+            default:
+                try{
+                    // 임시 데이터 저장
+                    JSONObject user_obj1 = new JSONObject();
+                    user_obj1.put("userid", "yujin1292");
+                    user_obj1.put("image", R.drawable.ic_baseline_emoji_emotions_24);
+                    user_arr.put(user_obj1);
+
+                    JSONObject user_obj2 = new JSONObject();
+                    user_obj2.put("userid", "arami98");
+                    user_obj2.put("image", R.drawable.ic_favorite);
+                    user_arr.put(user_obj2);
+
+                    JSONObject user_obj3 = new JSONObject();
+                    user_obj3.put("userid", "wonhee123");
+                    user_obj3.put("image", R.drawable.ic_chat_black);
+                    user_arr.put(user_obj3);
+
+                    JSONObject user_obj4 = new JSONObject();
+                    user_obj4.put("userid", "hahahoho");
+                    user_obj4.put("image", R.drawable.ic_baseline_face_24);
+                    user_arr.put(user_obj4);
+
+                    // 선택한 사용자의 팔로워 리스트에 있는 사용자를 팔로우 했는지 체크
+                    JSONArray following_list = followingObj.getJSONArray("data");
+                    for(int i = 0; i < user_arr.length(); i++){
+                        for(int j = 0; j < following_list.length(); j++){
+                            int check = 0;
+                            String user_follower_id = user_arr.getJSONObject(i).getString("userid");
+                            String following_id = following_list.getJSONObject(j).getString("userid");
+
+                            // Following
+                            if(user_follower_id == following_id) {
+                                user_arr.getJSONObject(i).put("flag", 1);
+                                check = 1;
+                                break;
+                            }
+
+                            // Unfollowing
+                            if (check == 0)
+                                user_arr.getJSONObject(i).put("flag", 0);
+                        }
+                    }
+                    item.put("data", user_arr);
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+        }
+        return item;
+    }
 }
