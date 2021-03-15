@@ -7,14 +7,14 @@
 
 var express = require('express');
 const passport = require('passport');
-var routes = require('../routes');
+const routes = require('../routes');
 
 const homeController = require('../Controller/homeController');
 const middleWares = require("../middlewares");
 
 var homeRouter = express.Router();
 
-homeRouter.post(routes.join,middleWares.multerProfile, homeController.homeJoinPost);
+homeRouter.post(routes.join, middleWares.multerProfile, homeController.homeJoinPost);
 homeRouter.post(routes.login, function(req, res, next) {
     passport.authenticate("local_login", function(err, user) {
         console.log("passport authenticate")

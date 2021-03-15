@@ -52,7 +52,7 @@ function handleDupIdBtnClick() {
                 'Content-Type' : 'application/json',
             },
             body: JSON.stringify({
-                id : idValue
+                login_id : idValue
             })
         }
     ).then(function (response) {

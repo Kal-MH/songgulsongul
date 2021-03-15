@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/post/upload" method="post" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <input type="text" class="text" name="text" placeholder="text"> <br><br>
+            </tr>
+            <tr>
+                <input type="text" class="hash-tag" name="hash_tag" placeholder="hash-tag"> <br><br>
+                <input type="text" class="hash-tag" name="hash_tag" placeholder="hash-tag"> <br><br>
+                <input type="text" class="hash-tag" name="hash_tag" placeholder="hash-tag"> <br><br>
+            </tr>
+            <tr>
+                <div>
+                    <input type="text" class="item-name" name="item_name" placeholder="item-name"> <br><br>
+                    <input type="number" class="item-lowprice" name="item_lowprice" placeholder="item-lowprice"> <br><br>
+                    <input type="number" class="item-highprice" name="item_highprice" placeholder="item-highprice"> <br><br>
+                    <input type="text" class="item-link" name="item_link" placeholder="item-link"> <br><br>
+                    <input type="text" class="item-img" name="item_img" placeholder="item-img"> <br><br>
+                </div>
+                <div>
+                    <input type="text" class="item-name" name="item_name" placeholder="item-name"> <br><br>
+                    <input type="number" class="item-lowprice" name="item_lowprice" placeholder="item-lowprice"> <br><br>
+                    <input type="number" class="item-highprice" name="item_highprice" placeholder="item-highprice"> <br><br>
+                    <input type="text" class="item-link" name="item_link" placeholder="item-link"> <br><br>
+                    <input type="text" class="item-img" name="item_img" placeholder="item-img"> <br><br>
+                </div>
+            </tr>
+            <tr>
+                <div>
+                    <label for="file">Post Image</label>
+                    <input type="file" id="file" name="img_post" accept="image/*" > <br><br>
+                    <label for="file">Post Image</label>
+                    <input type="file" id="file" name="img_post" accept="image/*" > <br><br>
+                    <label for="file">Post Image</label>
+                    <input type="file" id="file" name="img_post" accept="image/*" > <br><br>
+                    <label for="file">Post Image</label>
+                    <input type="file" id="file" name="img_post" accept="image/*" > <br><br>
+                </div>
+            </tr>
+        </table>
+        <input type="submit" value="Post">
+    </form>
+</body>
+</html>
