@@ -43,13 +43,13 @@ public class ZoomView extends FrameLayout {
     float zoomX, zoomY;
     float smoothZoomX, smoothZoomY;
     private boolean scrolling; // NOPMD by karooolek on 29.06.11 11:45
-    // minimap variables
+/*    // minimap variables
     private boolean showMinimap = false;
     private int miniMapColor = Color.WHITE;
     private int miniMapHeight = -1;
     private String miniMapCaption;
     private float miniMapCaptionSize = 10.0f;
-    private int miniMapCaptionColor = Color.WHITE;
+    private int miniMapCaptionColor = Color.WHITE;*/
     // touching variables
     private long lastTapTime;
     private float touchStartX, touchStartY;
@@ -77,7 +77,7 @@ public class ZoomView extends FrameLayout {
         }
         this.maxZoom = maxZoom;
     }
-    public void setMiniMapEnabled(final boolean showMiniMap) {
+ /*   public void setMiniMapEnabled(final boolean showMiniMap) {
         this.showMinimap = showMiniMap;
     }
     public boolean isMiniMapEnabled() {
@@ -115,7 +115,9 @@ public class ZoomView extends FrameLayout {
     }
     public void setMiniMapCaptionColor(final int color) {
         miniMapCaptionColor = color;
-    }
+    }*/
+
+
     public void zoomTo(final float zoom, final float x, final float y) {
         this.zoom = Math.min(zoom, maxZoom);
         zoomX = x;
@@ -160,6 +162,7 @@ public class ZoomView extends FrameLayout {
     private void processSingleTouchEvent(final MotionEvent ev) {
         final float x = ev.getX();
         final float y = ev.getY();
+      /*
         final float w = miniMapHeight * (float) getWidth() / getHeight();
         final float h = miniMapHeight;
         final boolean touchingMiniMap = x >= 10.0f && x <= 10.0f + w
@@ -168,8 +171,12 @@ public class ZoomView extends FrameLayout {
             processSingleTouchOnMinimap(ev);
         } else {
             processSingleTouchOutsideMinimap(ev);
-        }
+        }*/
+
+
+        processSingleTouchOutsideMinimap(ev);
     }
+    /*
     private void processSingleTouchOnMinimap(final MotionEvent ev) {
         final float x = ev.getX();
         final float y = ev.getY();
@@ -178,7 +185,9 @@ public class ZoomView extends FrameLayout {
         final float zx = (x - 10.0f) / w * getWidth();
         final float zy = (y - 10.0f) / h * getHeight();
         smoothZoomTo(smoothZoom, zx, zy);
-    }
+    }*/
+
+
     private void processSingleTouchOutsideMinimap(final MotionEvent ev) {
         final float x = ev.getX();
         final float y = ev.getY();
@@ -339,7 +348,7 @@ public class ZoomView extends FrameLayout {
             canvas.concat(m);
             v.draw(canvas);
             canvas.restore();
-        }
+        }/*
         // draw minimap
         if (showMinimap) {
             if (miniMapHeight < 0) {
@@ -364,7 +373,7 @@ public class ZoomView extends FrameLayout {
             canvas.drawRect(dx - 0.5f * w / zoom, dy - 0.5f * h / zoom, dx
                     + 0.5f * w / zoom, dy + 0.5f * h / zoom, p);
             canvas.translate(-10.0f, -10.0f);
-        }
+        }*/
         // redraw
         // if (animating) {
         getRootView().invalidate();
