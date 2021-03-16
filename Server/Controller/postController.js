@@ -18,102 +18,7 @@ const postController = {
         const postId = req.params.id;
         const offset = req.query.offset ? req.query.offset : 0;
 
-        var selectPostSql = `select * from post where id <= ${postId} order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`;
-        connection.query(selectPostSql, function (err, result) {
-            if (err){
-               console.log(err)
-               res.json({
-                'code' : statusCode.SERVER_ERROR
-            })
-            } else {
-                var posts = result;
-
-                var selectUserSql = "";
-                for(var i = 0; i < posts.length; i++) {
-                    selectUserSql += `select login_id, img_profile from user where id = ${posts[i].user_id}; `;
-                    selectUserSql += `select text from hash_tag where post_id=${posts[i].id};`;
-                    selectUserSql += `select * from item_tag where post_id=${posts[i].id};`;
-                    selectUserSql += `select * from likes where post_id=${posts[i].id};`;
-                    selectUserSql += `select c.user_id, c.text, u.img_profile, u.login_id from comment as c join user as u on c.post_id=${posts[i].id} and c.user_id=u.id;`;
-                }
-                connection.query(selectUserSql, function (err, result) {
-                    if (err){
-                        console.log(err);
-                        res.json({
-                            'code' : statusCode.SERVER_ERROR
-                        })
-                    } else {
-                        /*
-                         * To-do
-                         * 1. likeOnset, keepOnset  포스트 마다 각각
-                         * 2. 보내지는 데이터 확인하기
-                         * 3. api문서 마무리 하기
-                         * 4. db수정사항과 고려사항 정리하기
-                         * 5. 아이템 태그 default이미지로 저장되는 지 확인하기(o)
-                         * 6. 좋아요, 댓글, 보관함 api확인하기                                                                                               
-                         */
-                        var hashItemLikeComments = result;
-                        if (loggedUser){
-                            var selectMeLikesKeepSql = "";
-
-                            for(var i =0;i < posts.length; i++){
-                                selectMeLikesKeepSql += `select * from likes where post_id=${posts[i].id} and user_id=${loggedUser.id};`;
-                                selectMeLikesKeepSql += `select * from keep where post_id=${posts[i].id} and user_id=${loggedUser.id};`;
-                            }
-
-                            connection.query(selectMeLikesKeepSql, function (err, result) {
-                                if (err){
-                                    console.log(err);
-                                } else {
-                                    var likeArray = [];
-                                    var keepArray = [];
-
-                                    for(var i =0; i < result.length; i++){
-                                        likeArray.push(result[i * 2]);
-                                        keepArray.push(result[(i * 2) + 1]);
-                                    }
-
-                                    //send Data if user is login
-                                    //postController_subFunc.getPostDetailSendData(req, res, statusCode.OK, posts, hashItemLikeComments, likeArray, keepArray);
-                                    
-                                    var data = [];
-                                    for(var i = 0;i < posts.length;i++){
-                                        var post = {
-                                            post : posts[i],
-                                            user : hashItemLikeComments[i * 5],
-                                            hashTags : hashItemLikeComments[(i * 5) + 1],
-                                            itemTags : hashItemLikeComments[(i * 5) + 2],
-                                            likeNum : hashItemLikeComments[(i * 5) + 3].length,
-                                            comments : hashItemLikeComments[(i * 5) + 4],
-                                            likeOnset : (likeArray && (likeArray[i] != undefined && likeArray[i].length > 0) ? 1 : 0),
-                                            keepOnset : (keepArray && (keepArray[i] != undefined && keepArray[i].length > 0) ? 1 : 0)
-                                        }
-                                        data.push(post);
-                                    }
-                                    var options = {
-                                        appName : "Caligraphy",
-                                        user : res.locals.loggedUser,
-                                        post : data[0].post,
-                                        postUser : data[0].user,
-                                        hashTags : data[0].hashTags,
-                                        itemTags : data[0].itemTags, 
-                                        likeNum : data[0].likeNum,
-                                        comments : data[0].comments
-                                    }
-
-                                    res.render("postDetail.ejs", {options : options, likeOnset : data[0].likeOnset, keepOnset : data[0].keepOnset});
-                                }
-                            })
-                        } else {
-                            //send Data if user is not login
-                            postController_subFunc.getPostDetailSendData(req, res, statusCode.OK, posts, hashItemLikeComments);
-                        }
-                    }
-                })
-            }
-        })
-
-        // var postAndUserSql = `select p.id, p.image, p.text, p.post_date, p.user_id, u.login_id, u.img_profile from post as p join user as u 
+         // var postAndUserSql = `select p.id, p.image, p.text, p.post_date, p.user_id, u.login_id, u.img_profile from post as p join user as u 
         // on p.id = ${postId} and p.user_id = u.id;`;
         // var hashSql = `select text from hash_tag where post_id=${postId};`;
         // var itemSql = `select * from item_tag where post_id=${postId};`;
@@ -172,6 +77,100 @@ const postController = {
         //     }
         // })
 
+        // var selectPostSql = `select * from post where id <= ${postId} order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`;
+        // connection.query(selectPostSql, function (err, result) {
+        //     if (err){
+        //        console.log(err)
+        //        res.json({
+        //         'code' : statusCode.SERVER_ERROR
+        //     })
+        //     } else {
+        //         var posts = result;
+
+        //         var selectUserSql = "";
+        //         for(var i = 0; i < posts.length; i++) {
+        //             selectUserSql += `select login_id, img_profile from user where id = ${posts[i].user_id}; `;
+        //             selectUserSql += `select text from hash_tag where post_id=${posts[i].id};`;
+        //             selectUserSql += `select * from item_tag where post_id=${posts[i].id};`;
+        //             selectUserSql += `select * from likes where post_id=${posts[i].id};`;
+        //             selectUserSql += `select c.user_id, c.text, u.img_profile, u.login_id from comment as c join user as u on c.post_id=${posts[i].id} and c.user_id=u.id;`;
+        //         }
+        //         connection.query(selectUserSql, function (err, result) {
+        //             if (err){
+        //                 console.log(err);
+        //                 res.json({
+        //                     'code' : statusCode.SERVER_ERROR
+        //                 })
+        //             } else {
+        //                 /*
+        //                  * To-do
+        //                  * 1. likeOnset, keepOnset  포스트 마다 각각
+        //                  * 2. 보내지는 데이터 확인하기
+        //                  * 3. api문서 마무리 하기
+        //                  * 4. db수정사항과 고려사항 정리하기
+        //                  * 5. 아이템 태그 default이미지로 저장되는 지 확인하기(o)
+        //                  * 6. 좋아요, 댓글, 보관함 api확인하기                                                                                               
+        //                  */
+        //                 var hashItemLikeComments = result;
+        //                 if (loggedUser){
+        //                     var selectMeLikesKeepSql = "";
+
+        //                     for(var i =0;i < posts.length; i++){
+        //                         selectMeLikesKeepSql += `select * from likes where post_id=${posts[i].id} and user_id=${loggedUser.id};`;
+        //                         selectMeLikesKeepSql += `select * from keep where post_id=${posts[i].id} and user_id=${loggedUser.id};`;
+        //                     }
+
+        //                     connection.query(selectMeLikesKeepSql, function (err, result) {
+        //                         if (err){
+        //                             console.log(err);
+        //                         } else {
+        //                             var likeArray = [];
+        //                             var keepArray = [];
+
+        //                             for(var i =0; i < result.length; i++){
+        //                                 likeArray.push(result[i * 2]);
+        //                                 keepArray.push(result[(i * 2) + 1]);
+        //                             }
+
+        //                             //send Data if user is login
+        //                             //postController_subFunc.getPostDetailSendData(req, res, statusCode.OK, posts, hashItemLikeComments, likeArray, keepArray);
+                                    
+        //                             var data = [];
+        //                             for(var i = 0;i < posts.length;i++){
+        //                                 var post = {
+        //                                     post : posts[i],
+        //                                     user : hashItemLikeComments[i * 5],
+        //                                     hashTags : hashItemLikeComments[(i * 5) + 1],
+        //                                     itemTags : hashItemLikeComments[(i * 5) + 2],
+        //                                     likeNum : hashItemLikeComments[(i * 5) + 3].length,
+        //                                     comments : hashItemLikeComments[(i * 5) + 4],
+        //                                     likeOnset : (likeArray && (likeArray[i] != undefined && likeArray[i].length > 0) ? 1 : 0),
+        //                                     keepOnset : (keepArray && (keepArray[i] != undefined && keepArray[i].length > 0) ? 1 : 0)
+        //                                 }
+        //                                 data.push(post);
+        //                             }
+        //                             var options = {
+        //                                 appName : "Caligraphy",
+        //                                 user : res.locals.loggedUser,
+        //                                 post : data[0].post,
+        //                                 postUser : data[0].user,
+        //                                 hashTags : data[0].hashTags,
+        //                                 itemTags : data[0].itemTags, 
+        //                                 likeNum : data[0].likeNum,
+        //                                 comments : data[0].comments
+        //                             }
+
+        //                             res.render("postDetail.ejs", {options : options, likeOnset : data[0].likeOnset, keepOnset : data[0].keepOnset});
+        //                         }
+        //                     })
+        //                 } else {
+        //                     //send Data if user is not login
+        //                     postController_subFunc.getPostDetailSendData(req, res, statusCode.OK, posts, hashItemLikeComments);
+        //                 }
+        //             }
+        //         })
+        //     }
+        // })
     },
     /*
      * api plane
