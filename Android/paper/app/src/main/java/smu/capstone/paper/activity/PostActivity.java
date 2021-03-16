@@ -81,9 +81,9 @@ public class PostActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
 
-        JSONObject post_obj = getPostData();
-        JSONObject hashtag_obj = getHashtagData();
-        JSONObject itemtag_obj = getItemtagData();
+        final JSONObject post_obj = getPostData();
+        final JSONObject hashtag_obj = getHashtagData();
+        final JSONObject itemtag_obj = getItemtagData();
         JSONObject cmt_obj = getCmtData();
 
 
@@ -118,7 +118,6 @@ public class PostActivity extends AppCompatActivity {
         hashTagAdapter = new HashTagAdapter(post_hashtag_rv.getContext(), hashtag_obj);
         post_hashtag_rv.setAdapter(hashTagAdapter);
 
-
         post_cmt_list = findViewById(R.id.post_cmt_list);
         //코멘트 어뎁터 설정
         try {
@@ -143,6 +142,15 @@ public class PostActivity extends AppCompatActivity {
                         switch(item.getItemId()){
                             case R.id.post_edit:
                                 Intent intent = new Intent(PostActivity.this, PostEditActivity.class);
+                                // postEditActivity로 기존 data 전달
+                                try {
+                                    intent.putExtra("postImg", post_obj.getInt("postImg"));
+                                    intent.putExtra("text", post_obj.getString("text"));
+                                    intent.putExtra("hashtag", hashtag_obj.toString());
+                                    intent.putExtra("itemtag", itemtag_obj.toString());
+                                } catch (JSONException e){
+                                    e.printStackTrace();
+                                }
                                 startActivity(intent);
                                 break;
                             case R.id.post_save:

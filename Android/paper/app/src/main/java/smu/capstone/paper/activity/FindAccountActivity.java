@@ -22,6 +22,7 @@ import smu.capstone.paper.fragment.FragFindPw;
 public class FindAccountActivity extends AppCompatActivity {
 
     Button find_id_btn, find_pw_btn, find_account_btn;
+    int flag = 1; // 아이디 찾기 mode
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class FindAccountActivity extends AppCompatActivity {
         find_id_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                flag = 1; // 아이디 찾기 mode
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 FragFindId fragFindId = new FragFindId();
                 transaction.replace(R.id.find_frame, fragFindId);
@@ -45,7 +47,7 @@ public class FindAccountActivity extends AppCompatActivity {
         find_pw_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                flag = 2; // 비밀번호 찾기 mode
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 FragFindPw fragFindPw = new FragFindPw();
                 transaction.replace(R.id.find_frame, fragFindPw);
@@ -67,49 +69,97 @@ public class FindAccountActivity extends AppCompatActivity {
         transaction.replace(R.id.find_frame, fragFindId);
         transaction.commit();
 
-        //fragFindId = (FragFindId)getSupportFragmentManager().findFragmentById(R.id.find_frame);
-        final EditText find_id_email = findViewById(R.id.find_id_email);
-
         find_account_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = find_id_email.getText().toString();
-                if(email.getBytes().length <= 0){
-                    new AlertDialog.Builder(FindAccountActivity.this)
-                            .setTitle("경고")
-                            .setMessage("이메일을 입력해주세요.")
-                            .setNeutralButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                switch (flag){
+                    case 1:
+                        EditText find_id_email = findViewById(R.id.find_id_email);
+                        String email = find_id_email.getText().toString();
+                        email = email.trim(); // 공백값 허용x
+                        if(email.getBytes().length <= 0){
+                            new AlertDialog.Builder(FindAccountActivity.this)
+                                    .setTitle("경고")
+                                    .setMessage("이메일을 입력해주세요.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                                    .show();
+                        }
+
+                        else{
+                            // email주소 서버에 전송
+
+                            //if resultCode == 200
+                            new AlertDialog.Builder(FindAccountActivity.this)
+                                    .setMessage("이메일로 아이디를 전송하였습니다.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                                    .show();
+
+                            //if resultCode == 204
+                            /*new AlertDialog.Builder(FindAccountActivity.this)
+                                    .setMessage("존재하지 않는 정보입니다.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
                                 }
                             })
-                            .show();
-                }
+                            .show();*/
+                        }
+                        break;
+                    case 2:
+                        EditText find_pw_id = (EditText)findViewById(R.id.find_pw_id);
+                        EditText find_pw_email = (EditText)findViewById(R.id.find_pw_email);
+                        String id = find_pw_id.getText().toString();
+                        String pw_email = find_pw_email.getText().toString();
+                        id = id.trim();
+                        pw_email = pw_email.trim();
+                        if(id.getBytes().length <= 0 || pw_email.getBytes().length <= 0){
+                            new AlertDialog.Builder(FindAccountActivity.this)
+                                    .setTitle("경고")
+                                    .setMessage("미입력된 값을 입력해주세요.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                else{
-                    // email주소 서버에 전송
+                                        }
+                                    })
+                                    .show();
+                        }
+                        else{
+                            // id, email 서버에 전송
 
-                    // if resultCode == 200
-                    new AlertDialog.Builder(FindAccountActivity.this)
-                            .setMessage("이메일로 아이디를 전송하였습니다.")
-                            .setNeutralButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                            //if resultCode == 200
+                            new AlertDialog.Builder(FindAccountActivity.this)
+                                    .setMessage("이메일로 임시 비밀번호를 전송하였습니다.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                                    .show();
+
+                            //if resultCode == 204
+                            /*new AlertDialog.Builder(FindAccountActivity.this)
+                                    .setMessage("존재하지 않는 정보입니다.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
                                 }
                             })
-                            .show();
-                    // if resultCode == 204
-                    new AlertDialog.Builder(FindAccountActivity.this)
-                            .setMessage("존재하지 않는 정보입니다.")
-                            .setNeutralButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .show();
+                            .show();*/
+                        }
                 }
             }
         });
