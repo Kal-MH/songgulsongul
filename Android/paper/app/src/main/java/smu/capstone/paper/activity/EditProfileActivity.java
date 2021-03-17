@@ -17,26 +17,35 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import com.bumptech.glide.Glide;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.InputStream;
 
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.fragment.FragFindId;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    RadioGroup sns_radio;
-    EditText profile_new_sns;
-    Button profile_img_chnage;
-    ImageView profile_set_img;
+    private RadioGroup sns_radio;
+    private RadioButton profile_sns_radio_yes, profile_sns_radio_no;
+    private EditText profile_new_sns, profile_newid, profile_new_intro;
+    private Button profile_img_chnage;
+    private ImageView profile_set_img;
+    private JSONObject profile_item;
     private static final int REQUEST_CODE = 0;
+    private int profile_sns_check;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.edit_profile_toolbar);
         setSupportActionBar(toolbar);
@@ -45,8 +54,17 @@ public class EditProfileActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
+        profile_new_intro = (EditText)findViewById(R.id.profile_new_intro);
+        profile_new_sns = (EditText)findViewById(R.id.profile_new_sns);
         profile_img_chnage = findViewById(R.id.profile_img_chnage);
         profile_set_img = findViewById(R.id.profile_set_img);
+        sns_radio = findViewById(R.id.profile_edit_sns_radio);
+        profile_newid = findViewById(R.id.profile_newid);
+        profile_sns_radio_yes = findViewById(R.id.profile_sns_radio_yes);
+        profile_sns_radio_no = findViewById(R.id.profile_sns_radio_no);
+
+        setProfileData();
+
         profile_img_chnage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,9 +75,11 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+        profile_newid.setText(LoginSharedPreference.getUserName(this));
 
-        profile_new_sns = findViewById(R.id.profile_new_sns);
-        sns_radio = findViewById(R.id.profile_edit_sns_radio);
+        //여기다 중복확인 코드 짜야지
+
+
         sns_radio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -126,7 +146,53 @@ public class EditProfileActivity extends AppCompatActivity {
         return  true;
     }
 
+    //server에서 data전달
+    public JSONObject getProfileData(){
+        profile_item = new JSONObject();
 
+        // 임시 데이터 저장
+        try{
+            JSONObject obj = new JSONObject();
+            obj.put("intro", "Good to see you Buddy!");
+            obj.put("sns", "https://www.google.com");
+            obj.put("profile_image",R.drawable.ic_baseline_emoji_emotions_24);
+            obj.put("sns_check",1);
+
+            return obj;
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return profile_item;
+    }
+
+    public void setProfileData(){
+
+        JSONObject data = getProfileData();
+        try {
+            profile_new_intro.setText(data.getString("intro"));
+            profile_new_sns.setText(data.getString("sns"));
+            Glide.with(this).load(data.getInt("profile_image")).into(profile_set_img);
+            if(data.getInt("sns_check")==0){
+                profile_sns_radio_no.setChecked(true);
+                profile_sns_radio_yes.setChecked(false);
+                profile_new_sns.setClickable(false);
+                profile_new_sns.setFocusable(false);
+                profile_new_sns.setHint("sns 계정 없음");
+                profile_new_sns.setText("");
+            }
+            else{
+                profile_sns_radio_yes.setChecked(true);
+                profile_sns_radio_no.setChecked(false);
+                profile_new_sns.setFocusableInTouchMode(true);
+                profile_new_sns.setFocusable(true);
+                profile_new_sns.setHint("sns 계정을 입력하세요");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 }
