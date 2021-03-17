@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +40,6 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
 
     ArrayList<int[]> pos;
 
-    ImageView zoomf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +48,6 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
 
         //gets the file path
        filePath = getIntent().getStringExtra("path");
-
 
         //zoom View 세팅
         LayoutInflater inflater = this.getLayoutInflater();
@@ -63,10 +59,9 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
         zoomView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
         zoomView.setMaxZoom(4.0F);
 
-        zoomFrame = findViewById(R.id.edit_zoom) ;
+        zoomFrame = findViewById(R.id.edit_frame) ;
         zoomFrame.addView(zoomView);
         zoom_background = findViewById(R.id.zoom_background);
-
 
         //툴바 세팅
         toolbar = findViewById(R.id.edit_toolbar);
@@ -75,27 +70,17 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
         actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
 
-
-
-
-
         dot1 = findViewById(R.id.dot1);
         dot2 = findViewById(R.id.dot2);
         dot3 = findViewById(R.id.dot3);
         dot4 = findViewById(R.id.dot4);
 
-
-        zoomf = findViewById(R.id.zoomfocus);
         setDots();
-
 
         dot1.setOnTouchListener(this);
         dot2.setOnTouchListener(this);
         dot3.setOnTouchListener(this);
         dot4.setOnTouchListener(this);
-
-
-
 
     }
 
@@ -140,6 +125,7 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+
         int width = ((ViewGroup) v.getParent()).getWidth() ;
         int height = ((ViewGroup) v.getParent()).getHeight();
         int tb_height = toolbar.getHeight();
@@ -149,30 +135,24 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
         float startX = zoomView.getSmoothZoomX() - width/zoom*0.5f ;
         float startY =zoomView.getSmoothZoomY() - height/zoom*0.5f;
 
-       // zoomf.setX(startX);
-       // zoomf.setY(startY);
-
-        Log.d("point", "toolbar height " + tb + ", " + tb_height ) ;
-        Log.d("point", "smooth zoom    " + startX + ", " + startY ) ;
 
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            zoomView.setDotmove(true);
             oldXvalue = event.getX();
             oldYvalue = event.getY();
+
         }
         else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-//            v.setX( event.getRawX() -  oldXvalue);
-//            v.setY( event.getRawY() - (oldYvalue + v.getHeight() + tb_height)  );
 
             v.setX( startX + (event.getRawX()/zoom) - oldXvalue);
             v.setY( startY + ((event.getRawY()-tb_height)/zoom) - (oldYvalue + v.getHeight()/zoom )   );
 
-
-            Log.d("point", "old val    " + oldXvalue + ", " + oldYvalue ) ;
-
         }
         else if (event.getAction() == MotionEvent.ACTION_UP) {
-/*            if (v.getX() > width && v.getY() > height) {
+
+            zoomView.setDotmove(false);
+           if (v.getX() > width && v.getY() > height) {
                 v.setX(width);
                 v.setY(height);
             }
@@ -191,22 +171,22 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
             else if (v.getX() < 0 || v.getX() > width) {
                 if (v.getX() < 0) {
                     v.setX(0);
-                    v.setY(event.getRawY() - oldYvalue - v.getHeight());
+                    v.setY( startY + ((event.getRawY()-tb_height)/zoom) - (oldYvalue + v.getHeight()/zoom )   );
                 } else {
                     v.setX(width);
-                    v.setY(event.getRawY() - oldYvalue - v.getHeight());
+                    v.setY( startY + ((event.getRawY()-tb_height)/zoom) - (oldYvalue + v.getHeight()/zoom )   );
                 }
             }
             else if (v.getY() < 0 || v.getY() > height) {
                 if (v.getY() < 0) {
-                    v.setX(event.getRawX() - oldXvalue);
+                    v.setX( startX + (event.getRawX()/zoom) - oldXvalue);
                     v.setY(0);
                 }
                 else {
-                    v.setX(event.getRawX() - oldXvalue);
+                    v.setX( startX + (event.getRawX()/zoom) - oldXvalue);
                     v.setY(height);
                 }
-            }*/
+            }
         }
         return true;
     }
