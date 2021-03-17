@@ -25,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -45,6 +46,8 @@ public class PostEditActivity extends AppCompatActivity {
     ImageView post_edit_pic;
     JSONObject itemtag_obj, hashtag_obj;
     JSONArray hashtag_list;
+    Switch post_edit_ccl_1, post_edit_ccl_2, post_edit_ccl_3, post_edit_ccl_4, post_edit_ccl_5;
+    int ccl[] = {1,0,1,1,1}; // 넘겨받은 ccl설정 값 --> 추후 intent로 PostActivity에서 넘겨받음
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -54,6 +57,11 @@ public class PostEditActivity extends AppCompatActivity {
 
         post_edit_pic = findViewById(R.id.post_edit_pic);
         post_edit_text = findViewById(R.id.post_edit_text);
+        post_edit_ccl_1 = findViewById(R.id.post_edit_ccl_1);
+        post_edit_ccl_2 = findViewById(R.id.post_edit_ccl_2);
+        post_edit_ccl_3 = findViewById(R.id.post_edit_ccl_3);
+        post_edit_ccl_4 = findViewById(R.id.post_edit_ccl_4);
+        post_edit_ccl_5 = findViewById(R.id.post_edit_ccl_5);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.post_edit_toolbar);
         setSupportActionBar(toolbar);
@@ -66,6 +74,18 @@ public class PostEditActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Glide.with(PostEditActivity.this).load(intent.getIntExtra("postImg", 0)).into(post_edit_pic);
         post_edit_text.setText(intent.getStringExtra("text"));
+
+        // 기존 ccl 설정값에 따라 셋팅
+        if(ccl[0] == 1)
+            post_edit_ccl_1.setChecked(true);
+        if(ccl[1] == 1)
+            post_edit_ccl_2.setChecked(true);
+        if(ccl[2] == 1)
+            post_edit_ccl_3.setChecked(true);
+        if(ccl[3] == 1)
+            post_edit_ccl_4.setChecked(true);
+        if(ccl[4] == 1)
+            post_edit_ccl_5.setChecked(true);
 
         try {
             hashtag_obj = new JSONObject(intent.getStringExtra("hashtag"));
@@ -205,7 +225,7 @@ public class PostEditActivity extends AppCompatActivity {
                 break;
 
             case R.id.toolbar_done : // 확인 버튼 눌렀을 때
-                // 서버에 변경된 data 전송
+                // 서버에 변경된 data(postEdit객체) 전송
 
                 //if resultCode == 200
                 Toast toast = Toast.makeText(PostEditActivity.this, "수정완료", Toast.LENGTH_SHORT);
@@ -214,7 +234,7 @@ public class PostEditActivity extends AppCompatActivity {
                 startActivity(intent);
 
                 //if resultCode == 500
-                /*Toast toast = Toast.makeText(PostEditActivity.this, "실패", Toast.LENGTH_SHORT);
+                /*Toast toast = Toast.makeText(PostEditActivity.this, "수정실패", Toast.LENGTH_SHORT);
                 toast.show();*/
                 break;
 
