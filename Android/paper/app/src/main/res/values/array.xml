@@ -22,8 +22,12 @@
 
     <string-array name="image_size">
         <item>원본</item>
-        <item>30mmX40mm</item>
-        <item>35mmX45mm</item>
+        <item>400x400</item>
+        <item>600x600</item>
+        <item>700x700</item>
+        <item>900x900</item>
+        <item>1000x1000</item>
+        <item>1200x1200</item>
     </string-array>
 
 

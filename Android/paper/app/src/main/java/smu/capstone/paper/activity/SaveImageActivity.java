@@ -8,9 +8,13 @@ import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import smu.capstone.paper.R;
 
@@ -25,6 +29,22 @@ public class SaveImageActivity extends Activity {
         ImageView image = (ImageView)findViewById(R.id.save_img_pick);
         Button cancle_btn = (Button)findViewById(R.id.save_img_cancle);
         Button save_btn = (Button)findViewById(R.id.save_img_btn);
+        Spinner save_img_size = (Spinner)findViewById(R.id.save_img_size);
+
+        Intent intent = getIntent();
+        Glide.with(SaveImageActivity.this).load(intent.getIntExtra("postImg", 1)).into(image);
+
+        save_img_size.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         cancle_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,8 +66,8 @@ public class SaveImageActivity extends Activity {
         getWindow().getAttributes().width = width;
         getWindow().getAttributes().height = height;
 
-        Intent intent = getIntent();
-        image.setImageResource(intent.getIntExtra("image", 1));
+        //Intent intent = getIntent();
+        //image.setImageResource(intent.getIntExtra("image", 1));
 
     }
 }
