@@ -5,6 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +27,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
+import smu.capstone.paper.layout.DrawRect;
 import smu.capstone.paper.layout.ZoomView;
 
 
@@ -30,15 +35,20 @@ import smu.capstone.paper.layout.ZoomView;
 public class EditActivity extends AppCompatActivity implements View.OnTouchListener  {
     ImageView zoom_background;
     String filePath;
-    FrameLayout zoomFrame;
+    FrameLayout zoomFrame , dots ;
     ZoomView zoomView;
     Toolbar toolbar;
     ImageView dot1,dot2,dot3, dot4 ;
 
+    Paint paint;
+    Rect rect;
+
+    DrawRect drawRect;
     float oldXvalue;
     float oldYvalue;
 
-    ArrayList<int[]> pos;
+    ArrayList<float[]> pos;
+
 
 
     @Override
@@ -82,15 +92,20 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
         dot3.setOnTouchListener(this);
         dot4.setOnTouchListener(this);
 
+
+
     }
 
-    ArrayList<int[]>getPos(){
 
-        ArrayList<int[]> arrayList= new ArrayList<>();
-        arrayList.add(new int[]{300, 300});
-        arrayList.add(new int[]{300, 600});
-        arrayList.add(new int[]{600, 300});
-        arrayList.add(new int[]{600, 600});
+
+
+    ArrayList<float[]>getPos(){
+
+        ArrayList<float[]> arrayList= new ArrayList<>();
+        arrayList.add(new float[]{300f, 300f});
+        arrayList.add(new float[]{300f, 600f});
+        arrayList.add(new float[]{600f, 300f});
+        arrayList.add(new float[]{600f, 600f});
 
         return arrayList;
     }
@@ -115,11 +130,54 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
         dot4.setY(pos.get(3)[1]);
     }
 
+    void draw(){
+        pos.get(0)[0] = dot1.getX();
+        pos.get(0)[1] = dot1.getY();
+
+        pos.get(1)[0] = dot2.getX();
+        pos.get(1)[1] = dot2.getY();
+
+        pos.get(2)[0] = dot3.getX();
+        pos.get(2)[1] = dot3.getY();
+
+        pos.get(3)[0] = dot4.getX();
+        pos.get(3)[1] = dot4.getY();
+
+
+        dots.removeAllViews();
+        if(dots != null){
+            rect = new Rect(
+                    0, 0,
+                    dots.getMeasuredWidth(), dots.getMeasuredHeight()
+            );
+
+
+        }
+        else
+            dots = findViewById(R.id.dot_draw);
+
+        drawRect = new DrawRect(this, pos,dot1.getWidth()/2);
+        dots.addView(drawRect);
+
+    }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         //이미지 배경화면세팅
         Glide.with(this).load(filePath).into(zoom_background);
+        dots = findViewById(R.id.dot_draw);
+        if(dots != null){
+            rect = new Rect(
+                    0, 0,
+                    dots.getMeasuredWidth(), dots.getMeasuredHeight()
+            );
+
+
+        }
+
+        drawRect = new DrawRect(this, pos,dot1.getWidth()/2);
+        dots.addView(drawRect);
+
         super.onWindowFocusChanged(hasFocus);
     }
 
@@ -188,6 +246,7 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
                 }
             }
         }
+        draw();
         return true;
     }
 

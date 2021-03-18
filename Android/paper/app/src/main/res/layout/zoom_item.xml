@@ -12,6 +12,13 @@
         android:scaleType="fitCenter" />
 
     <FrameLayout
+        android:id="@+id/dot_draw"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/dots"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
