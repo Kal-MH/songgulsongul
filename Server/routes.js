@@ -16,12 +16,12 @@ const PROFILE = "/profile";
 const PROFILE_KEEP = "/profile-keep";
 const PROFILE_EDIT = "/profile-edit";
 const PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
-const USER_FOLLOW = "/user-follow";
-const USER_UNFOLLOW = "/user-unfollow";
-const USER_FOLLOW_LIST = "/user-follow-list";
-const USER_FOLLOWER_LIST = "/user-follower-list";
-const USER_DATA_DELETE = "/user-data-delete";
-const USER_LFOLLOW_LIST = "/user-lfollow-list";
+const USER_FOLLOW = "/follow";
+const USER_UNFOLLOW = "/unfollow";
+const USER_FOLLOW_LIST = "/follow-list";
+const USER_FOLLOWER_LIST = "/follower-list";
+const USER_DATA_DELETE = "/data-delete";
+const USER_LFOLLOW_LIST = "/lfollow-list";
 
 //post Router
 const POST = "/post";
@@ -71,6 +71,7 @@ const routes = {
     userFollowList : USER_FOLLOW_LIST,
     userFollowerList : USER_FOLLOWER_LIST,
     userDataDelete : USER_DATA_DELETE,
+    userLFollowList : USER_LFOLLOW_LIST,
 
     post : POST,
     postCommunity : POST_COMMUNITY,
@@ -81,8 +82,6 @@ const routes = {
     postSearchId : POST_SEARCH_ID,
     postDetail : POST_DETAIL,
     postUpdate : POST_UPDATE,
-
-    userLFollowList : USER_LFOLLOW_LIST,
 
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,
