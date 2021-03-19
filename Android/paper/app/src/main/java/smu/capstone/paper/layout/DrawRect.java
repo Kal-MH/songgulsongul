@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class DrawRect extends View {
     Paint paint;
-    float lineThickness = 30.0f;
+    float lineThickness = 10.0f;
     ArrayList<int[]> pos;
     int gap;
     public DrawRect(Context context) {
