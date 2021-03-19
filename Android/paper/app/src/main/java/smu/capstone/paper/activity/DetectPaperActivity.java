@@ -45,7 +45,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     float oldYvalue;
     Button doneBtn;
     ConstraintLayout bottom;
-    ArrayList<float[]> pos;
+    ArrayList<int[]> pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,13 +105,13 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
 
 
-    ArrayList<float[]>getPos(){
+    ArrayList<int[]>getPos(){
 
-        ArrayList<float[]> arrayList= new ArrayList<>();
-        arrayList.add(new float[]{300f, 300f});
-        arrayList.add(new float[]{300f, 600f});
-        arrayList.add(new float[]{600f, 300f});
-        arrayList.add(new float[]{600f, 600f});
+        ArrayList<int[]> arrayList= new ArrayList<>();
+        arrayList.add(new int[]{300, 300});
+        arrayList.add(new int[]{300, 600});
+        arrayList.add(new int[]{600, 300});
+        arrayList.add(new int[]{600, 600});
 
         return arrayList;
     }
@@ -137,17 +137,17 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     }
 
     void draw(){
-        pos.get(0)[0] = dot1.getX();
-        pos.get(0)[1] = dot1.getY();
+        pos.get(0)[0] = (int) dot1.getX();
+        pos.get(0)[1] = (int) dot1.getY();
 
-        pos.get(1)[0] = dot2.getX();
-        pos.get(1)[1] = dot2.getY();
+        pos.get(1)[0] = (int) dot2.getX();
+        pos.get(1)[1] = (int) dot2.getY();
 
-        pos.get(2)[0] = dot3.getX();
-        pos.get(2)[1] = dot3.getY();
+        pos.get(2)[0] = (int) dot3.getX();
+        pos.get(2)[1] = (int) dot3.getY();
 
-        pos.get(3)[0] = dot4.getX();
-        pos.get(3)[1] = dot4.getY();
+        pos.get(3)[0] = (int) dot4.getX();
+        pos.get(3)[1] = (int) dot4.getY();
 
 
         dots.removeAllViews();

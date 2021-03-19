@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class DrawRect extends View {
     Paint paint;
     float lineThickness = 30.0f;
-    ArrayList<float[]> pos;
+    ArrayList<int[]> pos;
     int gap;
     public DrawRect(Context context) {
         super(context);
@@ -20,14 +20,14 @@ public class DrawRect extends View {
         gap = 100;
     }
 
-    public DrawRect(Context context, ArrayList<float[]> pos){
+    public DrawRect(Context context, ArrayList<int[]> pos){
         super(context);
         paint = new Paint();
         this.pos = pos;
         gap = 100;
     }
 
-    public DrawRect(Context context, ArrayList<float[]> pos, int gap){
+    public DrawRect(Context context, ArrayList<int[]> pos, int gap){
         super(context);
         paint = new Paint();
         this.pos = pos;
