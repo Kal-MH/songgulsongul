@@ -23,6 +23,15 @@ const USER_FOLLOWER_LIST = "/follower-list";
 const USER_DATA_DELETE = "/data-delete";
 const USER_LFOLLOW_LIST = "/lfollow-list";
 
+//market Router
+const MARKET = "/market";
+const MARKET_MAIN = "/main";
+const MARKET_STICKER = "/:id";
+const MARKET_STICKER_BUY = "/sticker-buy";
+const MARKET_STICKER_SEARCH = "/sticker-search";
+const MARKET_SEARCH_PRICE = "/search-price";
+const MARKET_SEARCH_DATE = "/search-data";
+
 //post Router
 const POST = "/post";
 const POST_COMMUNITY = "/community";
@@ -72,6 +81,14 @@ const routes = {
     userFollowerList : USER_FOLLOWER_LIST,
     userDataDelete : USER_DATA_DELETE,
     userLFollowList : USER_LFOLLOW_LIST,
+
+    market : MARKET,
+    marketMain : MARKET_MAIN,
+    marketSticker : MARKET_STICKER,
+    marketStickerBuy : MARKET_STICKER_BUY,
+    marketStickerSearch : MARKET_STICKER_SEARCH,
+    marketSearchPrice : MARKET_SEARCH_PRICE,
+    marketSearchDate : MARKET_SEARCH_DATE,
 
     post : POST,
     postCommunity : POST_COMMUNITY,

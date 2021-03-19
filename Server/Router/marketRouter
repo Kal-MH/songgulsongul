@@ -1,5 +1,0 @@
-const express = require('express');
-const marketController = require('../Controller/marketController');
-const routes = require('../routes');
-
-var marketRouter = express.Router();

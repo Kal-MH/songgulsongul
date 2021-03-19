@@ -32,8 +32,8 @@
      })
    },
 
-   // 마켓 아이템 클릭
-   getMarketItem : function(req, res){
+   // 마켓 아이템 상세보기
+   getStickerDetail : function(req, res){
      const sticker_id = req.params.id;
      var item_detail = [];
      var seller_info = [];
@@ -71,13 +71,13 @@
      })
   },
 
-  // 마켓 아이템 구매 --> 이미지 저장 보류
-  marketItemBuy : function(req, res){
+  // 마켓 스티커 구매 --> 이미지 저장 보류
+  stickerBuy : function(req, res){
     const sticker_id = req.body.stickerId;
     const user_id = req.body.userId;
     var params = [sticker_id, user_id];
 
-    var sql = 'UPDATE user SET point = point - (SELECT price FROM market WHERE id = ?) WHERE login_id = ?' // 구매자의 포인트 차감
+    var sql = 'UPDATE user SET point = point - (SELECT price FROM market WHERE id = ?)AS mpoint WHERE login_id = ? AND point >= mpoint' // 구매자의 포인트 차감
     connection.query(sql, params, function(err, rows){
       var resultCode = statusCode.CLIENT_ERROR;
       if(err){
@@ -93,8 +93,8 @@
     })
   },
 
-  // 마켓 아이템 검색(기본)
-  marketSearch : function(req, res){
+  // 마켓 스티커 검색(기본)
+  getStickerSearch : function(req, res){
     const search_word = req.query.searchWord;
     var market_item = [];
 
@@ -125,8 +125,8 @@
     })
   },
 
-  // 마켓 아이템 검색(낮은 가격순)
-  marketSearchPrice : function(req, res){
+  // 마켓 스티커 검색(낮은 가격순)
+  getSearchPrice : function(req, res){
     const search_word = req.query.searchWord;
     var market_item = [];
 
@@ -157,8 +157,8 @@
     })
   },
 
-  // 마켓 아이템 검색(최신순)
-  marketSearchDate : function(req, res){
+  // 마켓 스티커 검색(최신순)
+  getSearchDate : function(req, res){
     const search_word = req.query.searchWord;
     var market_item = [];
 
