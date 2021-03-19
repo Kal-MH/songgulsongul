@@ -54,8 +54,8 @@ public class PostActivity extends AppCompatActivity {
     ItemTagAdapter itemTagAdapter;
     HashTagAdapter hashTagAdapter;
     JSONObject post_item, post_itemtag_item, post_hashtag_item, post_cmt_item;
-    TextView post_user_id, post_like_cnt, post_cmt_cnt, post_text;
-    ImageView post_profile_img, post_ccl_cc, post_ccl_a, post_ccl_nc, post_ccl_nd, post_ccl_sa;
+    TextView post_user_id, post_like_cnt, post_cmt_cnt, post_text, post_date;
+    ImageView post_pic, post_profile, post_ccl_cc, post_ccl_a, post_ccl_nc, post_ccl_nd, post_ccl_sa;
     int status;
 
     final int MY = 1;
@@ -71,7 +71,9 @@ public class PostActivity extends AppCompatActivity {
         post_like_cnt = findViewById(R.id.post_like_cnt);
         post_cmt_cnt = findViewById(R.id.post_cmt_cnt);
         post_text = findViewById(R.id.post_text);
-        post_profile_img = findViewById(R.id.post_profile);
+        post_profile = findViewById(R.id.post_profile);
+        post_pic = findViewById(R.id.post_pic);
+        post_date = findViewById(R.id.post_date);
         post_ccl_cc = findViewById(R.id.post_ccl_cc);
         post_ccl_a = findViewById(R.id.post_ccl_a);
         post_ccl_nc = findViewById(R.id.post_ccl_nc);
@@ -96,6 +98,7 @@ public class PostActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
+        setPostData();
 
         // 아이템 태그 어뎁터 설정
         post_itemtag_rv = findViewById(R.id.post_itemtag_rv);
@@ -114,12 +117,18 @@ public class PostActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         post_hashtag_rv = findViewById(R.id.post_hashtag_rv);
         post_hashtag_rv.setLayoutManager(layoutManager2);
-
-        hashTagAdapter = new HashTagAdapter(post_hashtag_rv.getContext(), hashtag_obj);
+        try{
+            hashTagAdapter = new HashTagAdapter(post_hashtag_rv.getContext(), hashtag_obj);
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
         post_hashtag_rv.setAdapter(hashTagAdapter);
 
-        post_cmt_list = findViewById(R.id.post_cmt_list);
+        
+
         //코멘트 어뎁터 설정
+        post_cmt_list = findViewById(R.id.post_cmt_list);
         try {
             cmt_adapter = new PostCmtAdapter(post_cmt_list.getContext(), cmt_obj );
         } catch (JSONException e){
@@ -154,7 +163,13 @@ public class PostActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 break;
                             case R.id.post_save:
-                                Toast.makeText(getApplicationContext(),"이미지 저장",Toast.LENGTH_SHORT).show();
+                                Intent intent2 = new Intent(PostActivity.this, SaveImageActivity.class);
+                                try {
+                                    intent2.putExtra("postImg", post_obj.getInt("postImg"));
+                                } catch (JSONException e){
+                                    e.printStackTrace();
+                                }
+                                startActivity(intent2);
                                 break;
                             case R.id.post_delete:
                                 Toast.makeText(getApplicationContext(),"게시글 삭제",Toast.LENGTH_SHORT).show();
@@ -285,6 +300,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     //server에서 data전달
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public JSONObject getHashtagData(){
         post_hashtag_item = new JSONObject();
         JSONArray arr= new JSONArray();
@@ -349,18 +365,19 @@ public class PostActivity extends AppCompatActivity {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        return post_item;
+        return post_cmt_item;
     }
 
     public void setPostData(){
         JSONObject data = getPostData();
         try {
-            post_user_id.setText(data.getString("userId") +"");
-            post_like_cnt.setText(data.getInt("follower_count" )+"");
-            post_cmt_cnt.setText(data.getInt("point") + "p");
-            post_text.setText(data.getString("intro"));
-            Glide.with(this).load(data.getInt("picture")).into(post_profile_img); // 게시물 사진
-
+            post_user_id.setText(data.getString("userId"));
+            post_like_cnt.setText(data.getInt("likeCnt" )+"");
+            post_cmt_cnt.setText(data.getInt("comCnt")+"");
+            post_date.setText(data.getString("timeStamp"));
+            post_text.setText(data.getString("text"));
+            Glide.with(this).load(data.getInt("profileImg")).into(post_profile);
+            Glide.with(this).load(data.getInt("postImg")).into(post_pic);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -56,7 +56,7 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
     public void setItem(@NonNull ItemTagAdapter.ViewHolder holder, JSONObject item, int position){
         // 받아온 데이터로 셋팅
         try {
-            Glide.with(context).load(item.getInt("Img")).into(holder.pic); // 게시물 사진
+            Glide.with(context).load(item.getInt("Img")).into(holder.pic);
         } catch (JSONException e){
             e.printStackTrace();
         }

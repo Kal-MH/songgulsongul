@@ -1,10 +1,12 @@
 package smu.capstone.paper.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,19 +21,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
+import smu.capstone.paper.item.HashtagItem;
 import smu.capstone.paper.item.PostCmtItem;
 
 public class PostCmtAdapter extends BaseAdapter {
-    private TextView post_item_id;
-    private TextView post_item_cmt;
+    ViewHolder holder;
     Context context;
     JSONObject obj = new JSONObject();
     JSONArray dataList;
     LayoutInflater inf;
-    int itemCnt;
+    int cmtCnt;
     int layout;
 
-    ArrayList<PostCmtItem> items;
 
     public PostCmtAdapter (Context context, JSONObject obj) throws JSONException {
         this.context = context;
@@ -39,21 +40,22 @@ public class PostCmtAdapter extends BaseAdapter {
         this.obj = obj;
 
         dataList = obj.getJSONArray("data");
-        itemCnt = dataList.length();
+        cmtCnt = dataList.length();
     }
 
 
     public void setItem(@NonNull PostCmtAdapter.ViewHolder holder,JSONObject item, int position){
         // 받아온 데이터로 셋팅
         try {
-            holder.user_id.setText(item.getString("user_id"));
+            holder.userId.setText(item.getString("userId"));
+            holder.cmt.setText(item.getString("cmt"));
         } catch (JSONException e){
             e.printStackTrace();
         }
     }
 
     @Override public int getCount() {
-        return items.size();
+        return dataList.length();
     }
 
     @Override public View getView(int position, View convertView, ViewGroup parent) {
@@ -65,9 +67,9 @@ public class PostCmtAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.post_cmt_item, parent, false);
-            holder = new ViewHolder();
-            holder.user_id = convertView.findViewById(R.id.post_item_id);
-            holder.cmt = convertView.findViewById(R.id.post_item_cmt);
+
+            holder = new ViewHolder(convertView);
+
             // 해당 View에 setTag로 Holder 객체 저장
             convertView.setTag(holder);
         } // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
@@ -76,10 +78,13 @@ public class PostCmtAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        PostCmtItem postcmtitem = items.get(position); // 아이템 내 각 위젯에 데이터 반영
-
-        holder.user_id.setText(postcmtitem.getId());
-        holder.cmt.setText(postcmtitem.getCmt());
+        try {
+            final JSONObject item = dataList.getJSONObject(position);
+            holder.userId.setText(item.getString("userId"));
+            holder.cmt.setText(item.getString("cmt"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         return convertView;
     }
@@ -89,18 +94,16 @@ public class PostCmtAdapter extends BaseAdapter {
     }
 
     @Override public Object getItem(int position) {
-        return items.get(position);
+        return null;
     }
 
     static class ViewHolder{
-        TextView user_id;
+        TextView userId;
         TextView cmt;
+        public ViewHolder(View convertView) {
+            userId = (TextView) convertView.findViewById(R.id.post_item_id);
+            cmt = (TextView) convertView.findViewById(R.id.post_item_cmt);
+        }
     }
 
-    public void addItem(String id, String cmt) {
-        PostCmtItem item = new PostCmtItem();
-        item.setId(id);
-        item.setCmt(cmt);
-        items.add(item);
-    }
 }
