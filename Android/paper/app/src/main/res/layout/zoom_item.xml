@@ -12,42 +12,49 @@
         android:scaleType="fitCenter" />
 
     <FrameLayout
+        android:id="@+id/dot_draw"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/dots"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/dot1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_favorite"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:src="@drawable/ic_baseline_dot"
             app:tint="#6E2ED6">
 
         </ImageView>
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             app:tint="#AB77FF"
-            android:src="@drawable/ic_favorite"
+            android:src="@drawable/ic_baseline_dot"
             android:id="@+id/dot2"
             >
 
         </ImageView>
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             app:tint="#3D009F"
-            android:src="@drawable/ic_favorite"
+            android:src="@drawable/ic_baseline_dot"
             android:id="@+id/dot3"
             >
 
         </ImageView>
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             app:tint="#180439"
-            android:src="@drawable/ic_favorite"
+            android:src="@drawable/ic_baseline_dot"
             android:id="@+id/dot4"
             >
 
