@@ -142,7 +142,7 @@ public class UploadActivity extends AppCompatActivity {
                 if( frag_status == GALLERY){
 
                     String filePath= fragUploadGal.getPicked_path();
-                    Intent intent = new Intent(this, EditActivity.class);
+                    Intent intent = new Intent(this, DetectPaperActivity.class);
                     intent.putExtra("path", filePath);
                     startActivity(intent);
 

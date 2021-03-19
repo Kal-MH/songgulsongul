@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import smu.capstone.paper.R;
-import smu.capstone.paper.activity.EditActivity;
+import smu.capstone.paper.activity.DetectPaperActivity;
 import smu.capstone.paper.layout.CameraSurfaceView;
 
 public class FragUploadCam extends Fragment {
@@ -87,7 +86,7 @@ public class FragUploadCam extends Fragment {
 
 
                     String filePath= tempFile.getAbsolutePath();
-                    Intent intent = new Intent(context, EditActivity.class);
+                    Intent intent = new Intent(context, DetectPaperActivity.class);
                     intent.putExtra("path", filePath);
                     startActivity(intent);
 
