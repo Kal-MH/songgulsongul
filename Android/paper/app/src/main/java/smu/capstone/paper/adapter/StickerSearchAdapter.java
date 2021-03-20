@@ -41,7 +41,7 @@ public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdap
     // 받아온 데이터로 스티커 내용 셋팅
     public void setItem(@NonNull StickerSearchAdapter.ViewHolder holder, JSONObject item){
         try {
-            holder.sticker_price.setText(item.getString("stickerPrice"));
+            holder.sticker_price.setText(item.getInt("stickerPrice") + "p");
             holder.sticker_name.setText(item.getString("stickerName"));
             Glide.with(context).load(item.getInt("stickerImage")).into(holder.sticker_image);
         } catch (JSONException e){
@@ -97,7 +97,7 @@ public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdap
                             intent.putExtra("stickerId", item.getInt("stickerId"));
                             intent.putExtra("image", item.getInt("stickerImage"));
                             intent.putExtra("name", item.getString("stickerName"));
-                            intent.putExtra("price", item.getString("stickerPrice"));
+                            intent.putExtra("price", item.getInt("stickerPrice"));
                             intent.putExtra("comment", item.getString("comment"));
 
                             context.startActivity(intent);

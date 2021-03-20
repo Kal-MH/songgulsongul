@@ -4,9 +4,9 @@
  const marketController = {
    // 마켓 메인
    marketMain : function(req, res){
-     var sql = 'SELECT * FROM market ORDER BY id DESC'; // 최신순으로 전송
      var market_item = [];
 
+     var sql = 'SELECT * FROM market ORDER BY id DESC'; // 최신순으로 전송
      connection.query(sql, function(err, rows){
       var resultCode = statusCode.SERVER_ERROR;
        if(err){
@@ -33,13 +33,19 @@
    },
 
    // 마켓 아이템 상세보기
+   // 사용자의 현재 보유 포인트도 함께 전송한다. --> front에서 가격과 비교 후 buy버튼 클릭 시 반영
    getStickerDetail : function(req, res){
-     const sticker_id = req.params.id;
+     const sticker_id = req.params.stickerId;
+     const user_id = req.params.userId;
+
      var item_detail = [];
      var seller_info = [];
+     var user_point;
+     var params = [sticker_id, user_id];
 
-     var sql = 'SELECT * FROM market JOIN user ON market.user_id = user.id WHERE market.id = ?';
-     connection.query(sql, [sticker_id], function(err, rows){
+     var sql1 = 'SELECT * FROM market JOIN user ON market.user_id = user.id WHERE market.id = ?';
+     var sql2 = 'SELECT point FROM user WHERE login_id = ?';
+     connection.query(sql1 + sql2, params, function(err, rows){
        var resultCode = statusCode.CLIENT_ERROR;
        if(err){
          console.log(err);
@@ -63,21 +69,25 @@
          seller_info.push(seller);
        }
 
+       // 사용자의 보유 point
+       user_point = rows[1];
+
        res.json({
          'code': resultCode,
          'itemDetail': item_detail,
-         'seller': seller_info
+         'seller': seller_info,
+         'userPoint': user_point
        })
      })
   },
 
-  // 마켓 스티커 구매 --> 이미지 저장 보류
+  // 마켓 스티커 구매
   stickerBuy : function(req, res){
     const sticker_id = req.body.stickerId;
     const user_id = req.body.userId;
     var params = [sticker_id, user_id];
 
-    var sql = 'UPDATE user SET point = point - (SELECT price FROM market WHERE id = ?)AS mpoint WHERE login_id = ? AND point >= mpoint' // 구매자의 포인트 차감
+    var sql = 'UPDATE user SET point = point - (SELECT price FROM market WHERE id = ?) WHERE login_id = ?'; // 구매자의 포인트 차감
     connection.query(sql, params, function(err, rows){
       var resultCode = statusCode.CLIENT_ERROR;
       if(err){

@@ -98,7 +98,7 @@ public class StickerSearchActivity extends AppCompatActivity {
         try{
             JSONObject obj1 = new JSONObject();
             obj1.put("stickerName", "sample1");
-            obj1.put("stickerPrice", "10p");
+            obj1.put("stickerPrice", "10");
             obj1.put("stickerImage", R.drawable.test);
             obj1.put("stickerId", 1);
             obj1.put("comment", "스티커 샘플 1 입니다~");
@@ -106,7 +106,7 @@ public class StickerSearchActivity extends AppCompatActivity {
 
             JSONObject obj2 = new JSONObject();
             obj2.put("stickerName", "sample2");
-            obj2.put("stickerPrice", "20p");
+            obj2.put("stickerPrice", "20");
             obj2.put("stickerImage", R.drawable.ic_favorite);
             obj2.put("stickerId", 2);
             obj2.put("comment", "스티커 샘플 2 입니다~");
@@ -114,7 +114,7 @@ public class StickerSearchActivity extends AppCompatActivity {
 
             JSONObject obj3 = new JSONObject();
             obj3.put("stickerName", "sample3");
-            obj3.put("stickerPrice", "30p");
+            obj3.put("stickerPrice", "30");
             obj3.put("stickerImage", R.drawable.ic_favorite_border);
             obj3.put("stickerId", 3);
             obj3.put("comment", "스티커 샘플 3 입니다~");
@@ -122,7 +122,7 @@ public class StickerSearchActivity extends AppCompatActivity {
 
             JSONObject obj4 = new JSONObject();
             obj4.put("stickerName", "sample4");
-            obj4.put("stickerPrice", "40p");
+            obj4.put("stickerPrice", "40");
             obj4.put("stickerImage", R.drawable.sampleimg);
             obj4.put("stickerId", 4);
             obj4.put("comment", "스티커 샘플 4 입니다~");
