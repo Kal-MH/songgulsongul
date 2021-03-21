@@ -94,10 +94,13 @@ public class StickerDetailActivity extends AppCompatActivity {
                                     //-------------------------
                                     Toast toast = Toast.makeText(StickerDetailActivity.this, "구매 완료", Toast.LENGTH_SHORT);
                                     toast.show();
+                                    Intent intent = getIntent(); // 포인트가 차감 되었으므로 새로고침 필요
+                                    finish();
+                                    startActivity(intent);
 
                                     //if resultCode == 204
-                                    //Toast toast = Toast.makeText(StickerDetailActivity.this, "오류 발생", Toast.LENGTH_SHORT);
-                                    //toast.show();
+                                    //Toast toast2 = Toast.makeText(StickerDetailActivity.this, "오류 발생", Toast.LENGTH_SHORT);
+                                    //toast2.show();
                                 }
                             })
                             .setNegativeButton("NO", new DialogInterface.OnClickListener() {
