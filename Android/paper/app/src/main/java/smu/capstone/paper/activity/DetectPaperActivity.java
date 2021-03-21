@@ -7,7 +7,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,9 +32,21 @@ import smu.capstone.paper.R;
 import smu.capstone.paper.layout.DrawRect;
 import smu.capstone.paper.layout.ZoomView;
 
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.MatOfPoint;
+import org.opencv.imgcodecs.Imgcodecs;
+
 
 // 카메라 촬영및 갤러리에서 선택후 임시로 전달할 Activity
 public class DetectPaperActivity extends AppCompatActivity implements View.OnTouchListener  {
+    static {
+        System.loadLibrary("opencv_java4");
+        System.loadLibrary("native-lib");
+    }
+
     ImageView zoom_background;
     String filePath;
     FrameLayout zoomFrame , dots ;
@@ -47,6 +61,22 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     ConstraintLayout bottom;
     ArrayList<int[]> pos;
 
+
+    float originalRatio = 1.0f;
+    float zoomBackgroundRatio = 1.0f;
+    private int pivotOffsetX;
+    private int pivotOffsetY;
+    private Mat imgInput;
+    private Mat imgOutput;
+    private MatOfPoint paperPoints;
+
+
+
+
+    public native void GetPaperPoints(long inputImage,long outputPoint, int th1, int th2);
+
+    public native void PaperProcessing(long inputImage, long outputImage, long inputPoints, int th1, int th2);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +84,8 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
         //gets the file path
        filePath = getIntent().getStringExtra("path");
+        imgInput = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
+        paperPoints = new MatOfPoint();
 
         //zoom View 세팅
         LayoutInflater inflater = this.getLayoutInflater();
@@ -81,7 +113,12 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         dot3 = findViewById(R.id.dot3);
         dot4 = findViewById(R.id.dot4);
 
-        setDots();
+        //setDots(); /// OnCreate에서 ImageView의 크기를 가져올 수 없어서 스케일 조절이 되지 않음.
+
+        
+
+
+
 
         dot1.setOnTouchListener(this);
         dot2.setOnTouchListener(this);
@@ -116,9 +153,50 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         return arrayList;
     }
 
+
+
     void setDots(){
 
-        pos = getPos();
+            ///opencv로 종이 찾기
+            //BitmapDrawable targetDrawable = (BitmapDrawable) zoom_background.getDrawable();
+            //Bitmap targetBitmap = targetDrawable.getBitmap();/*
+            //Utils.bitmapToMat(targetBitmap, imgInput);
+
+        float scaleFactor = 1.0f;
+        GetPaperPoints(imgInput.getNativeObjAddr(), paperPoints.getNativeObjAddr(), 15, 150);
+        originalRatio = imgInput.height()/(float)imgInput.width();
+        zoomBackgroundRatio = zoom_background.getMeasuredHeight()/(float)zoom_background.getMeasuredWidth();
+
+        if(originalRatio > zoomBackgroundRatio){
+            scaleFactor = imgInput.height()/(float)zoom_background.getMeasuredHeight();
+            pivotOffsetX = (int) (imgInput.height()/scaleFactor - zoom_background.getMeasuredHeight())/4;
+            pivotOffsetY = 0;
+        }
+        else{
+            scaleFactor = imgInput.width()/(float)zoom_background.getMeasuredWidth();
+            pivotOffsetY = (int) (imgInput.height()/scaleFactor - zoom_background.getMeasuredWidth())/4;
+            pivotOffsetX = 0;
+        }
+        Log.i("PaperDetect", "image Scale factor: "+ String.valueOf(scaleFactor));
+        Log.i("PaperDetect", "pivotOffsetX: "+ String.valueOf(pivotOffsetX));
+        Log.i("PaperDetect", "pivotOffsetY: "+ String.valueOf(pivotOffsetY));
+        if(paperPoints.toList().size() ==4){
+            //pos.clear();
+
+            ///OnCreate에서 zoom_background는 아직 안그려져서 measuredHeight, height, MaxHeight 다 고장나서 나옴
+            //zoom_background.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            //zoom_background.getDrawable().getIntrinsicWidth()은 이미지를 비동기 로드했을때 null 문제가 발생 할 수 있어서 사용 불가->직접 이미지 사이즈를 예측계산필요
+            //boolean useHeight = imgInput.width()<imgInput.height();
+            pos = new ArrayList<int[]>();
+            for (Point p: paperPoints.toList()) {
+                pos.add(new int[]{(int)(p.x/scaleFactor)+pivotOffsetX, (int)(p.y/scaleFactor)+pivotOffsetY});
+                //pos.add(new int[]{0,0}); // 테스트용 0 처리
+                Log.i("PaperDetect", String.valueOf((p.x/scaleFactor)) + ", " + String.valueOf((p.y/scaleFactor)));
+            }
+
+        }
+        else/**/
+            pos = getPos();
 
         dot1.setX(pos.get(0)[0]);
         dot1.setY(pos.get(0)[1]);
@@ -170,7 +248,8 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         //이미지 배경화면세팅
-        Glide.with(this).load(filePath).into(zoom_background);
+        Glide.with(this).load(filePath).into(zoom_background);//비동기 이미지 로드
+        setDots();///TODO: 최초 한번만 실행되게 수정할 것
         dots = findViewById(R.id.dot_draw);
         if(dots != null){
             rect = new Rect(
@@ -179,8 +258,10 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
             );
         }
 
+
         drawRect = new DrawRect(this, pos,dot1.getWidth()/2);
         dots.addView(drawRect);
+
         super.onWindowFocusChanged(hasFocus);
     }
 
