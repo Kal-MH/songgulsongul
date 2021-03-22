@@ -50,7 +50,7 @@
              }
 
              if(status === 1){ // 로그인한 사용자의 프로필일 경우
-               prodata.'point' = rows[3].point;
+               prodata.point = rows[3].point;
              }
              profile_info.push(prodata);
            }
@@ -71,7 +71,7 @@
        const user_id = req.body.userId;
 
        var params = [login_id, user_id];
-       var sql = 'INSERT INTO follow(follower_id, follow_target_id) VALUES(?,?)'';
+       var sql = 'INSERT INTO follow(follower_id, follow_target_id) VALUES(?,?)';
        connection.query(sql, params, function(err, rows){
          var resultCode = statusCode.CLIENT_ERROR;
          var message = 'ERROR';
@@ -382,8 +382,8 @@
          }
 
          res.json({
-           'code': resultCode;
-           'message': message;
+           'code': resultCode,
+           'message': message
          })
        })
      }

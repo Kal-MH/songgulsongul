@@ -182,7 +182,7 @@ const apiController = {
     },
     insertPostComment : function (req, res) {
         var postId = req.params.postid;
-        var userId = req.params.userid;
+        var userId = res.locals.loggedUser.id;
         var text = req.body.comment; //공백으로 오는 것을 어디서 걸러줄 것인가.
 
         if (text == ''){
@@ -208,10 +208,10 @@ const apiController = {
     },
     deletePostComment : function (req, res) {
         var postId = req.params.postid;
-        var userId = req.params.userid;
+        var commentId = req.params.commentid;
 
-        var commentDeleteSql = `delete from comment where user_id=? and post_id=?;`
-        var commentParams = [userId, postId];
+        var commentDeleteSql = `delete from comment where id=? and post_id=?;`
+        var commentParams = [commentId, postId];
         connection.query(commentDeleteSql, commentParams, function (err, result) {
             var code = statusCode.OK;
             if (err){
