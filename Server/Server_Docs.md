@@ -4,7 +4,7 @@
 
 - git clone하고 처음 실행 시
 
-  - 콘솔에 npm install 타이핑
+  - 콘솔에 npm install 타이핑
 
   ```
   npm install이란, 
@@ -415,4 +415,4 @@
 
 - 예시
 
-  ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/92db12a5-fe20-45a3-ac4b-1283a44da458/postDetail.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/92db12a5-fe20-45a3-ac4b-1283a44da458/postDetail.png)
+  ![postDetail](https://user-images.githubusercontent.com/59648372/112144589-c5c61c80-8c1c-11eb-8dbc-2e50f8b86b2d.png)
