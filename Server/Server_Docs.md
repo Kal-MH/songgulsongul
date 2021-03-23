@@ -416,3 +416,70 @@
 - 예시
 
   ![postDetail](https://user-images.githubusercontent.com/59648372/112144589-c5c61c80-8c1c-11eb-8dbc-2e50f8b86b2d.png)
+
+5. 게시글 업로드
+
+   - api : “/post/upload”
+   - method : POST
+   - 전달받아야 하는 데이터
+     - post id (url param)
+     - 게시글 정보
+       - image
+       - text
+     - 해시태그 정보
+       - text
+     - 아이템 태그 정보
+       - name
+       - lprice
+       - hprice
+       - url
+       - picture
+   - 응답데이터
+
+     ```java
+     json = {
+     	'code', //상태코드
+     					// 상태코드는 ok(200), client error(500)으로 나뉜다.
+     }
+     ```
+
+6. 게시글 업데이트
+
+   - api : “/post/update/:id”
+   - method : POST
+   - 전달받아야 하는 데이터
+     - post id (url param)
+     - 게시글 정보
+       - image
+       - text
+     - 해시태그 정보
+       - text
+     - 아이템 태그 정보
+       - name
+       - lprice
+       - hprice
+       - url
+       - picture
+   - 응답데이터
+
+     ```java
+     json = {
+     	'code', //상태코드
+     					// 상태코드는 ok(200), client error(204)으로 나뉜다.
+     }
+     ```
+
+7. 게시글 삭제
+
+   - api : “/post/delete/:id”
+   - method : GET
+   - 전달받아야 하는 데이터
+     - post id (url param)
+   - 응답데이터
+
+     ```java
+     json = {
+     	'code', //상태코드
+     					// 상태코드는 ok(200), server error(500)으로 나뉜다.
+     }
+     ```
