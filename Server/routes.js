@@ -44,8 +44,8 @@ const API_EMAIL_AUTH_NUMBER = "/email-auth-number";
 
 const API_POST_LIKE = "/like/:id";
 const API_POST_KEEP = "/keep/:id";
-const API_POST_COMMENT_INSERT = "/comment/:postid/:userid";
-const API_POST_COMMENT_DELETE = "/comment/:postid/:userid";
+const API_POST_COMMENT_INSERT = "/comment/:postid";
+const API_POST_COMMENT_DELETE = "/comment/:postid/:commentid";
 
 //img tag api temporary
 const API_NAVER_ITEM_TAG = "/naver/item-tag";

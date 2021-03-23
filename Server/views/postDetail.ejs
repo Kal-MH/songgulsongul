@@ -117,18 +117,18 @@
                             <h5> <%= options.comments[i].login_id %> </h5>
                             <h5> <%= options.comments[i].text %> </h5>
                             <% if (options.comments[i].user_id == options.user.id) { %>
-                                <form action="/api/comment/<%= options.post.id %>/<%= options.user.id %>" method="get">
+                                <form action="/api/comment/<%= options.post.id %>/<%= options.comments[i].id %>" method="get">
                                     <input type="submit" value="delete">
                                 </form>
                             <% } %>
-                        <% } %>
-                        
-                        <% if (options.user) { %>
-                            <form action="/api/comment/<%= options.post.id %>/<%= options.user.id %>  " method="post">
-                                <input type="text" name="comment" id="comment">
-                                <input type="submit" value="comment">
-                            </form>
-                        <% } %>
+                            <% } %>
+                            
+                            <% if (options.user) { %>
+                                <form action="/api/comment/<%= options.post.id %>" method="post">
+                                    <input type="text" name="comment" id="comment">
+                                    <input type="submit" value="comment">
+                                </form>
+                            <% } %>
                     </div>
 		        </div>
 		

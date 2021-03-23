@@ -2,7 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 const expressSession = require('express-session');
@@ -34,8 +34,8 @@ app.set('view engine', 'ejs');
 app.use(helmet());
 app.use(logger('dev'));
 app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 //sesssion & passport
@@ -43,13 +43,13 @@ app.use(expressSession({
     secret: '1234DSFs@adf1234!@#$asd',
     resave: false,
     saveUninitialized: true,
-    store: new MySQLStore({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-        port : process.env.DB_PORT
-    })
+    // store: new MySQLStore({
+    //     host: process.env.DB_HOST,
+    //     user: process.env.DB_USER,
+    //     password: process.env.DB_PASSWORD,
+    //     database: process.env.DB_DATABASE,
+    //     port : process.env.DB_PORT
+    // })
 }))
 app.use(passport.initialize());
 app.use(passport.session());
