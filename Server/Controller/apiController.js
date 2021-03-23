@@ -36,8 +36,6 @@ const apiController = {
                 'code' : resultCode
             })
         })
-
-
     },
     //이메일인증보내기
     sendEmail : async function (req, res) {
