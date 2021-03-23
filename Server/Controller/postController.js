@@ -96,10 +96,16 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.SERVER_ERROR
+                    'code' : statusCode.SERVER_ERROR,
+                    'data' : null
+                })
+            } else if (result.length == 0) { // 팔로우하는 사람이 없는 경우
+                res.json({
+                    'code' : statusCode.OK,
+                    'data' : result
                 })
             } else {
-                var selectPostSql = `select * from post where `;
+                var selectPostSql = `select id from post where `;
                 for(var i = 0;i < result.length - 1;i++){
                     selectPostSql += `user_id = ${result[i].follow_target_id} or `
                 }
@@ -109,12 +115,56 @@ const postController = {
                     if (err){
                         console.log(err);
                         res.json({
-                            'code' : statusCode.SERVER_ERROR
+                            'code' : statusCode.SERVER_ERROR,
+                            'data' : null
                         })
                     } else {
-                        res.json({
-                            'code' : statusCode.OK,
-                            'data' : result //result ? result : null로 합쳐서 에러에 있는 res.json과 합치자
+                        var selectPostFeedSql = "";
+                        
+                        for(var i = 0;i < result.length; i++){
+                            selectPostFeedSql += `select p.id, p.image, p.text, p.post_date, p.post_time, p.user_id, u.login_id, u.img_profile from post as p join user as u 
+                            on p.id = ${result[i].id} and p.user_id = u.id;`;
+                            selectPostFeedSql += `select id from comment where post_id = ${result[i].id};`;
+                            selectPostFeedSql += `select * from likes where post_id = ${result[i].id};`;
+                            selectPostFeedSql += `select * from likes where post_id = ${result[i].id} and user_id = ${loggedUser.id};`;
+                            selectPostFeedSql += `select id from keep where post_id = ${result[i].id} and user_id = ${loggedUser.id};`;
+                        }
+                        connection.query(selectPostFeedSql, function (req, result) {
+                            if (err){
+                                console.log(err);
+                                res.json({
+                                    'code' : statusCode.SERVER_ERROR,
+                                    'data' : null
+                                })
+                            } else {
+                                var data = [];
+                                for(var i = 0;i < result.length; i += 5){
+                                    var info = {
+                                        post : {
+                                            id : result[i][0].id,
+                                            image : result[i][0].image,
+                                            text : result[i][0].text,
+                                            post_time : result[i][0].post_time,
+                                            post_date : result[i][0].post_date
+                                        },
+                                        user : {
+                                            user_id : result[i][0].user_id,
+                                            login_id : result[i][0].login_id,
+                                            img_profile : result[i][0].img_profile
+                                        },
+                                        commentsNum : (result[i + 1]) ? result[i + 1].length : 0,
+                                        likeNum : (result[i + 2]) ? result[i + 2].length : 0,
+                                        likeOnset : (result[i + 3] && result[i + 3].length != 0) ? 1 : 0,
+                                        keepOnset : (result[i + 4] && result[i + 4].length != 0) ? 1 : 0
+                                    }
+                                    data.push(info);
+                                }
+                                console.log(data);
+                                res.json({
+                                    'code' : statusCode.OK,
+                                    'data' : data
+                                })
+                            }
                         })
                     }
                 })

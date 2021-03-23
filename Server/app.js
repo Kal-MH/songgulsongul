@@ -43,13 +43,13 @@ app.use(expressSession({
     secret: '1234DSFs@adf1234!@#$asd',
     resave: false,
     saveUninitialized: true,
-    // store: new MySQLStore({
-    //     host: process.env.DB_HOST,
-    //     user: process.env.DB_USER,
-    //     password: process.env.DB_PASSWORD,
-    //     database: process.env.DB_DATABASE,
-    //     port : process.env.DB_PORT
-    // })
+    store: new MySQLStore({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE,
+        port : process.env.DB_PORT
+    })
 }))
 app.use(passport.initialize());
 app.use(passport.session());
