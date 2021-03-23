@@ -270,7 +270,7 @@
 
    - 예시
 
-     ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cd78eef0-819f-4a9d-b026-550f8d3b3752/postCommunity.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cd78eef0-819f-4a9d-b026-550f8d3b3752/postCommunity.png)
+     ![postCommunity](https://user-images.githubusercontent.com/59648372/112145078-41c06480-8c1d-11eb-8303-68bbcdc80f26.png)
 
 2. 팔로우 게시글 불러오기
 
@@ -309,7 +309,7 @@
 
    - 예시
 
-     ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f59e93ec-aa92-4b92-a6fa-88bead57f15e/postfeeds.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f59e93ec-aa92-4b92-a6fa-88bead57f15e/postfeeds.png)
+     ![postfeeds](https://user-images.githubusercontent.com/59648372/112144953-1a699780-8c1d-11eb-8463-b9ef1bbc9191.png)
 
 3. 검색하기
 
@@ -358,7 +358,7 @@
        ]
        ```
 
-       ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b233ee9d-d5a8-48e2-8b2a-5c0db83debef/postSearchTag.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b233ee9d-d5a8-48e2-8b2a-5c0db83debef/postSearchTag.png)
+       ![postSearchTag](https://user-images.githubusercontent.com/59648372/112144995-281f1d00-8c1d-11eb-8b30-d5bad38f3e5f.png)
 
      - <search Id>
 
@@ -372,7 +372,7 @@
        ]
        ```
 
-       ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a521bf4f-04f1-4be8-9651-b4c530eca8f2/postSearchId.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a521bf4f-04f1-4be8-9651-b4c530eca8f2/postSearchId.png)
+       ![postSearchId](https://user-images.githubusercontent.com/59648372/112145026-340adf00-8c1d-11eb-8af4-70810bc376aa.png)
 
 4. **특정 게시글 불러오기**
 

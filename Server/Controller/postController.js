@@ -70,7 +70,7 @@ const postController = {
                                 likeNum : data[0].likeNum,
                                 comments : data[0].comments
                             }
-            
+
                             res.render("postDetail.ejs", {options : options, likeOnset : data[0].likeOnset, keepOnset : data[0].keepOnset});
                             // --------------------------------------------------------------------------------------
                             //postController_subFunc.getPostDetailSendData(req, res, statusCode.OK, postData, likeKeep);  
@@ -295,13 +295,12 @@ const postController = {
     postUpdate : function (req, res) {
         var postId = req.params.id;
         var loggedUser = res.locals.loggedUser;
-        var files = req.files;
+        var file = req.file;
 
         console.log(req.body);
 
         //안드로이드에서 넘어오는 값에 따라서 수정이 필요한 부분
-        //또한, 지금은 이미지를 하나만 받고 있기 때문에 반복문으로 처리해야 할 수도 있다.
-        var image = (files.length == 0) ? req.body.img_post_link : req.files[0].path; 
+        var image = (file) ? req.file.path : req.body.img_post_link; 
         var updatePostSql = `update post set image=?, text=?, post_time=curtime(), post_date=curdate(), user_id=? where id=${postId};`;
         var updatePostParams = [image, req.body.text, loggedUser.id];
 
@@ -330,22 +329,26 @@ const postController = {
                         })
                     } else {
                         //itemTag - 현재는 단수로 되어 있지만, 이후에 액티비티랑 연동할 때, 복수로 바꿔야 한다.
-                        var item = {
-                            name : req.body.itemName,
-                            lowprice : Number(req.body.itemLowprice),
-                            highprice : Number(req.body.itemHighprice),
-                            itemLink : req.body.itemLink,
-                            itemImg : function () {
-                                if (req.body.itemImg == '')
-                                    return "/public/default/to-do-list.png";
-                                else 
-                                    return req.body.itemImg;
-                            }
-                        }
+                        
                         var deleteItemTagSql = `delete from item_tag where post_id=${postId};`;
-                        var insertItemSql = "insert into item_tag (post_id, name, lowprice, highprice, url, picture) values(?, ?, ?, ?, ?, ?);";
-                        var itemParams = [postId, item.name, item.lowprice, item.highprice, item.itemLink, item.itemImg()]
-                        connection.query(deleteItemTagSql + insertItemSql, itemParams, function (err, result) {
+                        var insertItemSql = "";
+                        var insertItemParams = [];
+                        for(var i = 0;i < req.body.itemName.length;i++){
+                            var itemImg;
+                            if (req.body.itemImg[i] == '') {
+                                itemImg = "/public/default/to-do-list.png";
+                            } else {   
+                                itemImg = req.body.itemImg[i];
+                            }
+
+                            insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, url, picture) values(${postId}, ?, ?, ?, ?, ?);`;
+                            insertItemParams.push(req.body.itemName[i]);
+                            insertItemParams.push(Number(req.body.itemLowprice[i]));
+                            insertItemParams.push(Number(req.body.itemHighprice[i]));
+                            insertItemParams.push(req.body.itemLink[i]);
+                            insertItemParams.push(itemImg);
+                        }
+                        connection.query(deleteItemTagSql + insertItemSql, insertItemParams, function (err, result) {
                             if (err){
                                 console.log(err);
                                 res.json({
@@ -357,6 +360,25 @@ const postController = {
                         })
                     }
                 })
+            }
+        })
+    },
+    postDelete : function (req, res) {
+        const postId = req.params.id;
+        const loggedUser = res.locals.loggedUser;
+
+        var deletePostSql = `delete from post where id = ${postId} and user_id = ${loggedUser.id};`;
+        connection.query(deletePostSql, function (err, result) {
+            if (err){
+                console.log(err);
+                res.json({
+                    'code' : statusCode.SERVER_ERROR
+                })
+            } else {
+                res.redirect("/post/community?offset=0")
+                // res.json({
+                //     'code' : statusCode.OK
+                // })
             }
         })
     }

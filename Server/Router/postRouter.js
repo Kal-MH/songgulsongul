@@ -13,5 +13,5 @@ postRouter.get(routes.postDetail, postController.getPostDetail);
 //사용자 로그인상태 확인
 postRouter.post(routes.postUpload, middleWares.multerPost, postController.postUpload);
 postRouter.post(routes.postUpdate, middleWares.multerPost, postController.postUpdate);
-
+postRouter.get(routes.postDelete, middleWares.onlyPrivate, postController.postDelete);
 module.exports = postRouter;
