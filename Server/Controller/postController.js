@@ -250,7 +250,7 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.SERVER_ERROR
+                    'code' : statusCode.CLIENT_ERROR
                 })
             } else {
                 var postId = result[0].insertId;
@@ -279,7 +279,7 @@ const postController = {
                     if (err){
                         console.log(err);
                         res.json({
-                            'code' : statusCode.SERVER_ERROR
+                            'code' : statusCode.CLIENT_ERROR
                         })
                     }
                     else{
@@ -308,7 +308,7 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.SERVER_ERROR
+                    'code' : statusCode.CLIENT_ERROR
                 })
             } else {
                 //hashTag
@@ -325,7 +325,7 @@ const postController = {
                     if (err){
                         console.log(err);
                         res.json({
-                            'code' : statusCode.SERVER_ERROR
+                            'code' : statusCode.CLIENT_ERROR
                         })
                     } else {
                         //itemTag - 현재는 단수로 되어 있지만, 이후에 액티비티랑 연동할 때, 복수로 바꿔야 한다.
@@ -352,7 +352,7 @@ const postController = {
                             if (err){
                                 console.log(err);
                                 res.json({
-                                    'code' : statusCode.SERVER_ERROR
+                                    'code' : statusCode.CLIENT_ERROR
                                 })
                             } else {
                                 res.redirect(`/post/${postId}`);
