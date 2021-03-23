@@ -15,7 +15,7 @@ const middleWares = require("../middlewares");
 var homeRouter = express.Router();
 
 homeRouter.post(routes.join, middleWares.multerProfile, homeController.homeJoinPost);
-homeRouter.post(routes.login, function(req, res, next) {
+homeRouter.post(routes.login, middleWares.onlyPublic, function(req, res, next) {
     passport.authenticate("local_login", function(err, user) {
         console.log("passport authenticate")
         if (err){

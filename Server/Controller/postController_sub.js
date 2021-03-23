@@ -29,7 +29,7 @@ const postController_subFunc = {
         var searchKeyword = req.query.keyword;
         var offset = req.query.offset;
 
-        var sql = `select * from user where login_id like'${searchKeyword}%' limit ${db_config.limitation} offset ${offset};`;
+        var sql = `select id, login_id, img_profile from user where login_id like'${searchKeyword}%' limit ${db_config.limitation} offset ${offset};`;
         connection.query(sql, function (err, result) {
             if (err){
                 console.log(err);

@@ -73,14 +73,18 @@ const statusCode = require("../config/serverStatusCode");
             'code' : statusCode.CLIENT_ERROR,
           })
         } else {
+          var loginIds = "";
+          for(var i = 0;i < result.length; i++)
+            loginIds += "아이디 : " + result[i].login_id + "\n";
           const mailOptions = {
             from:"paper.pen.smu@gmail.com",
             to : email,
             subject : "아이디 찾기.",
-            text : "아이디 : " + result[0].login_id
+            text : loginIds
           }
 
           await smtpTransport.sendMail(mailOptions, function (err, response) {
+            var resultCode;
             if (err){
               console.log(err);
               resultCode = statusCode.SERVER_ERROR;
