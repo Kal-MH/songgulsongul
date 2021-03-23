@@ -9,4 +9,4 @@ marketRouter.get(routes.marketSticker, marketController.getStickerDetail);
 marketRouter.get(routes.marketStickerSearch, marketController.getStickerSearch);
 marketRouter.get(routes.marketSearchPrice, marketController.getSearchPrice);
 marketRouter.get(routes.marketSearchDate, marketController.getSearchDate);
-marketRouter.post(routes.marketStickerBuy, marketController.stickerBuy);
+marketRouter.get(routes.marketStickerBuy, marketController.stickerBuy);

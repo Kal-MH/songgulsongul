@@ -26,8 +26,8 @@ const USER_LFOLLOW_LIST = "/lfollow-list";
 //market Router
 const MARKET = "/market";
 const MARKET_MAIN = "/main";
-const MARKET_STICKER = "/:stickerId/:userId";
-const MARKET_STICKER_BUY = "/sticker-buy";
+const MARKET_STICKER = "/sticker/:stickerId/:userId";
+const MARKET_STICKER_BUY = "/buy/:stickerId/:userId";
 const MARKET_STICKER_SEARCH = "/sticker-search";
 const MARKET_SEARCH_PRICE = "/search-price";
 const MARKET_SEARCH_DATE = "/search-data";

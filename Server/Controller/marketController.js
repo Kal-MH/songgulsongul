@@ -75,7 +75,7 @@
        res.json({
          'code': resultCode,
          'itemDetail': item_detail,
-         'seller': seller_info,
+         'sellerInfo': seller_info,
          'userPoint': user_point
        })
      })
@@ -83,8 +83,8 @@
 
   // 마켓 스티커 구매
   stickerBuy : function(req, res){
-    const sticker_id = req.body.stickerId;
-    const user_id = req.body.userId;
+    const sticker_id = req.params.stickerId;
+    const user_id = req.params.userId;
     var params = [sticker_id, user_id];
 
     var sql = 'UPDATE user SET point = point - (SELECT price FROM market WHERE id = ?) WHERE login_id = ?'; // 구매자의 포인트 차감
