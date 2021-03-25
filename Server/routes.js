@@ -44,6 +44,7 @@ const POST_SEARCH_ID = "/search/id"
 //----------------------delete---------------
 const POST_UPLOAD = "/upload";
 const POST_UPDATE = "/update/:id"
+const POST_DELETE = "/delete/:id"
 
 //api Router
 const API = "/api";
@@ -99,6 +100,7 @@ const routes = {
     postSearchId : POST_SEARCH_ID,
     postDetail : POST_DETAIL,
     postUpdate : POST_UPDATE,
+    postDelete : POST_DELETE,
 
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,
