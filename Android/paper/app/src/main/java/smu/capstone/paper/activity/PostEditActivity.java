@@ -83,16 +83,11 @@ public class PostEditActivity extends AppCompatActivity {
 
 
         // 기존 ccl 설정값에 따라 셋팅
-        if(ccl1)
-            post_edit_ccl_1.setChecked(true);
-        if(ccl2)
-            post_edit_ccl_2.setChecked(true);
-        if(ccl3)
-            post_edit_ccl_3.setChecked(true);
-        if(ccl4)
-            post_edit_ccl_4.setChecked(true);
-        if(ccl5)
-            post_edit_ccl_5.setChecked(true);
+        post_edit_ccl_1.setChecked(ccl1);
+        post_edit_ccl_2.setChecked(ccl2);
+        post_edit_ccl_3.setChecked(ccl3);
+        post_edit_ccl_4.setChecked(ccl4);
+        post_edit_ccl_5.setChecked(ccl5);
 
         try {
             hashtag_obj = new JSONObject(intent.getStringExtra("hashtag"));

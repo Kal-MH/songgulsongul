@@ -10,17 +10,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.TextView;
 
-import java.sql.Array;
-
-import smu.capstone.paper.CclSharedPreference;
-import smu.capstone.paper.LoginSharedPreference;
+import smu.capstone.paper.SettingSharedPreference;
 import smu.capstone.paper.R;
 
 public class SettingActivity extends AppCompatActivity {
-    Switch setting_ccl_1, setting_ccl_2, setting_ccl_3, setting_ccl_4, setting_ccl_5;
-    boolean ccl1, ccl2, ccl3, ccl4, ccl5;
+    Switch setting_ccl_1, setting_ccl_2, setting_ccl_3, setting_ccl_4, setting_ccl_5
+            , setting_alert_1, setting_alert_2, setting_alert_3, setting_alert_4;
+    boolean ccl1, ccl2, ccl3, ccl4, ccl5
+            , alert1, alert2, alert3, alert4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +30,11 @@ public class SettingActivity extends AppCompatActivity {
         setting_ccl_3 = findViewById(R.id.setting_ccl_3);
         setting_ccl_4 = findViewById(R.id.setting_ccl_4);
         setting_ccl_5 = findViewById(R.id.setting_ccl_5);
+        setting_alert_1 = findViewById(R.id.setting_alert_1);
+        setting_alert_2 = findViewById(R.id.setting_alert_2);
+        setting_alert_3 = findViewById(R.id.setting_alert_3);
+        setting_alert_4 = findViewById(R.id.setting_alert_4);
+
 
         //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.setting_toolbar);
@@ -41,17 +44,36 @@ public class SettingActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
-        setting_ccl_1.setChecked(CclSharedPreference.getPrefCcl(this,"ccl1"));
-        setting_ccl_2.setChecked(CclSharedPreference.getPrefCcl(this,"ccl2"));
-        setting_ccl_3.setChecked(CclSharedPreference.getPrefCcl(this,"ccl3"));
-        setting_ccl_4.setChecked(CclSharedPreference.getPrefCcl(this,"ccl4"));
-        setting_ccl_5.setChecked(CclSharedPreference.getPrefCcl(this,"ccl5"));
+        ccl1 = SettingSharedPreference.getSetting(this,"ccl1");
+        ccl2 = SettingSharedPreference.getSetting(this,"ccl2");
+        ccl3 = SettingSharedPreference.getSetting(this,"ccl3");
+        ccl4 = SettingSharedPreference.getSetting(this,"ccl4");
+        ccl5 = SettingSharedPreference.getSetting(this,"ccl5");
+        alert1 = SettingSharedPreference.getSetting(this,"alert1");
+        alert2 = SettingSharedPreference.getSetting(this,"alert2");
+        alert3 = SettingSharedPreference.getSetting(this,"alert3");
+        alert4 = SettingSharedPreference.getSetting(this,"alert4");
+
+        setting_ccl_1.setChecked(ccl1);
+        setting_ccl_2.setChecked(ccl2);
+        setting_ccl_3.setChecked(ccl3);
+        setting_ccl_4.setChecked(ccl4);
+        setting_ccl_5.setChecked(ccl5);
+        setting_alert_1.setChecked(alert1);
+        setting_alert_2.setChecked(alert2);
+        setting_alert_3.setChecked(alert3);
+        setting_alert_4.setChecked(alert4);
+
 
         setting_ccl_1.setOnCheckedChangeListener(checkedChangeListener);
         setting_ccl_2.setOnCheckedChangeListener(checkedChangeListener);
         setting_ccl_3.setOnCheckedChangeListener(checkedChangeListener);
         setting_ccl_4.setOnCheckedChangeListener(checkedChangeListener);
         setting_ccl_5.setOnCheckedChangeListener(checkedChangeListener);
+        setting_alert_1.setOnCheckedChangeListener(checkedChangeListener);
+        setting_alert_2.setOnCheckedChangeListener(checkedChangeListener);
+        setting_alert_3.setOnCheckedChangeListener(checkedChangeListener);
+        setting_alert_4.setOnCheckedChangeListener(checkedChangeListener);
 
         // 워터마크 스피너
 
@@ -65,34 +87,39 @@ public class SettingActivity extends AppCompatActivity {
             switch (buttonView.getId()){
                 case R.id.setting_ccl_1:
                     if(isChecked)
-                        ccl1=true;
-                    else
-                        ccl1=false;
+                        ccl1=setting_ccl_1.isChecked();
                     break;
                 case R.id.setting_ccl_2:
                     if(isChecked)
-                        ccl2=true;
-
-                    else
-                        ccl2=false;
+                        ccl2=setting_ccl_2.isChecked();
                     break;
                 case R.id.setting_ccl_3:
                     if(isChecked)
-                        ccl3=true;
-                    else
-                        ccl3=false;
+                        ccl3=setting_ccl_3.isChecked();
                     break;
                 case R.id.setting_ccl_4:
                     if(isChecked)
-                        ccl4=true;
-                    else
-                        ccl4=false;
+                        ccl4=setting_ccl_4.isChecked();
                     break;
                 case R.id.setting_ccl_5:
                     if(isChecked)
-                        ccl5=true;
-                    else
-                        ccl5=false;
+                        ccl5=setting_ccl_5.isChecked();
+                    break;
+                case R.id.setting_alert_1:
+                    if(isChecked)
+                        alert1=setting_alert_1.isChecked();
+                    break;
+                case R.id.setting_alert_2:
+                    if(isChecked)
+                        alert2=setting_alert_2.isChecked();
+                    break;
+                case R.id.setting_alert_3:
+                    if(isChecked)
+                        alert3=setting_alert_3.isChecked();
+                    break;
+                case R.id.setting_alert_4:
+                    if(isChecked)
+                        alert4=setting_alert_4.isChecked();
                     break;
             }
         }
@@ -103,11 +130,15 @@ public class SettingActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.toolbar_save:
-                CclSharedPreference.setPrefCcl(SettingActivity.this, "ccl1",ccl1);
-                CclSharedPreference.setPrefCcl(SettingActivity.this, "ccl2",ccl2);
-                CclSharedPreference.setPrefCcl(SettingActivity.this, "ccl3",ccl3);
-                CclSharedPreference.setPrefCcl(SettingActivity.this, "ccl4",ccl4);
-                CclSharedPreference.setPrefCcl(SettingActivity.this, "ccl5",ccl5);
+                SettingSharedPreference.setSetting(SettingActivity.this, "ccl1",ccl1);
+                SettingSharedPreference.setSetting(SettingActivity.this, "ccl2",ccl2);
+                SettingSharedPreference.setSetting(SettingActivity.this, "ccl3",ccl3);
+                SettingSharedPreference.setSetting(SettingActivity.this, "ccl4",ccl4);
+                SettingSharedPreference.setSetting(SettingActivity.this, "ccl5",ccl5);
+                SettingSharedPreference.setSetting(SettingActivity.this, "alert1",alert1);
+                SettingSharedPreference.setSetting(SettingActivity.this, "alert2",alert2);
+                SettingSharedPreference.setSetting(SettingActivity.this, "alert3",alert3);
+                SettingSharedPreference.setSetting(SettingActivity.this, "alert4",alert4);
             case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
                 finish();
                 return true;

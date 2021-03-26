@@ -20,26 +20,20 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.charset.CharsetEncoder;
-
-import smu.capstone.paper.CclSharedPreference;
+import smu.capstone.paper.SettingSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.AddItemTagAdapter;
-import smu.capstone.paper.item.ItemtagItem;
 
 public class UploadDetailActivity extends AppCompatActivity {
 
@@ -68,11 +62,11 @@ public class UploadDetailActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
-        upload_detail_ccl_1.setChecked(CclSharedPreference.getPrefCcl(this,"ccl1"));
-        upload_detail_ccl_2.setChecked(CclSharedPreference.getPrefCcl(this,"ccl2"));
-        upload_detail_ccl_3.setChecked(CclSharedPreference.getPrefCcl(this,"ccl3"));
-        upload_detail_ccl_4.setChecked(CclSharedPreference.getPrefCcl(this,"ccl4"));
-        upload_detail_ccl_5.setChecked(CclSharedPreference.getPrefCcl(this,"ccl5"));
+        upload_detail_ccl_1.setChecked(SettingSharedPreference.getSetting(this,"ccl1"));
+        upload_detail_ccl_2.setChecked(SettingSharedPreference.getSetting(this,"ccl2"));
+        upload_detail_ccl_3.setChecked(SettingSharedPreference.getSetting(this,"ccl3"));
+        upload_detail_ccl_4.setChecked(SettingSharedPreference.getSetting(this,"ccl4"));
+        upload_detail_ccl_5.setChecked(SettingSharedPreference.getSetting(this,"ccl5"));
 
 
         //해쉬태그 작성

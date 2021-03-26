@@ -169,6 +169,11 @@ public class PostActivity extends AppCompatActivity {
                                     intent.putExtra("text", post_obj.getString("text"));
                                     intent.putExtra("hashtag", hashtag_obj.toString());
                                     intent.putExtra("itemtag", itemtag_obj.toString());
+                                    intent.putExtra("ccl1",post_obj.getBoolean("ccl1"));
+                                    intent.putExtra("ccl2",post_obj.getBoolean("ccl2"));
+                                    intent.putExtra("ccl3",post_obj.getBoolean("ccl3"));
+                                    intent.putExtra("ccl4",post_obj.getBoolean("ccl4"));
+                                    intent.putExtra("ccl5",post_obj.getBoolean("ccl5"));
                                 } catch (JSONException e){
                                     e.printStackTrace();
                                 }
