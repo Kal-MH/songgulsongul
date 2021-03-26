@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -209,7 +210,8 @@ public class EditActivity extends AppCompatActivity implements View.OnTouchListe
             }
 
             case R.id.toolbar_next:
-
+                Intent intent= new Intent(EditActivity.this, UploadDetailActivity.class);
+                startActivity(intent);
 
                 return true;
 

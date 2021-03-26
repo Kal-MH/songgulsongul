@@ -25,6 +25,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +34,7 @@ import org.json.JSONObject;
 
 import java.nio.charset.CharsetEncoder;
 
+import smu.capstone.paper.CclSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.AddItemTagAdapter;
 import smu.capstone.paper.item.ItemtagItem;
@@ -41,6 +44,8 @@ public class UploadDetailActivity extends AppCompatActivity {
     RecyclerView itemtag_rv;
     AddItemTagAdapter adapter;
     EditText hashtagText;
+    Switch upload_detail_ccl_1, upload_detail_ccl_2, upload_detail_ccl_3
+            , upload_detail_ccl_4, upload_detail_ccl_5;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -48,7 +53,11 @@ public class UploadDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_detail);
 
-
+        upload_detail_ccl_1 = findViewById(R.id.upload_detail_ccl_1);
+        upload_detail_ccl_2 = findViewById(R.id.upload_detail_ccl_2);
+        upload_detail_ccl_3 = findViewById(R.id.upload_detail_ccl_3);
+        upload_detail_ccl_4 = findViewById(R.id.upload_detail_ccl_4);
+        upload_detail_ccl_5 = findViewById(R.id.upload_detail_ccl_5);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.upload_detail_toolbar);
         setSupportActionBar(toolbar);
@@ -57,6 +66,11 @@ public class UploadDetailActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
+        upload_detail_ccl_1.setChecked(CclSharedPreference.getPrefCcl(this,"ccl1"));
+        upload_detail_ccl_2.setChecked(CclSharedPreference.getPrefCcl(this,"ccl2"));
+        upload_detail_ccl_3.setChecked(CclSharedPreference.getPrefCcl(this,"ccl3"));
+        upload_detail_ccl_4.setChecked(CclSharedPreference.getPrefCcl(this,"ccl4"));
+        upload_detail_ccl_5.setChecked(CclSharedPreference.getPrefCcl(this,"ccl5"));
 
 
         //해쉬태그 작성
