@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -173,6 +175,17 @@ public class UploadDetailActivity extends AppCompatActivity {
                 break;
 
             case R.id.toolbar_done :
+                // 서버에 변경된 data(객체) 전송
+
+                //if resultCode == 200
+                Toast toast = Toast.makeText(UploadDetailActivity.this, "업로드 완료", Toast.LENGTH_SHORT);
+                toast.show();
+                Intent intent = new Intent(UploadDetailActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동
+                startActivity(intent);
+
+                //if resultCode == 500
+                /*Toast toast = Toast.makeText(UploadDetailActivity.this, "업로드 실패", Toast.LENGTH_SHORT);
+                toast.show();*/
                 break;
 
         }
