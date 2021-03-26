@@ -33,7 +33,7 @@ import smu.capstone.paper.layout.ZoomView;
 
 // 카메라 촬영및 갤러리에서 선택후 임시로 전달할 Activity
 public class DetectPaperActivity extends AppCompatActivity implements View.OnTouchListener  {
-    ImageView zoom_background;
+    ImageView zoom_background , help;
     String filePath;
     FrameLayout zoomFrame , dots ;
     ZoomView zoomView;
@@ -75,6 +75,17 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
+
+        //헬프버튼 세팅
+        help = findViewById(R.id.detect_paper_help);
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DetectPaperActivity.this, DetectPaperHelpActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         dot1 = findViewById(R.id.dot1);
         dot2 = findViewById(R.id.dot2);
