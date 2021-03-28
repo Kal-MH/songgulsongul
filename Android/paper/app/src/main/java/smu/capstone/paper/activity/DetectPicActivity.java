@@ -75,6 +75,7 @@ public class DetectPicActivity extends AppCompatActivity {
                 Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
                 intent.putExtra("path", filePath);
                 startActivity(intent);
+                finish();
             }
         });
     }

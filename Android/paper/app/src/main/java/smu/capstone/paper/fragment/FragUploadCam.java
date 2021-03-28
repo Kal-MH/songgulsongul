@@ -84,12 +84,11 @@ public class FragUploadCam extends Fragment {
                     os.flush();
                     os.close();
 
-
                     String filePath= tempFile.getAbsolutePath();
                     Intent intent = new Intent(context, DetectPaperActivity.class);
                     intent.putExtra("path", filePath);
                     startActivity(intent);
-
+                    getActivity().finish();
 
                 } catch (IOException e) {
                     e.printStackTrace();
