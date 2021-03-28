@@ -47,7 +47,8 @@ public class PostEditActivity extends AppCompatActivity {
     JSONObject itemtag_obj, hashtag_obj;
     JSONArray hashtag_list;
     Switch post_edit_ccl_1, post_edit_ccl_2, post_edit_ccl_3, post_edit_ccl_4, post_edit_ccl_5;
-    int ccl[] = {1,0,1,1,1}; // 넘겨받은 ccl설정 값 --> 추후 intent로 PostActivity에서 넘겨받음
+    boolean ccl1,ccl2,ccl3,ccl4,ccl5;
+    //int ccl[] = {1,0,1,1,1}; // 넘겨받은 ccl설정 값 --> 추후 intent로 PostActivity에서 넘겨받음
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -74,18 +75,19 @@ public class PostEditActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Glide.with(PostEditActivity.this).load(intent.getIntExtra("postImg", 0)).into(post_edit_pic);
         post_edit_text.setText(intent.getStringExtra("text"));
+        ccl1=intent.getBooleanExtra("ccl1",false);
+        ccl2=intent.getBooleanExtra("ccl2",false);
+        ccl3=intent.getBooleanExtra("ccl3",false);
+        ccl4=intent.getBooleanExtra("ccl4",false);
+        ccl5=intent.getBooleanExtra("ccl5",false);
+
 
         // 기존 ccl 설정값에 따라 셋팅
-        if(ccl[0] == 1)
-            post_edit_ccl_1.setChecked(true);
-        if(ccl[1] == 1)
-            post_edit_ccl_2.setChecked(true);
-        if(ccl[2] == 1)
-            post_edit_ccl_3.setChecked(true);
-        if(ccl[3] == 1)
-            post_edit_ccl_4.setChecked(true);
-        if(ccl[4] == 1)
-            post_edit_ccl_5.setChecked(true);
+        post_edit_ccl_1.setChecked(ccl1);
+        post_edit_ccl_2.setChecked(ccl2);
+        post_edit_ccl_3.setChecked(ccl3);
+        post_edit_ccl_4.setChecked(ccl4);
+        post_edit_ccl_5.setChecked(ccl5);
 
         try {
             hashtag_obj = new JSONObject(intent.getStringExtra("hashtag"));

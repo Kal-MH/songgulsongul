@@ -1,7 +1,6 @@
 package smu.capstone.paper.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -17,11 +16,9 @@ public class EditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
-
+      
         filePath = getIntent().getStringExtra("path");
         edit_iv = findViewById(R.id.edit_pic);
-
-        Glide.with(this).load(filePath).into(edit_iv);
-
+        Glide.with(this).load(filePath).into(edit_iv);      
     }
 }
