@@ -6,35 +6,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
 
 import smu.capstone.paper.R;
 
-public class EditActivity extends AppCompatActivity {
-
-    String filePath;
-    ImageView edit_iv;
-    Button back, done;
+public class EditDoneActivity extends AppCompatActivity {
+    Button upload, back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+        setContentView(R.layout.activity_edit_done);
 
-        done = findViewById(R.id.edit_done);
-        back = findViewById(R.id.edit_back);
-
-        filePath = getIntent().getStringExtra("path");
-        edit_iv = findViewById(R.id.edit_pic);
-        Glide.with(this).load(filePath).into(edit_iv);
+        upload = findViewById(R.id.edit_done_upload);
+        back = findViewById(R.id.edit_done_back);
 
 
-        done.setOnClickListener(new View.OnClickListener() {
+        upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent( EditActivity.this , EditDoneActivity.class);
+                Intent intent = new Intent(EditDoneActivity.this, UploadDetailActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -43,7 +33,9 @@ public class EditActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(EditDoneActivity.this, UploadActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

@@ -145,7 +145,7 @@ public class UploadActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, DetectPaperActivity.class);
                     intent.putExtra("path", filePath);
                     startActivity(intent);
-
+                    finish();
                 }
                 else if( frag_status == CAMERA){
                     //  Not happened!

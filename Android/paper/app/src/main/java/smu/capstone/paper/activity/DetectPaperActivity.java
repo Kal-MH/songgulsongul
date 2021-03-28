@@ -108,6 +108,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 // 이미지 편집 후 임시파일로 저장, 인텐트에는 url로 전달
                 intent.putExtra("path", filePath);
                 startActivity(intent);
+                finish();
             }
         });
 
