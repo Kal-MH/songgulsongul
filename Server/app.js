@@ -2,7 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 const expressSession = require('express-session');
@@ -16,6 +16,7 @@ const userRouter = require('./Router/userRouter');
 const homeRouter = require('./Router/homeRouter');
 const apiRouter = require('./Router/apiRouter');
 const postRouter = require('./Router/postRouter');
+const marketRouter = require('./Router/marketRouter');
 const { localMiddlewares } = require('./middlewares');
 const dotenv = require('dotenv');
 
@@ -34,8 +35,8 @@ app.set('view engine', 'ejs');
 app.use(helmet());
 app.use(logger('dev'));
 app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 //sesssion & passport
@@ -74,6 +75,7 @@ app.use(routes.home, homeRouter);
 app.use(routes.api, apiRouter);
 app.use(routes.user, userRouter);
 app.use(routes.post, postRouter);
+app.use(routes.market, marketRouter);
 
 //Server listening
 app.listen(PORT, function () {

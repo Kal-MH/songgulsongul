@@ -29,7 +29,7 @@ const postController_subFunc = {
         var searchKeyword = req.query.keyword;
         var offset = req.query.offset;
 
-        var sql = `select * from user where login_id like'${searchKeyword}%' limit ${db_config.limitation} offset ${offset};`;
+        var sql = `select id, login_id, img_profile from user where login_id like'${searchKeyword}%' limit ${db_config.limitation} offset ${offset};`;
         connection.query(sql, function (err, result) {
             if (err){
                 console.log(err);
@@ -46,21 +46,26 @@ const postController_subFunc = {
             }
         })
     },
-    getPostDetailSendData : function (req, res, statusCode, posts, hashItemLikeComments, likeArray, keepArray) {
-        var data = [];
-
-        for(var i = 0;i < posts.length;i++){
-            var post = {
-                post : posts[i],
-                user : hashItemLikeComments[i * 5],
-                hashTags : hashItemLikeComments[(i * 5) + 1],
-                itemTags : hashItemLikeComments[(i * 5) + 2],
-                likeNum : hashItemLikeComments[(i * 5) + 3].length,
-                comments : hashItemLikeComments[(i * 5) + 4],
-                likeOnset : (likeArray && (likeArray[i] != undefined && likeArray[i].length > 0) ? 1 : 0),
-                keepOnset : (keepArray && (keepArray[i] != undefined && keepArray[i].length > 0) ? 1 : 0)
-            }
-            data.push(post);
+    getPostDetailSendData : function (req, res, statusCode, postData, likeKeep) {
+        var data = {
+            post : {
+                id : postData[0][0].id,
+                image : postData[0][0].image,
+                text : postData[0][0].text,
+                post_time : postData[0][0].post_time,
+                post_date : postData[0][0].post_date,
+                user_id : postData[0][0].user_id
+            },
+            user : {
+                login_id : postData[0][0].login_id,
+                img_profile : postData[0][0].img_profile
+            },
+            hashTags : postData[1],
+            itemTags : postData[2],
+            likeNum : postData[3].length,
+            comments : postData[4],
+            likeOnset : (likeKeep && likeKeep.likeOnset == 1) ? 1 : 0,
+            keepOnset :  (likeKeep && likeKeep.keepOnset == 1) ? 1 : 0
         }
         res.json({
             'code' : statusCode,

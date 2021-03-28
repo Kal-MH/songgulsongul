@@ -36,8 +36,6 @@ const apiController = {
                 'code' : resultCode
             })
         })
-
-
     },
     //이메일인증보내기
     sendEmail : async function (req, res) {
@@ -100,35 +98,25 @@ const apiController = {
                     'code' : statusCode.CLIENT_ERROR
                 })
             } else {
+                var apiLikeSql = "";
                 if (result.length == 0){
                     //사용자가 좋아요를 누른 상황
-                    var apiLikeSql = `insert into likes (post_id, user_id) values (${postId}, ${loggedUser.id});`;
-                    connection.query(apiLikeSql, function (err, result) {
-                        var code = statusCode.OK;
-                        if (err){
-                            console.log(err);
-                            code = statusCode.SERVER_ERROR;
-                        }
-                        res.redirect(`/post/${postId}`)
-                        // res.json({
-                        //     'code' : code
-                        // })
-                    })
+                    apiLikeSql = `insert into likes (post_id, user_id) values (${postId}, ${loggedUser.id});`;    
                 } else {
                     //사용자가 좋아요 취소를 누른 상황
-                    var apiLikeDeleteSql = `delete from likes where post_id=${postId} and user_id=${loggedUser.id};`;
-                    connection.query(apiLikeDeleteSql, function (err, result) {
-                        var code = statusCode.OK;
-                        if (err){
-                            console.log(err);
-                            code = statusCode.SERVER_ERROR;
-                        }
-                        res.redirect(`/post/${postId}`)
-                        // res.json({
-                        //     'code' : code
-                        // })
-                    })
+                    apiLikeSql = `delete from likes where post_id=${postId} and user_id=${loggedUser.id};`;
                 }
+                connection.query(apiLikeSql, function (err, result) {
+                    var code = statusCode.OK;
+                    if (err){
+                        console.log(err);
+                        code = statusCode.SERVER_ERROR;
+                    }
+                    res.redirect(`/post/${postId}`)
+                    // res.json({
+                    //     'code' : code
+                    // })
+                })
             }
         })
         
@@ -147,71 +135,54 @@ const apiController = {
                     'code' : statusCode.CLIENT_ERROR
                 })
             } else {
+                var apiKeepSql = "";
                 if (result.length == 0){
                     //사용자가 보관하기를 누른 상황
-                    var apiKeepSql = `insert into keep (post_id, user_id) values (${postId}, ${loggedUser.id});`;
-                    connection.query(apiKeepSql, function (err, result) {
-                        var code = statusCode.OK;
-                        if (err){
-                            console.log(err);
-                            code = statusCode.SERVER_ERROR;
-                        }
-                        res.redirect(`/post/${postId}`)
-                        // res.json({
-                        //     'code' : code
-                        // })
-                    })
+                    apiKeepSql = `insert into keep (post_id, user_id) values (${postId}, ${loggedUser.id});`;
                 } else {
                     //사용자가 보관하기 취소를 누른 상황
-                    var apiKeepDeleteSql = `delete from keep where post_id=${postId} and user_id=${loggedUser.id};`;
-                    connection.query(apiKeepDeleteSql, function (err, result) {
-                        var code = statusCode.OK;
-                        if (err){
-                            console.log(err);
-                            code = statusCode.SERVER_ERROR;
-                        }
-                        res.redirect(`/post/${postId}`)
-                        // res.json({
-                        //     'code' : code
-                        // })
-                    })
+                    apiKeepSql = `delete from keep where post_id=${postId} and user_id=${loggedUser.id};`;
                 }
+                connection.query(apiKeepSql, function (err, result) {
+                    var code = statusCode.OK;
+                    if (err){
+                        console.log(err);
+                        code = statusCode.SERVER_ERROR;
+                    }
+                    res.redirect(`/post/${postId}`)
+                    // res.json({
+                    //     'code' : code
+                    // })
+                })
             }
         })
         
     },
     insertPostComment : function (req, res) {
         var postId = req.params.postid;
-        var userId = req.params.userid;
+        var userId = res.locals.loggedUser.id;
         var text = req.body.comment; //공백으로 오는 것을 어디서 걸러줄 것인가.
 
-        if (text == ''){
-            res.json({
-                'code' : statusCode.CLIENT_ERROR
-            })
-        } else {
-            var commentInsertSql = `insert into comment(user_id, post_id, text, c_time, c_date) values(?, ?, ?, curtime(), curdate());`
-            var commentParams = [userId, postId, text];
-            connection.query(commentInsertSql, commentParams, function (err, result) {
-                var code = statusCode.OK;
-                if (err){
-                    console.log(err);
-                    code = statusCode.CLIENT_ERROR;
-                }
-                res.redirect(`/post/${postId}`)
-                // res.json({
-                //     'code' : code
-                // })
-            })
-        }
-
+        var commentInsertSql = `insert into comment(user_id, post_id, text, c_time, c_date) values(?, ?, ?, curtime(), curdate());`
+        var commentParams = [userId, postId, text];
+        connection.query(commentInsertSql, commentParams, function (err, result) {
+            var code = statusCode.OK;
+            if (err){
+                console.log(err);
+                code = statusCode.CLIENT_ERROR;
+            }
+            res.redirect(`/post/${postId}`)
+            // res.json({
+            //     'code' : code
+            // })
+        })
     },
     deletePostComment : function (req, res) {
         var postId = req.params.postid;
-        var userId = req.params.userid;
+        var commentId = req.params.commentid;
 
-        var commentDeleteSql = `delete from comment where user_id=? and post_id=?;`
-        var commentParams = [userId, postId];
+        var commentDeleteSql = `delete from comment where id=? and post_id=?;`
+        var commentParams = [commentId, postId];
         connection.query(commentDeleteSql, commentParams, function (err, result) {
             var code = statusCode.OK;
             if (err){

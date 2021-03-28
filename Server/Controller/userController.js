@@ -22,7 +22,7 @@
        var sql1 = 'SELECT COUNT(*) FROM user JOIN follow ON follow.follower_id = user.id WHERE follow.follow_target_id = ?'; // 팔로워 수
        var sql2 = 'SELECT COUNT(*) FROM user JOIN follow ON follow.follow_target_id = user.id WHERE follow.follower_id = ?'; // 팔로우 수
        var sql3 = 'SELECT * FROM user JOIN post ON user.id = post.user_id WHERE user.login_id = ?'; // 게시글목록
-       var sql4 = 'SELECT * FROM profile WHERE user_id = ?' // 프로필 데이터(포인트, 소개글, sns 주소)
+       var sql4 = 'SELECT * FROM profile WHERE user_id = ?'; // 프로필 데이터(포인트, 소개글, sns 주소)
 
          connection.query(sql1 + sql2 + sql3 + sql4, param, function(err, rows){
            var resultCode = statusCode.CLIENT_ERROR;
@@ -50,7 +50,7 @@
              }
 
              if(status === 1){ // 로그인한 사용자의 프로필일 경우
-               prodata.'point' = rows[3].point;
+               prodata.point = rows[3].point;
              }
              profile_info.push(prodata);
            }
@@ -71,7 +71,7 @@
        const user_id = req.body.userId;
 
        var params = [login_id, user_id];
-       var sql = 'INSERT INTO follow(follower_id, follow_target_id) VALUES(?,?)'';
+       var sql = 'INSERT INTO follow(follower_id, follow_target_id) VALUES(?,?)';
        connection.query(sql, params, function(err, rows){
          var resultCode = statusCode.CLIENT_ERROR;
          var message = 'ERROR';
@@ -348,8 +348,8 @@
          }
 
          res.json({
-           'code': resultCode;
-           'message': message;
+           'code': resultCode,
+           'message': message
          })
        })
      }

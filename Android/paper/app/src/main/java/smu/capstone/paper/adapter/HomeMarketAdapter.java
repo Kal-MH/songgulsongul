@@ -44,7 +44,7 @@ public class HomeMarketAdapter extends BaseAdapter {
         try {
             Glide.with(mContext).load(item.getInt("stickerImage")).into(imageView); // 사진
             nameText.setText(item.getString("name")); // 상품명
-            costText.setText(item.getString("price")); // 가격
+            costText.setText(item.getInt("price") + "p"); // 가격
         } catch (JSONException e){
             e.printStackTrace();
         }

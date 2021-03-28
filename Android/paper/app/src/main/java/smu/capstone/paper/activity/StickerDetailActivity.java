@@ -1,13 +1,18 @@
 package smu.capstone.paper.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -19,8 +24,8 @@ import smu.capstone.paper.R;
 
 public class StickerDetailActivity extends AppCompatActivity {
 
-    int sticker_id, img;
-    String name, price, comment;
+    int sticker_id, img, price, user_point;
+    String name, comment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,7 @@ public class StickerDetailActivity extends AppCompatActivity {
         TextView sticker_name = (TextView)findViewById(R.id.sticker_d_name);
         TextView sticker_price = (TextView)findViewById(R.id.sticker_d_price);
         TextView sticker_com = (TextView)findViewById(R.id.sticker_d_comment);
+        Button sticker_buy = (Button)findViewById(R.id.sticker_d_buy);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.sticker_detail_toolbar);
         setSupportActionBar(toolbar);
@@ -43,7 +49,7 @@ public class StickerDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         sticker_id = intent.getIntExtra("stickerId", 0);
         name = intent.getStringExtra("name");
-        price = intent.getStringExtra("price");
+        price = intent.getIntExtra("price", 0);
         img = intent.getIntExtra("image", 0);
         comment = intent.getStringExtra("comment");
 
@@ -51,14 +57,62 @@ public class StickerDetailActivity extends AppCompatActivity {
         JSONObject obj = getStickerDtData();
         try {
             sticker_name.setText(obj.getString("name"));
-            sticker_price.setText(obj.getString("price"));
+            sticker_price.setText(obj.getString("price") + "p");
             sticker_img.setImageResource(obj.getInt("image"));
             sticker_com.append("\n");
             sticker_com.append(obj.getString("comment"));
+            user_point = obj.getInt("point");
         } catch (JSONException e){
             e.printStackTrace();
         }
         actionBar.setTitle(intent.getStringExtra("name"));
+
+        // 구매 버튼 click listener
+        sticker_buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (user_point < price) { // 사용자 보유 포인트 부족시, 서버 통신 X
+                    new AlertDialog.Builder(StickerDetailActivity.this)
+                            .setMessage("포인트가 부족합니다." + "\n(보유 포인트: " + user_point + "p)")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
+                } else {
+                    new AlertDialog.Builder(StickerDetailActivity.this)
+                            .setMessage("스티커를 구매 할까요?")
+                            .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // server에 구매 요청
+
+                                    //if resultCode == 200
+                                    // sticker image저장 action
+                                    //-------------------------
+                                    Toast toast = Toast.makeText(StickerDetailActivity.this, "구매 완료", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                    Intent intent = getIntent(); // 포인트가 차감 되었으므로 새로고침 필요
+                                    finish();
+                                    startActivity(intent);
+
+                                    //if resultCode == 204
+                                    //Toast toast2 = Toast.makeText(StickerDetailActivity.this, "오류 발생", Toast.LENGTH_SHORT);
+                                    //toast2.show();
+                                }
+                            })
+                            .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
+                }
+            }
+        });
 
     }
 
@@ -75,6 +129,7 @@ public class StickerDetailActivity extends AppCompatActivity {
             item.put("price", price);
             item.put("image", img);
             item.put("comment", comment);
+            item.put("point", 1000); // 사용자의 보유 포인트도 함께 전달받음
         }catch (JSONException e){
             e.printStackTrace();
         }

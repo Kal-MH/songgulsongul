@@ -5,191 +5,88 @@ const statusCode = require("../config/serverStatusCode");
 const serverConfig = require("../config/serverConfig");
 
 const postController = {
-    /*
-     * 특정피드를 포함해서 20개 가져오기
-     * - 특정피드를 첫번째로 해서 20개를 가져오자
-     * api : /post/:id?offset=0
-     * 
-     * 가장 상단에 있는 것이 클릭한 피드.
-     * (클릭한 피드가 최신순이 되기 위해서 해당 피드의 아이디보다 작은 것들로 20개를 긁어온다.) 
-     */
     getPostDetail : function (req, res) {
         const loggedUser = res.locals.loggedUser;
         const postId = req.params.id;
-        const offset = req.query.offset ? req.query.offset : 0;
 
-        var selectPostSql = `select * from post where id <= ${postId} order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`;
-        connection.query(selectPostSql, function (err, result) {
+        // 게시글과 관련된 정보를 가져오는 쿼리문
+        // 게시글, 작성자, 해시태그, 아이템 태그, 좋아요, 코멘트를 차례로 가져오고 있다.
+         var selectPostDetailSql = `select p.id, p.image, p.text, p.post_time, p.post_date, p.user_id, u.login_id, u.img_profile from post as p join user as u 
+        on p.id = ${postId} and p.user_id = u.id;`;
+        selectPostDetailSql += `select text from hash_tag where post_id=${postId};`;
+        selectPostDetailSql += `select * from item_tag where post_id=${postId};`;
+        selectPostDetailSql += `select * from likes where post_id=${postId};`;
+        selectPostDetailSql += `select c.id, c.user_id, c.text, u.img_profile, u.login_id from comment as c join user as u on c.post_id=${postId} and c.user_id=u.id;`;
+        connection.query(selectPostDetailSql, function (err, result) {
             if (err){
-               console.log(err)
-               res.json({
-                'code' : statusCode.SERVER_ERROR
-            })
+                console.log(err);
+                postController_subFunc.getPostDetailSendData(req, res, statusCode.SERVER_ERROR, null, null);
             } else {
-                var posts = result;
+                var postData = result;
 
-                var selectUserSql = "";
-                for(var i = 0; i < posts.length; i++) {
-                    selectUserSql += `select login_id, img_profile from user where id = ${posts[i].user_id}; `;
-                    selectUserSql += `select text from hash_tag where post_id=${posts[i].id};`;
-                    selectUserSql += `select * from item_tag where post_id=${posts[i].id};`;
-                    selectUserSql += `select * from likes where post_id=${posts[i].id};`;
-                    selectUserSql += `select c.user_id, c.text, u.img_profile, u.login_id from comment as c join user as u on c.post_id=${posts[i].id} and c.user_id=u.id;`;
-                }
-                connection.query(selectUserSql, function (err, result) {
-                    if (err){
-                        console.log(err);
-                        res.json({
-                            'code' : statusCode.SERVER_ERROR
-                        })
-                    } else {
-                        /*
-                         * To-do
-                         * 1. likeOnset, keepOnset  포스트 마다 각각
-                         * 2. 보내지는 데이터 확인하기
-                         * 3. api문서 마무리 하기
-                         * 4. db수정사항과 고려사항 정리하기
-                         * 5. 아이템 태그 default이미지로 저장되는 지 확인하기(o)
-                         * 6. 좋아요, 댓글, 보관함 api확인하기                                                                                               
-                         */
-                        var hashItemLikeComments = result;
-                        if (loggedUser){
-                            var selectMeLikesKeepSql = "";
+                if (loggedUser){
+                    var meLikesSql = `select * from likes where post_id=${postId} and user_id=${(loggedUser) ? loggedUser.id : -1};`;
+                    var meKeepsSql = `select * from keep where post_id=${postId} and user_id=${(loggedUser) ? loggedUser.id : -1};`;
+                    connection.query(meLikesSql + meKeepsSql, function (err, result) {
+                        if (err){
+                            console.log(err);
+                            postController_subFunc.getPostDetailSendData(req, res, statusCode.SERVER_ERROR, null, null);
+                        } else {
+                            var likeKeep = {
+                                likeOnset : (result[0].length == 0) ? 0 : 1,
+                                keepOnset : (result[1].length == 0) ? 0 : 1
 
-                            for(var i =0;i < posts.length; i++){
-                                selectMeLikesKeepSql += `select * from likes where post_id=${posts[i].id} and user_id=${loggedUser.id};`;
-                                selectMeLikesKeepSql += `select * from keep where post_id=${posts[i].id} and user_id=${loggedUser.id};`;
                             }
 
-                            connection.query(selectMeLikesKeepSql, function (err, result) {
-                                if (err){
-                                    console.log(err);
-                                } else {
-                                    var likeArray = [];
-                                    var keepArray = [];
+                            // ------------------------- data  확인을 위한 ejs 넘겨주는 변수값들 --------------------
+                            var data = [{
+                                post : {
+                                    id : postData[0][0].id,
+                                    image : postData[0][0].image,
+                                    text : postData[0][0].text,
+                                    post_time : postData[0][0].post_time,
+                                    post_date : postData[0][0].post_date,
+                                    user_id : postData[0][0].user_id
+                                },
+                                user : {
+                                    login_id : postData[0][0].login_id,
+                                    img_profile : postData[0][0].img_profile
+                                },
+                                hashTags : postData[1],
+                                itemTags : postData[2],
+                                likeNum : postData[3].length,
+                                comments : postData[4],
+                                likeOnset : (likeKeep && likeKeep.likeOnset == 1) ? 1 : 0,
+                                keepOnset :  (likeKeep && likeKeep.keepOnset == 1) ? 1 : 0
+                            }];
+            
+                            var options = {
+                                appName : "Caligraphy",
+                                user : res.locals.loggedUser,
+                                post : data[0].post,
+                                postUser : data[0].user,
+                                hashTags : data[0].hashTags,
+                                itemTags : data[0].itemTags, 
+                                likeNum : data[0].likeNum,
+                                comments : data[0].comments
+                            }
 
-                                    for(var i =0; i < result.length; i++){
-                                        likeArray.push(result[i * 2]);
-                                        keepArray.push(result[(i * 2) + 1]);
-                                    }
-
-                                    //send Data if user is login
-                                    //postController_subFunc.getPostDetailSendData(req, res, statusCode.OK, posts, hashItemLikeComments, likeArray, keepArray);
-                                    
-                                    var data = [];
-                                    for(var i = 0;i < posts.length;i++){
-                                        var post = {
-                                            post : posts[i],
-                                            user : hashItemLikeComments[i * 5],
-                                            hashTags : hashItemLikeComments[(i * 5) + 1],
-                                            itemTags : hashItemLikeComments[(i * 5) + 2],
-                                            likeNum : hashItemLikeComments[(i * 5) + 3].length,
-                                            comments : hashItemLikeComments[(i * 5) + 4],
-                                            likeOnset : (likeArray && (likeArray[i] != undefined && likeArray[i].length > 0) ? 1 : 0),
-                                            keepOnset : (keepArray && (keepArray[i] != undefined && keepArray[i].length > 0) ? 1 : 0)
-                                        }
-                                        data.push(post);
-                                    }
-                                    var options = {
-                                        appName : "Caligraphy",
-                                        user : res.locals.loggedUser,
-                                        post : data[0].post,
-                                        postUser : data[0].user,
-                                        hashTags : data[0].hashTags,
-                                        itemTags : data[0].itemTags, 
-                                        likeNum : data[0].likeNum,
-                                        comments : data[0].comments
-                                    }
-
-                                    res.render("postDetail.ejs", {options : options, likeOnset : data[0].likeOnset, keepOnset : data[0].keepOnset});
-                                }
-                            })
-                        } else {
-                            //send Data if user is not login
-                            postController_subFunc.getPostDetailSendData(req, res, statusCode.OK, posts, hashItemLikeComments);
+                            res.render("postDetail.ejs", {options : options, likeOnset : data[0].likeOnset, keepOnset : data[0].keepOnset});
+                            // --------------------------------------------------------------------------------------
+                            //postController_subFunc.getPostDetailSendData(req, res, statusCode.OK, postData, likeKeep);  
+                           
                         }
-                    }
-                })
+                    })
+                } else {
+                    postController_subFunc.getPostDetailSendData(req, res, statusCode.OK, postData, null);
+                }
+
+
+               
+                
             }
         })
-
-        // var postAndUserSql = `select p.id, p.image, p.text, p.post_date, p.user_id, u.login_id, u.img_profile from post as p join user as u 
-        // on p.id = ${postId} and p.user_id = u.id;`;
-        // var hashSql = `select text from hash_tag where post_id=${postId};`;
-        // var itemSql = `select * from item_tag where post_id=${postId};`;
-        // connection.query(postAndUserSql + hashSql + itemSql, function (err, result) {
-        //     if (err){
-        //         console.log(err);
-        //         res.json({
-        //             'code' : statusCode.CLIENT_ERROR
-        //         })
-        //     } else {
-        //         var postUser = result[0][0];
-        //         var hashs = result[1];
-        //         var items = result[2];
-
-        //         var likesSql = `select * from likes where post_id=${postId};`;
-        //         var commentsSql = `select c.user_id, c.text, u.img_profile, u.login_id from comment as c join user as u on c.post_id=${postId} and c.user_id=u.id;`;
-        //         connection.query(likesSql + commentsSql, function (err, result) {
-        //             if (err){
-        //                 console.log(err);
-        //                 res.json({
-        //                     'code' : statusCode.CLIENT_ERROR
-        //                 })
-        //             } else {
-        //                 var options = {
-        //                     appName : appName,
-        //                     user : loggedUser,
-        //                     postUser : postUser,
-        //                     hashs : hashs,
-        //                     items : items, 
-        //                     likeNum : result[0].length,
-        //                     comments : result[1]
-        //                 }
-
-        //                 if (loggedUser){
-        //                     var meLikesSql = `select * from likes where post_id=${postId} and user_id=${(loggedUser) ? loggedUser.id : -1};`;
-        //                     var meKeepsSql = `select * from keep where post_id=${postId} and user_id=${(loggedUser) ? loggedUser.id : -1};`;
-        //                     connection.query(meLikesSql + meKeepsSql, function (err, result) {
-        //                         if (err){
-        //                             console.log(err);
-        //                             res.json({
-        //                                 'code' : statusCode.CLIENT_ERROR
-        //                             })
-        //                         } else {
-        //                             var likeOnset = (result[0].length == 0) ? 0 : 1 ;
-        //                             var keepOnset = (result[1].length == 0) ? 0 : 1 ;
-                                    
-        //                             res.render("postDetail.ejs", {options : options, likeOnset : likeOnset, keepOnset : keepOnset});
-        //                         }
-        //                     })
-        //                 }
-        //                 res.render("postDetail.ejs", {options : options, likeOnset : 0, keepOnset : 0});
-        //             }
-        //         })
-                
-                
-        //     }
-        // })
-
     },
-    /*
-     * api plane
-     * 
-     * const category = req.query.category
-     * const offset = req.query.offset
-     * 
-     * <로그인 정보 불필요>
-     * mainFeed sql : select * from post order by post_time desc, post_date desc limit 20 offset 20
-     * 
-     * <로그인 정보 필요>
-     * homeFeed sql : follow table과 post table 조인해서 넘겨줌
-     * keepFeed sql : keep table, post table 조인해서 넘겨줌
-     * 
-     * 넘겨줄 데이터
-     *  - postid, image, text, user_id(작성자 아이디)
-     *  - 혹은 전체 데이터
-     */
     getFeeds : function (req, res) {
         const loggedUser = res.locals.loggedUser;
         const offset = req.query.offset;
@@ -199,10 +96,16 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.SERVER_ERROR
+                    'code' : statusCode.SERVER_ERROR,
+                    'data' : null
+                })
+            } else if (result.length == 0) { // 팔로우하는 사람이 없는 경우
+                res.json({
+                    'code' : statusCode.OK,
+                    'data' : result
                 })
             } else {
-                var selectPostSql = `select * from post where `;
+                var selectPostSql = `select id from post where `;
                 for(var i = 0;i < result.length - 1;i++){
                     selectPostSql += `user_id = ${result[i].follow_target_id} or `
                 }
@@ -212,12 +115,56 @@ const postController = {
                     if (err){
                         console.log(err);
                         res.json({
-                            'code' : statusCode.SERVER_ERROR
+                            'code' : statusCode.SERVER_ERROR,
+                            'data' : null
                         })
                     } else {
-                        res.json({
-                            'code' : statusCode.OK,
-                            'data' : result //result ? result : null로 합쳐서 에러에 있는 res.json과 합치자
+                        var selectPostFeedSql = "";
+                        
+                        for(var i = 0;i < result.length; i++){
+                            selectPostFeedSql += `select p.id, p.image, p.text, p.post_date, p.post_time, p.user_id, u.login_id, u.img_profile from post as p join user as u 
+                            on p.id = ${result[i].id} and p.user_id = u.id;`;
+                            selectPostFeedSql += `select id from comment where post_id = ${result[i].id};`;
+                            selectPostFeedSql += `select * from likes where post_id = ${result[i].id};`;
+                            selectPostFeedSql += `select * from likes where post_id = ${result[i].id} and user_id = ${loggedUser.id};`;
+                            selectPostFeedSql += `select id from keep where post_id = ${result[i].id} and user_id = ${loggedUser.id};`;
+                        }
+                        connection.query(selectPostFeedSql, function (req, result) {
+                            if (err){
+                                console.log(err);
+                                res.json({
+                                    'code' : statusCode.SERVER_ERROR,
+                                    'data' : null
+                                })
+                            } else {
+                                var data = [];
+                                for(var i = 0;i < result.length; i += 5){
+                                    var info = {
+                                        post : {
+                                            id : result[i][0].id,
+                                            image : result[i][0].image,
+                                            text : result[i][0].text,
+                                            post_time : result[i][0].post_time,
+                                            post_date : result[i][0].post_date
+                                        },
+                                        user : {
+                                            user_id : result[i][0].user_id,
+                                            login_id : result[i][0].login_id,
+                                            img_profile : result[i][0].img_profile
+                                        },
+                                        commentsNum : (result[i + 1]) ? result[i + 1].length : 0,
+                                        likeNum : (result[i + 2]) ? result[i + 2].length : 0,
+                                        likeOnset : (result[i + 3] && result[i + 3].length != 0) ? 1 : 0,
+                                        keepOnset : (result[i + 4] && result[i + 4].length != 0) ? 1 : 0
+                                    }
+                                    data.push(info);
+                                }
+                                console.log(data);
+                                res.json({
+                                    'code' : statusCode.OK,
+                                    'data' : data
+                                })
+                            }
                         })
                     }
                 })
@@ -236,7 +183,8 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.SERVER_ERROR
+                    'code' : statusCode.SERVER_ERROR,
+                    'data' : null
                 })
             } else {
                 //이후에 res.json()으로 바꿔야 한다.
@@ -294,37 +242,18 @@ const postController = {
             itemImg : req.body.item_img
         }
 
-        // post이미지를 여러 개 받을 수 있다는 경우의 수를 고려해서 일단은 multer.array & files로 받는다.
-        var postImages = req.files;
+        var postImages = req.file.path;
         
-        var insertPostSql = "";
-        var insertPostParams = [];
-        for(var i = 0;i < postImages.length; i++)
-        {
-            // 문장에 포함해서 쿼리를 보내게 되면 image path의 구분자가 사라지는 문제 발생
-            // 배열을 만들어서 인자를 넘겨주는 방법으로 우회
-            
-            // 혹은 image url을 ,(콤마)로 연결한 다음, 데이터베이스에서 꺼내올 때, split하는 방법
-            // 그럴 경우, 데이터베이스 메모리 할당을 고려해야 한다.
-            // 결론, 업로드하는 이미지 갯수 제한을 두어야 한다.
-            
-            insertPostSql += `insert into post (image, text, post_time, post_date, user_id) values (?, '${text}', curtime(), curdate(), ${loggedUser.id});`;
-            insertPostParams.push(postImages[i].path);
-
-
-        }
+        var insertPostSql = `insert into post (image, text, post_time, post_date, user_id) values (?, '${text}', curtime(), curdate(), ${loggedUser.id});`;
+        var insertPostParams = [postImages];
         connection.query(insertPostSql, insertPostParams, function (err, result) {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.SERVER_ERROR
+                    'code' : statusCode.CLIENT_ERROR
                 })
             } else {
-                var postId;
-                if (result.length > 1) 
-                    postId = result[0].insertId;
-                else 
-                    postId = result.insertId
+                var postId = result[0].insertId;
                 
                 //hashTag
                 var insertHashSql = "";
@@ -350,7 +279,7 @@ const postController = {
                     if (err){
                         console.log(err);
                         res.json({
-                            'code' : statusCode.SERVER_ERROR
+                            'code' : statusCode.CLIENT_ERROR
                         })
                     }
                     else{
@@ -366,13 +295,12 @@ const postController = {
     postUpdate : function (req, res) {
         var postId = req.params.id;
         var loggedUser = res.locals.loggedUser;
-        var files = req.files;
+        var file = req.file;
 
         console.log(req.body);
 
         //안드로이드에서 넘어오는 값에 따라서 수정이 필요한 부분
-        //또한, 지금은 이미지를 하나만 받고 있기 때문에 반복문으로 처리해야 할 수도 있다.
-        var image = (files.length == 0) ? req.body.img_post_link : req.files[0].path; 
+        var image = (file) ? req.file.path : req.body.img_post_link; 
         var updatePostSql = `update post set image=?, text=?, post_time=curtime(), post_date=curdate(), user_id=? where id=${postId};`;
         var updatePostParams = [image, req.body.text, loggedUser.id];
 
@@ -380,7 +308,7 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.SERVER_ERROR
+                    'code' : statusCode.CLIENT_ERROR
                 })
             } else {
                 //hashTag
@@ -397,30 +325,34 @@ const postController = {
                     if (err){
                         console.log(err);
                         res.json({
-                            'code' : statusCode.SERVER_ERROR
+                            'code' : statusCode.CLIENT_ERROR
                         })
                     } else {
                         //itemTag - 현재는 단수로 되어 있지만, 이후에 액티비티랑 연동할 때, 복수로 바꿔야 한다.
-                        var item = {
-                            name : req.body.itemName,
-                            lowprice : Number(req.body.itemLowprice),
-                            highprice : Number(req.body.itemHighprice),
-                            itemLink : req.body.itemLink,
-                            itemImg : function () {
-                                if (req.body.itemImg == '')
-                                    return "/public/default/to-do-list.png";
-                                else 
-                                    return req.body.itemImg;
-                            }
-                        }
+                        
                         var deleteItemTagSql = `delete from item_tag where post_id=${postId};`;
-                        var insertItemSql = "insert into item_tag (post_id, name, lowprice, highprice, url, picture) values(?, ?, ?, ?, ?, ?);";
-                        var itemParams = [postId, item.name, item.lowprice, item.highprice, item.itemLink, item.itemImg()]
-                        connection.query(deleteItemTagSql + insertItemSql, itemParams, function (err, result) {
+                        var insertItemSql = "";
+                        var insertItemParams = [];
+                        for(var i = 0;i < req.body.itemName.length;i++){
+                            var itemImg;
+                            if (req.body.itemImg[i] == '') {
+                                itemImg = "/public/default/to-do-list.png";
+                            } else {   
+                                itemImg = req.body.itemImg[i];
+                            }
+
+                            insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, url, picture) values(${postId}, ?, ?, ?, ?, ?);`;
+                            insertItemParams.push(req.body.itemName[i]);
+                            insertItemParams.push(Number(req.body.itemLowprice[i]));
+                            insertItemParams.push(Number(req.body.itemHighprice[i]));
+                            insertItemParams.push(req.body.itemLink[i]);
+                            insertItemParams.push(itemImg);
+                        }
+                        connection.query(deleteItemTagSql + insertItemSql, insertItemParams, function (err, result) {
                             if (err){
                                 console.log(err);
                                 res.json({
-                                    'code' : statusCode.SERVER_ERROR
+                                    'code' : statusCode.CLIENT_ERROR
                                 })
                             } else {
                                 res.redirect(`/post/${postId}`);
@@ -428,6 +360,25 @@ const postController = {
                         })
                     }
                 })
+            }
+        })
+    },
+    postDelete : function (req, res) {
+        const postId = req.params.id;
+        const loggedUser = res.locals.loggedUser;
+
+        var deletePostSql = `delete from post where id = ${postId} and user_id = ${loggedUser.id};`;
+        connection.query(deletePostSql, function (err, result) {
+            if (err){
+                console.log(err);
+                res.json({
+                    'code' : statusCode.SERVER_ERROR
+                })
+            } else {
+                res.redirect("/post/community?offset=0")
+                // res.json({
+                //     'code' : statusCode.OK
+                // })
             }
         })
     }

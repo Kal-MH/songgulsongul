@@ -27,27 +27,30 @@
                     <a href="#">+</a>
 		            <a href="/logout" class="btn btn-default btn-sm">로그아웃</a>
                 <% } %> 
-                <% if (options.postUser.login_id == options.user.id) { %>
+                <% if (options.post.user_id == options.user.id) { %>
                     <h4>Update</h4>
-                    <form action="/post/update/<%= options.postUser.id %> " method="post" enctype="multipart/form-data">
+                    <form action="/post/update/<%= options.post.id %> " method="post" enctype="multipart/form-data">
                         <label for="file">Image</label>
                         <input type="file" name="img_post" id="file" accept="image/*" >
-                        <input type="text" name="img_post_link" id="file" value="<%= options.postUser.image %> ">
+                        <input type="text" name="img_post_link" id="file" value="<%= options.post.image %> ">
                         <br>
-                        <input type="text" name="text" id="text" value="<%= options.postUser.text %> ">
+                        <input type="text" name="text" id="text" value="<%= options.post.text %> ">
                         <br>
-                        <% for( let i = 0; i < options.hashs.length; i++ ) { %>
+                        <% for( let i = 0; i < options.hashTags.length; i++ ) { %>
                             <span> #</span>
-                            <input type="text" name="hashTags" value="<%= options.hashs[i].text %>">
+                            <input type="text" name="hashTags" value="<%= options.hashTags[i].text %>">
                         <% } %>
-                        <% for( let i = 0; i < options.items.length; i++ ) { %>
-                            <input type="text" class="itemName" name="itemName" value="<%= options.items[0].name %> "> <br><br>
-                            <input type="text" class="itemLowprice" name="itemLowprice" value="<%= options.items[0].lowprice %> "> <br><br>
-                            <input type="text" class="itemHighprice" name="itemHighprice" value="<%= options.items[0].highprice %> "> <br><br>
-                            <input type="text" class="itemLink" name="itemLink" value="<%= options.items[0].url %> "> <br><br>
-                            <input type="text" class="itemImg" name="itemImg" value="<%= options.items[0].picture %> "> <br><br>
+                        <% for( let i = 0; i < options.itemTags.length; i++ ) { %>
+                            <input type="text" class="itemName" name="itemName" value="<%= options.itemTags[i].name %> "> <br><br>
+                            <input type="number" class="itemLowprice" name="itemLowprice" value="<%= options.itemTags[i].lowprice %> "> <br><br>
+                            <input type="number" class="itemHighprice" name="itemHighprice" value="<%= options.itemTags[i].highprice %> "> <br><br>
+                            <input type="text" class="itemLink" name="itemLink" value="<%= options.itemTags[i].url %> "> <br><br>
+                            <input type="text" class="itemImg" name="itemImg" value="<%= options.itemTags[i].picture %> "> <br><br>
                         <% } %>
                         <input type="submit" value="update">
+                    </form>
+                    <form action="/post/delete/<%= options.post.id %> " method="get">
+                        <input type="submit" value="delete">
                     </form>
                 <% } %>
 		    </div>
@@ -57,8 +60,8 @@
 		        <div class="col-sm-6">
 		            <div class="well">
 						<a href="#">
-                            <img src="/<%= options.user.img_profile %> " width="100" height="100">
-                            <h5><%= options.user.login_id %> </h5>
+                            <img src="/<%= options.postUser.img_profile %> " width="100" height="100">
+                            <h5><%= options.postUser.login_id %> </h5>
                         </a>
                         <h5><%= options.post.post_date %> </h5>
 		            </div>
@@ -117,18 +120,18 @@
                             <h5> <%= options.comments[i].login_id %> </h5>
                             <h5> <%= options.comments[i].text %> </h5>
                             <% if (options.comments[i].user_id == options.user.id) { %>
-                                <form action="/api/comment/<%= options.post.id %>/<%= options.user.id %>" method="get">
+                                <form action="/api/comment/<%= options.post.id %>/<%= options.comments[i].id %>" method="get">
                                     <input type="submit" value="delete">
                                 </form>
                             <% } %>
-                        <% } %>
-                        
-                        <% if (options.user) { %>
-                            <form action="/api/comment/<%= options.post.id %>/<%= options.user.id %>  " method="post">
-                                <input type="text" name="comment" id="comment">
-                                <input type="submit" value="comment">
-                            </form>
-                        <% } %>
+                            <% } %>
+                            
+                            <% if (options.user) { %>
+                                <form action="/api/comment/<%= options.post.id %>" method="post">
+                                    <input type="text" name="comment" id="comment">
+                                    <input type="submit" value="comment">
+                                </form>
+                            <% } %>
                     </div>
 		        </div>
 		
