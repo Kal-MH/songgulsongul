@@ -86,7 +86,7 @@ public class DetectPicActivity extends AppCompatActivity {
             tempFile = File.createTempFile(name, null, getCacheDir());
 
             FileOutputStream out = new FileOutputStream(tempFile);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
             out.close();
             return tempFile;
 
