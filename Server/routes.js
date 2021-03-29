@@ -13,7 +13,7 @@ const FIND_PASSWORD = "/find/password";
 //user Router
 const USER = "/user";
 const USER_PROFILE = "/profile";
-const USER_PROFILE_KEEP = "/profile-keep";
+const USER_KEEP = "/keep";
 const USER_PROFILE_EDIT = "/profile-edit";
 const USER_PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
 const USER_FOLLOW = "/follow";
@@ -74,7 +74,7 @@ const routes = {
 
     user : USER,
     userProfile : USER_PROFILE,
-    userProfileKeep : USER_PROFILE_KEEP,
+    userKeep : USER_KEEP,
     userProfileEditIdcheck : USER_PROFILE_EDIT_IDCHECK,
     userProfileEdit : USER_PROFILE_EDIT,
     userFollow : USER_FOLLOW,
