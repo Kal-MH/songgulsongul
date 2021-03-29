@@ -11,15 +11,15 @@ const routes = require('../routes');
 
  var userRouter = express.Router();
 
-userRouter.post(routes.profile, userController.userProfilePost);
-userRouter.post(routes.profileKeep, userController.profileKeep);
-userRouter.post(routes.profileEditIdCheck, userController.profileEditIdCheck);
-userRouter.post(routes.profileEdit, userController.profileEdit);
+userRouter.post(routes.userProfile, userController.userProfilePost);
 userRouter.post(routes.userFollow, userController.userFollowPost);
 userRouter.post(routes.userUnfollow, userController.userUnfollowPost);
+userRouter.post(routes.userLFollowList, userController.userLFollowList);
 userRouter.post(routes.userFollowList, userController.userFollowList);
 userRouter.post(routes.userFollowerList, userController.userFollowerList);
+userRouter.post(routes.userKeep, userController.profileKeep);
+userRouter.post(routes.userProfileEditIdcheck, userController.profileEditIdCheck);
+userRouter.post(routes.userProfileEdit, userController.profileEdit);
 userRouter.post(routes.userDataDelete, userController.userDataDelete);
-userRouter.post(routes.userLFollowList, userController.userLFollowList);
 
  module.exports = userRouter;

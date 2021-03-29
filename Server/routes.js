@@ -12,10 +12,10 @@ const FIND_PASSWORD = "/find/password";
 
 //user Router
 const USER = "/user";
-const PROFILE = "/profile";
-const PROFILE_KEEP = "/profile-keep";
-const PROFILE_EDIT = "/profile-edit";
-const PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
+const USER_PROFILE = "/profile";
+const USER_KEEP = "/keep";
+const USER_PROFILE_EDIT = "/profile-edit";
+const USER_PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
 const USER_FOLLOW = "/follow";
 const USER_UNFOLLOW = "/unfollow";
 const USER_FOLLOW_LIST = "/follow-list";
@@ -71,11 +71,12 @@ const routes = {
     login : LOGIN,
     findId : FIND_ID,
     findPassword : FIND_PASSWORD,
+
     user : USER,
-    profile : PROFILE,
-    profileKeep : PROFILE_KEEP,
-    profileEditIdCheck : PROFILE_EDIT_IDCHECK,
-    profileEdit : PROFILE_EDIT,
+    userProfile : USER_PROFILE,
+    userKeep : USER_KEEP,
+    userProfileEditIdcheck : USER_PROFILE_EDIT_IDCHECK,
+    userProfileEdit : USER_PROFILE_EDIT,
     userFollow : USER_FOLLOW,
     userUnfollow : USER_UNFOLLOW,
     userFollowList : USER_FOLLOW_LIST,

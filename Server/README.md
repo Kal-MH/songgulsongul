@@ -243,116 +243,144 @@
 ## User Router
 
 1. 프로필
-    - api: /profile
-    - front에서 보낼 data: id, status
-    - 응답 data:
+    - api: /user/profile
+    - method : POST
+    - 전달받아야 하는 데이터
+      - id
+      - status
+    - 응답 데이터
 
         ```java
-        data = {
-        	code(응답코드)
-        	followerCnt(팔로워 수)
-        	followCnt(팔로우 수)
-        	postInfo(게시글 정보) -> image, postId
-        	profileInfo(프로필 정보) -> profile_image, intro, sns
+        json = {
+        	'code', //응답코드
+        	'followerCnt',  //팔로워 수
+        	'followCnt',  //팔로우 수
+        	'postInfo', //게시글 정보 -> image, postId
+        	'profileInfo'  //프로필 정보 -> profile_image, intro, sns
         }
         ```
 
 2. 팔로우 하기
-    - api: /user-follow
-    - front에서 보낼 data: loginId(로그인한 사용자), userId(팔로우 대상자)
-    - 응답 data: code
+    - api: /user/follow
+    - method : POST
+    - 전달받아야 하는 데이터
+      - loginId(로그인한 사용자)
+      - userId(팔로우 대상자)
+    - 응답 데이터
 
         ```java
-        data = {
-        	code,
-        	message(응답 메시지)
+        json = {
+        	'code'
         }
         ```
 
 3. 언팔로우 하기
-    - api: /user-unfollow
-    - front에서 보낼 data: loginId, userId
-    - 응답 data: code
+    - api: /user/unfollow
+    - method : POST
+    - 전달받아야 하는 데이터
+      - loginId
+      - userId
+    - 응답 데이터
 
         ```java
-        data = {
-        	message
+        json = {
+        	'code'
         }
         ```
 
 4. 로그인한 사용자의 팔로우 리스트 받아오기
-    - api: /user-lfollow-list
-    - front에서 보낼 data: id
-    - 응답 data: code
+    - api: /user/lfollow-list
+    - method : POST
+    - 전달받아야 하는 데이터
+      - id(로그인한 사용자의 id)
+    - 응답 데이터
 
         ```java
-        data = {
-        	followinfo(팔로우 정보) -> image, userId
+        json = {
+          'code',
+        	'followinfo' //팔로우 정보 -> image, userId
         }
         ```
 
 5. 선택한 사용자의 팔로우 리스트 받아오기
-    - api: /user-follow-list
-    - front에서 보낼 data: userId(선택한 사용자)
-    - 응답 data: code
+    - api: /user/follow-list
+    - method : POST
+    - 전달받아야 하는 데이터
+      - userId(선택한 사용자의 id)
+    - 응답 데이터
 
         ```java
-        data = {
-        	userfollowinfo(팔로우 정보) -> image, userId
+        json = {
+          'code',
+        	'userfollowinfo'  //팔로우 정보 -> image, userId
         }
         ```
 
 6. 팔로워 리스트 받아오기
-    - api: /user-follower-list
-    - front에서 보낼 data: id
-    - 응답 data: code
+    - api: /user/follower-list
+    - method : POST
+    - 전달받아야 하는 데이터
+      - id
+    - 응답 데이터
 
         ```java
-        data = {
-        	followerinfo(팔로워 정보) -> image, userId
+        json = {
+          'code',
+        	'followerinfo'  //팔로워 정보 -> image, userId
         }
         ```
 
 7. 보관함 기능
-    - api: /profile-keep
-    - front에서 보낼 data: id
-    - 응답 data: code
+    - api: /user/keep
+    - method : POST
+    - 전달받아야 하는 데이터
+      - id(로그인한 사용자)
+    - 응답 데이터
 
         ```java
-        data = {
-        	keepinfo(보관정보) -> image, postId
-        	keepcnt(보관개수)
+        json = {
+          'code',
+        	'keepinfo', //보관정보 -> image, postId
+        	'keepcnt' //보관개수
         }
         ```
 
 8. 프로필 수정 – 아이디 중복 확인
-    - api: /profile-edit-idcheck
+    - api: /user/profile-edit-idcheck
 
         ```java
-        data = {
-        	code
+        json = {
+        	'code'
         }
         ```
 
 9. 프로필 수정
-    - api: /profile-edit
-    - front에서 보낼 data: id(기존 아이디), newId(변경된 아이디), newIntro(변경된 소개글), newSNS(변경된 sns주소), profileImage
-    - 응답 data: code
+    - api: /user/profile-edit
+    - method : POST
+    - 전달받아야 하는 데이터
+      - id(기존 아이디)
+      - newId(변경된 아이디)
+      - newIntro(변경된 소개글)
+      - newSNS(변경된 sns주소)
+      - profileImage
+    - 응답 데이터
 
         ```java
-        data = {
-        	message
+        json = {
+        	'code'
         }
         ```
 
 10. 회원 탈퇴
-    - Api: /user-data-delete
-    - front에서 보낼 data: id
-    - 응답 data: code
+    - api: /user/data-delete
+    - method : POST
+    - 전달받아야 하는 데이터
+      - id(로그인한 사용자)
+    - 응답 데이터
 
         ```java
-        data = {
-        	message
+        json = {
+        	'code'
         }
         ```
 
