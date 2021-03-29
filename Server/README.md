@@ -252,11 +252,11 @@
 
         ```java
         json = {
-        	'code'(응답코드)
-        	'followerCnt'(팔로워 수)
-        	'followCnt'(팔로우 수)
-        	'postInfo'(게시글 정보) -> image, postId
-        	'profileInfo'(프로필 정보) -> profile_image, intro, sns
+        	'code', //응답코드
+        	'followerCnt',  //팔로워 수
+        	'followCnt',  //팔로우 수
+        	'postInfo', //게시글 정보 -> image, postId
+        	'profileInfo'  //프로필 정보 -> profile_image, intro, sns
         }
         ```
 
@@ -297,8 +297,8 @@
 
         ```java
         json = {
-          'code'
-        	'followinfo'(팔로우 정보) -> image, userId
+          'code',
+        	'followinfo' //팔로우 정보 -> image, userId
         }
         ```
 
@@ -311,8 +311,8 @@
 
         ```java
         json = {
-          'code'
-        	'userfollowinfo'(팔로우 정보) -> image, userId
+          'code',
+        	'userfollowinfo'  //팔로우 정보 -> image, userId
         }
         ```
 
@@ -325,8 +325,8 @@
 
         ```java
         json = {
-          'code'
-        	'followerinfo'(팔로워 정보) -> image, userId
+          'code',
+        	'followerinfo'  //팔로워 정보 -> image, userId
         }
         ```
 
@@ -339,9 +339,9 @@
 
         ```java
         json = {
-          'code'
-        	'keepinfo'(보관정보) -> image, postId
-        	'keepcnt'(보관개수)
+          'code',
+        	'keepinfo', //보관정보 -> image, postId
+        	'keepcnt' //보관개수
         }
         ```
 
