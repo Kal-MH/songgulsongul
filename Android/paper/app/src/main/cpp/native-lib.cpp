@@ -12,9 +12,16 @@ using namespace std;
 static const int smallSizeX = 500;
 static const int smallSizeY = 500;
 
+Mat RGB2MinGrey(Mat img){
+
+    return img;
+}
 
 //water filling
 //https://github.com/seungjun45/Water-Filling
+
+
+
 Mat RGB2YCbCr(Mat img){
 
     int width = img.cols;
@@ -406,7 +413,7 @@ JNIEXPORT void JNICALL
 Java_smu_capstone_paper_activity_DetectPaperActivity_PaperProcessing(JNIEnv *env, jobject thiz,
                                                                      jlong input_image,
                                                                      jlong output_image,
-                                                                     jlong input_points, jint th1,
+                                                                     jlong input_points,jint offset_x,jint offset_y, jfloat scale_factor, jint th1,
                                                                      jint th2) {
     Mat &img_input = *(Mat *) input_image;
 
@@ -423,6 +430,7 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_PaperProcessing(JNIEnv *env
     if(input_points == NULL)
     {
 
+        /*
         resize(img_input, smallImg,Size(smallSizeX,smallSizeY),0,0);
 
         //img_output = getImageCannyBorders(img_input, th1, th2);
@@ -433,9 +441,7 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_PaperProcessing(JNIEnv *env
         borders = findBordersPoints(img_output);
 
         bordersResized = ResizePoints(borders,img_input.cols/smallSizeX, img_input.rows/smallSizeY);
-
-
-
+        */
     }
     else
     {
@@ -459,10 +465,11 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_PaperProcessing(JNIEnv *env
     }
 
 
+    /*
     if (img_output.type()==CV_8UC1) {
         //input image is grayscale
         cvtColor(img_output, img_output, COLOR_GRAY2BGR);
-    }
+    }*/
 
     for(Point p : bordersResized)
     {
@@ -508,6 +515,9 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_PaperProcessing(JNIEnv *env
         img_output2 = rec_img;
 
         */
+    }
+    else{
+        img_output = img_input;
     }
     //cvtColor( img_input, img_output, COLOR_RGB2GRAY);
     //cvtColor( ticketImage, graysrc, CV_BGR2GRAY );
@@ -562,4 +572,52 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env,
      //메모리 누수 위험
      //이상하게 include 쪽에서 오류남
     */
+}extern "C"
+JNIEXPORT void JNICALL
+Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobject thiz,
+                                                             jlong img_input, jlong out_points,
+                                                             jint th1, jint th2) {
+    Mat &imgInput = *(Mat *) img_input;
+
+    Mat &points = *(Mat *) out_points;
+
+    Mat smallImg;
+
+    Mat borders;
+    double area;
+    RotatedRect rect;
+
+    vector<Point> pointsFromBox;
+
+    smallImg = Mat();
+    resize(img_input, smallImg,Size(smallSizeX,smallSizeY),0,0);
+    borders = Mat();
+    borders = getImageCannyBorders(smallImg, th1, th2);
+
+    vector<vector<Point>> contours;	/// Find contours
+    findContours( borders, contours, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
+
+    vector<vector<Point>> contours_poly( contours.size() );
+
+
+    for(unsigned int i = 0; i < contours.size(); i++ )
+    {
+        /*
+        double peri = arcLength(contours[i], true);
+        approxPolyDP( Mat(contours[i]), contours_poly[i], 0.02 * peri, true );
+        if (contours_poly[i].size() == 4)
+        {
+            return contours_poly[i];
+        }*/
+        area = contourArea(contours[i]);
+        if(area > 75){
+            rect = minAreaRect(contours[i]);
+
+            boxPoints(rect, pointsFromBox);
+        }
+    }
+    if(!pointsFromBox.empty()){
+        points = Mat(ResizePoints(pointsFromBox,imgInput.cols/smallSizeX, imgInput.rows/smallSizeY), true);
+    }
+
 }

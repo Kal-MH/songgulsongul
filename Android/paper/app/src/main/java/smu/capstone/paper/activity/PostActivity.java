@@ -56,6 +56,7 @@ public class PostActivity extends AppCompatActivity {
     JSONObject post_item, post_itemtag_item, post_hashtag_item, post_cmt_item;
     TextView post_user_id, post_like_cnt, post_cmt_cnt, post_text, post_date;
     ImageView post_pic, post_profile, post_ccl_cc, post_ccl_a, post_ccl_nc, post_ccl_nd, post_ccl_sa;
+    boolean ccl1, ccl2, ccl3, ccl4, ccl5;
     int status;
 
     final int MY = 1;
@@ -99,6 +100,17 @@ public class PostActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
         setPostData();
+
+        if(ccl1)
+            post_ccl_cc.setImageResource(R.drawable.ccl_cc_fill);
+        if(ccl2)
+            post_ccl_a.setImageResource(R.drawable.ccl_attribution_fill);
+        if(ccl3)
+            post_ccl_nc.setImageResource(R.drawable.ccl_noncommercial_fill);
+        if(ccl4)
+            post_ccl_nd.setImageResource(R.drawable.ccl_no_derivative_fill);
+        if(ccl5)
+            post_ccl_sa.setImageResource(R.drawable.ccl_share_alike_fill);
 
         // 아이템 태그 어뎁터 설정
         post_itemtag_rv = findViewById(R.id.post_itemtag_rv);
@@ -157,6 +169,11 @@ public class PostActivity extends AppCompatActivity {
                                     intent.putExtra("text", post_obj.getString("text"));
                                     intent.putExtra("hashtag", hashtag_obj.toString());
                                     intent.putExtra("itemtag", itemtag_obj.toString());
+                                    intent.putExtra("ccl1",post_obj.getBoolean("ccl1"));
+                                    intent.putExtra("ccl2",post_obj.getBoolean("ccl2"));
+                                    intent.putExtra("ccl3",post_obj.getBoolean("ccl3"));
+                                    intent.putExtra("ccl4",post_obj.getBoolean("ccl4"));
+                                    intent.putExtra("ccl5",post_obj.getBoolean("ccl5"));
                                 } catch (JSONException e){
                                     e.printStackTrace();
                                 }
@@ -286,11 +303,11 @@ public class PostActivity extends AppCompatActivity {
             obj.put("postImg",R.drawable.sampleimg);
             obj.put("like", 0);
             obj.put("keep",0);
-            obj.put("ccl1",0);
-            obj.put("ccl2",0);
-            obj.put("ccl3",0);
-            obj.put("ccl4",0);
-            obj.put("ccl5",0);
+            obj.put("ccl1",false);
+            obj.put("ccl2",true);
+            obj.put("ccl3",false);
+            obj.put("ccl4",true);
+            obj.put("ccl5",false);
 
             return obj;
         }catch (JSONException e){
@@ -376,6 +393,11 @@ public class PostActivity extends AppCompatActivity {
             post_cmt_cnt.setText(data.getInt("comCnt")+"");
             post_date.setText(data.getString("timeStamp"));
             post_text.setText(data.getString("text"));
+            ccl1=data.getBoolean("ccl1");
+            ccl2=data.getBoolean("ccl2");
+            ccl3=data.getBoolean("ccl3");
+            ccl4=data.getBoolean("ccl4");
+            ccl5=data.getBoolean("ccl5");
             Glide.with(this).load(data.getInt("profileImg")).into(post_profile);
             Glide.with(this).load(data.getInt("postImg")).into(post_pic);
         } catch (JSONException e) {

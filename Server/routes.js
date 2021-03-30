@@ -12,16 +12,25 @@ const FIND_PASSWORD = "/find/password";
 
 //user Router
 const USER = "/user";
-const PROFILE = "/profile";
-const PROFILE_KEEP = "/profile-keep";
-const PROFILE_EDIT = "/profile-edit";
-const PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
-const USER_FOLLOW = "/user-follow";
-const USER_UNFOLLOW = "/user-unfollow";
-const USER_FOLLOW_LIST = "/user-follow-list";
-const USER_FOLLOWER_LIST = "/user-follower-list";
-const USER_DATA_DELETE = "/user-data-delete";
-const USER_LFOLLOW_LIST = "/user-lfollow-list";
+const USER_PROFILE = "/profile";
+const USER_KEEP = "/keep";
+const USER_PROFILE_EDIT = "/profile-edit";
+const USER_PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
+const USER_FOLLOW = "/follow";
+const USER_UNFOLLOW = "/unfollow";
+const USER_FOLLOW_LIST = "/follow-list";
+const USER_FOLLOWER_LIST = "/follower-list";
+const USER_DATA_DELETE = "/data-delete";
+const USER_LFOLLOW_LIST = "/lfollow-list";
+
+//market Router
+const MARKET = "/market";
+const MARKET_MAIN = "/main";
+const MARKET_STICKER = "/sticker/:stickerId/:userId";
+const MARKET_STICKER_BUY = "/buy/:stickerId/:userId";
+const MARKET_STICKER_SEARCH = "/sticker-search";
+const MARKET_SEARCH_PRICE = "/search-price";
+const MARKET_SEARCH_DATE = "/search-data";
 
 //post Router
 const POST = "/post";
@@ -35,6 +44,7 @@ const POST_SEARCH_ID = "/search/id"
 //----------------------delete---------------
 const POST_UPLOAD = "/upload";
 const POST_UPDATE = "/update/:id"
+const POST_DELETE = "/delete/:id"
 
 //api Router
 const API = "/api";
@@ -44,8 +54,8 @@ const API_EMAIL_AUTH_NUMBER = "/email-auth-number";
 
 const API_POST_LIKE = "/like/:id";
 const API_POST_KEEP = "/keep/:id";
-const API_POST_COMMENT_INSERT = "/comment/:postid/:userid";
-const API_POST_COMMENT_DELETE = "/comment/:postid/:userid";
+const API_POST_COMMENT_INSERT = "/comment/:postid";
+const API_POST_COMMENT_DELETE = "/comment/:postid/:commentid";
 
 //img tag api temporary
 const API_NAVER_ITEM_TAG = "/naver/item-tag";
@@ -61,16 +71,26 @@ const routes = {
     login : LOGIN,
     findId : FIND_ID,
     findPassword : FIND_PASSWORD,
+
     user : USER,
-    profile : PROFILE,
-    profileKeep : PROFILE_KEEP,
-    profileEditIdCheck : PROFILE_EDIT_IDCHECK,
-    profileEdit : PROFILE_EDIT,
+    userProfile : USER_PROFILE,
+    userKeep : USER_KEEP,
+    userProfileEditIdcheck : USER_PROFILE_EDIT_IDCHECK,
+    userProfileEdit : USER_PROFILE_EDIT,
     userFollow : USER_FOLLOW,
     userUnfollow : USER_UNFOLLOW,
     userFollowList : USER_FOLLOW_LIST,
     userFollowerList : USER_FOLLOWER_LIST,
     userDataDelete : USER_DATA_DELETE,
+    userLFollowList : USER_LFOLLOW_LIST,
+
+    market : MARKET,
+    marketMain : MARKET_MAIN,
+    marketSticker : MARKET_STICKER,
+    marketStickerBuy : MARKET_STICKER_BUY,
+    marketStickerSearch : MARKET_STICKER_SEARCH,
+    marketSearchPrice : MARKET_SEARCH_PRICE,
+    marketSearchDate : MARKET_SEARCH_DATE,
 
     post : POST,
     postCommunity : POST_COMMUNITY,
@@ -81,8 +101,7 @@ const routes = {
     postSearchId : POST_SEARCH_ID,
     postDetail : POST_DETAIL,
     postUpdate : POST_UPDATE,
-
-    userLFollowList : USER_LFOLLOW_LIST,
+    postDelete : POST_DELETE,
 
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,

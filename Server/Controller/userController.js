@@ -22,13 +22,16 @@
        var sql1 = 'SELECT COUNT(*) FROM user JOIN follow ON follow.follower_id = user.id WHERE follow.follow_target_id = ?'; // 팔로워 수
        var sql2 = 'SELECT COUNT(*) FROM user JOIN follow ON follow.follow_target_id = user.id WHERE follow.follower_id = ?'; // 팔로우 수
        var sql3 = 'SELECT * FROM user JOIN post ON user.id = post.user_id WHERE user.login_id = ?'; // 게시글목록
-       var sql4 = 'SELECT * FROM profile WHERE user_id = ?' // 프로필 데이터(포인트, 소개글, sns 주소)
+       var sql4 = 'SELECT * FROM profile WHERE user_id = ?'; // 프로필 데이터(포인트, 소개글, sns 주소)
 
          connection.query(sql1 + sql2 + sql3 + sql4, param, function(err, rows){
            var resultCode = statusCode.CLIENT_ERROR;
 
            if (err) {
              console.log(err);
+             res.json({
+               'code': resultCode
+             })
            }
            else{
              resultCode = statusCode.OK;
@@ -50,19 +53,19 @@
              }
 
              if(status === 1){ // 로그인한 사용자의 프로필일 경우
-               prodata.'point' = rows[3].point;
+               prodata.point = rows[3].point;
              }
              profile_info.push(prodata);
-           }
 
-           res.json({
-             'code': resultCode,
-             'followerCnt': follower_cnt,
-             'followCnt': follow_cnt,
-             'postInfo': post_info,
-             'profileInfo': profile_info
-           })
-         });
+             res.json({
+               'code': resultCode,
+               'followerCnt': follower_cnt,
+               'followCnt': follow_cnt,
+               'postInfo': post_info,
+               'profileInfo': profile_info
+             })
+           }
+         })
      },
 
      // 팔로우
@@ -71,24 +74,23 @@
        const user_id = req.body.userId;
 
        var params = [login_id, user_id];
-       var sql = 'INSERT INTO follow(follower_id, follow_target_id) VALUES(?,?)'';
+       var sql = 'INSERT INTO follow(follower_id, follow_target_id) VALUES(?,?)';
        connection.query(sql, params, function(err, rows){
          var resultCode = statusCode.CLIENT_ERROR;
-         var message = 'ERROR';
 
          if(err){
            console.log(err);
+           res.json({
+             'code': resultCode
+           })
          }
          else{
            resultCode = statusCode.OK;
-           message = 'OK';
+           res.json({
+             'code': resultCode
+           })
          }
-
-         res.json({
-           'code': resultCode,
-           'message': message
-         })
-       });
+       })
      },
 
      // 언팔로우
@@ -101,24 +103,23 @@
        var sql = 'DELETE FROM follow WHERE follower_id = ? AND follow_target_id = ?';
        connection.query(sql, params, function(err, rows){
          var resultCode = statusCode.SERVER_ERROR;
-         var message = 'ERROR';
 
          if(err){
            console.log(err);
+           res.json({
+             'code': resultCode
+           })
          }
          else{
            resultCode = statusCode.OK;
-           message = 'OK';
+           res.json({
+             'code' : resultCode
+           })
          }
-
-         res.json({
-           'code' : resultCode,
-           'message' : message
-         })
-       });
+       })
      },
 
-     // 로그인한 사용자의 팔로우 리스트 얻을 경우 --> luserFollowList
+     // 로그인한 사용자의 팔로우 리스트 얻을 경우 --> userlFollowList
      // 선택한 사용자의 팔로우 리스트 얻을 경우 --> userFollowList
 
      // 로그인한 사용자의 팔로우 리스트
@@ -133,6 +134,9 @@
 
          if(err){
            console.log(err);
+           res.json({
+             'code': resultCode
+           })
          }
          else{
            resultCode = statusCode.OK;
@@ -144,12 +148,12 @@
              };
              follow_info.put(followInfo);
            }
-         }
 
-         res.json({
-           'code': resultCode,
-           'followinfo': follow_info
-         })
+           res.json({
+             'code': resultCode,
+             'followinfo': follow_info
+           })
+         }
        })
      },
 
@@ -165,6 +169,9 @@
 
          if(err){
            console.log(err);
+           res.json({
+             'code': resultCode
+           })
          }
          else{
            resultCode = statusCode.OK;
@@ -176,12 +183,12 @@
              };
              user_follow_info.put(userFollowInfo);
            }
-         }
 
-         res.json({
-           'code': resultCode,
-           'userfollowinfo': user_follow_info
-         })
+           res.json({
+             'code': resultCode,
+             'userfollowinfo': user_follow_info
+           })
+         }
        })
      },
 
@@ -197,6 +204,9 @@
 
          if(err){
            console.log(err);
+           res.json({
+             'code': resultCode
+           })
          }
          else{
            resultCode = statusCode.OK;
@@ -208,12 +218,12 @@
              };
              follower_info.put(followerInfo);
            }
-         }
 
-         res.json({
-           'code': resultCode,
-           'followerinfo': follower_info
-         })
+           res.json({
+             'code': resultCode,
+             'followerinfo': follower_info
+           })
+         }
        })
      },
 
@@ -230,6 +240,9 @@
 
          if(err){
            console.log(err);
+           res.json({
+             'code': resultCode
+           })
          }
          else{
            resultCode = statusCode.OK;
@@ -242,14 +255,14 @@
              keep_info.push(kdata);
            }
            keep_cnt = rows.length();
-         }
 
-         res.json({
-           'code' : resultCode,
-           'keepinfo' : keep_info,
-           'keepcnt': keep_cnt
-         })
-       });
+           res.json({
+             'code' : resultCode,
+             'keepinfo' : keep_info,
+             'keepcnt': keep_cnt
+           })
+         }
+       })
      },
 
      // 프로필수정 - 아이디 중복확인
@@ -263,29 +276,21 @@
        const new_id = req.body.newId; // 변경된 아이디
        const new_intro = req.body.newIntro;
        const new_sns = req.body.newSNS;
-       const new_image = req.query.profileImage;
+       const new_image = req.body.profileImage;
        var param = [id];
 
        var sql = 'SELECT * FROM user WHERE login_id = ?';
        connection.query(sql, param, function(err, rows){
          var resultCode = statusCode.CLIENT_ERROR;
-         var message = 'ERROR';
 
          if(err){
            console.log(err);
+           res.json({
+             'code': resultCode
+           })
          }
          else{
            resultCode = statusCode.OK;
-           message = '정상적으로 수정 완료';
-
-           // 프로필 이미지 db갱신
-           sql = 'UPDATE user SET img_profile = ? WHERE login_id = ?';
-           connection.query(sql, [new_image, id], function(err, rows){
-             if(err){
-               resultCode = statusCode.SERVER_ERROR;
-               message = 'ERROR';
-             }
-           })
 
            // 기존 아이디와 비교 후 db갱신
            if(rows[0].login_id !== new_id){
@@ -293,9 +298,11 @@
              connection.query(sql, [new_id, id], function(err, rows){
                if(err){
                  resultCode = statusCode.SERVER_ERROR;
-                 message = 'ERROR';
+                 res.json({
+                   'code': resultCode
+                 })
                }
-             });
+             })
            }
 
            // 기존 소개글과 비교 후 db갱신
@@ -304,9 +311,11 @@
              connection.query(sql, [new_intro, id], function(err, rows){
                if(err){
                  resultCode = statusCode.SERVER_ERROR;
-                 message = 'ERROR';
+                 res.json({
+                   'code': resultCode
+                 })
                }
-             });
+             })
            }
 
            // 기존 SNS계정과 비교 후 db갱신
@@ -315,17 +324,29 @@
              connection.query(sql, [new_sns, id], function(err, rows){
                if(err){
                  resultCode = statusCode.SERVER_ERROR;
-                 message = 'ERROR';
+                 res.json({
+                   'code': resultCode
+                 })
                }
-             });
+             })
            }
-         }
 
-         res.json({
-           'code' : resultCode,
-           'message' : message
-         });
-       });
+           // 프로필 이미지 db갱신
+           sql = 'UPDATE user SET img_profile = ? WHERE login_id = ?';
+           connection.query(sql, [new_image, id], function(err, rows){
+             if(err){
+               resultCode = statusCode.SERVER_ERROR;
+               res.json({
+                 'code': resultCode
+               })
+             }
+           })
+
+           res.json({
+             'code': resultCode
+           })
+         }
+       })
      },
 
      // 회원 탈퇴
@@ -337,20 +358,20 @@
 
        connection.query(sql, param, function(err, rows){
          var resultCode = statusCode.SERVER_ERROR;
-         var message = 'ERROR';
 
          if(err) {
            console.log(err);
+           res.json({
+             'code': resultCode
+           })
          }
          else{
            resultCode = statusCode.OK;
-           message = '탈퇴 처리완료';
-         }
 
-         res.json({
-           'code': resultCode;
-           'message': message;
-         })
+           res.json({
+             'code': resultCode
+           })
+         }
        })
      }
  }

@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
@@ -19,28 +20,28 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.charset.CharsetEncoder;
-
+import smu.capstone.paper.SettingSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.AddItemTagAdapter;
-import smu.capstone.paper.item.ItemtagItem;
 
 public class UploadDetailActivity extends AppCompatActivity {
 
     RecyclerView itemtag_rv;
     AddItemTagAdapter adapter;
     EditText hashtagText;
+    Switch upload_detail_ccl_1, upload_detail_ccl_2, upload_detail_ccl_3
+            , upload_detail_ccl_4, upload_detail_ccl_5;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -48,7 +49,11 @@ public class UploadDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_detail);
 
-
+        upload_detail_ccl_1 = findViewById(R.id.upload_detail_ccl_1);
+        upload_detail_ccl_2 = findViewById(R.id.upload_detail_ccl_2);
+        upload_detail_ccl_3 = findViewById(R.id.upload_detail_ccl_3);
+        upload_detail_ccl_4 = findViewById(R.id.upload_detail_ccl_4);
+        upload_detail_ccl_5 = findViewById(R.id.upload_detail_ccl_5);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.upload_detail_toolbar);
         setSupportActionBar(toolbar);
@@ -57,6 +62,11 @@ public class UploadDetailActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
+        upload_detail_ccl_1.setChecked(SettingSharedPreference.getSetting(this,"ccl1"));
+        upload_detail_ccl_2.setChecked(SettingSharedPreference.getSetting(this,"ccl2"));
+        upload_detail_ccl_3.setChecked(SettingSharedPreference.getSetting(this,"ccl3"));
+        upload_detail_ccl_4.setChecked(SettingSharedPreference.getSetting(this,"ccl4"));
+        upload_detail_ccl_5.setChecked(SettingSharedPreference.getSetting(this,"ccl5"));
 
 
         //해쉬태그 작성
@@ -159,6 +169,17 @@ public class UploadDetailActivity extends AppCompatActivity {
                 break;
 
             case R.id.toolbar_done :
+                // 서버에 변경된 data(객체) 전송
+
+                //if resultCode == 200
+                Toast toast = Toast.makeText(UploadDetailActivity.this, "업로드 완료", Toast.LENGTH_SHORT);
+                toast.show();
+                Intent intent = new Intent(UploadDetailActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동
+                startActivity(intent);
+
+                //if resultCode == 500
+                /*Toast toast = Toast.makeText(UploadDetailActivity.this, "업로드 실패", Toast.LENGTH_SHORT);
+                toast.show();*/
                 break;
 
         }
