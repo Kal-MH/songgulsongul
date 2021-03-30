@@ -623,12 +623,8 @@ Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobjec
     rect.center.y *= imgInput.rows/smallSizeY;
     rect.size.height*= imgInput.cols/smallSizeX;
     rect.size.width*= imgInput.rows/smallSizeY;
-
-    rect.center.x -rect.size.width/2;
-    rect.center.y -rect.size.height/2;//topLeft
-
+    
     jintArray rectFromJava = (env)->NewIntArray(4);
-
 
     jint *ptrArray = env->GetIntArrayElements(rectFromJava, 0);
     ptrArray[0] = rect.center.x - rect.size.width/2; //left

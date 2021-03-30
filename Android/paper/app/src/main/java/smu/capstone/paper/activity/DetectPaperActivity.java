@@ -8,9 +8,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +31,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+import smu.capstone.paper.ImageUtil;
 import smu.capstone.paper.R;
 import smu.capstone.paper.layout.DrawRect;
 import smu.capstone.paper.layout.ZoomView;
@@ -105,6 +109,12 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         zoomFrame = findViewById(R.id.detect_paper_frame) ;
         zoomFrame.addView(zoomView);
         zoom_background = findViewById(R.id.zoom_background);
+
+        //대상 이미지 동기 로딩
+        Bitmap imgInputBitmap = Bitmap.createBitmap(imgInput.cols(),imgInput.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(imgInput,imgInputBitmap);
+        zoom_background.setImageBitmap(imgInputBitmap);
+        
 
         //툴바 세팅
         toolbar = findViewById(R.id.detect_paper_toolbar);
@@ -185,6 +195,10 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
 
         GetPaperPoints(imgInput.getNativeObjAddr(), paperPoints.getNativeObjAddr(), th1, th2);
+        boolean canUsePoints = true;
+        
+        //비동기 이미지 로드용 코드
+        /*
         originalRatio = imgInput.height()/(float)imgInput.width();
         zoomBackgroundRatio = zoom_background.getMeasuredHeight()/(float)zoom_background.getMeasuredWidth();
 
@@ -203,7 +217,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         Log.i("PaperDetect", "pivotOffsetY: "+ String.valueOf(pivotOffsetY));
         if(paperPoints.toList().size() ==4){
             //pos.clear();
-            boolean flag = true;
+
             int maxX=0;
             int maxY=0;
             int minX=imgInput.width();
@@ -237,7 +251,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
             }
 
 
-            if(flag){
+            if(canUsePoints){
                 pos = tempPos;
             }
             else{
@@ -272,7 +286,74 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
             paperPoints.fromList(tempPoint);
 
         }
+        */
 
+        //동기 이미지로드용 코드
+        ArrayList<int[]> tempPos = new ArrayList<int[]>();
+        if(paperPoints.toList().size() ==4) {
+            //pos.clear();
+
+
+            float[] imageValues = new float[9];
+            zoom_background.getImageMatrix().getValues(imageValues);
+            float scaleX = imageValues[Matrix.MSCALE_X];
+            float scaleY = imageValues[Matrix.MSCALE_Y];
+            Drawable backgroundDrawable= zoom_background.getDrawable();
+            final int origW = backgroundDrawable.getIntrinsicWidth();
+            final int origH = backgroundDrawable.getIntrinsicHeight();
+            final int actW = Math.round(origW * scaleX);
+            final int actH = Math.round(origH * scaleY);
+
+            int maxX = 0;
+            int maxY = 0;
+            int minX = imgInput.width();
+            int minY = imgInput.height();
+            ///OnCreate에서 zoom_background는 아직 안그려져서 measuredHeight, height, MaxHeight 다 고장나서 나옴
+            //zoom_background.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            //zoom_background.getDrawable().getIntrinsicWidth()은 이미지를 비동기 로드했을때 null 문제가 발생 할 수 있어서 사용 불가->직접 이미지 사이즈를 예측계산필요
+            //boolean useHeight = imgInput.width()<imgInput.height();
+
+            for (Point p : paperPoints.toList()) {
+                if (p.x > imgInput.width() | p.y > imgInput.height()) {
+                    Log.w("PaperDetect", "The Point is over the imgInput! use default pos.");
+
+                    canUsePoints = false;
+                    break;
+                }
+                maxX = Math.max(maxX, (int) p.x);
+                maxY = Math.max(maxY, (int) p.y);
+                minX = Math.min(minX, (int) p.x);
+                minY = Math.min(minY, (int) p.y);
+
+                int[] locReturnP = ImageUtil.ImagePointToImageView(zoom_background, (int)p.x, (int)p.y);
+                tempPos.add(new int[]{locReturnP[0], locReturnP[1]});
+
+                //tempPos.add(new int[]{(int) (p.x / scaleFactor) + pivotOffsetX, (int) (p.y / scaleFactor) + pivotOffsetY});
+                //pos.add(new int[]{0,0}); // 테스트용 0 처리
+                //Log.i("PaperDetect", String.valueOf((p.x / scaleFactor)) + ", " + String.valueOf((p.y / scaleFactor)));
+
+            }
+            if((maxX-minX)*(maxY-minY)/(actW*actH)<0.5){
+                Log.w("PaperDetect", "Detected paper size is too small! use default points");
+                canUsePoints = false;
+            }
+        }
+        if(canUsePoints){
+            pos = tempPos;
+        }
+        else{
+            pos = getPos();
+            Log.w("PaperDetect", "Cant find 4 points of paper! use default points");
+
+            ArrayList<Point> tempPoint = new ArrayList<Point>();
+            for (int[] p: pos) {
+                int[] locReturnP = ImageUtil.ImagePointToImageView(zoom_background, p[0], p[1]);
+                tempPos.add(new int[]{locReturnP[0], locReturnP[1]});
+            }
+            paperPoints.fromList(tempPoint);
+        }
+        
+        
         dot1.setX(pos.get(0)[0]);
         dot1.setY(pos.get(0)[1]);
 
@@ -325,7 +406,8 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         //이미지 배경화면세팅
         if(hasFocus){
             if(!findPaperOnce){///최초 1회 실행
-                Glide.with(this).load(filePath).into(zoom_background);//비동기 이미지 로드
+                //Glide.with(this).load(filePath).into(zoom_background);//비동기 이미지 로드
+
                 setDots();
                 dots = findViewById(R.id.dot_draw);
                 if(dots != null){
@@ -368,6 +450,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
             v.setX( startX + (event.getRawX()/zoom) - oldXvalue);
             v.setY( startY + ((event.getRawY()-tb_height)/zoom) - (oldYvalue + v.getHeight()/zoom )   );
+            /*
             if(v.getId() == dot1.getId()){
                 pos.set(0, new int[]{(int) (startX + (event.getRawX()/zoom)-oldXvalue),
                         (int) (startY + ((event.getRawY() - tb_height)/zoom)-(oldYvalue + v.getHeight()/zoom))});
@@ -384,15 +467,37 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 pos.set(3, new int[]{(int) (startX + (event.getRawX()/zoom)-oldXvalue),
                         (int) (startY + ((event.getRawY() - tb_height)/zoom)-(oldYvalue + v.getHeight()/zoom))});
             }
+            */
 
+            /*
+            pos.set(0, new int[]{(int)dot1.getX(), (int)dot1.getY()});
+            pos.set(1, new int[]{(int)dot2.getX(), (int)dot2.getY()});
+            pos.set(2, new int[]{(int)dot3.getX(), (int)dot3.getY()});
+            pos.set(3, new int[]{(int)dot4.getX(), (int)dot4.getY()});
+            */
+            pos.get(0)[0] = (int) dot1.getX();
+            pos.get(0)[1] = (int) dot1.getY();
+            pos.get(1)[0] = (int) dot2.getX();
+            pos.get(1)[1] = (int) dot2.getY();
+            pos.get(2)[0] = (int) dot3.getX();
+            pos.get(2)[1] = (int) dot3.getY();
+            pos.get(3)[0] = (int) dot4.getX();
+            pos.get(3)[1] = (int) dot4.getY();
 
             ArrayList<Point> tempPoint = new ArrayList<Point>();
             for (int[] p: pos) {
+                //비동기 이미지 로드용 코드
+                /*
                 int locX = Math.max((int)((p[0]-pivotOffsetX)*scaleFactor), 0);
                 locX = Math.min(locX, imgInput.width());
                 int locY = Math.max((int)((p[1]-pivotOffsetY)*scaleFactor), 0);
                 locY = Math.min(locY, imgInput.height());
                 tempPoint.add(new Point(locX, locY));
+                */
+                //동기 이미지 로드용 코드
+                int[]loc = ImageUtil.ImageViewPointToImage(zoom_background,p[0],p[1]);
+                tempPoint.add(new Point(loc[0], loc[1]));
+                Log.i("PaperDetect", String.valueOf(p[0])+", "+String.valueOf(p[0]));
             }
             paperPoints.fromList(tempPoint);
 
