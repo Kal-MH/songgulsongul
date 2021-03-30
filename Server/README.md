@@ -627,3 +627,95 @@
      					// 상태코드는 ok(200), server error(500)으로 나뉜다.
      }
      ```
+
+## Market Router
+
+1. 마켓 메인화면
+
+   - api : “/market/main”
+   - 응답데이터
+
+     ```java
+     json = {
+     	'code',
+      'marketItem' // 마켓 sticker 정보 --> id, image, name, price
+     }
+     ```
+     
+2. 마켓 스티커 상세보기
+
+   - api : “/market/detail/:stickerId/:userId”
+   - method : GET
+   - 전달받아야 하는 데이터
+     - stickerId(스티커id)
+     - userId(로그인한 사용자 id -- 보유 포인트 전송에 필요)
+   - 응답데이터
+
+     ```java
+     json = {
+     	'code',
+      'stickerDetail', // sticker 상세 정보 --> image, name, price, text
+      'sellerInfo', // 판매자 정보 --> profileImage, userId
+      'userPoint' // 사용자 포인트
+     }
+     ```
+  
+3. 마켓 스티커 구매
+
+   - api : “/market/buy/:stickerId/:userId”
+   - method : GET
+   - 전달받아야 하는 데이터
+     - stickerId(스티커id)
+     - userId(로그인한 사용자 id -- 구매자 포인트 차감)
+   - 응답데이터
+
+     ```java
+     json = {
+     	'code'
+     }
+     ```
+     
+4. 마켓 스티커 검색시(기본)
+
+   - api : “/market/sticker-search?searchWord=?”
+   - method : GET
+   - 전달받아야 하는 데이터
+     - searchWord(검색어)
+   - 응답데이터
+
+     ```java
+     json = {
+     	'code',
+      'marketItem' // 검색한 sticker --> id, image, name, price
+     }
+     ```
+     
+5. 마켓 스티커 검색(낮은 가격순)
+
+   - api : “/market/search-price?searchWord=?”
+   - method : GET
+   - 전달받아야 하는 데이터
+     - searchWord(검색어)
+   - 응답데이터
+
+     ```java
+     json = {
+     	'code',
+      'marketItem' // 검색한 sticker --> id, image, name, price
+     }
+     ```
+     
+6. 마켓 스티커 검색(최신순)
+
+   - api : “/market/search-date?searchWord=?”
+   - method : GET
+   - 전달받아야 하는 데이터
+     - searchWord(검색어)
+   - 응답데이터
+
+     ```java
+     json = {
+     	'code',
+      'marketItem' // 검색한 sticker --> id, image, name, price
+     }
+     ```
