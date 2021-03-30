@@ -268,6 +268,7 @@ Mat getImageCannyBorders( Mat src, int th1 = 25, int th2 = 200)
     Mat resized;
 
     /// Convert it to gray
+    border =  Mat();
     cvtColor(src, border, COLOR_RGB2GRAY );
     //cvtColor( src, border, COLOR_RGB2GRAY );
     GaussianBlur( border, border, Size(5,5), 0, 0, BORDER_DEFAULT );
@@ -573,26 +574,27 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env,
      //이상하게 include 쪽에서 오류남
     */
 }extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT jintArray JNICALL
 Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobject thiz,
-                                                             jlong img_input, jlong out_points,
+                                                             jlong img_input,
                                                              jint th1, jint th2) {
     Mat &imgInput = *(Mat *) img_input;
 
-    Mat &points = *(Mat *) out_points;
 
-    Mat smallImg;
+
+    Mat sizedImage;
 
     Mat borders;
+
+
     double area;
     RotatedRect rect;
 
     vector<Point> pointsFromBox;
 
-    smallImg = Mat();
-    resize(img_input, smallImg,Size(smallSizeX,smallSizeY),0,0);
-    borders = Mat();
-    borders = getImageCannyBorders(smallImg, th1, th2);
+    resize(imgInput, sizedImage,Size(smallSizeX,smallSizeY),0,0);
+
+    borders = getImageCannyBorders(sizedImage, th1, th2);
 
     vector<vector<Point>> contours;	/// Find contours
     findContours( borders, contours, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) );
@@ -613,11 +615,33 @@ Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobjec
         if(area > 75){
             rect = minAreaRect(contours[i]);
 
-            boxPoints(rect, pointsFromBox);
+            //boxPoints(rect, pointsFromBox);
         }
     }
+
+    rect.center.x *= imgInput.cols/smallSizeX;
+    rect.center.y *= imgInput.rows/smallSizeY;
+    rect.size.height*= imgInput.cols/smallSizeX;
+    rect.size.width*= imgInput.rows/smallSizeY;
+
+    rect.center.x -rect.size.width/2;
+    rect.center.y -rect.size.height/2;//topLeft
+
+    jintArray rectFromJava = (env)->NewIntArray(4);
+
+
+    jint *ptrArray = env->GetIntArrayElements(rectFromJava, 0);
+    ptrArray[0] = rect.center.x - rect.size.width/2; //left
+    ptrArray[1] = rect.center.y - rect.size.height/2; //top
+    ptrArray[2] = rect.center.x + rect.size.width/2; //right
+    ptrArray[3] = rect.center.y + rect.size.height/2; //bottom
+    env->ReleaseIntArrayElements(rectFromJava, ptrArray, 0);
+
+    return rectFromJava;
+
+    /*
     if(!pointsFromBox.empty()){
         points = Mat(ResizePoints(pointsFromBox,imgInput.cols/smallSizeX, imgInput.rows/smallSizeY), true);
-    }
+    }*/
 
 }

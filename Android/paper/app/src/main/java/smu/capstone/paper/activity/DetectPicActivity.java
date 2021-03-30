@@ -42,10 +42,11 @@ public class DetectPicActivity extends AppCompatActivity {
     public long imgInputAddress;
     int th1 = 15;
     int th2 = 150;
-    Mat paperImage = new Mat();
-    MatOfPoint picPoints = new MatOfPoint();
+    Mat paperImage;
+    //MatOfPoint picPoints;
+    int[] picRectFromOpencv = new int[]{400,400,800,500};
 
-    public native void DetectPic(long imgInput, long outPoints, int th1, int th2);
+    public native int[] DetectPic(long imgInput, int th1, int th2);
     //public native void ProcessPic();
 
     @Override
@@ -66,34 +67,36 @@ public class DetectPicActivity extends AppCompatActivity {
 
 
 
+
         cropImageView = (CropImageView) findViewById(R.id.cropImageView);
 
-        // 가져온 이미지 세팅
+        Rect cropRect = new Rect(400, 400, 800, 500);
+
+                // 가져온 이미지 세팅
         //cropImageView.setImageUriAsync(imageUri);
         imgInputAddress = getIntent().getLongExtra("imgInputAddress", 0x00);
-        //Log.w("DetectPic", "paperImage Address: "+ String.valueOf(imgInputAddress));
-        try{
-            paperImage = new Mat(imgInputAddress);
-        }
-        catch(Exception e){
-            paperImage = new Mat();
-        }
-        finally {
-
-        }
+        paperImage = new Mat(imgInputAddress);
         Bitmap imgInputBitmap = Bitmap.createBitmap(paperImage.cols(),paperImage.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(paperImage,imgInputBitmap);
         cropImageView.setImageBitmap(imgInputBitmap);
-        //paperImage = new Mat(imgInputAddress);
         //paperImage = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
 
-        //DetectPic(paperImage.getNativeObjAddr(),picPoints.getNativeObjAddr(),th1,th2);
+        picRectFromOpencv = DetectPic(paperImage.getNativeObjAddr(), th1, th2);
+
+        cropRect.left = picRectFromOpencv[0];
+        cropRect.top = picRectFromOpencv[1];
+        cropRect.right = picRectFromOpencv[2];
+        cropRect.bottom = picRectFromOpencv[3];
+        Log.i("DetectPic",String.valueOf(cropRect.left));
+        Log.i("DetectPic",String.valueOf(cropRect.top));
+        Log.i("DetectPic",String.valueOf(cropRect.right));
+        Log.i("DetectPic",String.valueOf(cropRect.bottom));
 
         //세부내용 세팅
         cropImageView.setGuidelines(CropImageView.Guidelines.ON);
         cropImageView.setScaleType(CropImageView.ScaleType.FIT_CENTER);
         cropImageView.setAutoZoomEnabled(true);
-        cropImageView.setCropRect(new Rect(400, 400, 800, 500));
+        cropImageView.setCropRect(cropRect);
 
 
 
