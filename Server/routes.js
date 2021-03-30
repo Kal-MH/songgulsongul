@@ -26,11 +26,11 @@ const USER_LFOLLOW_LIST = "/lfollow-list";
 //market Router
 const MARKET = "/market";
 const MARKET_MAIN = "/main";
-const MARKET_STICKER = "/sticker/:stickerId/:userId";
-const MARKET_STICKER_BUY = "/buy/:stickerId/:userId";
+const MARKET_DETAIL = "/detail/:stickerId/:userId";
+const MARKET_BUY = "/buy/:stickerId/:userId";
 const MARKET_STICKER_SEARCH = "/sticker-search";
 const MARKET_SEARCH_PRICE = "/search-price";
-const MARKET_SEARCH_DATE = "/search-data";
+const MARKET_SEARCH_DATE = "/search-date";
 
 //post Router
 const POST = "/post";
@@ -86,8 +86,8 @@ const routes = {
 
     market : MARKET,
     marketMain : MARKET_MAIN,
-    marketSticker : MARKET_STICKER,
-    marketStickerBuy : MARKET_STICKER_BUY,
+    marketDetail : MARKET_DETAIL,
+    marketBuy : MARKET_BUY,
     marketStickerSearch : MARKET_STICKER_SEARCH,
     marketSearchPrice : MARKET_SEARCH_PRICE,
     marketSearchDate : MARKET_SEARCH_DATE,
