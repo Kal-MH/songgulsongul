@@ -38,13 +38,10 @@ const POST_COMMUNITY = "/community";
 const POST_FEEDS = "/feeds";
 const POST_DETAIL = "/:id";
 const POST_SEARCH = "/search";
-//----------------------delete---------------
-const POST_SEARCH_TAG = "/search/tag";
-const POST_SEARCH_ID = "/search/id"
-//----------------------delete---------------
 const POST_UPLOAD = "/upload";
-const POST_UPDATE = "/update/:id"
-const POST_DELETE = "/delete/:id"
+const POST_UPDATE = "/update/:id";
+const POST_DELETE = "/delete/:id";
+const POST_DOWNLOAD = "/download/:id";
 
 //api Router
 const API = "/api";
@@ -65,6 +62,7 @@ const API_NAVER_ITEM_TAG_CALLBACK = "/naver/item-tag/callback";
 //로그인한 후, 내 프로필 보기
 const ME = "/me";
 const LOGOUT = "/logout";
+
 const routes = {
     home : HOME,
     join : JOIN,
@@ -97,11 +95,10 @@ const routes = {
     postFeeds : POST_FEEDS,
     postUpload : POST_UPLOAD,
     postSearch : POST_SEARCH,
-    postSearchTag : POST_SEARCH_TAG,
-    postSearchId : POST_SEARCH_ID,
     postDetail : POST_DETAIL,
     postUpdate : POST_UPDATE,
     postDelete : POST_DELETE,
+    postDownload : POST_DOWNLOAD,
 
     api : API,
     apiDupIdCheck : API_DUP_IDCHECK,

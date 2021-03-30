@@ -243,146 +243,156 @@
 ## User Router
 
 1. 프로필
-    - api: /user/profile
-    - method : POST
-    - 전달받아야 하는 데이터
-      - id
-      - status
-    - 응답 데이터
 
-        ```java
-        json = {
-        	'code', //응답코드
-        	'followerCnt',  //팔로워 수
-        	'followCnt',  //팔로우 수
-        	'postInfo', //게시글 정보 -> image, postId
-        	'profileInfo'  //프로필 정보 -> profile_image, intro, sns
-        }
-        ```
+   - api: /user/profile
+   - method : POST
+   - 전달받아야 하는 데이터
+     - id
+     - status
+   - 응답 데이터
+
+     ```java
+     json = {
+     	'code', //응답코드
+     	'followerCnt',  //팔로워 수
+     	'followCnt',  //팔로우 수
+     	'postInfo', //게시글 정보 -> image, postId
+     	'profileInfo'  //프로필 정보 -> profile_image, intro, sns
+     }
+     ```
 
 2. 팔로우 하기
-    - api: /user/follow
-    - method : POST
-    - 전달받아야 하는 데이터
-      - loginId(로그인한 사용자)
-      - userId(팔로우 대상자)
-    - 응답 데이터
 
-        ```java
-        json = {
-        	'code'
-        }
-        ```
+   - api: /user/follow
+   - method : POST
+   - 전달받아야 하는 데이터
+     - loginId(로그인한 사용자)
+     - userId(팔로우 대상자)
+   - 응답 데이터
+
+     ```java
+     json = {
+     	'code'
+     }
+     ```
 
 3. 언팔로우 하기
-    - api: /user/unfollow
-    - method : POST
-    - 전달받아야 하는 데이터
-      - loginId
-      - userId
-    - 응답 데이터
 
-        ```java
-        json = {
-        	'code'
-        }
-        ```
+   - api: /user/unfollow
+   - method : POST
+   - 전달받아야 하는 데이터
+     - loginId
+     - userId
+   - 응답 데이터
+
+     ```java
+     json = {
+     	'code'
+     }
+     ```
 
 4. 로그인한 사용자의 팔로우 리스트 받아오기
-    - api: /user/lfollow-list
-    - method : POST
-    - 전달받아야 하는 데이터
-      - id(로그인한 사용자의 id)
-    - 응답 데이터
 
-        ```java
-        json = {
-          'code',
-        	'followinfo' //팔로우 정보 -> image, userId
-        }
-        ```
+   - api: /user/lfollow-list
+   - method : POST
+   - 전달받아야 하는 데이터
+     - id(로그인한 사용자의 id)
+   - 응답 데이터
+
+     ```java
+     json = {
+       'code',
+     	'followinfo' //팔로우 정보 -> image, userId
+     }
+     ```
 
 5. 선택한 사용자의 팔로우 리스트 받아오기
-    - api: /user/follow-list
-    - method : POST
-    - 전달받아야 하는 데이터
-      - userId(선택한 사용자의 id)
-    - 응답 데이터
 
-        ```java
-        json = {
-          'code',
-        	'userfollowinfo'  //팔로우 정보 -> image, userId
-        }
-        ```
+   - api: /user/follow-list
+   - method : POST
+   - 전달받아야 하는 데이터
+     - userId(선택한 사용자의 id)
+   - 응답 데이터
+
+     ```java
+     json = {
+       'code',
+     	'userfollowinfo'  //팔로우 정보 -> image, userId
+     }
+     ```
 
 6. 팔로워 리스트 받아오기
-    - api: /user/follower-list
-    - method : POST
-    - 전달받아야 하는 데이터
-      - id
-    - 응답 데이터
 
-        ```java
-        json = {
-          'code',
-        	'followerinfo'  //팔로워 정보 -> image, userId
-        }
-        ```
+   - api: /user/follower-list
+   - method : POST
+   - 전달받아야 하는 데이터
+     - id
+   - 응답 데이터
+
+     ```java
+     json = {
+       'code',
+     	'followerinfo'  //팔로워 정보 -> image, userId
+     }
+     ```
 
 7. 보관함 기능
-    - api: /user/keep
-    - method : POST
-    - 전달받아야 하는 데이터
-      - id(로그인한 사용자)
-    - 응답 데이터
 
-        ```java
-        json = {
-          'code',
-        	'keepinfo', //보관정보 -> image, postId
-        	'keepcnt' //보관개수
-        }
-        ```
+   - api: /user/keep
+   - method : POST
+   - 전달받아야 하는 데이터
+     - id(로그인한 사용자)
+   - 응답 데이터
+
+     ```java
+     json = {
+       'code',
+     	'keepinfo', //보관정보 -> image, postId
+     	'keepcnt' //보관개수
+     }
+     ```
 
 8. 프로필 수정 – 아이디 중복 확인
-    - api: /user/profile-edit-idcheck
 
-        ```java
-        json = {
-        	'code'
-        }
-        ```
+   - api: /user/profile-edit-idcheck
+
+     ```java
+     json = {
+     	'code'
+     }
+     ```
 
 9. 프로필 수정
-    - api: /user/profile-edit
-    - method : POST
-    - 전달받아야 하는 데이터
-      - id(기존 아이디)
-      - newId(변경된 아이디)
-      - newIntro(변경된 소개글)
-      - newSNS(변경된 sns주소)
-      - profileImage
-    - 응답 데이터
 
-        ```java
-        json = {
-        	'code'
-        }
-        ```
+   - api: /user/profile-edit
+   - method : POST
+   - 전달받아야 하는 데이터
+     - id(기존 아이디)
+     - newId(변경된 아이디)
+     - newIntro(변경된 소개글)
+     - newSNS(변경된 sns주소)
+     - profileImage
+   - 응답 데이터
+
+     ```java
+     json = {
+     	'code'
+     }
+     ```
 
 10. 회원 탈퇴
+
     - api: /user/data-delete
     - method : POST
     - 전달받아야 하는 데이터
       - id(로그인한 사용자)
     - 응답 데이터
 
-        ```java
-        json = {
-        	'code'
-        }
-        ```
+      ```java
+      json = {
+      	'code'
+      }
+      ```
 
 ## Post Router
 
@@ -625,5 +635,23 @@
      json = {
      	'code', //상태코드
      					// 상태코드는 ok(200), server error(500)으로 나뉜다.
+     }
+     ```
+
+8. 게시글 다운로드
+
+   - api : "/post/download/:id
+   - method : GET
+   - 전달받아야 하는 데이터
+     - post id (url param)
+   - 응답데이터
+
+     ```java
+     json = {
+     	'code', //상태코드
+     					// 상태코드는 ok(200), server error(500)으로 나뉜다.
+     	'data' : {
+     		'img_path' : file
+     	}
      }
      ```

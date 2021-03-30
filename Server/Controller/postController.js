@@ -4,6 +4,10 @@ const db_config = require("../db/db_config");
 const statusCode = require("../config/serverStatusCode");
 const serverConfig = require("../config/serverConfig");
 
+const fs = require("fs");
+const path = require("path");
+const mime = require("mime");
+
 const postController = {
     getPostDetail : function (req, res) {
         const loggedUser = res.locals.loggedUser;
@@ -253,7 +257,7 @@ const postController = {
                     'code' : statusCode.CLIENT_ERROR
                 })
             } else {
-                var postId = result[0].insertId;
+                var postId = result.insertId;
                 
                 //hashTag
                 var insertHashSql = "";
@@ -301,6 +305,7 @@ const postController = {
 
         //안드로이드에서 넘어오는 값에 따라서 수정이 필요한 부분
         var image = (file) ? req.file.path : req.body.img_post_link; 
+
         var updatePostSql = `update post set image=?, text=?, post_time=curtime(), post_date=curdate(), user_id=? where id=${postId};`;
         var updatePostParams = [image, req.body.text, loggedUser.id];
 
@@ -327,9 +332,7 @@ const postController = {
                         res.json({
                             'code' : statusCode.CLIENT_ERROR
                         })
-                    } else {
-                        //itemTag - 현재는 단수로 되어 있지만, 이후에 액티비티랑 연동할 때, 복수로 바꿔야 한다.
-                        
+                    } else {                      
                         var deleteItemTagSql = `delete from item_tag where post_id=${postId};`;
                         var insertItemSql = "";
                         var insertItemParams = [];
@@ -367,19 +370,95 @@ const postController = {
         const postId = req.params.id;
         const loggedUser = res.locals.loggedUser;
 
-        var deletePostSql = `delete from post where id = ${postId} and user_id = ${loggedUser.id};`;
-        connection.query(deletePostSql, function (err, result) {
+        var selectPostSql = `select image from post where id = ${postId} and user_id = ${loggedUser.id};`;
+        connection.query(selectPostSql, function (err, result) {
+            if (err){
+                console.log(err);
+                res.json({
+                    'code' : statusCode.SERVER_ERROR,
+                })
+            } else {
+                var fileImage = result[0].image;
+                var filePath = `./${fileImage}`;
+                var deletePostSql = `delete from post where image = ?;`;
+                connection.query(deletePostSql, fileImage, function (err, result) {
+                    if (err){
+                        console.log(err);
+                        res.json({
+                            'code' : statusCode.SERVER_ERROR
+                        })
+                    } else {
+                        if (fs.existsSync(filePath)){
+                            fs.unlink(filePath, function (err) {
+                                if (err){
+                                    console.log(err);
+                                    res.json({
+                                        'code' : statusCode.SERVER_ERROR,
+                                    })
+                                } else {
+                                    res.redirect("/post/community?offset=0")
+                                    // res.json({
+                                    //     'code' : statusCode.OK
+                                    // })
+                                }               
+                            })
+                        } else {
+                            res.json({
+                                'code' : statusCode.OK,
+                            })
+                        }
+                    }
+                })
+            }
+        })
+    },
+    postDownload : function (req, res) {
+        var postId = req.params.id;
+
+        var sql = `select image from post where id = ${postId};`;
+        connection.query(sql, function (err, result) {
             if (err){
                 console.log(err);
                 res.json({
                     'code' : statusCode.SERVER_ERROR
                 })
             } else {
-                res.redirect("/post/community?offset=0")
-                // res.json({
-                //     'code' : statusCode.OK
-                // })
+                //s3로 확장하게 되면 경로설정 수정할 필요성 있음
+                var file = `${result[0].image}`;
+                console.log(file);
+                
+                res.json({
+                    'code' : statusCode.OK,
+                    'data' : {
+                        'imgPath' : file
+                    }
+                })
             }
+
+            //이미지 확장자를 체크하기 위한 다운로드 코드
+            // try{
+            //     if (fs.existsSync(file)){
+            //         var fileName = path.basename(file);
+            //         var mimeType = mime.getType(file);
+
+            //         console.log(fileName);
+            //         console.log(mimeType);
+
+            //         console.log(fileName);
+            //         res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
+            //         res.setHeader('Content-type', mimeType);
+
+            //         var fileStream = fs.createReadStream(file);
+            //         fileStream.pipe(res);
+            //     } else {
+            //         res.send('no file exists');
+            //         return ;
+            //     }
+            // } catch(e){
+            //     console.log(e);
+            //     res.send('error occurs');
+            //     return ;
+            // }
         })
     }
 }
