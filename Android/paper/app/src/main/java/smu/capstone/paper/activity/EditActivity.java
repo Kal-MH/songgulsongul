@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -17,6 +18,12 @@ public class EditActivity extends AppCompatActivity {
     String filePath;
     ImageView edit_iv;
     Button back, done;
+
+
+
+    long first_time = 0;
+    long second_time = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,7 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent( EditActivity.this , EditDoneActivity.class);
+                intent.putExtra("path", filePath);
                 startActivity(intent);
                 finish();
             }
@@ -46,5 +54,18 @@ public class EditActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        second_time = System.currentTimeMillis();
+        if(second_time-first_time <2000){
+            super.onBackPressed();
+            finish();
+        }
+        else{
+            Toast.makeText(this,"한번 더 누르면 편집을 종료합니다", Toast.LENGTH_SHORT).show();
+            first_time = System.currentTimeMillis();
+        }
     }
 }
