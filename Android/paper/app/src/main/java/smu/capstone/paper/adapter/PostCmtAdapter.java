@@ -47,8 +47,8 @@ public class PostCmtAdapter extends BaseAdapter {
     public void setItem(@NonNull PostCmtAdapter.ViewHolder holder,JSONObject item, int position){
         // 받아온 데이터로 셋팅
         try {
-            holder.userId.setText(item.getString("userId"));
-            holder.cmt.setText(item.getString("cmt"));
+            holder.userId.setText(item.getString("login_id"));
+            holder.cmt.setText(item.getString("text"));
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -80,8 +80,8 @@ public class PostCmtAdapter extends BaseAdapter {
 
         try {
             final JSONObject item = dataList.getJSONObject(position);
-            holder.userId.setText(item.getString("userId"));
-            holder.cmt.setText(item.getString("cmt"));
+            holder.userId.setText(item.getString("login_id"));
+            holder.cmt.setText(item.getString("text"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

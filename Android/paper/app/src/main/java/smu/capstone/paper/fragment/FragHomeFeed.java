@@ -81,29 +81,29 @@ public class FragHomeFeed extends Fragment {
         // 임시 데이터 저장
         try{
             JSONObject obj = new JSONObject();
-            obj.put("userId", "wonhee");
-            obj.put("timeStamp", "21-02-07");
-            obj.put("likeCnt", 499);
-            obj.put("comCnt", 204);
+            obj.put("user_id", "wonhee");
+            obj.put("post_time", "21-02-07");
+            obj.put("likeNum", 499);
+            obj.put("commentsNum", 204);
             obj.put("text", "hi everyone");
-            obj.put("profileImg",R.drawable.ic_baseline_emoji_emotions_24);
-            obj.put("postImg",R.drawable.sampleimg);
-            obj.put("like", 0);
-            obj.put("keep",0);
-            obj.put("postId", 1);
+            obj.put("img_profile",R.drawable.ic_baseline_emoji_emotions_24);
+            obj.put("image",R.drawable.sampleimg);
+            obj.put("likeOnset", 0);
+            obj.put("keepOnset",0);
+            obj.put("post_id", 1);
             arr.put(obj);
 
             JSONObject obj2 = new JSONObject();
-            obj2.put("userId", "YUJIN");
-            obj2.put("timeStamp", "21-02-07");
-            obj2.put("likeCnt", 20);
-            obj2.put("comCnt", 52);
+            obj2.put("user_id", "YUJIN");
+            obj2.put("post_time", "21-02-07");
+            obj2.put("likeNum", 20);
+            obj2.put("commentsNum", 52);
             obj2.put("text", "바쁘다 바빠 현대사회에 사는 이유진의 그림입니다~후후");
-            obj2.put("profileImg", R.drawable.sampleimg);
-            obj2.put("postImg", R.drawable.test);
-            obj2.put("like", 0);
-            obj2.put("keep", 0);
-            obj2.put("postId",2);
+            obj2.put("img_profile", R.drawable.sampleimg);
+            obj2.put("image", R.drawable.test);
+            obj2.put("likeOnset", 0);
+            obj2.put("keepOnset", 0);
+            obj2.put("post_id",2);
             arr.put(obj2);
 
             item.put("data", arr);

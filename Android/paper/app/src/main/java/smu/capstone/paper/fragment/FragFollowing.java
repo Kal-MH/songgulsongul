@@ -87,22 +87,22 @@ public class FragFollowing extends Fragment {
         // 임시 데이터 저장
         try{
             JSONObject obj1 = new JSONObject();
-            obj1.put("userid", "Prof.cho");
+            obj1.put("userId", "Prof.cho");
             obj1.put("image", R.drawable.test);
             arr.put(obj1);
 
             JSONObject obj2 = new JSONObject();
-            obj2.put("userid", "yujin1292");
+            obj2.put("userId", "yujin1292");
             obj2.put("image", R.drawable.ic_baseline_emoji_emotions_24);
             arr.put(obj2);
 
             JSONObject obj3 = new JSONObject();
-            obj3.put("userid", "arami98");
+            obj3.put("userId", "arami98");
             obj3.put("image", R.drawable.ic_favorite);
             arr.put(obj3);
 
             JSONObject obj4 = new JSONObject();
-            obj4.put("userid", "wonhee123");
+            obj4.put("userId", "wonhee123");
             obj4.put("image", R.drawable.ic_chat_black);
             arr.put(obj4);
             item.put("data", arr);
@@ -122,22 +122,22 @@ public class FragFollowing extends Fragment {
 
             // 임시 데이터 저장
             JSONObject user_obj1 = new JSONObject();
-            user_obj1.put("userid", "yujin1292");
+            user_obj1.put("userId", "yujin1292");
             user_obj1.put("image", R.drawable.ic_baseline_emoji_emotions_24);
             user_arr.put(user_obj1);
 
             JSONObject user_obj2 = new JSONObject();
-            user_obj2.put("userid", "arami98");
+            user_obj2.put("userId", "arami98");
             user_obj2.put("image", R.drawable.ic_favorite);
             user_arr.put(user_obj2);
 
             JSONObject user_obj3 = new JSONObject();
-            user_obj3.put("userid", "wonhee123");
+            user_obj3.put("userId", "wonhee123");
             user_obj3.put("image", R.drawable.ic_chat_black);
             user_arr.put(user_obj3);
 
             JSONObject user_obj4 = new JSONObject();
-            user_obj4.put("userid", "hahahoho");
+            user_obj4.put("userId", "hahahoho");
             user_obj4.put("image", R.drawable.ic_baseline_face_24);
             user_arr.put(user_obj4);
 
@@ -145,8 +145,8 @@ public class FragFollowing extends Fragment {
             for(int i = 0; i < user_arr.length(); i++){
                 for(int j = 0; j < arr.length(); j++){
                     int check = 0;
-                    String user_follower_id = user_arr.getJSONObject(i).getString("userid");
-                    String follower_id = arr.getJSONObject(j).getString("userid");
+                    String user_follower_id = user_arr.getJSONObject(i).getString("userId");
+                    String follower_id = arr.getJSONObject(j).getString("userId");
 
                     // Following
                     if(user_follower_id == follower_id) {

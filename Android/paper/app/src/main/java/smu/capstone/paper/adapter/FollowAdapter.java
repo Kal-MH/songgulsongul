@@ -42,7 +42,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
     // 받아온 데이터로 팔로우/팔로워 리스트 내용 셋팅
     public void setItem(@NonNull FollowAdapter.ViewHolder holder, JSONObject item){
         try {
-            holder.userid.setText(item.getString("userid"));
+            holder.userid.setText(item.getString("userId"));
             Glide.with(context).load(item.getInt("image")).into(holder.profile_image);
         } catch (JSONException e){
             e.printStackTrace();
@@ -92,7 +92,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
         holder.follow_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //팔로우 액션 --> server에 처리 요청
+                //팔로우 액션 --> server에 FolowData객체 전달
 
                 //if resultCode == 200
                 holder.follow_btn.setVisibility(View.GONE);
@@ -134,7 +134,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
                         JSONObject item = dataList.getJSONObject(pos);
                         if (pos != RecyclerView.NO_POSITION) {
                             Intent intent = new Intent(context, ProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("userid", item.getString("userid"));
+                            intent.putExtra("userId", item.getString("userId"));
                             context.startActivity(intent);
                         }
                     } catch (JSONException e){

@@ -48,7 +48,7 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHold
     public void setItem(@NonNull HashTagAdapter.ViewHolder holder, JSONObject item, int position){
         // 받아온 데이터로 셋팅
         try {
-            holder.content.setText(item.getString("content"));
+            holder.content.setText(item.getString("text"));
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -67,7 +67,7 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHold
     public void onBindViewHolder(@NonNull HashTagAdapter.ViewHolder holder, final int position) {
         try {
             final JSONObject item = dataList.getJSONObject(position);
-            holder.content.setText(item.getString("content"));
+            holder.content.setText(item.getString("text"));
         } catch (JSONException e){
             e.printStackTrace();
 

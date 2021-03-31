@@ -41,9 +41,9 @@ public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdap
     // 받아온 데이터로 스티커 내용 셋팅
     public void setItem(@NonNull StickerSearchAdapter.ViewHolder holder, JSONObject item){
         try {
-            holder.sticker_price.setText(item.getInt("stickerPrice") + "p");
-            holder.sticker_name.setText(item.getString("stickerName"));
-            Glide.with(context).load(item.getInt("stickerImage")).into(holder.sticker_image);
+            holder.sticker_price.setText(item.getInt("price") + "p");
+            holder.sticker_name.setText(item.getString("name"));
+            Glide.with(context).load(item.getInt("image")).into(holder.sticker_image);
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -94,11 +94,11 @@ public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdap
                         if (pos != RecyclerView.NO_POSITION) {
                             // 임시로 내용 전달 --> 실제로는 stickerId만 전달
                             Intent intent = new Intent(context, StickerDetailActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("stickerId", item.getInt("stickerId"));
-                            intent.putExtra("image", item.getInt("stickerImage"));
-                            intent.putExtra("name", item.getString("stickerName"));
-                            intent.putExtra("price", item.getInt("stickerPrice"));
-                            intent.putExtra("comment", item.getString("comment"));
+                            intent.putExtra("stickerId", item.getInt("id"));
+                            intent.putExtra("image", item.getInt("image"));
+                            intent.putExtra("name", item.getString("name"));
+                            intent.putExtra("price", item.getInt("price"));
+                            intent.putExtra("comment", item.getString("text"));
 
                             context.startActivity(intent);
                         }
