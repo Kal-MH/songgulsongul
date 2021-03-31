@@ -184,6 +184,16 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         return arrayList;
     }
 
+    ArrayList<int[]>get0Pos(){
+
+        ArrayList<int[]> arrayList= new ArrayList<>();
+        arrayList.add(new int[]{0, 0});
+        arrayList.add(new int[]{0, 0});
+        arrayList.add(new int[]{0, 0});
+        arrayList.add(new int[]{0, 0});
+
+        return arrayList;
+    }
 
 
     void setDots(){
@@ -343,6 +353,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         }
         else{
             pos = getPos();
+            //pos = get0Pos();
             Log.w("PaperDetect", "Cant find 4 points of paper! use default points");
 
             ArrayList<Point> tempPoint = new ArrayList<Point>();
@@ -368,6 +379,11 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
         dot4.setX(pos.get(3)[0]);
         dot4.setY(pos.get(3)[1]);
+
+
+
+        Log.i("DetectPaper", "dot1 pos: " + String.valueOf(dot1.getX()) + ", "+String.valueOf(dot1.getY()));
+
     }
 
     void draw(){
@@ -497,8 +513,9 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 //동기 이미지 로드용 코드
                 int[]loc = ImageUtil.ImageViewPointToImage(zoom_background,p[0],p[1]);
                 tempPoint.add(new Point(loc[0], loc[1]));
-                Log.i("PaperDetect", String.valueOf(p[0])+", "+String.valueOf(p[0]));
+                //Log.i("PaperDetect", String.valueOf(p[0])+", "+String.valueOf(p[0]));
             }
+            Log.i("DetectPaper", "dot1 pos: " + String.valueOf(dot1.getX()) + ", "+String.valueOf(dot1.getY()));
             paperPoints.fromList(tempPoint);
 
         }

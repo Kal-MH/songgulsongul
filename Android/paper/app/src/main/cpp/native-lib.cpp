@@ -588,7 +588,8 @@ Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobjec
 
 
     double area;
-    RotatedRect rect;
+    Rect rect;
+    RotatedRect rotatedRect;
 
     vector<Point> pointsFromBox;
 
@@ -612,25 +613,34 @@ Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobjec
             return contours_poly[i];
         }*/
         area = contourArea(contours[i]);
-        if(area > 75){
-            rect = minAreaRect(contours[i]);
-
+        if(area > 20){
+            //rotatedRect = minAreaRect(contours[i]);
+             rect = boundingRect(contours[i]);
             //boxPoints(rect, pointsFromBox);
+            break;
         }
     }
 
-    rect.center.x *= imgInput.cols/smallSizeX;
-    rect.center.y *= imgInput.rows/smallSizeY;
-    rect.size.height*= imgInput.cols/smallSizeX;
-    rect.size.width*= imgInput.rows/smallSizeY;
-    
+
+    /*
+    rotatedRect.center.x *= imgInput.cols/smallSizeX;
+    rotatedRect.center.y *= imgInput.rows/smallSizeY;
+    rotatedRect.size.height*= imgInput.cols/smallSizeX;
+    rotatedRect.size.width*= imgInput.rows/smallSizeY;
+    */
     jintArray rectFromJava = (env)->NewIntArray(4);
 
     jint *ptrArray = env->GetIntArrayElements(rectFromJava, 0);
-    ptrArray[0] = rect.center.x - rect.size.width/2; //left
-    ptrArray[1] = rect.center.y - rect.size.height/2; //top
-    ptrArray[2] = rect.center.x + rect.size.width/2; //right
-    ptrArray[3] = rect.center.y + rect.size.height/2; //bottom
+    /*
+    ptrArray[0] = rotatedRect.center.x - rotatedRect.size.width/2; //left
+    ptrArray[1] = rotatedRect.center.y - rotatedRect.size.height/2; //top
+    ptrArray[2] = rotatedRect.center.x + rotatedRect.size.width/2; //right
+    ptrArray[3] = rotatedRect.center.y + rotatedRect.size.height/2; //bottom
+     */
+    ptrArray[0] = rect.x;
+    ptrArray[1] = rect.y;
+    ptrArray[2] = rect.x + rect.width;
+    ptrArray[3] = rect.y + rect.height;
     env->ReleaseIntArrayElements(rectFromJava, ptrArray, 0);
 
     return rectFromJava;

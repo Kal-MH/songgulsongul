@@ -29,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import smu.capstone.paper.ImageUtil;
 import smu.capstone.paper.R;
 
 public class DetectPicActivity extends AppCompatActivity {
@@ -54,7 +55,7 @@ public class DetectPicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detect_pic);
 
-       // detect_pic_imageView = findViewById(R.id.detect_pic_iv);
+
         filePath = getIntent().getStringExtra("path");
         Uri imageUri = Uri.fromFile(new File(filePath));
 
@@ -82,6 +83,14 @@ public class DetectPicActivity extends AppCompatActivity {
         //paperImage = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
 
         picRectFromOpencv = DetectPic(paperImage.getNativeObjAddr(), th1, th2);
+        detect_pic_imageView = findViewById(R.id.ImageView_image);
+        int[] loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[0],picRectFromOpencv[1]);
+
+        picRectFromOpencv[0] = loc[0];
+        picRectFromOpencv[1] = loc[1];
+        loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[2],picRectFromOpencv[3]);
+        picRectFromOpencv[2] = loc[0];
+        picRectFromOpencv[3] = loc[1];
 
         cropRect.left = picRectFromOpencv[0];
         cropRect.top = picRectFromOpencv[1];
