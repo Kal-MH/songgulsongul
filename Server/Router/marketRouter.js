@@ -10,3 +10,5 @@ marketRouter.get(routes.marketBuy, marketController.stickerBuy);
 marketRouter.get(routes.marketStickerSearch, marketController.getStickerSearch);
 marketRouter.get(routes.marketSearchPrice, marketController.getSearchPrice);
 marketRouter.get(routes.marketSearchDate, marketController.getSearchDate);
+
+module.exports = marketRouter;
