@@ -248,8 +248,9 @@ const postController = {
 
         var postImages = req.file.path;
         
-        var insertPostSql = `insert into post (image, text, post_time, post_date, user_id) values (?, '${text}', curtime(), curdate(), ${loggedUser.id});`;
-        var insertPostParams = [postImages];
+        var insertPostSql = `insert into post (image, text, post_time, post_date, user_id, ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa) 
+        values (?, '${text}', curtime(), curdate(), ${loggedUser.id}, ?);`;
+        var insertPostParams = [postImages, req.body.ccl];
         connection.query(insertPostSql, insertPostParams, function (err, result) {
             if (err){
                 console.log(err);
