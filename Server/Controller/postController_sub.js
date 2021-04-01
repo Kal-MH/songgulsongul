@@ -8,7 +8,7 @@ const postController_subFunc = {
         var offset = req.query.offset;
 
         var sql = `select h.post_id, h.text, p.image, p.post_time, p.post_date from hash_tag as h join post as p 
-        on h.post_id = p.id and h.text like "${searchKeyword}%" order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`;
+        on h.post_id = p.id and h.text like "${searchKeyword}%" order by post_date desc, post_time desc limit ${db_config.limitation} offset ${offset};`;
         connection.query(sql, function (err, result) {
             if (err){
                 console.log(err);

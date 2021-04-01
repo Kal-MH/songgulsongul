@@ -114,7 +114,7 @@ const postController = {
                     selectPostSql += `user_id = ${result[i].follow_target_id} or `
                 }
                 selectPostSql += `user_id = ${result[result.length - 1].follow_target_id} 
-                order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`;
+                order by post_date desc, post_time desc limit ${db_config.limitation} offset ${offset};`;
                 connection.query(selectPostSql, function (req, result) {
                     if (err){
                         console.log(err);
@@ -180,10 +180,16 @@ const postController = {
         const user = res.locals.loggedUser;
         const offset = req.query.offset;
 
-        //20개만 받아오기
-        var sql = `select * from post order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`
+        // //20개만 받아오기
+        // var sql = `select * from post order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`
 
-        connection.query(sql, function (err, result) {
+        var selectPostSql;
+        if (offset == undefined)
+            selectPostSql = `select * from post order by post_date desc, post_time desc limit ${db_config.limitation};`
+        else
+            selectPostSql = `select * from post where id < ${offset} order by post_date desc, post_time desc limit ${db_config.limitation};`
+
+        connection.query(selectPostSql, function (err, result) {
             if (err){
                 console.log(err);
                 res.json({
