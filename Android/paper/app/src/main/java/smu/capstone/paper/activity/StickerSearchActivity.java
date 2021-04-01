@@ -97,35 +97,35 @@ public class StickerSearchActivity extends AppCompatActivity {
 
         try{
             JSONObject obj1 = new JSONObject();
-            obj1.put("stickerName", "sample1");
-            obj1.put("stickerPrice", "10");
-            obj1.put("stickerImage", R.drawable.test);
-            obj1.put("stickerId", 1);
-            obj1.put("comment", "스티커 샘플 1 입니다~");
+            obj1.put("name", "sample1");
+            obj1.put("price", "10");
+            obj1.put("image", R.drawable.test);
+            obj1.put("id", 1);
+            obj1.put("text", "스티커 샘플 1 입니다~");
             arr.put(obj1);
 
             JSONObject obj2 = new JSONObject();
-            obj2.put("stickerName", "sample2");
-            obj2.put("stickerPrice", "20");
-            obj2.put("stickerImage", R.drawable.ic_favorite);
-            obj2.put("stickerId", 2);
-            obj2.put("comment", "스티커 샘플 2 입니다~");
+            obj2.put("name", "sample2");
+            obj2.put("price", "20");
+            obj2.put("image", R.drawable.ic_favorite);
+            obj2.put("id", 2);
+            obj2.put("text", "스티커 샘플 2 입니다~");
             arr.put(obj2);
 
             JSONObject obj3 = new JSONObject();
-            obj3.put("stickerName", "sample3");
-            obj3.put("stickerPrice", "30");
-            obj3.put("stickerImage", R.drawable.ic_favorite_border);
-            obj3.put("stickerId", 3);
-            obj3.put("comment", "스티커 샘플 3 입니다~");
+            obj3.put("name", "sample3");
+            obj3.put("price", "30");
+            obj3.put("image", R.drawable.ic_favorite_border);
+            obj3.put("id", 3);
+            obj3.put("text", "스티커 샘플 3 입니다~");
             arr.put(obj3);
 
             JSONObject obj4 = new JSONObject();
-            obj4.put("stickerName", "sample4");
-            obj4.put("stickerPrice", "40");
-            obj4.put("stickerImage", R.drawable.sampleimg);
-            obj4.put("stickerId", 4);
-            obj4.put("comment", "스티커 샘플 4 입니다~");
+            obj4.put("name", "sample4");
+            obj4.put("price", "40");
+            obj4.put("image", R.drawable.sampleimg);
+            obj4.put("id", 4);
+            obj4.put("text", "스티커 샘플 4 입니다~");
             arr.put(obj4);
 
             item.put("data", arr);

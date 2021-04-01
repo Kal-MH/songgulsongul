@@ -33,9 +33,11 @@ public class StickerDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sticker_detail);
 
         ImageView sticker_img = (ImageView)findViewById(R.id.sticker_d_image);
+        ImageView sticker_profile = (ImageView)findViewById(R.id.sticker_d_profile);
         TextView sticker_name = (TextView)findViewById(R.id.sticker_d_name);
         TextView sticker_price = (TextView)findViewById(R.id.sticker_d_price);
         TextView sticker_com = (TextView)findViewById(R.id.sticker_d_comment);
+        TextView sticker_seller = (TextView)findViewById(R.id.sticker_d_seller);
         Button sticker_buy = (Button)findViewById(R.id.sticker_d_buy);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.sticker_detail_toolbar);
@@ -60,8 +62,10 @@ public class StickerDetailActivity extends AppCompatActivity {
             sticker_price.setText(obj.getString("price") + "p");
             sticker_img.setImageResource(obj.getInt("image"));
             sticker_com.append("\n");
-            sticker_com.append(obj.getString("comment"));
-            user_point = obj.getInt("point");
+            sticker_com.append(obj.getString("text"));
+            sticker_profile.setImageResource(obj.getInt("profileImage"));
+            sticker_seller.setText(obj.getString("userId"));
+            user_point = obj.getInt("userPoint");
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -128,8 +132,10 @@ public class StickerDetailActivity extends AppCompatActivity {
             item.put("name", name);
             item.put("price", price);
             item.put("image", img);
-            item.put("comment", comment);
-            item.put("point", 1000); // 사용자의 보유 포인트도 함께 전달받음
+            item.put("text", comment);
+            item.put("profileImage", R.drawable.ic_favorite);
+            item.put("userId", "seller");
+            item.put("userPoint", 1000); // 사용자의 보유 포인트도 함께 전달받음
         }catch (JSONException e){
             e.printStackTrace();
         }

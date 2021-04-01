@@ -54,7 +54,7 @@ public class FragPostAccount extends Fragment {
 
                 // 게시글 id 전달
                 try {
-                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("postId");
+                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("post_id");
                     intent.putExtra("postId", postId);
                 } catch (JSONException e){
                     e.printStackTrace();
@@ -79,8 +79,8 @@ public class FragPostAccount extends Fragment {
         try{
             for(int i = 0; i < 14; i++){
                 JSONObject obj = new JSONObject();
-                obj.put("postImage", R.drawable.ic_favorite_border);
-                obj.put("postId", pid);
+                obj.put("image", R.drawable.ic_favorite_border);
+                obj.put("post_id", pid);
                 pid++;
                 arr.put(obj);
             }

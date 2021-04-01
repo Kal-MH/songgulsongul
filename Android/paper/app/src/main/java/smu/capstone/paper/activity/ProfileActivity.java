@@ -129,7 +129,7 @@ public class ProfileActivity extends AppCompatActivity {
                 try{
                     JSONObject obj = getProfileData();
                     intent.putExtra("intro", obj.getString("intro"));
-                    intent.putExtra("picture", obj.getInt("picture"));
+                    intent.putExtra("picture", obj.getInt("profile_image"));
                 } catch (JSONException e){
                     e.printStackTrace();
                 }
@@ -170,12 +170,12 @@ public class ProfileActivity extends AppCompatActivity {
         // 임시 데이터 저장
         try{
             JSONObject obj = new JSONObject();
-            obj.put("follow_count", 100);
-            obj.put("follower_count", 291);
+            obj.put("followCnt", 100);
+            obj.put("followerCnt", 291);
             obj.put("point", 4002);
             obj.put("sns", "https://www.google.com");
             obj.put("intro", "Good to see you Buddy!");
-            obj.put("picture", R.drawable.ic_baseline_emoji_emotions_24); //추후에 url 세팅으로변경
+            obj.put("profile_image", R.drawable.ic_baseline_emoji_emotions_24); //추후에 url 세팅으로변경
 
             return obj;
         }catch (JSONException e){
@@ -191,18 +191,18 @@ public class ProfileActivity extends AppCompatActivity {
         // 임시 데이터 저장
         try{
             JSONObject obj = new JSONObject();
-            obj.put("postId", "111");
-            obj.put("postImage", R.drawable.ic_favorite);
+            obj.put("post_id", "111");
+            obj.put("image", R.drawable.ic_favorite);
             arr.put(obj);
 
             JSONObject obj2 = new JSONObject();
-            obj2.put("postId", "123");
-            obj2.put("postImage", R.drawable.ic_favorite_border);
+            obj2.put("post_id", "123");
+            obj2.put("image", R.drawable.ic_favorite_border);
             arr.put(obj2);
 
             JSONObject obj3 = new JSONObject();
-            obj3.put("postId", "144");
-            obj3.put("postImage", R.drawable.ic_favorite);
+            obj3.put("post_id", "144");
+            obj3.put("image", R.drawable.ic_favorite);
             arr.put(obj3);
 
             post_item.put("data", arr);
@@ -217,12 +217,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         JSONObject data = getProfileData();
         try {
-            follow_count_tv.setText(data.getInt("follow_count") +"");
-            follower_count_tv.setText(data.getInt("follower_count" )+"");
+            follow_count_tv.setText(data.getInt("followCnt") +"");
+            follower_count_tv.setText(data.getInt("followerCnt" )+"");
             points_tv.setText(data.getInt("point") + "p");
             intro_tv.setText(data.getString("intro"));
             sns_tv.setText(data.getString("sns"));
-            Glide.with(this).load(data.getInt("picture")).into(profile_userimage); // 게시물 사진
+            Glide.with(this).load(data.getInt("profile_image")).into(profile_userimage); // 게시물 사진
 
         } catch (JSONException e) {
             e.printStackTrace();

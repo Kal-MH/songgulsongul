@@ -30,6 +30,7 @@ public class KeepActivity extends AppCompatActivity {
     PostImageAdapter adapter;
     TextView keep_count, keep_id;
     ImageView keep_imae;
+    int keepcnt;
 
 
     @Override
@@ -69,11 +70,7 @@ public class KeepActivity extends AppCompatActivity {
         //keep_id.setText(userId);
 
         // 보관한 게시글 개수 셋팅
-        try {
-            keep_count.setText("보관한 게시글 " + obj.getJSONArray("data").length());
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
+        keep_count.setText("보관한 게시글 " + keepcnt);
 
         //Click Listener
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -106,41 +103,43 @@ public class KeepActivity extends AppCompatActivity {
         //임시 데이터 저장
         try{
             JSONObject obj1 = new JSONObject();
-            obj1.put("postImage", R.drawable.sampleimg);
+            obj1.put("image", R.drawable.sampleimg);
             obj1.put("postId", 1);
             arr.put(obj1);
 
             JSONObject obj2 = new JSONObject();
-            obj2.put("postImage", R.drawable.test);
+            obj2.put("image", R.drawable.test);
             obj2.put("postId", 2);
             arr.put(obj2);
 
             JSONObject obj3 = new JSONObject();
-            obj3.put("postImage", R.drawable.ic_baseline_emoji_emotions_24);
+            obj3.put("image", R.drawable.ic_baseline_emoji_emotions_24);
             obj3.put("postId", 3);
             arr.put(obj3);
 
             JSONObject obj4 = new JSONObject();
-            obj4.put("postImage", R.drawable.test);
+            obj4.put("image", R.drawable.test);
             obj4.put("postId", 4);
             arr.put(obj4);
 
             JSONObject obj5 = new JSONObject();
-            obj5.put("postImage", R.drawable.sampleimg);
+            obj5.put("image", R.drawable.sampleimg);
             obj5.put("postId", 5);
             arr.put(obj5);
 
             JSONObject obj6 = new JSONObject();
-            obj6.put("postImage", R.drawable.ic_favorite);
+            obj6.put("image", R.drawable.ic_favorite);
             obj6.put("postId", 6);
             arr.put(obj6);
 
             JSONObject obj7 = new JSONObject();
-            obj7.put("postImage", R.drawable.sampleimg);
+            obj7.put("image", R.drawable.sampleimg);
             obj7.put("postId", 7);
             arr.put(obj7);
 
             item.put("data", arr);
+
+            keepcnt = item.getJSONArray("data").length();
         }catch (JSONException e){
             e.printStackTrace();
         }
