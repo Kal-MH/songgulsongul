@@ -588,6 +588,13 @@
        - hprice
        - url
        - picture
+     - ccl 정보
+       - ccl_cc
+       - ccl_a
+       - ccl_nc
+       - ccl_nd
+       - ccl_sa
+         현재는 int형 5개짜리 ccl 배열이 넘어오는 것을 가정해서 구현되어 있다. 추후에 넘어오는 데이터 구조에 따라 수정 가능.
    - 응답데이터
 
      ```java
