@@ -42,7 +42,7 @@ public class UploadActivity extends AppCompatActivity {
     private FragmentTransaction ft;
 
     int frag_status;
-    boolean isQuick;
+    public boolean isQuick;
 
 
     @SuppressLint("WrongViewCast")
@@ -67,7 +67,7 @@ public class UploadActivity extends AppCompatActivity {
         requestPermissionCamera();
 
         //프레그먼트 세팅
-        fragUploadCam = new FragUploadCam();
+        fragUploadCam = new FragUploadCam(isQuick);
         fragUploadGal = new FragUploadGal();
 
         //하단 네비게이션뷰 세팅
@@ -142,10 +142,19 @@ public class UploadActivity extends AppCompatActivity {
                 if( frag_status == GALLERY){
 
                     String filePath= fragUploadGal.getPicked_path();
-                    Intent intent = new Intent(this, DetectPaperActivity.class);
-                    intent.putExtra("path", filePath);
-                    startActivity(intent);
-                    finish();
+                    if(isQuick){
+                        Intent intent = new Intent(this, UploadDetailActivity.class);
+                        intent.putExtra("path", filePath);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else{
+                        Intent intent = new Intent(this, DetectPaperActivity.class);
+                        intent.putExtra("path", filePath);
+                        startActivity(intent);
+                        finish();
+
+                    }
                 }
                 else if( frag_status == CAMERA){
                     //  Not happened!

@@ -21,6 +21,7 @@ import java.io.OutputStream;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.DetectPaperActivity;
+import smu.capstone.paper.activity.UploadDetailActivity;
 import smu.capstone.paper.layout.CameraSurfaceView;
 
 public class FragUploadCam extends Fragment {
@@ -30,6 +31,11 @@ public class FragUploadCam extends Fragment {
     private  Context context;
     CameraSurfaceView surfaceView;
     ImageView imageView;
+    boolean isQuick;
+
+    public FragUploadCam(boolean isQuick) {
+        this.isQuick = isQuick;
+    }
 
     @SuppressLint("WrongViewCast")
 
@@ -85,10 +91,19 @@ public class FragUploadCam extends Fragment {
                     os.close();
 
                     String filePath= tempFile.getAbsolutePath();
-                    Intent intent = new Intent(context, DetectPaperActivity.class);
-                    intent.putExtra("path", filePath);
-                    startActivity(intent);
-                    getActivity().finish();
+
+                    if(isQuick){
+                        Intent intent = new Intent(context, UploadDetailActivity.class);
+                        intent.putExtra("path", filePath);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                    else{
+                        Intent intent = new Intent(context, DetectPaperActivity.class);
+                        intent.putExtra("path", filePath);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
 
                 } catch (IOException e) {
                     e.printStackTrace();
