@@ -7,8 +7,14 @@ const postController_subFunc = {
         var searchKeyword = req.query.keyword;
         var offset = req.query.offset;
 
-        var sql = `select h.post_id, h.text, p.image, p.post_time, p.post_date from hash_tag as h join post as p 
-        on h.post_id = p.id and h.text like "${searchKeyword}%" order by post_date desc, post_time desc limit ${db_config.limitation} offset ${offset};`;
+        var sql;
+        if(offset == undefined){
+            sql = `select h.post_id, h.text, p.image, p.post_time, p.post_date from hash_tag as h join post as p 
+            on h.post_id = p.id and h.text like "${searchKeyword}%" order by post_date desc, post_time desc limit ${db_config.limitation * 1000};`;
+        } else {
+            sql = `select h.post_id, h.text, p.image, p.post_time, p.post_date from hash_tag as h join post as p 
+            on h.post_id = p.id and h.text like "${searchKeyword}%" and h.post_id < ${offset} order by post_date desc, post_time desc limit ${db_config.limitation * 1000};`;
+        }
         connection.query(sql, function (err, result) {
             if (err){
                 console.log(err);
@@ -16,10 +22,25 @@ const postController_subFunc = {
                     'code' : statusCode.CLIENT_ERROR
                 })
             } else {
+                var data = [];
+
+                if (result.length > 0){
+                    var post_id = result[0].post_id;
+                    for(var i = 0;i < result.length ; i++){
+                        if (i == 0 || post_id != result[i].post_id){
+                            post_id = result[i].post_id;
+                            data.push(result[i]);
+                        }
+                        if (data.length == db_config.limitation)
+                            break ;
+                    }
+                } 
+                console.log(result)
+
                 //이후에 res.json으로 수정
                 res.json({
                     'code' : statusCode.OK,
-                    'data' : result
+                    'data' : data
                 })
                 //res.render("search.ejs", {searchKeyword : searchKeyword, posts : result})
             }
@@ -29,7 +50,12 @@ const postController_subFunc = {
         var searchKeyword = req.query.keyword;
         var offset = req.query.offset;
 
-        var sql = `select id, login_id, img_profile from user where login_id like'${searchKeyword}%' limit ${db_config.limitation} offset ${offset};`;
+        var sql;
+        if (offset == undefined){
+            sql = `select id, login_id, img_profile from user where login_id like'${searchKeyword}%' limit ${db_config.limitation};`;
+        } else {
+            sql = `select id, login_id, img_profile from user where login_id like'${searchKeyword}%' and id > ${offset} limit ${db_config.limitation};`;
+        }
         connection.query(sql, function (err, result) {
             if (err){
                 console.log(err);

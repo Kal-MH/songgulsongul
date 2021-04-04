@@ -399,7 +399,7 @@
 1. 게시판 게시글 불러오기
 
    - api : "/post/community?offset=?";
-     - 게시글을 20개씩 불러오기 위해서는 이전 게시글과의 offset값이 필요
+     - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
      - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
    - method : GET
    - 전달받아야 하는 데이터
@@ -419,7 +419,7 @@
      		'user_id'
      	}
      }
-     **//data의 경우, 오류가 발생했을 때는 null(혹은 undefined)로 넘어올 수 있다.**
+     **//data의 경우, 오류가 발생했을 때는 빈배열 혹은 undefined(null)로 넘어올 수 있다.**
      ```
 
    - 예시
@@ -429,7 +429,7 @@
 2. 팔로우 게시글 불러오기
 
    - api : “/post/feeds?offset=?”
-     - offset값을 쿼리로 넘겨받는다.(게시판 게시글 참조)
+     - 게시판 게시글과 마찬가지로 이전 data의 마지막 게시글 id를 offset값으로 받는다.
    - method : GET
    - 전달받아야 하는 데이터
      - 쿼리 offset값
@@ -473,7 +473,9 @@
          - method=tag //태그 검색
          - method=id // 계정 검색
        - keyword : 검색할 키워드
-       - offset : offset값 (메인 피드 설명 참조)
+       - offset
+         - tag검색의 경우, 게시판 게시글, 피드 게시글과 마찬가지로 이전 data의 마지막 게시글 id를 offset 값으로 받는다.
+         - id검색의 경우, 이전 data의 마지막 user id를 offset값으로 받는다.
    - method : GET
    - 전달받아야 하는 데이터
      - 쿼리 method, keyword, offset값
