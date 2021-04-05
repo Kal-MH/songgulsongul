@@ -168,17 +168,16 @@ public  class JoinActivity extends AppCompatActivity {
         join_pw_check_text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                join_pw_correct_text.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().equals(join_pw_check_text.getText().toString())) {
+                if(s.toString().equals(join_pw_text.getText().toString())) {
                     join_pw_correct_text.setText("비밀번호가 일치합니다.");
                     join_pw_correct_text.setVisibility(View.VISIBLE);
                     password_check_flag = 1;
