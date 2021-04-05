@@ -32,6 +32,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.R;
+import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.data.IdCheckData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
@@ -109,14 +111,14 @@ public  class JoinActivity extends AppCompatActivity {
 
                 else {
                     // login_id로 server와 통신
-                    serviceApi.IdCheck(login_id).enqueue(new Callback<JSONObject>() {
+                    IdCheckData data = new IdCheckData(login_id);
+                    serviceApi.IdCheck(data).enqueue(new Callback<CodeResponse>() {
 
                         // 통신 성공시 호출
                         @Override
-                        public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
-                            JSONObject result = response.body();
-                            try {
-                                int resultCode = result.getInt("code");
+                        public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                            CodeResponse result = response.body();
+                                int resultCode = result.getCode();
 
                                 if (resultCode == 200) {
                                     id_check_flag = 1;
@@ -131,7 +133,7 @@ public  class JoinActivity extends AppCompatActivity {
                                             .show();
                                 }
 
-                                else {
+                                else if (resultCode == 204){
                                     id_check_flag = 0;
                                     new AlertDialog.Builder(JoinActivity.this)
                                             .setTitle("경고")
@@ -146,14 +148,23 @@ public  class JoinActivity extends AppCompatActivity {
                                     join_id_text.setText(null);
                                 }
 
-                            }catch (JSONException e){
-                                e.printStackTrace();
-                            }
+                                else{
+                                    new AlertDialog.Builder(JoinActivity.this)
+                                            .setTitle("경고")
+                                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                }
+                                            })
+                                            .show();
+                                }
                         }
 
                         // 통신 실패시 호출
                         @Override
-                        public void onFailure(Call<JSONObject> call, Throwable t) {
+                        public void onFailure(Call<CodeResponse> call, Throwable t) {
                             id_check_flag = 0;
                             Toast.makeText(JoinActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                             Log.e("아이디 중복확인 에러", t.getMessage());
