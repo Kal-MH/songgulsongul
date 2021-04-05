@@ -243,154 +243,169 @@
 ## User Router
 
 1. 프로필
-    - api: /user/profile
-    - method : POST
-    - 전달받아야 하는 데이터
-      - id
-      - status
-    - 응답 데이터
 
-        ```java
-        json = {
-        	'code', //응답코드
-        	'followerCnt',  //팔로워 수
-        	'followCnt',  //팔로우 수
-        	'postInfo', //게시글 정보 -> image, postId
-        	'profileInfo'  //프로필 정보 -> profile_image, intro, sns
-        }
-        ```
+   - api: /user/profile
+   - method : POST
+   - 전달받아야 하는 데이터
+     - id
+     - status
+   - 응답 데이터
+
+     ```java
+     json = {
+     	'code', //응답코드
+     	'followerCnt',  //팔로워 수
+     	'followCnt',  //팔로우 수
+     	'postInfo', //게시글 정보 -> image, postId
+     	'profileInfo'  //프로필 정보 -> profile_image, intro, sns
+     }
+     ```
 
 2. 팔로우 하기
-    - api: /user/follow
-    - method : POST
-    - 전달받아야 하는 데이터
-      - loginId(로그인한 사용자)
-      - userId(팔로우 대상자)
-    - 응답 데이터
 
-        ```java
-        json = {
-        	'code'
-        }
-        ```
+   - api: /user/follow
+   - method : POST
+   - 전달받아야 하는 데이터
+     - loginId(로그인한 사용자)
+     - userId(팔로우 대상자)
+   - 응답 데이터
+
+     ```java
+     json = {
+     	'code'
+     }
+     ```
 
 3. 언팔로우 하기
-    - api: /user/unfollow
-    - method : POST
-    - 전달받아야 하는 데이터
-      - loginId
-      - userId
-    - 응답 데이터
 
-        ```java
-        json = {
-        	'code'
-        }
-        ```
+   - api: /user/unfollow
+   - method : POST
+   - 전달받아야 하는 데이터
+     - loginId
+     - userId
+   - 응답 데이터
+
+     ```java
+     json = {
+     	'code'
+     }
+     ```
 
 4. 로그인한 사용자의 팔로우 리스트 받아오기
-    - api: /user/lfollow-list
-    - method : POST
-    - 전달받아야 하는 데이터
-      - id(로그인한 사용자의 id)
-    - 응답 데이터
 
-        ```java
-        json = {
-          'code',
-        	'followinfo' //팔로우 정보 -> image, userId
-        }
-        ```
+   - api: /user/lfollow-list
+   - method : POST
+   - 전달받아야 하는 데이터
+     - id(로그인한 사용자의 id)
+   - 응답 데이터
+
+     ```java
+     json = {
+       'code',
+     	'followinfo' //팔로우 정보 -> image, userId
+     }
+     ```
 
 5. 선택한 사용자의 팔로우 리스트 받아오기
-    - api: /user/follow-list
-    - method : POST
-    - 전달받아야 하는 데이터
-      - userId(선택한 사용자의 id)
-    - 응답 데이터
 
-        ```java
-        json = {
-          'code',
-        	'userfollowinfo'  //팔로우 정보 -> image, userId
-        }
-        ```
+   - api: /user/follow-list
+   - method : POST
+   - 전달받아야 하는 데이터
+     - userId(선택한 사용자의 id)
+   - 응답 데이터
+
+     ```java
+     json = {
+       'code',
+     	'userfollowinfo'  //팔로우 정보 -> image, userId
+     }
+     ```
 
 6. 팔로워 리스트 받아오기
-    - api: /user/follower-list
-    - method : POST
-    - 전달받아야 하는 데이터
-      - id
-    - 응답 데이터
 
-        ```java
-        json = {
-          'code',
-        	'followerinfo'  //팔로워 정보 -> image, userId
-        }
-        ```
+   - api: /user/follower-list
+   - method : POST
+   - 전달받아야 하는 데이터
+     - id
+   - 응답 데이터
+
+     ```java
+     json = {
+       'code',
+     	'followerinfo'  //팔로워 정보 -> image, userId
+     }
+     ```
 
 7. 보관함 기능
-    - api: /user/keep
-    - method : POST
-    - 전달받아야 하는 데이터
-      - id(로그인한 사용자)
-    - 응답 데이터
 
-        ```java
-        json = {
-          'code',
-        	'keepinfo', //보관정보 -> image, postId
-        	'keepcnt' //보관개수
-        }
-        ```
+   - api: /user/keep
+   - method : POST
+   - 전달받아야 하는 데이터
+     - id(로그인한 사용자)
+   - 응답 데이터
+
+     ```java
+     json = {
+       'code',
+     	'keepinfo', //보관정보 -> image, postId
+     	'keepcnt' //보관개수
+     }
+     ```
 
 8. 프로필 수정 – 아이디 중복 확인
-    - api: /user/profile-edit-idcheck
 
-        ```java
-        json = {
-        	'code'
-        }
-        ```
+   - api: /user/profile-edit-idcheck
+
+     ```java
+     json = {
+     	'code'
+     }
+     ```
 
 9. 프로필 수정
-    - api: /user/profile-edit
-    - method : POST
-    - 전달받아야 하는 데이터
-      - id(기존 아이디)
-      - newId(변경된 아이디)
-      - newIntro(변경된 소개글)
-      - newSNS(변경된 sns주소)
-      - profileImage
-    - 응답 데이터
 
-        ```java
-        json = {
-        	'code'
-        }
-        ```
+   - api: /user/profile-edit
+   - method : POST
+   - 전달받아야 하는 데이터
+     - id(기존 아이디)
+     - newId(변경된 아이디)
+     - newIntro(변경된 소개글)
+     - newSNS(변경된 sns주소)
+     - profileImage
+   - 응답 데이터
+
+     ```java
+     json = {
+     	'code'
+     }
+     ```
 
 10. 회원 탈퇴
+
     - api: /user/data-delete
     - method : POST
     - 전달받아야 하는 데이터
       - id(로그인한 사용자)
     - 응답 데이터
 
-        ```java
-        json = {
-        	'code'
-        }
-        ```
+      ```java
+      json = {
+      	'code'
+      }
+      ```
 
 ## Post Router
 
 1. 게시판 게시글 불러오기
 
    - api : "/post/community?offset=?";
-     - 게시글을 20개씩 불러오기 위해서는 이전 게시글과의 offset값이 필요
-     - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
+     - 처음 게시글을 불러오는 경우,
+        - /post/community
+        - 가장 최신 게시글을 20개씩 불러온다.
+     - 이후에 게시글을 계속해서 불러오는 경우
+        - /post/community?offset=?
+        - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
+        - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
    - method : GET
    - 전달받아야 하는 데이터
      - 쿼리 offset값
@@ -409,7 +424,7 @@
      		'user_id'
      	}
      }
-     **//data의 경우, 오류가 발생했을 때는 null(혹은 undefined)로 넘어올 수 있다.**
+     **//data의 경우, 오류가 발생했을 때는 빈배열 혹은 undefined(null)로 넘어올 수 있다.**
      ```
 
    - 예시
@@ -419,7 +434,13 @@
 2. 팔로우 게시글 불러오기
 
    - api : “/post/feeds?offset=?”
-     - offset값을 쿼리로 넘겨받는다.(게시판 게시글 참조)
+     - 처음 게시글을 불러오는 경우,
+        - /post/feeds
+        - 가장 최신 게시글을 20개씩 불러온다.
+     - 이후에 게시글을 계속해서 불러오는 경우
+        - /post/feeds?offset=?
+        - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
+        - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
    - method : GET
    - 전달받아야 하는 데이터
      - 쿼리 offset값
@@ -463,7 +484,13 @@
          - method=tag //태그 검색
          - method=id // 계정 검색
        - keyword : 검색할 키워드
-       - offset : offset값 (메인 피드 설명 참조)
+       - offset
+         - tag검색의 경우, 게시판 게시글, 피드 게시글과 마찬가지로 이전 data의 마지막 게시글 id를 offset 값으로 받는다.
+            - 처음 검색결과를 불러오는 경우 : /post/search?method=tag&keyword=calli
+            - 이후에 계속해서 검색결과를 불러오는 경우 : /post/search?method=tag&keyword=calli&offset=44
+         - id검색의 경우, 이전 data의 마지막 user id를 offset값으로 받는다.
+            - 처음 검색결과를 불러오는 경우 : /post/search?method=id&keyword=aaa
+            - 이후에 계속해서 검색결과를 불러오는 경우 : /post/search?method=id&keyword=aaa&offset=10
    - method : GET
    - 전달받아야 하는 데이터
      - 쿼리 method, keyword, offset값
@@ -578,6 +605,13 @@
        - hprice
        - url
        - picture
+     - ccl 정보
+       - ccl_cc
+       - ccl_a
+       - ccl_nc
+       - ccl_nd
+       - ccl_sa
+         현재는 int형 5개짜리 ccl 배열이 넘어오는 것을 가정해서 구현되어 있다. 추후에 넘어오는 데이터 구조에 따라 수정 가능.
    - 응답데이터
 
      ```java
@@ -627,7 +661,21 @@
      					// 상태코드는 ok(200), server error(500)으로 나뉜다.
      }
      ```
+8. 게시글 다운로드
 
+   - api : "/post/download/:id
+   - method : GET
+   - 전달받아야 하는 데이터
+     - post id (url param)
+   - 응답데이터
+     ```java
+     json = {
+     'code', //상태코드
+     					// 상태코드는 ok(200), server error(500)으로 나뉜다.
+     	'data' : {
+     		'img_path' : file
+     	}
+     ```
 ## Market Router
 
 1. 마켓 메인화면

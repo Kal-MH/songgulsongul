@@ -14,4 +14,5 @@ postRouter.get(routes.postDetail, postController.getPostDetail);
 postRouter.post(routes.postUpload, middleWares.multerPost, postController.postUpload);
 postRouter.post(routes.postUpdate, middleWares.multerPost, postController.postUpdate);
 postRouter.get(routes.postDelete, middleWares.onlyPrivate, postController.postDelete);
+postRouter.get(routes.postDownload, postController.postDownload);
 module.exports = postRouter;

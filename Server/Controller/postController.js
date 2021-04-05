@@ -4,6 +4,10 @@ const db_config = require("../db/db_config");
 const statusCode = require("../config/serverStatusCode");
 const serverConfig = require("../config/serverConfig");
 
+const fs = require("fs");
+const path = require("path");
+const mime = require("mime");
+
 const postController = {
     getPostDetail : function (req, res) {
         const loggedUser = res.locals.loggedUser;
@@ -105,12 +109,17 @@ const postController = {
                     'data' : result
                 })
             } else {
-                var selectPostSql = `select id from post where `;
+                var selectPostSql = `select id from post where (`;
                 for(var i = 0;i < result.length - 1;i++){
                     selectPostSql += `user_id = ${result[i].follow_target_id} or `
                 }
-                selectPostSql += `user_id = ${result[result.length - 1].follow_target_id} 
-                order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`;
+                if(offset == undefined){
+                    selectPostSql += `user_id = ${result[result.length - 1].follow_target_id} )
+                    order by post_date desc, post_time desc limit ${db_config.limitation};`;
+                } else {
+                    selectPostSql += `user_id = ${result[result.length - 1].follow_target_id} ) and id < ${offset}
+                    order by post_date desc, post_time desc limit ${db_config.limitation};`;
+                }
                 connection.query(selectPostSql, function (req, result) {
                     if (err){
                         console.log(err);
@@ -119,53 +128,60 @@ const postController = {
                             'data' : null
                         })
                     } else {
-                        var selectPostFeedSql = "";
+                        if (result.length == 0) {
+                            res.json({
+                                'code' : statusCode.OK,
+                                'data' : result
+                            })
+                        } else {
+                            var selectPostFeedSql = "";
                         
-                        for(var i = 0;i < result.length; i++){
-                            selectPostFeedSql += `select p.id, p.image, p.text, p.post_date, p.post_time, p.user_id, u.login_id, u.img_profile from post as p join user as u 
-                            on p.id = ${result[i].id} and p.user_id = u.id;`;
-                            selectPostFeedSql += `select id from comment where post_id = ${result[i].id};`;
-                            selectPostFeedSql += `select * from likes where post_id = ${result[i].id};`;
-                            selectPostFeedSql += `select * from likes where post_id = ${result[i].id} and user_id = ${loggedUser.id};`;
-                            selectPostFeedSql += `select id from keep where post_id = ${result[i].id} and user_id = ${loggedUser.id};`;
-                        }
-                        connection.query(selectPostFeedSql, function (req, result) {
-                            if (err){
-                                console.log(err);
-                                res.json({
-                                    'code' : statusCode.SERVER_ERROR,
-                                    'data' : null
-                                })
-                            } else {
-                                var data = [];
-                                for(var i = 0;i < result.length; i += 5){
-                                    var info = {
-                                        post : {
-                                            id : result[i][0].id,
-                                            image : result[i][0].image,
-                                            text : result[i][0].text,
-                                            post_time : result[i][0].post_time,
-                                            post_date : result[i][0].post_date
-                                        },
-                                        user : {
-                                            user_id : result[i][0].user_id,
-                                            login_id : result[i][0].login_id,
-                                            img_profile : result[i][0].img_profile
-                                        },
-                                        commentsNum : (result[i + 1]) ? result[i + 1].length : 0,
-                                        likeNum : (result[i + 2]) ? result[i + 2].length : 0,
-                                        likeOnset : (result[i + 3] && result[i + 3].length != 0) ? 1 : 0,
-                                        keepOnset : (result[i + 4] && result[i + 4].length != 0) ? 1 : 0
-                                    }
-                                    data.push(info);
-                                }
-                                console.log(data);
-                                res.json({
-                                    'code' : statusCode.OK,
-                                    'data' : data
-                                })
+                            for(var i = 0;i < result.length; i++){
+                                selectPostFeedSql += `select p.id, p.image, p.text, p.post_date, p.post_time, p.user_id, u.login_id, u.img_profile from post as p join user as u 
+                                on p.id = ${result[i].id} and p.user_id = u.id;`;
+                                selectPostFeedSql += `select id from comment where post_id = ${result[i].id};`;
+                                selectPostFeedSql += `select * from likes where post_id = ${result[i].id};`;
+                                selectPostFeedSql += `select * from likes where post_id = ${result[i].id} and user_id = ${loggedUser.id};`;
+                                selectPostFeedSql += `select id from keep where post_id = ${result[i].id} and user_id = ${loggedUser.id};`;
                             }
-                        })
+                            connection.query(selectPostFeedSql, function (req, result) {
+                                if (err){
+                                    console.log(err);
+                                    res.json({
+                                        'code' : statusCode.SERVER_ERROR,
+                                        'data' : null
+                                    })
+                                } else {
+                                    var data = [];
+                                    for(var i = 0;i < result.length; i += 5){
+                                        var info = {
+                                            post : {
+                                                id : result[i][0].id,
+                                                image : result[i][0].image,
+                                                text : result[i][0].text,
+                                                post_time : result[i][0].post_time,
+                                                post_date : result[i][0].post_date
+                                            },
+                                            user : {
+                                                user_id : result[i][0].user_id,
+                                                login_id : result[i][0].login_id,
+                                                img_profile : result[i][0].img_profile
+                                            },
+                                            commentsNum : (result[i + 1]) ? result[i + 1].length : 0,
+                                            likeNum : (result[i + 2]) ? result[i + 2].length : 0,
+                                            likeOnset : (result[i + 3] && result[i + 3].length != 0) ? 1 : 0,
+                                            keepOnset : (result[i + 4] && result[i + 4].length != 0) ? 1 : 0
+                                        }
+                                        data.push(info);
+                                    }
+                                    console.log(data);
+                                    res.json({
+                                        'code' : statusCode.OK,
+                                        'data' : data
+                                    })
+                                }
+                            })
+                        }
                     }
                 })
             }
@@ -176,10 +192,16 @@ const postController = {
         const user = res.locals.loggedUser;
         const offset = req.query.offset;
 
-        //20개만 받아오기
-        var sql = `select * from post order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`
+        // //20개만 받아오기
+        // var sql = `select * from post order by post_time desc, post_date desc limit ${db_config.limitation} offset ${offset};`
 
-        connection.query(sql, function (err, result) {
+        var selectPostSql;
+        if (offset == undefined)
+            selectPostSql = `select * from post order by post_date desc, post_time desc limit ${db_config.limitation};`
+        else
+            selectPostSql = `select * from post where id < ${offset} order by post_date desc, post_time desc limit ${db_config.limitation};`
+
+        connection.query(selectPostSql, function (err, result) {
             if (err){
                 console.log(err);
                 res.json({
@@ -244,8 +266,9 @@ const postController = {
 
         var postImages = req.file.path;
         
-        var insertPostSql = `insert into post (image, text, post_time, post_date, user_id) values (?, '${text}', curtime(), curdate(), ${loggedUser.id});`;
-        var insertPostParams = [postImages];
+        var insertPostSql = `insert into post (image, text, post_time, post_date, user_id, ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa) 
+        values (?, '${text}', curtime(), curdate(), ${loggedUser.id}, ?);`;
+        var insertPostParams = [postImages, req.body.ccl];
         connection.query(insertPostSql, insertPostParams, function (err, result) {
             if (err){
                 console.log(err);
@@ -253,7 +276,7 @@ const postController = {
                     'code' : statusCode.CLIENT_ERROR
                 })
             } else {
-                var postId = result[0].insertId;
+                var postId = result.insertId;
                 
                 //hashTag
                 var insertHashSql = "";
@@ -301,6 +324,7 @@ const postController = {
 
         //안드로이드에서 넘어오는 값에 따라서 수정이 필요한 부분
         var image = (file) ? req.file.path : req.body.img_post_link; 
+
         var updatePostSql = `update post set image=?, text=?, post_time=curtime(), post_date=curdate(), user_id=? where id=${postId};`;
         var updatePostParams = [image, req.body.text, loggedUser.id];
 
@@ -327,9 +351,7 @@ const postController = {
                         res.json({
                             'code' : statusCode.CLIENT_ERROR
                         })
-                    } else {
-                        //itemTag - 현재는 단수로 되어 있지만, 이후에 액티비티랑 연동할 때, 복수로 바꿔야 한다.
-                        
+                    } else {                      
                         var deleteItemTagSql = `delete from item_tag where post_id=${postId};`;
                         var insertItemSql = "";
                         var insertItemParams = [];
@@ -367,19 +389,95 @@ const postController = {
         const postId = req.params.id;
         const loggedUser = res.locals.loggedUser;
 
-        var deletePostSql = `delete from post where id = ${postId} and user_id = ${loggedUser.id};`;
-        connection.query(deletePostSql, function (err, result) {
+        var selectPostSql = `select image from post where id = ${postId} and user_id = ${loggedUser.id};`;
+        connection.query(selectPostSql, function (err, result) {
+            if (err){
+                console.log(err);
+                res.json({
+                    'code' : statusCode.SERVER_ERROR,
+                })
+            } else {
+                var fileImage = result[0].image;
+                var filePath = `./${fileImage}`;
+                var deletePostSql = `delete from post where image = ?;`;
+                connection.query(deletePostSql, fileImage, function (err, result) {
+                    if (err){
+                        console.log(err);
+                        res.json({
+                            'code' : statusCode.SERVER_ERROR
+                        })
+                    } else {
+                        if (fs.existsSync(filePath)){
+                            fs.unlink(filePath, function (err) {
+                                if (err){
+                                    console.log(err);
+                                    res.json({
+                                        'code' : statusCode.SERVER_ERROR,
+                                    })
+                                } else {
+                                    res.redirect("/post/community?offset=0")
+                                    // res.json({
+                                    //     'code' : statusCode.OK
+                                    // })
+                                }               
+                            })
+                        } else {
+                            res.json({
+                                'code' : statusCode.OK,
+                            })
+                        }
+                    }
+                })
+            }
+        })
+    },
+    postDownload : function (req, res) {
+        var postId = req.params.id;
+
+        var sql = `select image from post where id = ${postId};`;
+        connection.query(sql, function (err, result) {
             if (err){
                 console.log(err);
                 res.json({
                     'code' : statusCode.SERVER_ERROR
                 })
             } else {
-                res.redirect("/post/community?offset=0")
-                // res.json({
-                //     'code' : statusCode.OK
-                // })
+                //s3로 확장하게 되면 경로설정 수정할 필요성 있음
+                var file = `${result[0].image}`;
+                console.log(file);
+                
+                res.json({
+                    'code' : statusCode.OK,
+                    'data' : {
+                        'imgPath' : file
+                    }
+                })
             }
+
+            //이미지 확장자를 체크하기 위한 다운로드 코드
+            // try{
+            //     if (fs.existsSync(file)){
+            //         var fileName = path.basename(file);
+            //         var mimeType = mime.getType(file);
+
+            //         console.log(fileName);
+            //         console.log(mimeType);
+
+            //         console.log(fileName);
+            //         res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
+            //         res.setHeader('Content-type', mimeType);
+
+            //         var fileStream = fs.createReadStream(file);
+            //         fileStream.pipe(res);
+            //     } else {
+            //         res.send('no file exists');
+            //         return ;
+            //     }
+            // } catch(e){
+            //     console.log(e);
+            //     res.send('error occurs');
+            //     return ;
+            // }
         })
     }
 }
