@@ -1,10 +1,12 @@
 package smu.capstone.paper.activity;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,7 +38,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private RadioGroup sns_radio;
     private RadioButton profile_sns_radio_yes, profile_sns_radio_no;
     private EditText profile_new_sns, profile_newid, profile_new_intro;
-    private Button profile_img_chnage;
+    private Button profile_img_chnage, profile_check;
     private ImageView profile_set_img;
     private JSONObject profile_item;
     private static final int REQUEST_CODE = 0;
@@ -62,6 +64,7 @@ public class EditProfileActivity extends AppCompatActivity {
         profile_newid = findViewById(R.id.profile_newid);
         profile_sns_radio_yes = findViewById(R.id.profile_sns_radio_yes);
         profile_sns_radio_no = findViewById(R.id.profile_sns_radio_no);
+        profile_check = findViewById(R.id.profile_check);
 
         setProfileData();
 
@@ -77,8 +80,36 @@ public class EditProfileActivity extends AppCompatActivity {
 
         profile_newid.setText(LoginSharedPreference.getUserName(this));
 
-        //여기다 중복확인 코드 짜야지
+        profile_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // newId로 server와 통신
+                String newId = profile_newid.getText().toString();
 
+                //if resultCode == 200
+                new AlertDialog.Builder(EditProfileActivity.this)
+                        .setMessage("사용할 수 있는 아이디입니다.")
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
+
+                //else
+                /*new AlertDialog.Builder(EditProfileActivity.this)
+                        .setTitle("경고")
+                        .setMessage("이미 사용중인 아이디입니다."+"\n"+"다시 입력해 주세요.")
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();*/
+            }
+        });
 
         sns_radio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

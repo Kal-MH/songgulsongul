@@ -56,7 +56,7 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
     public void setItem(@NonNull ItemTagAdapter.ViewHolder holder, JSONObject item, int position){
         // 받아온 데이터로 셋팅
         try {
-            Glide.with(context).load(item.getInt("Img")).into(holder.pic);
+            Glide.with(context).load(item.getInt("picture")).into(holder.pic);
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -76,7 +76,7 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         try {
             final JSONObject item = dataList.getJSONObject(position);
-            holder.pic.setImageBitmap((Bitmap) item.get("Image"));
+            holder.pic.setImageBitmap((Bitmap) item.get("picture"));
         } catch (JSONException e){
             e.printStackTrace();
 

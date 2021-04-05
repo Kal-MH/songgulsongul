@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import smu.capstone.paper.activity.AddItemtagActivity;
 import smu.capstone.paper.activity.ItemDetailActivity;
 import smu.capstone.paper.activity.PostEditActivity;
 import smu.capstone.paper.item.ItemtagItem;
@@ -39,6 +40,8 @@ public class AddItemTagAdapter extends ItemTagAdapter {
             public void onClick(View v) {
                 if(position == 0){
                     Log.d("TAG","add action");
+                    Intent intent = new Intent(context, AddItemtagActivity.class);
+                    context.startActivity(intent);
                 }
             }
         });

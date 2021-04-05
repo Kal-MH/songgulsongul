@@ -94,7 +94,7 @@ public class PostEditActivity extends AppCompatActivity {
             hashtag_list = hashtag_obj.getJSONArray("data");
             hashtagText = findViewById(R.id.post_edit_hashtag);
             for(int i = 0; i < hashtag_list.length(); i++){
-                hashtagText.append(hashtag_list.getJSONObject(i).getString("content"));
+                hashtagText.append(hashtag_list.getJSONObject(i).getString("text"));
                 if(i < hashtag_list.length() - 1)
                     hashtagText.append(" ");
             }

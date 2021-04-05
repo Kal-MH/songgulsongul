@@ -64,12 +64,12 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             else{
                 holder.text.setText(text); // 글 내용(15자 이하)
             }
-            holder.timestamp.setText(item.getString("timeStamp")); // 게시 시간
-            holder.comment_counter.setText(item.getInt("comCnt") + ""); // 댓글 수
+            holder.timestamp.setText(item.getString("post_time")); // 게시 시간
+            holder.comment_counter.setText(item.getInt("commentsNum") + ""); // 댓글 수
             holder.favorite_counter.setText(iconInfo.get(position).getFavoriteCounter() + ""); // 좋아요 수
-            holder.user_id.setText(item.getString("userId")); // 게시자 id
-            Glide.with(context).load(item.getInt("profileImg")).into(holder.profile_image); // 게시자 프로필 사진
-            Glide.with(context).load(item.getInt("postImg")).into(holder.picture); // 게시물 사진
+            holder.user_id.setText(item.getString("user_id")); // 게시자 id
+            Glide.with(context).load(item.getInt("img_profile")).into(holder.profile_image); // 게시자 프로필 사진
+            Glide.with(context).load(item.getInt("image")).into(holder.picture); // 게시물 사진
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -88,8 +88,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
        try {
            final JSONObject item = dataList.getJSONObject(position);
-           iconInfo.add(new HomeFeedItem(item.getInt("like"), item.getInt("likeCnt"), item.getInt("keep")));
-           final int postId = item.getInt("postId");
+           iconInfo.add(new HomeFeedItem(item.getInt("likeOnset"), item.getInt("likeNum"), item.getInt("keepOnset")));
+           final int postId = item.getInt("post_id");
            setItem(holder, item, position);
 
            if(iconInfo.get(position).getLike() == 0){
@@ -113,7 +113,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                    Intent intent = new Intent(context, PostActivity.class);
 
                    // 게시글 id 넘겨주기
-                   intent.putExtra("postId", postId);
+                   intent.putExtra("post_id", postId);
 
                    context.startActivity(intent);
                }
@@ -125,7 +125,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                    Intent intent = new Intent(context, PostActivity.class);
 
                    // 게시글 id 넘겨주기
-                   intent.putExtra("postId", postId);
+                   intent.putExtra("post_id", postId);
 
                    context.startActivity(intent);
                }
@@ -204,8 +204,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 Intent intent = new Intent(context, PostActivity.class);
                 // 게시글 id 전달
                 try {
-                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("postId");
-                    intent.putExtra("postId", postId);
+                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("post_id");
+                    intent.putExtra("post_id", postId);
                 } catch (JSONException e){
                     e.printStackTrace();
                 }

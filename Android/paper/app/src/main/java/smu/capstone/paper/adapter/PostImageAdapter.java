@@ -53,7 +53,7 @@ public class PostImageAdapter extends BaseAdapter {
     // 받아온 데이터로 게시글 내용 셋팅
     public void setItem(ImageView imageView, JSONObject item){
         try {
-            Glide.with(mContext).load(item.getInt("postImage")).into(imageView); // 게시물 사진
+            Glide.with(mContext).load(item.getInt("image")).into(imageView); // 게시물 사진
         } catch (JSONException e){
             e.printStackTrace();
         }

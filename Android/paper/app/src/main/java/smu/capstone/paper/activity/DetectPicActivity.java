@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -33,6 +34,9 @@ public class DetectPicActivity extends AppCompatActivity {
     Toolbar toolbar;
     CropImageView cropImageView;
     Button okbtn;
+
+    long first_time = 0;
+    long second_time = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,19 +109,36 @@ public class DetectPicActivity extends AppCompatActivity {
         return true;
     }
 
+
+
+    @Override
+    public void onBackPressed() {
+        second_time = System.currentTimeMillis();
+        if(second_time-first_time <2000){
+            super.onBackPressed();
+            finish();
+        }
+        else{
+            Toast.makeText(this,"한번 더 누르면 편집을 종료합니다", Toast.LENGTH_SHORT).show();
+            first_time = System.currentTimeMillis();
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
 
             case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
-                finish();
+                // 알림팝업
+
                 return true;
             }
 
-            case R.id.toolbar_skip:// 건너뛰기
-
-
+            case R.id.toolbar_skip://  바로 다음 화면으로 건너뛰기
+                Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
+                intent.putExtra("path", filePath);
+                startActivity(intent);
+                finish();
                 return true;
 
         }

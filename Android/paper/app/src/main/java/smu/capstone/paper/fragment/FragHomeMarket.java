@@ -79,11 +79,11 @@ public  class FragHomeMarket extends Fragment {
                 Intent intent = new Intent(getContext(), StickerDetailActivity.class);
                 // 임시로 내용 전달 --> 실제로는 stickerId만 전달
                 try {
-                    intent.putExtra("stickerId",  obj.getJSONArray("data").getJSONObject(position).getInt("stickerId"));
-                    intent.putExtra("image", obj.getJSONArray("data").getJSONObject(position).getInt("stickerImage"));
+                    intent.putExtra("stickerId",  obj.getJSONArray("data").getJSONObject(position).getInt("id"));
+                    intent.putExtra("image", obj.getJSONArray("data").getJSONObject(position).getInt("image"));
                     intent.putExtra("name", obj.getJSONArray("data").getJSONObject(position).getString("name"));
                     intent.putExtra("price", obj.getJSONArray("data").getJSONObject(position).getInt("price"));
-                    intent.putExtra("comment", obj.getJSONArray("data").getJSONObject(position).getString("comment"));
+                    intent.putExtra("comment", obj.getJSONArray("data").getJSONObject(position).getString("text"));
                     startActivity(intent);
                 } catch (JSONException e){
                     e.printStackTrace();
@@ -105,67 +105,67 @@ public  class FragHomeMarket extends Fragment {
         //임시 데이터 저장
         try{
             JSONObject obj = new JSONObject();
-            obj.put("stickerImage", R.drawable.sampleimg);
+            obj.put("image", R.drawable.sampleimg);
             obj.put("name", "sample1");
             obj.put("price", "20");
-            obj.put("stickerId", 1);
-            obj.put("comment", "스티커 샘플 1 입니다~");
+            obj.put("id", 1);
+            obj.put("text", "스티커 샘플 1 입니다~");
             arr.put(obj);
 
             JSONObject obj2 = new JSONObject();
-            obj2.put("stickerImage", R.drawable.test);
+            obj2.put("image", R.drawable.test);
             obj2.put("name", "sample2");
             obj2.put("price", "10");
-            obj2.put("stickerId", 2);
-            obj2.put("comment", "스티커 샘플 2 입니다~");
+            obj2.put("id", 2);
+            obj2.put("text", "스티커 샘플 2 입니다~");
             arr.put(obj2);
 
             JSONObject obj3 = new JSONObject();
-            obj3.put("stickerImage", R.drawable.ic_favorite);
+            obj3.put("image", R.drawable.ic_favorite);
             obj3.put("name", "sample3");
             obj3.put("price", "50");
-            obj3.put("stickerId", 3);
-            obj3.put("comment", "스티커 샘플 3 입니다~");
+            obj3.put("id", 3);
+            obj3.put("text", "스티커 샘플 3 입니다~");
             arr.put(obj3);
 
             JSONObject obj4 = new JSONObject();
-            obj4.put("stickerImage", R.drawable.ic_favorite_border);
+            obj4.put("image", R.drawable.ic_favorite_border);
             obj4.put("name", "sample4");
             obj4.put("price", "40");
-            obj4.put("stickerId", 4);
-            obj4.put("comment", "스티커 샘플 4 입니다~");
+            obj4.put("id", 4);
+            obj4.put("text", "스티커 샘플 4 입니다~");
             arr.put(obj4);
 
             JSONObject obj5 = new JSONObject();
-            obj5.put("stickerImage", R.drawable.sampleimg);
+            obj5.put("image", R.drawable.sampleimg);
             obj5.put("name", "sample5");
             obj5.put("price", "20");
-            obj5.put("stickerId", 5);
-            obj5.put("comment", "스티커 샘플 5 입니다~");
+            obj5.put("id", 5);
+            obj5.put("text", "스티커 샘플 5 입니다~");
             arr.put(obj5);
 
             JSONObject obj6 = new JSONObject();
-            obj6.put("stickerImage", R.drawable.test);
+            obj6.put("image", R.drawable.test);
             obj6.put("name", "sample6");
             obj6.put("price", "10");
-            obj6.put("stickerId", 6);
-            obj6.put("comment", "스티커 샘플 6 입니다~");
+            obj6.put("id", 6);
+            obj6.put("text", "스티커 샘플 6 입니다~");
             arr.put(obj6);
 
             JSONObject obj7 = new JSONObject();
-            obj7.put("stickerImage", R.drawable.ic_favorite);
+            obj7.put("image", R.drawable.ic_favorite);
             obj7.put("name", "sample7");
             obj7.put("price", "50");
-            obj7.put("stickerId", 7);
-            obj7.put("comment", "스티커 샘플 7 입니다~");
+            obj7.put("id", 7);
+            obj7.put("text", "스티커 샘플 7 입니다~");
             arr.put(obj7);
 
             JSONObject obj8 = new JSONObject();
-            obj8.put("stickerImage", R.drawable.ic_favorite_border);
+            obj8.put("image", R.drawable.ic_favorite_border);
             obj8.put("name", "sample8");
             obj8.put("price", "40");
-            obj8.put("stickerId", 8);
-            obj8.put("comment", "스티커 샘플 8 입니다~");
+            obj8.put("id", 8);
+            obj8.put("text", "스티커 샘플 8 입니다~");
             arr.put(obj8);
 
             item.put("data", arr);

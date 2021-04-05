@@ -110,8 +110,8 @@ public class FragHomeComu extends Fragment {
         try{
             for(int i = 0; i < 10; i++){
                 JSONObject obj = new JSONObject();
-                obj.put("postImage", R.drawable.sampleimg);
-                obj.put("postId", pid);
+                obj.put("image", R.drawable.sampleimg);
+                obj.put("post_id", pid);
                 pid++;
                 arr.put(obj);
             }

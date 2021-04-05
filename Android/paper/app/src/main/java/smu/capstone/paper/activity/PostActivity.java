@@ -165,7 +165,7 @@ public class PostActivity extends AppCompatActivity {
                                 Intent intent = new Intent(PostActivity.this, PostEditActivity.class);
                                 // postEditActivity로 기존 data 전달
                                 try {
-                                    intent.putExtra("postImg", post_obj.getInt("postImg"));
+                                    intent.putExtra("postImg", post_obj.getInt("image"));
                                     intent.putExtra("text", post_obj.getString("text"));
                                     intent.putExtra("hashtag", hashtag_obj.toString());
                                     intent.putExtra("itemtag", itemtag_obj.toString());
@@ -182,7 +182,7 @@ public class PostActivity extends AppCompatActivity {
                             case R.id.post_save:
                                 Intent intent2 = new Intent(PostActivity.this, SaveImageActivity.class);
                                 try {
-                                    intent2.putExtra("postImg", post_obj.getInt("postImg"));
+                                    intent2.putExtra("postImg", post_obj.getInt("image"));
                                 } catch (JSONException e){
                                     e.printStackTrace();
                                 }
@@ -294,15 +294,15 @@ public class PostActivity extends AppCompatActivity {
         // 임시 데이터 저장
         try{
             JSONObject obj = new JSONObject();
-            obj.put("userId", "wonhee");
-            obj.put("timeStamp", "21-02-07");
-            obj.put("likeCnt", 499);
-            obj.put("comCnt", 204);
+            obj.put("login_id", "wonhee");
+            obj.put("post_time", "21-02-07");
+            obj.put("likeNum", 499);
+            obj.put("commentsNum", 204);
             obj.put("text", "hi everyone");
-            obj.put("profileImg",R.drawable.ic_baseline_emoji_emotions_24);
-            obj.put("postImg",R.drawable.sampleimg);
-            obj.put("like", 0);
-            obj.put("keep",0);
+            obj.put("img_profile",R.drawable.ic_baseline_emoji_emotions_24);
+            obj.put("image",R.drawable.sampleimg);
+            obj.put("likeOnset", 0);
+            obj.put("keepOnset",0);
             obj.put("ccl1",false);
             obj.put("ccl2",true);
             obj.put("ccl3",false);
@@ -326,7 +326,7 @@ public class PostActivity extends AppCompatActivity {
         try{
             for(int i = 0; i < 5; i++){
                 JSONObject obj = new JSONObject();
-                obj.put("content", "#캘리그라피");
+                obj.put("text", "#캘리그라피");
                 arr.put(obj);
             }
             post_hashtag_item.put("data", arr);
@@ -346,7 +346,7 @@ public class PostActivity extends AppCompatActivity {
         try{
             for(int i = 0; i < 5; i++){
                 JSONObject obj = new JSONObject();
-                obj.put("Image", drawable2Bitmap( getDrawable(R.drawable.sampleimg)) );
+                obj.put("picture", drawable2Bitmap( getDrawable(R.drawable.sampleimg)) );
                 arr.put(obj);
             }
             post_itemtag_item.put("data", arr);
@@ -364,18 +364,18 @@ public class PostActivity extends AppCompatActivity {
         // 임시 데이터 저장
         try{
             JSONObject obj = new JSONObject();
-            obj.put("userId", "wonhee");
-            obj.put("cmt", "와 정말 멋져요");
+            obj.put("login_id", "wonhee");
+            obj.put("text", "와 정말 멋져요");
             arr.put(obj);
 
             JSONObject obj2 = new JSONObject();
-            obj2.put("userId", "YUJIN");
-            obj2.put("cmt", "좋아요 누르고 갑니다~");
+            obj2.put("login_id", "YUJIN");
+            obj2.put("text", "좋아요 누르고 갑니다~");
             arr.put(obj2);
 
             JSONObject obj3 = new JSONObject();
-            obj2.put("userId", "YUJIN");
-            obj2.put("cmt", "안녕하세요");
+            obj2.put("login_id", "YUJIN");
+            obj2.put("text", "안녕하세요");
             arr.put(obj2);
 
             post_cmt_item.put("data", arr);
@@ -388,18 +388,18 @@ public class PostActivity extends AppCompatActivity {
     public void setPostData(){
         JSONObject data = getPostData();
         try {
-            post_user_id.setText(data.getString("userId"));
-            post_like_cnt.setText(data.getInt("likeCnt" )+"");
-            post_cmt_cnt.setText(data.getInt("comCnt")+"");
-            post_date.setText(data.getString("timeStamp"));
+            post_user_id.setText(data.getString("login_id"));
+            post_like_cnt.setText(data.getInt("likeNum" )+"");
+            post_cmt_cnt.setText(data.getInt("commentsNum")+"");
+            post_date.setText(data.getString("post_time"));
             post_text.setText(data.getString("text"));
             ccl1=data.getBoolean("ccl1");
             ccl2=data.getBoolean("ccl2");
             ccl3=data.getBoolean("ccl3");
             ccl4=data.getBoolean("ccl4");
             ccl5=data.getBoolean("ccl5");
-            Glide.with(this).load(data.getInt("profileImg")).into(post_profile);
-            Glide.with(this).load(data.getInt("postImg")).into(post_pic);
+            Glide.with(this).load(data.getInt("img_profile")).into(post_profile);
+            Glide.with(this).load(data.getInt("image")).into(post_pic);
         } catch (JSONException e) {
             e.printStackTrace();
         }

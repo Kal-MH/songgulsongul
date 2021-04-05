@@ -3,14 +3,14 @@ package smu.capstone.paper.data;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginData {
-    @SerializedName("userEmail")
-    String userEmail;
+    @SerializedName("login_id")
+    String login_id;
 
-    @SerializedName("userPwd")
-    String userPwd;
+    @SerializedName("password")
+    String password;
 
-    public LoginData(String userEmail, String userPwd) {
-        this.userEmail = userEmail;
-        this.userPwd = userPwd;
+    public LoginData(String login_id, String password) {
+        this.login_id = login_id;
+        this.password = password;
     }
 }
