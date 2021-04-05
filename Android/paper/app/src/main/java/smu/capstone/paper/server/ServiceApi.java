@@ -6,6 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import smu.capstone.paper.data.JoinData;
+import smu.capstone.paper.data.LoginData;
 
 public interface ServiceApi {
     // 아이디 중복체크
@@ -20,4 +21,7 @@ public interface ServiceApi {
     @POST("/join")
     Call<JSONObject> Join(@Body JoinData data);
 
+    // 로그인
+    @POST("/login")
+    Call<JSONObject> Login(@Body LoginData data);
 }
