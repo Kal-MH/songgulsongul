@@ -399,8 +399,13 @@
 1. 게시판 게시글 불러오기
 
    - api : "/post/community?offset=?";
-     - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
-     - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
+     - 처음 게시글을 불러오는 경우,
+        - /post/community
+        - 가장 최신 게시글을 20개씩 불러온다.
+     - 이후에 게시글을 계속해서 불러오는 경우
+        - /post/community?offset=?
+        - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
+        - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
    - method : GET
    - 전달받아야 하는 데이터
      - 쿼리 offset값
@@ -429,7 +434,13 @@
 2. 팔로우 게시글 불러오기
 
    - api : “/post/feeds?offset=?”
-     - 게시판 게시글과 마찬가지로 이전 data의 마지막 게시글 id를 offset값으로 받는다.
+     - 처음 게시글을 불러오는 경우,
+        - /post/feeds
+        - 가장 최신 게시글을 20개씩 불러온다.
+     - 이후에 게시글을 계속해서 불러오는 경우
+        - /post/feeds?offset=?
+        - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
+        - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
    - method : GET
    - 전달받아야 하는 데이터
      - 쿼리 offset값
@@ -475,7 +486,11 @@
        - keyword : 검색할 키워드
        - offset
          - tag검색의 경우, 게시판 게시글, 피드 게시글과 마찬가지로 이전 data의 마지막 게시글 id를 offset 값으로 받는다.
+            - 처음 검색결과를 불러오는 경우 : /post/search?method=tag&keyword=calli
+            - 이후에 계속해서 검색결과를 불러오는 경우 : /post/search?method=tag&keyword=calli&offset=44
          - id검색의 경우, 이전 data의 마지막 user id를 offset값으로 받는다.
+            - 처음 검색결과를 불러오는 경우 : /post/search?method=id&keyword=aaa
+            - 이후에 계속해서 검색결과를 불러오는 경우 : /post/search?method=id&keyword=aaa&offset=10
    - method : GET
    - 전달받아야 하는 데이터
      - 쿼리 method, keyword, offset값
