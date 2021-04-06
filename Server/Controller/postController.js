@@ -10,7 +10,7 @@ const mime = require("mime");
 
 const postController = {
     getPostDetail : function (req, res) {
-        const loggedUser = res.locals.loggedUser;
+        const loggedUser = req.query.userid;
         const postId = req.params.id;
 
         // 게시글과 관련된 정보를 가져오는 쿼리문
@@ -29,8 +29,8 @@ const postController = {
                 var postData = result;
 
                 if (loggedUser){
-                    var meLikesSql = `select * from likes where post_id=${postId} and user_id=${(loggedUser) ? loggedUser.id : -1};`;
-                    var meKeepsSql = `select * from keep where post_id=${postId} and user_id=${(loggedUser) ? loggedUser.id : -1};`;
+                    var meLikesSql = `select * from likes where post_id=${postId} and user_id=${loggedUser};`;
+                    var meKeepsSql = `select * from keep where post_id=${postId} and user_id=${loggedUser};`;
                     connection.query(meLikesSql + meKeepsSql, function (err, result) {
                         if (err){
                             console.log(err);
@@ -92,10 +92,10 @@ const postController = {
         })
     },
     getFeeds : function (req, res) {
-        const loggedUser = res.locals.loggedUser;
+        const loggedUser = req.query.userid;
         const offset = req.query.offset;
 
-        const selectFollowSql = `select follow_target_id from follow where follower_id = ${loggedUser.id};`;
+        const selectFollowSql = `select follow_target_id from follow where follower_id = ${loggedUser};`;
         connection.query(selectFollowSql, function (err, result) {
             if (err){
                 console.log(err);
@@ -141,8 +141,8 @@ const postController = {
                                 on p.id = ${result[i].id} and p.user_id = u.id;`;
                                 selectPostFeedSql += `select id from comment where post_id = ${result[i].id};`;
                                 selectPostFeedSql += `select * from likes where post_id = ${result[i].id};`;
-                                selectPostFeedSql += `select * from likes where post_id = ${result[i].id} and user_id = ${loggedUser.id};`;
-                                selectPostFeedSql += `select id from keep where post_id = ${result[i].id} and user_id = ${loggedUser.id};`;
+                                selectPostFeedSql += `select * from likes where post_id = ${result[i].id} and user_id = ${loggedUser};`;
+                                selectPostFeedSql += `select id from keep where post_id = ${result[i].id} and user_id = ${loggedUser};`;
                             }
                             connection.query(selectPostFeedSql, function (req, result) {
                                 if (err){
@@ -189,7 +189,7 @@ const postController = {
     },
     getCommunity : function (req, res) {
         const appName = res.locals.appName;
-        const user = res.locals.loggedUser;
+        //const user = req.query.userid;
         const offset = req.query.offset;
 
         // //20개만 받아오기
@@ -210,11 +210,11 @@ const postController = {
                 })
             } else {
                 //이후에 res.json()으로 바꿔야 한다.
-                res.render("mainfeed.ejs", {appName : appName, user : user, posts : result});
-                // res.json({
-                //     'code' : statusCode.OK,
-                //     'data' : result
-                // })
+                //res.render("mainfeed.ejs", {appName : appName, user : user, posts : result});
+                res.json({
+                    'code' : statusCode.OK,
+                    'data' : result
+                })
             }
         })
 
@@ -253,7 +253,7 @@ const postController = {
                       '' ]
                 }                           
          */
-        var loggedUser = res.locals.loggedUser;
+        var loggedUser = req.query.userid;
         var text = req.body.text;
         var hashTagsAndItemTags = req.body.hash_tag;
         var items = {
@@ -267,7 +267,7 @@ const postController = {
         var postImages = req.file.path;
         
         var insertPostSql = `insert into post (image, text, post_time, post_date, user_id, ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa) 
-        values (?, '${text}', curtime(), curdate(), ${loggedUser.id}, ?);`;
+        values (?, '${text}', curtime(), curdate(), ${loggedUser}, ?);`;
         var insertPostParams = [postImages, req.body.ccl];
         connection.query(insertPostSql, insertPostParams, function (err, result) {
             if (err){
@@ -316,8 +316,8 @@ const postController = {
         })
     },
     postUpdate : function (req, res) {
-        var postId = req.params.id;
-        var loggedUser = res.locals.loggedUser;
+        var postId = req.query.postid;
+        var loggedUser = req.query.userid;
         var file = req.file;
 
         console.log(req.body);
@@ -326,7 +326,7 @@ const postController = {
         var image = (file) ? req.file.path : req.body.img_post_link; 
 
         var updatePostSql = `update post set image=?, text=?, post_time=curtime(), post_date=curdate(), user_id=? where id=${postId};`;
-        var updatePostParams = [image, req.body.text, loggedUser.id];
+        var updatePostParams = [image, req.body.text, loggedUser];
 
         connection.query(updatePostSql, updatePostParams, function (err, result) {
             if (err){
@@ -386,10 +386,10 @@ const postController = {
         })
     },
     postDelete : function (req, res) {
-        const postId = req.params.id;
-        const loggedUser = res.locals.loggedUser;
+        const postId = req.query.postid;
+        const loggedUser = req.query.userid;
 
-        var selectPostSql = `select image from post where id = ${postId} and user_id = ${loggedUser.id};`;
+        var selectPostSql = `select image from post where id = ${postId} and user_id = ${loggedUser};`;
         connection.query(selectPostSql, function (err, result) {
             if (err){
                 console.log(err);
@@ -432,7 +432,7 @@ const postController = {
         })
     },
     postDownload : function (req, res) {
-        var postId = req.params.id;
+        var postId = req.query.postid;
 
         var sql = `select image from post where id = ${postId};`;
         connection.query(sql, function (err, result) {

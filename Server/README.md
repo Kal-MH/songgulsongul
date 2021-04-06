@@ -101,14 +101,13 @@
 
 3. 좋아요
 
-   - api : “/api/like/:id”
+   - api : “/api/like?userid=?&postid=?”
 
-     - api 예시 : /api/like/17, /api/like/44, …
-     - url param으로 postId를 건네받는다.
-       - 필요하면, query로 대체 가능
+     - api 예시 : /api/like?userid=4&postid=17, /api/like?userid=4&postid=44, …
      - method : GET
      - 전달받아야 하는 데이터
-       - post id (url param)
+       - user id (url query)
+       - post id (url query)
      - 응답데이터
 
        ```java
@@ -124,13 +123,12 @@
 
 4. 보관하기
 
-   - api : “/api/keep/:id”
-     - api 예시 : /api/keep/17, /api/keep/44, …
-     - url param으로 postId를 건네받는다.
-       - 필요하면, query로 대체 가능
+   - api : “/api/keep?userid=?&postid=?”
+     - api 예시 : /api/like?userid=4&postid=17, /api/like?userid=4&postid=44, …
    - method : GET
    - 전달받아야 하는 데이터
-     - post id (url param)
+     - user id (url query)
+     - post id (url query)
    - 응답데이터
 
      ```java
@@ -146,10 +144,11 @@
 
 5. 댓글쓰기
 
-   - api : "/api/comment/:postid"
+   - api : "/api/comment?userid=?&postid=?"
    - method : GET
    - 전달받아야 하는 데이터
-     - post id(url param)
+     - user id (url query)
+     - post id (url query)
    - 응답데이터
 
      ```java
@@ -163,10 +162,10 @@
 
 6. 댓글 지우기
 
-   - api : "/api/comment/:postid/:commentid"
+   - api : "/api/comment/delete?postid=?&commentid=?"
    - method : GET
    - 전달받아야 하는 데이터
-     - post id(url param), comment id(url param)
+     - post id(url query), comment id(url query)
    - 응답데이터
 
      ```java
@@ -400,12 +399,12 @@
 
    - api : "/post/community?offset=?";
      - 처음 게시글을 불러오는 경우,
-        - /post/community
-        - 가장 최신 게시글을 20개씩 불러온다.
+       - /post/community
+       - 가장 최신 게시글을 20개씩 불러온다.
      - 이후에 게시글을 계속해서 불러오는 경우
-        - /post/community?offset=?
-        - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
-        - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
+       - /post/community?offset=?
+       - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
+       - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
    - method : GET
    - 전달받아야 하는 데이터
      - 쿼리 offset값
@@ -433,14 +432,14 @@
 
 2. 팔로우 게시글 불러오기
 
-   - api : “/post/feeds?offset=?”
+   - api : “/post/feeds?userid=?&offset=?”
      - 처음 게시글을 불러오는 경우,
-        - /post/feeds
-        - 가장 최신 게시글을 20개씩 불러온다.
+       - /post/feeds?userid=2
+       - 가장 최신 게시글을 20개씩 불러온다.
      - 이후에 게시글을 계속해서 불러오는 경우
-        - /post/feeds?offset=?
-        - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
-        - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
+       - /post/feeds?userid=2&offset=44
+       - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
+       - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
    - method : GET
    - 전달받아야 하는 데이터
      - 쿼리 offset값
@@ -486,11 +485,11 @@
        - keyword : 검색할 키워드
        - offset
          - tag검색의 경우, 게시판 게시글, 피드 게시글과 마찬가지로 이전 data의 마지막 게시글 id를 offset 값으로 받는다.
-            - 처음 검색결과를 불러오는 경우 : /post/search?method=tag&keyword=calli
-            - 이후에 계속해서 검색결과를 불러오는 경우 : /post/search?method=tag&keyword=calli&offset=44
+           - 처음 검색결과를 불러오는 경우 : /post/search?method=tag&keyword=calli
+           - 이후에 계속해서 검색결과를 불러오는 경우 : /post/search?method=tag&keyword=calli&offset=44
          - id검색의 경우, 이전 data의 마지막 user id를 offset값으로 받는다.
-            - 처음 검색결과를 불러오는 경우 : /post/search?method=id&keyword=aaa
-            - 이후에 계속해서 검색결과를 불러오는 경우 : /post/search?method=id&keyword=aaa&offset=10
+           - 처음 검색결과를 불러오는 경우 : /post/search?method=id&keyword=aaa
+           - 이후에 계속해서 검색결과를 불러오는 경우 : /post/search?method=id&keyword=aaa&offset=10
    - method : GET
    - 전달받아야 하는 데이터
      - 쿼리 method, keyword, offset값
@@ -547,10 +546,11 @@
 
 4. **특정 게시글 불러오기**
 
-   - api : “/post/:id”
+   - api : “/post/:id?userid=?”
    - method : GET
    - 전달받아야 하는 데이터
      - post id (url param)
+     - user id (url query)
    - 응답데이터
 
      ```java
@@ -590,10 +590,10 @@
 
 5. 게시글 업로드
 
-   - api : “/post/upload”
+   - api : “/post/upload?userid=?”
    - method : POST
    - 전달받아야 하는 데이터
-     - post id (url param)
+     - user id (url query)
      - 게시글 정보
        - image
        - text
@@ -623,10 +623,11 @@
 
 6. 게시글 업데이트
 
-   - api : “/post/update/:id”
+   - api : “/post/update?userid=?&postid=?”
    - method : POST
    - 전달받아야 하는 데이터
-     - post id (url param)
+     - user id (url query)
+     - post id (url query)
      - 게시글 정보
        - image
        - text
@@ -649,10 +650,11 @@
 
 7. 게시글 삭제
 
-   - api : “/post/delete/:id”
+   - api : “/post/delete?userid=?&postid=?”
    - method : GET
    - 전달받아야 하는 데이터
-     - post id (url param)
+     - user id (url query)
+     - post id (url query)
    - 응답데이터
 
      ```java
@@ -661,12 +663,13 @@
      					// 상태코드는 ok(200), server error(500)으로 나뉜다.
      }
      ```
+
 8. 게시글 다운로드
 
-   - api : "/post/download/:id
+   - api : "/post/download?postid=?"
    - method : GET
    - 전달받아야 하는 데이터
-     - post id (url param)
+     - post id (url query)
    - 응답데이터
      ```java
      json = {
@@ -676,6 +679,7 @@
      		'img_path' : file
      	}
      ```
+
 ## Market Router
 
 1. 마켓 메인화면
@@ -689,7 +693,7 @@
       'marketItem' // 마켓 sticker 정보 --> id, image, name, price
      }
      ```
-     
+
 2. 마켓 스티커 상세보기
 
    - api : “/market/detail/:stickerId/:userId”
@@ -707,7 +711,7 @@
       'userPoint' // 사용자 포인트
      }
      ```
-  
+
 3. 마켓 스티커 구매
 
    - api : “/market/buy/:stickerId/:userId”
@@ -722,7 +726,7 @@
      	'code'
      }
      ```
-     
+
 4. 마켓 스티커 검색시(기본)
 
    - api : “/market/sticker-search?searchWord=?”
@@ -737,7 +741,7 @@
       'marketItem' // 검색한 sticker --> id, image, name, price
      }
      ```
-     
+
 5. 마켓 스티커 검색(낮은 가격순)
 
    - api : “/market/search-price?searchWord=?”
@@ -752,7 +756,7 @@
       'marketItem' // 검색한 sticker --> id, image, name, price
      }
      ```
-     
+
 6. 마켓 스티커 검색(최신순)
 
    - api : “/market/search-date?searchWord=?”
