@@ -8,11 +8,11 @@ import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +22,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import org.json.JSONArray;
+import com.google.gson.JsonObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,6 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.R;
 import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.data.EmailAuthData;
 import smu.capstone.paper.data.IdCheckData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.server.RetrofitClient;
@@ -41,6 +43,8 @@ import smu.capstone.paper.server.ServiceApi;
 public  class JoinActivity extends AppCompatActivity {
     // ServiceApi 객체 생성
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+
+
 
     TextView join_timer, join_id_text, join_pw_correct_text;
     CountDownTimer countDownTimer;
@@ -51,6 +55,9 @@ public  class JoinActivity extends AppCompatActivity {
     String auth;
     final int MILLISINFUTURE = 180 * 1000;
     final int COUNT_DOWN_INTERVAL = 1000;
+    final int RESULT_OK = 200;
+    final int RESULT_CLIENT_ERR= 204;
+    final int RESULT_SERVER_ERR = 500;
     int id_check_flag = 0; // 아이디 중복 확인 여부 체크
     int email_check_flag = 0; // 이메일 중복 확인 여부 체크
     int password_check_flag = 0; // 비밀번호 체크
@@ -120,7 +127,7 @@ public  class JoinActivity extends AppCompatActivity {
                             CodeResponse result = response.body();
                                 int resultCode = result.getCode();
 
-                                if (resultCode == 200) {
+                                if (resultCode == RESULT_OK) {
                                     id_check_flag = 1;
                                     new AlertDialog.Builder(JoinActivity.this)
                                             .setMessage("사용할 수 있는 아이디입니다.")
@@ -133,7 +140,7 @@ public  class JoinActivity extends AppCompatActivity {
                                             .show();
                                 }
 
-                                else if (resultCode == 204){
+                                else if (resultCode == RESULT_CLIENT_ERR){
                                     id_check_flag = 0;
                                     new AlertDialog.Builder(JoinActivity.this)
                                             .setTitle("경고")
@@ -148,7 +155,8 @@ public  class JoinActivity extends AppCompatActivity {
                                     join_id_text.setText(null);
                                 }
 
-                                else{
+                                else if (resultCode == RESULT_SERVER_ERR){
+                                    id_check_flag = 0;
                                     new AlertDialog.Builder(JoinActivity.this)
                                             .setTitle("경고")
                                             .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
@@ -159,6 +167,11 @@ public  class JoinActivity extends AppCompatActivity {
                                                 }
                                             })
                                             .show();
+                                }
+
+                                else{
+                                    id_check_flag = 0;
+                                    Toast.makeText(JoinActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                                 }
                         }
 
@@ -205,7 +218,8 @@ public  class JoinActivity extends AppCompatActivity {
         join_send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pattern email_pattern = Pattern.compile("^[a-zA-X0-9]@[a-zA-Z0-9].[a-zA-Z0-9]");
+                //Pattern email_pattern = Pattern.compile("^[a-zA-X0-9]@[a-zA-Z0-9].[a-zA-Z0-9]");
+                Pattern email_pattern = Patterns.EMAIL_ADDRESS;
                 String email = join_email_text.getText().toString();
                 email = email.trim();
 
@@ -226,6 +240,7 @@ public  class JoinActivity extends AppCompatActivity {
 
                 // 입력한 이메일이 형식에서 벗어날 경우 --> 서버 통신x
                 else if(!email_pattern.matcher(email).matches()){
+                    email_check_flag = 0;
                     new AlertDialog.Builder(JoinActivity.this)
                             .setTitle("경고")
                             .setMessage("올바른 이메일 형식이 아닙니다.")
@@ -240,29 +255,39 @@ public  class JoinActivity extends AppCompatActivity {
 
                 else {
                     // 입력한 email로 server통신
-                    serviceApi.EmailAuth(email).enqueue(new Callback<JSONObject>() {
+                    EmailAuthData data = new EmailAuthData(email);
+                    serviceApi.EmailAuth(data).enqueue(new Callback<JsonObject>() {
                         @Override
-                        public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
-                            JSONObject result = response.body();
-                            try {
-                                auth = result.getString("authNumber");
-                                int resultCode = result.getInt("code");
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                                JsonObject result = response.body();
+                                auth = result.get("authNumber").getAsString();
+                                int resultCode = result.get("code").getAsInt();
+                                System.out.println(resultCode);
 
-                                if(resultCode == 200) {
+                                if(resultCode == RESULT_OK) {
                                     join_check_key.setEnabled(true); // 인증번호 확인 버튼 활성화
                                     join_timer.setVisibility(View.VISIBLE); // 인증 제한시간 표시
                                     countDownTimer(); // 타이머 작동
                                 }
+                                else if(resultCode == RESULT_SERVER_ERR){
+                                    new AlertDialog.Builder(JoinActivity.this)
+                                            .setTitle("경고")
+                                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                }
+                                            })
+                                            .show();
+                                }
                                 else{
                                     Toast.makeText(JoinActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                                 }
-                            } catch (JSONException e){
-                                e.printStackTrace();
-                            }
                         }
 
                         @Override
-                        public void onFailure(Call<JSONObject> call, Throwable t) {
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
                             email_check_flag = 0;
                             Toast.makeText(JoinActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                             Log.e("이메일 인증 에러", t.getMessage());
@@ -322,6 +347,9 @@ public  class JoinActivity extends AppCompatActivity {
                                 .show();
                         join_email_text.setText(null);
                         join_.setText(null);
+                        join_check_key.setEnabled(false);
+                        join_timer.setVisibility(View.INVISIBLE);
+                        auth = null;
                     }
                 }
             }
@@ -366,7 +394,7 @@ public  class JoinActivity extends AppCompatActivity {
                 int sns_url_num = sns_url.getBytes().length;
 
                 // 미입력한 값이 있을 경우 --> 서버 통신x
-                if(email_num <= 0 || password_num <= 0 || login_id_num <= 0){
+                if(email_num <= 0 || password_num <= 0 || login_id_num <= 0 || sns_url_num <= 0){
                     new AlertDialog.Builder(JoinActivity.this)
                             .setTitle("경고")
                             .setMessage("항목을 모두 입력해주세요.")
@@ -424,13 +452,13 @@ public  class JoinActivity extends AppCompatActivity {
                 else {
                     // joindata로 server와 통신
                     JoinData data = new JoinData(email, password, login_id, sns_url);
-                    serviceApi.Join(data).enqueue(new Callback<JSONObject>() {
+                    serviceApi.Join(data).enqueue(new Callback<CodeResponse>() {
                         @Override
-                        public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
-                            JSONObject result = response.body();
+                        public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                             try {
-                                int resultCode = result.getInt("code");
-                                if (resultCode == 200) {
+                                CodeResponse result = response.body();
+                                int resultCode = result.getCode();
+                                if (resultCode == RESULT_OK) {
                                     new AlertDialog.Builder(JoinActivity.this)
                                             .setMessage("회원가입 완료!")
                                             .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -442,7 +470,7 @@ public  class JoinActivity extends AppCompatActivity {
                                                 }
                                             })
                                             .show();
-                                } else {
+                                } else if (resultCode == RESULT_CLIENT_ERR) {
                                     new AlertDialog.Builder(JoinActivity.this)
                                             .setMessage("회원가입 실패" + "\n" + "다시 시도해주세요.")
                                             .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -455,14 +483,25 @@ public  class JoinActivity extends AppCompatActivity {
                                                 }
                                             })
                                             .show();
+                                } else {
+                                    Toast.makeText(JoinActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            } catch (NullPointerException e){
+                                new AlertDialog.Builder(JoinActivity.this)
+                                        .setTitle("경고")
+                                        .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .show();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<JSONObject> call, Throwable t) {
+                        public void onFailure(Call<CodeResponse> call, Throwable t) {
                             Toast.makeText(JoinActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                             Log.e("회원가입 에러", t.getMessage());
                             t.printStackTrace(); // 에러 발생 원인 단계별로 출력
@@ -492,18 +531,6 @@ public  class JoinActivity extends AppCompatActivity {
                 join_check_key.setEnabled(false); // 인증번호 확인 버튼 비활성화
             }
         }.start();
-    }
-
-    public JSONObject getAuthData(String email){
-        final JSONObject item = new JSONObject();
-
-        //임시 데이터 저장
-        try{
-            item.put("authNumber", "123456");
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return item;
     }
 
     @Override
