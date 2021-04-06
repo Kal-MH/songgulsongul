@@ -7,17 +7,19 @@ const connection = require("../db/db");
 const smtpTransport = require("../config/email");
 const crypto = require('crypto');
 const statusCode = require("../config/serverStatusCode");
+const serverConfig = require("../config/serverConfig");
 
  var homeController = {
      //회원가입
+     //안드로이드에서 항목체크를 함으로, 서버에서 따로 데이터 유무 체크 핸들링 부분은 추가하지 않았다.
      homeJoinPost : function (req, res) {
         var email = req.body.email;
         var password = req.body.password;
         var loginId = req.body.login_id;
         var snsUrl = req.body.sns_url;
-        var imgProfile = req.file.path;
+        var imgProfile = serverConfig.defaultUserProfile;
 
-        console.log(req.body)
+        
         //비밀번호 암호화
         crypto.randomBytes(64, function (err, buf) {
           crypto.pbkdf2(password, buf.toString('base64'), 100, 64, 'sha512', function (err, key) {
