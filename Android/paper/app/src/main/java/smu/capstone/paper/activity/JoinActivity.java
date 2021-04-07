@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
@@ -44,8 +45,6 @@ public  class JoinActivity extends AppCompatActivity {
     // ServiceApi 객체 생성
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
 
-
-
     TextView join_timer, join_id_text, join_pw_correct_text;
     CountDownTimer countDownTimer;
     Button join_send_btn, join_check_key, join_check_id, join_btn;
@@ -61,6 +60,7 @@ public  class JoinActivity extends AppCompatActivity {
     int id_check_flag = 0; // 아이디 중복 확인 여부 체크
     int email_check_flag = 0; // 이메일 중복 확인 여부 체크
     int password_check_flag = 0; // 비밀번호 체크
+    int sns_check_flag = 0; // sns계정 유 무 체크
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,6 @@ public  class JoinActivity extends AppCompatActivity {
         join_check_key.setEnabled(false);
         join_timer.setVisibility(View.INVISIBLE); // 인증 제한시간 숨기기
         join_pw_correct_text.setVisibility(View.INVISIBLE);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.join_toolbar);
         setSupportActionBar(toolbar);
@@ -364,11 +363,13 @@ public  class JoinActivity extends AppCompatActivity {
                     join_sns_text.setClickable(false);
                     join_sns_text.setFocusable(false);
                     join_sns_text.setText(null);
+                    sns_check_flag = 0;
                 }
                 // sns 유 선택 -> 입력창 활성화
                 else{
                     join_sns_text.setFocusableInTouchMode(true);
                     join_sns_text.setFocusable(true);
+                    sns_check_flag = 1;
                 }
             }
         });
@@ -381,6 +382,7 @@ public  class JoinActivity extends AppCompatActivity {
                 String password = join_pw_text.getText().toString();
                 String login_id = join_id_text.getText().toString();
                 String sns_url = join_sns_text.getText().toString();
+                join_sns_text.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
                 // 입력값 공백 제거
                 email = email.trim();
@@ -394,7 +396,7 @@ public  class JoinActivity extends AppCompatActivity {
                 int sns_url_num = sns_url.getBytes().length;
 
                 // 미입력한 값이 있을 경우 --> 서버 통신x
-                if(email_num <= 0 || password_num <= 0 || login_id_num <= 0 || sns_url_num <= 0){
+                if(email_num <= 0 || password_num <= 0 || login_id_num <= 0){
                     new AlertDialog.Builder(JoinActivity.this)
                             .setTitle("경고")
                             .setMessage("항목을 모두 입력해주세요.")
@@ -405,6 +407,20 @@ public  class JoinActivity extends AppCompatActivity {
                                 }
                             })
                             .show();
+                }
+
+                // sns계정 유 선택 --> 값 입력x 경우 --> 서버 통신x
+                if(sns_check_flag == 1 && sns_url_num <= 0 ){
+                        new AlertDialog.Builder(JoinActivity.this)
+                                .setTitle("경고")
+                                .setMessage("sns계정 입력을 완료해주세요.")
+                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                })
+                                .show();
                 }
 
                 // 아이디 중복확인 완료x --> 서버 통신x
