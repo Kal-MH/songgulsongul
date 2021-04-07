@@ -26,7 +26,7 @@ const serverConfig = require("../config/serverConfig");
             var hashedPassword = key.toString('base64');
             var salt = buf.toString('base64');
             // 삽입을 수행하는 sql문.
-            var sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, point) VALUES (?, ?, ?, ?, ?, ?, 0)';
+            var sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, point) VALUES (?, ?, ?, ?, ?, ?, 1000)';
             var params = [email, loginId, hashedPassword, salt, snsUrl, imgProfile];
             
             connection.query(sql, params, function (err, result) {
