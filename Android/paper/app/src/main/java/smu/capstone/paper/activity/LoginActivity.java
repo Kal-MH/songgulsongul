@@ -22,6 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
+import smu.capstone.paper.data.CodeResponse;
 import smu.capstone.paper.data.LoginData;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
@@ -34,6 +35,10 @@ public class LoginActivity extends AppCompatActivity {
     Button login_go_find;
     Button login_btn;
     EditText login_username, login_pw;
+
+    final int RESULT_OK = 200;
+    final int RESULT_CLIENT_ERR= 204;
+    final int RESULT_SERVER_ERR = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,22 +107,21 @@ public class LoginActivity extends AppCompatActivity {
                 else {
                     // login_id, password로 서버와 통신
                     LoginData data = new LoginData(login_id, passsword);
-                    serviceApi.Login(data).enqueue(new Callback<JSONObject>() {
+                    serviceApi.Login(data).enqueue(new Callback<CodeResponse>() {
                         @Override
-                        public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
-                            JSONObject result = response.body();
-                            try{
-                                int resultCode = result.getInt("code");
+                        public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                            CodeResponse result = response.body();
+                                int resultCode = result.getCode();
 
                                 // 로그인 성공시 --> 로그인 기록 저장, home으로 전환
-                                if(resultCode == 200){
+                                if(resultCode == RESULT_OK){
                                     LoginSharedPreference.setUserName(LoginActivity.this, login_id);
                                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }
 
-                                else{
+                                else if(resultCode == RESULT_CLIENT_ERR){
                                     new AlertDialog.Builder(LoginActivity.this)
                                             .setMessage("아이디, 또는 패스워드가 잘못 입력되었습니다.")
                                             .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -130,13 +134,13 @@ public class LoginActivity extends AppCompatActivity {
                                     login_username.setText(null);
                                     login_pw.setText(null);
                                 }
-                            }catch (JSONException e){
-                                e.printStackTrace();
-                            }
+                                else{
+                                    Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                }
                         }
 
                         @Override
-                        public void onFailure(Call<JSONObject> call, Throwable t) {
+                        public void onFailure(Call<CodeResponse> call, Throwable t) {
                             Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                             Log.e("로그인 에러", t.getMessage());
                             t.printStackTrace(); // 에러 발생 원인 단계별로 출력
