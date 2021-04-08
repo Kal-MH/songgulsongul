@@ -78,7 +78,8 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         toolbar = findViewById(R.id.detect_paper_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
+        actionBar.setTitle("Step 1");
+        //actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
 
         //헬프버튼 세팅

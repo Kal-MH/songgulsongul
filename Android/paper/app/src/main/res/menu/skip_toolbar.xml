@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/toolbar_before"
+        android:title="이전단계"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/toolbar_skip"
         android:title="건너뛰기"
         app:showAsAction="ifRoom" />

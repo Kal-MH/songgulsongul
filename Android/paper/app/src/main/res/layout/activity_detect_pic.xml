@@ -32,10 +32,40 @@
         android:background="@color/purpleGray">
 
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:srcCompat="@drawable/ic_baseline_dot"
+                tools:ignore="VectorDrawableCompat" />
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                app:srcCompat="@drawable/ic_baseline_dot"
+                app:tint="#FD5340F8"
+                tools:ignore="VectorDrawableCompat" />
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:srcCompat="@drawable/ic_baseline_dot"
+                tools:ignore="VectorDrawableCompat" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
             android:gravity="center"
