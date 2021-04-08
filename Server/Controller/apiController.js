@@ -195,6 +195,30 @@ const apiController = {
             // })
         })
     },
+    apiPointDaily : function (req, res) {
+        var userId = req.query.id;
+        
+        console.log(updateUserPointDaily);
+        if (userId == undefined){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        } else {
+            var updateUserPointDaily = `update user set point = point + 100 where id = ${userId};`;
+            connection.query(updateUserPointDaily, function (err, result) {
+                if (err){
+                    console.log(err);
+                    res.json({
+                        'code' : statusCode.SERVER_ERROR
+                    })
+                } else {
+                    res.json({
+                        'code' : statusCode.OK
+                    })
+                }
+            })
+        }
+    },
     //itemTag naver api 사용하기
     sendNaverAPI : async function (req, res) {
         const itemName = encodeURI(req.query.item);

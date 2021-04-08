@@ -11,7 +11,6 @@ const serverConfig = require("../config/serverConfig");
 
  var homeController = {
      //회원가입
-     //안드로이드에서 항목체크를 함으로, 서버에서 따로 데이터 유무 체크 핸들링 부분은 추가하지 않았다.
      homeJoinPost : function (req, res) {
         var email = req.body.email;
         var password = req.body.password;
@@ -19,43 +18,90 @@ const serverConfig = require("../config/serverConfig");
         var snsUrl = req.body.sns_url;
         var imgProfile = serverConfig.defaultUserProfile;
 
-        
-        //비밀번호 암호화
-        crypto.randomBytes(64, function (err, buf) {
-          crypto.pbkdf2(password, buf.toString('base64'), 100, 64, 'sha512', function (err, key) {
-            var hashedPassword = key.toString('base64');
-            var salt = buf.toString('base64');
-            // 삽입을 수행하는 sql문.
-            var sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, point) VALUES (?, ?, ?, ?, ?, ?, 1000)';
-            var params = [email, loginId, hashedPassword, salt, snsUrl, imgProfile];
-            
-            connection.query(sql, params, function (err, result) {
-                var resultCode = statusCode.CLIENT_ERROR;
-             
-                if (err) {
-                    console.log(err);
-                } else {
-                    resultCode = statusCode.OK; //ok
-                }
-                console.log(result);
-        
-                res.json({
-                    'code': resultCode,
-                });
-            });
+        if (email == undefined || password == undefined || loginId == undefined){
+          res.json({
+            'code' : statusCode.CLIENT_ERROR
           })
-        })
+        } else {
+          //비밀번호 암호화
+          crypto.randomBytes(64, function (err, buf) {
+            if (err){
+              console.log(err);
+              res.json({
+                'code' : statusCode.SERVER_ERROR
+              })
+            }
+            crypto.pbkdf2(password, buf.toString('base64'), 100, 64, 'sha512', function (err, key) {
+              if (err){
+                console.log(err);
+                res.json({
+                  'code' : statusCode.SERVER_ERROR
+                })
+              }
+              var hashedPassword = key.toString('base64');
+              var salt = buf.toString('base64');
+              // 삽입을 수행하는 sql문.
+              var sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, point) VALUES (?, ?, ?, ?, ?, ?, 1000)';
+              var params = [email, loginId, hashedPassword, salt, snsUrl, imgProfile];
+              
+              connection.query(sql, params, function (err, result) {
+                  var resultCode = statusCode.SERVER_ERROR;
+               
+                  if (err) {
+                      console.log(err);
+                  } else {
+                      resultCode = statusCode.OK; //ok
+                  }
+                  console.log(result);
+          
+                  res.json({
+                      'code': resultCode,
+                  });
+              });
+            })
+          })
+        }
     },
     //로그인
     homeLoginPost :  function (req, res) {
-      var resultCode = statusCode.CLIENT_ERROR;
+      var loginId = req.body.login_id;
+      var password = req.body.password;
       
-      if (req.user){
-          resultCode = statusCode.OK;
-      }
+      var sql = "select * from user where login_id = ?";
 
-      res.json({
-          'code' : resultCode,
+      if (loginId == undefined || password == undefined){
+        res.json({
+          'code' : statusCode.CLIENT_ERROR
+        })
+      }
+      
+      connection.query(sql, loginId, function (err, result) {
+        console.log('login')
+        if(err){
+          console.log(err);
+          res.json({
+            'code' : statusCode.SERVER_ERROR,
+          })
+        }else{
+          if(result.length === 0){
+            res.json({
+              'code' : statusCode.CLIENT_ERROR,
+            })
+          } else {
+            crypto.pbkdf2(password, result[0].salt, 100, 64, 'sha512', function (err, key) {
+              if (key.toString('base64') !== result[0].password){
+                res.json({
+                  'code' : statusCode.CLIENT_ERROR,
+                })
+              } else {
+                res.json({
+                  'code' : statusCode.OK,
+                  'id' : result[0].id
+                })
+              }
+            })
+          } 
+        }
       })
     },
     //아이디찾기

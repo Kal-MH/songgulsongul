@@ -54,6 +54,8 @@ const API_POST_KEEP = "/keep";
 const API_POST_COMMENT_INSERT = "/comment";
 const API_POST_COMMENT_DELETE = "/comment/delete";
 
+const API_POINT_DAILY = "/point/daily";
+
 //img tag api temporary
 const API_NAVER_ITEM_TAG = "/naver/item-tag";
 const API_NAVER_ITEM_TAG_CALLBACK = "/naver/item-tag/callback";
@@ -108,6 +110,7 @@ const routes = {
     apiPostKeep : API_POST_KEEP,
     apiPostCommentInsert : API_POST_COMMENT_INSERT,
     apiPostCommentDelete : API_POST_COMMENT_DELETE,
+    apiPointDaily : API_POINT_DAILY,
     apiNaverItemtag : API_NAVER_ITEM_TAG,
     apiNaverItemtagCallback : API_NAVER_ITEM_TAG_CALLBACK,
     me : ME,
