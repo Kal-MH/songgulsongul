@@ -174,6 +174,20 @@
      }
      ```
 
+7. 출석 포인트 반영하기
+
+   - api : "/api/point/daily?id=?"
+   - method : GET
+   - 전달받아야 하는 데이터
+     - user id(url query)
+   - 응답데이터
+
+     ```java
+     json = {
+     	'code' //200, 204, 500
+     }
+     ```
+
 ## Home Controller
 
 1. 회원가입
@@ -206,9 +220,12 @@
 
      ```java
      json = {
-     	'code' : 200 or 204(error)
+     	'code' : 200 or 204(error),
+       'id' : userid
      }
      ```
+  - 고려사항
+    - id의 경우, 로그인 성공(200) 시에만 값이 반환된다.
 
 3. 아이디 찾기
 

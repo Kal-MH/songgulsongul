@@ -6,33 +6,14 @@
  */
 
 var express = require('express');
-const passport = require('passport');
 const routes = require('../routes');
 
 const homeController = require('../Controller/homeController');
-const middleWares = require("../middlewares");
 
 var homeRouter = express.Router();
 
 homeRouter.post(routes.join, homeController.homeJoinPost);
-homeRouter.post(routes.login, middleWares.onlyPublic, function(req, res, next) {
-    passport.authenticate("local_login", function(err, user) {
-        console.log("passport authenticate")
-        if (err){
-            console.log(err);
-        }
-
-        if (user){
-            req.login(user, function (err) {
-                if (err){
-                    console.log(err);
-                }
-            })
-            console.log("passport", req.user);
-        }
-        return next();
-    })(req, res, next);
-}, homeController.homeLoginPost);
+homeRouter.post(routes.login, homeController.homeLoginPost);
 homeRouter.post(routes.findId, homeController.findId)
 homeRouter.post(routes.findPassword, homeController.findPassword);
 

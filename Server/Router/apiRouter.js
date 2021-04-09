@@ -7,7 +7,6 @@
 
 const express = require('express');
 const apiController = require('../Controller/apiController');
-const middleWares = require('../middlewares');
 const routes = require('../routes');
 
  var apiRouter = express.Router();
@@ -16,11 +15,13 @@ const routes = require('../routes');
  apiRouter.post(routes.apiEmailAuth, apiController.sendEmail);
  apiRouter.post(routes.apiEmailAuthNumber, apiController.checkEmailAuthNumber);
 
- apiRouter.get(routes.apiPostLike, middleWares.onlyPrivate, apiController.setPostLike);
- apiRouter.get(routes.apiPostKeep, middleWares.onlyPrivate, apiController.setPostKeep);
+ apiRouter.get(routes.apiPostLike, apiController.setPostLike);
+ apiRouter.get(routes.apiPostKeep, apiController.setPostKeep);
  
  apiRouter.post(routes.apiPostCommentInsert,apiController.insertPostComment);
  apiRouter.get(routes.apiPostCommentDelete, apiController.deletePostComment);
+
+ apiRouter.get(routes.apiPointDaily, apiController.apiPointDaily);
 
  //임시
  apiRouter.get(routes.apiNaverItemtag, apiController.sendNaverAPI);
