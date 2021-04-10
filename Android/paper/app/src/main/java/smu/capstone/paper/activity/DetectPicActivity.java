@@ -51,7 +51,8 @@ public class DetectPicActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.detect_pic_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
+        actionBar.setTitle("Step 2");
+        // actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
 
 

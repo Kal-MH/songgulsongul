@@ -4,14 +4,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,7 +29,6 @@ import java.io.InputStream;
 
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
-import smu.capstone.paper.fragment.FragFindId;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -78,7 +75,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        profile_newid.setText(LoginSharedPreference.getUserName(this));
+        profile_newid.setText(LoginSharedPreference.getUserId(this));
 
         profile_check.setOnClickListener(new View.OnClickListener() {
             @Override

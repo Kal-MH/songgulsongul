@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 final String login_id = login_username.getText().toString();
                 String passsword = login_pw.getText().toString();
                 login_id.trim();
@@ -87,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }
                             })
-                            .show();
+
                 }
 
                 // 입력한 비밀번호가 공백값일 경우 --> 서버 통신 x
@@ -115,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 // 로그인 성공시 --> 로그인 기록 저장, home으로 전환
                                 if(resultCode == RESULT_OK){
-                                    LoginSharedPreference.setUserName(LoginActivity.this, login_id);
+                                    LoginSharedPreference.setUserId(LoginActivity.this, login_id);
                                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -147,25 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
 
-                    //if (true) { //로그인 성공시
-
-                    //    if (login_username.getText().toString().length() == 0)
-                    //        LoginSharedPreference.setUserName(LoginActivity.this, "administer");
-                    //    else
-                    //        LoginSharedPreference.setUserName(LoginActivity.this, login_username.getText().toString());
-
-
-                        //로그인 기록 저장
-                        //LoginSharedPreference.setUserName(LoginActivity.this, login_username.getText().toString());
-                    //} else { //로그인 실패
-
-                        // 로그인 실패 알림
-                    }
-
-                //일단 바로 홈화면으로 전환
-                /*Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                startActivity(intent);
-                finish();*/
+           
 
             }
         });

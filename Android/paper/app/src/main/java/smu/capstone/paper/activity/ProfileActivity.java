@@ -17,13 +17,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +30,6 @@ import org.json.JSONObject;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.PostImageAdapter;
-import smu.capstone.paper.item.PostItem;
 
 
 public class ProfileActivity extends AppCompatActivity {
@@ -80,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // 아이디 세팅
         if(Status == MY)
-            actionBar.setTitle(LoginSharedPreference.getUserName(this));
+            actionBar.setTitle(LoginSharedPreference.getUserId(this));
         else
             actionBar.setTitle(intent.getStringExtra("userid"));
 
@@ -267,7 +264,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             case R.id.profile_logout:
                 // LogoutAction
-                LoginSharedPreference.clearUserName(ProfileActivity.this);
+                LoginSharedPreference.clearUserId(ProfileActivity.this);
                 Intent intent3 = new Intent(ProfileActivity.this, LoginActivity.class);
                 intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent3);
