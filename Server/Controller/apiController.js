@@ -85,11 +85,11 @@ const apiController = {
     },
     //좋아요 api
     setPostLike : function (req, res) {
-        const postId = req.params.id;
+        const postId = req.query.postid;
 
         //일단은 사용자가 로그인되었다는 가정하에, 클라이언트에서 거른다는 가정하에 진행
-        const loggedUser = res.locals.loggedUser;
-        const apiLikeCheckSql = `select * from likes where post_id=${postId} and user_id=${loggedUser.id};`;
+        const loggedUser = req.query.userid;
+        const apiLikeCheckSql = `select * from likes where post_id=${postId} and user_id=${loggedUser};`;
 
         connection.query(apiLikeCheckSql, function (err, result) {
             if (err){
@@ -101,10 +101,10 @@ const apiController = {
                 var apiLikeSql = "";
                 if (result.length == 0){
                     //사용자가 좋아요를 누른 상황
-                    apiLikeSql = `insert into likes (post_id, user_id) values (${postId}, ${loggedUser.id});`;    
+                    apiLikeSql = `insert into likes (post_id, user_id) values (${postId}, ${loggedUser});`;    
                 } else {
                     //사용자가 좋아요 취소를 누른 상황
-                    apiLikeSql = `delete from likes where post_id=${postId} and user_id=${loggedUser.id};`;
+                    apiLikeSql = `delete from likes where post_id=${postId} and user_id=${loggedUser};`;
                 }
                 connection.query(apiLikeSql, function (err, result) {
                     var code = statusCode.OK;
@@ -122,11 +122,11 @@ const apiController = {
         
     },
     setPostKeep : function (req, res) {
-        const postId = req.params.id;
+        const postId = req.query.postid;
 
         //일단은 사용자가 로그인되었다는 가정하에, 클라이언트에서 거른다는 가정하에 진행
-        const loggedUser = res.locals.loggedUser;
-        const apiKeepCheckSql = `select * from keep where post_id=${postId} and user_id=${loggedUser.id};`;
+        const loggedUser = res.query.userid;
+        const apiKeepCheckSql = `select * from keep where post_id=${postId} and user_id=${loggedUser};`;
 
         connection.query(apiKeepCheckSql, function (err, result) {
             if (err){
@@ -138,10 +138,10 @@ const apiController = {
                 var apiKeepSql = "";
                 if (result.length == 0){
                     //사용자가 보관하기를 누른 상황
-                    apiKeepSql = `insert into keep (post_id, user_id) values (${postId}, ${loggedUser.id});`;
+                    apiKeepSql = `insert into keep (post_id, user_id) values (${postId}, ${loggedUser});`;
                 } else {
                     //사용자가 보관하기 취소를 누른 상황
-                    apiKeepSql = `delete from keep where post_id=${postId} and user_id=${loggedUser.id};`;
+                    apiKeepSql = `delete from keep where post_id=${postId} and user_id=${loggedUser};`;
                 }
                 connection.query(apiKeepSql, function (err, result) {
                     var code = statusCode.OK;
@@ -159,8 +159,8 @@ const apiController = {
         
     },
     insertPostComment : function (req, res) {
-        var postId = req.params.postid;
-        var userId = res.locals.loggedUser.id;
+        var postId = req.query.postid;
+        var userId = req.query.userid;
         var text = req.body.comment; //공백으로 오는 것을 어디서 걸러줄 것인가.
 
         var commentInsertSql = `insert into comment(user_id, post_id, text, c_time, c_date) values(?, ?, ?, curtime(), curdate());`
@@ -178,8 +178,8 @@ const apiController = {
         })
     },
     deletePostComment : function (req, res) {
-        var postId = req.params.postid;
-        var commentId = req.params.commentid;
+        var postId = req.query.postid;
+        var commentId = req.query.commentid;
 
         var commentDeleteSql = `delete from comment where id=? and post_id=?;`
         var commentParams = [commentId, postId];
@@ -194,6 +194,30 @@ const apiController = {
             //     'code' : code
             // })
         })
+    },
+    apiPointDaily : function (req, res) {
+        var userId = req.query.id;
+        
+        console.log(updateUserPointDaily);
+        if (userId == undefined){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        } else {
+            var updateUserPointDaily = `update user set point = point + 100 where id = ${userId};`;
+            connection.query(updateUserPointDaily, function (err, result) {
+                if (err){
+                    console.log(err);
+                    res.json({
+                        'code' : statusCode.SERVER_ERROR
+                    })
+                } else {
+                    res.json({
+                        'code' : statusCode.OK
+                    })
+                }
+            })
+        }
     },
     //itemTag naver api 사용하기
     sendNaverAPI : async function (req, res) {

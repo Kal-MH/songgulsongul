@@ -40,29 +40,29 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 //sesssion & passport
-app.use(expressSession({
-    secret: '1234DSFs@adf1234!@#$asd',
-    resave: false,
-    saveUninitialized: true,
-    store: new MySQLStore({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-        port : process.env.DB_PORT
-    })
-}))
-app.use(passport.initialize());
-app.use(passport.session());
-configPassport();
+// app.use(expressSession({
+//     secret: '1234DSFs@adf1234!@#$asd',
+//     resave: false,
+//     saveUninitialized: true,
+//     store: new MySQLStore({
+//         host: process.env.DB_HOST,
+//         user: process.env.DB_USER,
+//         password: process.env.DB_PASSWORD,
+//         database: process.env.DB_DATABASE,
+//         port : process.env.DB_PORT
+//     })
+// }))
+// app.use(passport.initialize());
+// app.use(passport.session());
+// configPassport();
+// app.use(function (req, res, next) {
+//     console.log(req.user);
+//     next();
+// })
 
 //localMiddlewares to remember app name
 app.use(localMiddlewares);
 
-app.use(function (req, res, next) {
-    console.log(req.user);
-    next();
-})
 
 //서버구현(웹상에서)
 app.use("/public", express.static(path.join(__dirname, "public")));

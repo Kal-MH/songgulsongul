@@ -39,9 +39,9 @@ const POST_FEEDS = "/feeds";
 const POST_DETAIL = "/:id";
 const POST_SEARCH = "/search";
 const POST_UPLOAD = "/upload";
-const POST_UPDATE = "/update/:id";
-const POST_DELETE = "/delete/:id";
-const POST_DOWNLOAD = "/download/:id";
+const POST_UPDATE = "/update";
+const POST_DELETE = "/delete";
+const POST_DOWNLOAD = "/download";
 
 //api Router
 const API = "/api";
@@ -49,10 +49,12 @@ const API_DUP_IDCHECK = "/dup-idcheck";
 const API_EMAIL_AUTH = "/email-auth";
 const API_EMAIL_AUTH_NUMBER = "/email-auth-number";
 
-const API_POST_LIKE = "/like/:id";
-const API_POST_KEEP = "/keep/:id";
-const API_POST_COMMENT_INSERT = "/comment/:postid";
-const API_POST_COMMENT_DELETE = "/comment/:postid/:commentid";
+const API_POST_LIKE = "/like";
+const API_POST_KEEP = "/keep";
+const API_POST_COMMENT_INSERT = "/comment";
+const API_POST_COMMENT_DELETE = "/comment/delete";
+
+const API_POINT_DAILY = "/point/daily";
 
 //img tag api temporary
 const API_NAVER_ITEM_TAG = "/naver/item-tag";
@@ -108,6 +110,7 @@ const routes = {
     apiPostKeep : API_POST_KEEP,
     apiPostCommentInsert : API_POST_COMMENT_INSERT,
     apiPostCommentDelete : API_POST_COMMENT_DELETE,
+    apiPointDaily : API_POINT_DAILY,
     apiNaverItemtag : API_NAVER_ITEM_TAG,
     apiNaverItemtagCallback : API_NAVER_ITEM_TAG_CALLBACK,
     me : ME,

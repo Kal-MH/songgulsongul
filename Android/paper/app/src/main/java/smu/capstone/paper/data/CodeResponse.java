@@ -2,18 +2,15 @@ package smu.capstone.paper.data;
 
 import com.google.gson.annotations.SerializedName;
 
-public class JoinResponse {
+public class CodeResponse {
     @SerializedName("code")
     private int code;
 
-    @SerializedName("message")
-    private String message;
+    public CodeResponse(int code){
+        this.code = code;
+    }
 
     public int getCode() {
         return code;
-    }
-
-    public String getMessage() {
-        return message;
     }
 }
