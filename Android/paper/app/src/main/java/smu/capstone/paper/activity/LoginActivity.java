@@ -54,9 +54,9 @@ public class LoginActivity extends AppCompatActivity {
                 if(true){ //로그인 성공시
 
                     if( login_username.getText().toString().length() == 0)
-                        LoginSharedPreference.setUserName(LoginActivity.this, "administer");
+                        LoginSharedPreference.setUserId(LoginActivity.this, "administer");
                     else
-                        LoginSharedPreference.setUserName(LoginActivity.this, login_username.getText().toString());
+                        LoginSharedPreference.setUserId(LoginActivity.this, login_username.getText().toString());
 
 
                     //로그인 기록 저장
