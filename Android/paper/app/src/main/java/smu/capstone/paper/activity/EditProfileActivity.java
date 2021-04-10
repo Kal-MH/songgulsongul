@@ -75,7 +75,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        profile_newid.setText(LoginSharedPreference.getUserId(this));
+        profile_newid.setText(LoginSharedPreference.getLoginId(this));
 
         profile_check.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -17,7 +17,7 @@ public class FirstAuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_auth);
 
-        if(LoginSharedPreference.getUserId(FirstAuthActivity.this).length() == 0) {
+        if(LoginSharedPreference.getLoginId(FirstAuthActivity.this).length() == 0) {
             // call Login Activity
             intent = new Intent(FirstAuthActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -25,7 +25,7 @@ public class FirstAuthActivity extends AppCompatActivity {
         } else {
             // Call Next Activity
             intent = new Intent(FirstAuthActivity.this, HomeActivity.class);
-            intent.putExtra("STD_NUM", LoginSharedPreference.getUserId(this).toString());
+            intent.putExtra("STD_NUM", LoginSharedPreference.getLoginId(this).toString());
             startActivity(intent);
             this.finish();
         }

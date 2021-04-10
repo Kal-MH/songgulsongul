@@ -77,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // 아이디 세팅
         if(Status == MY)
-            actionBar.setTitle(LoginSharedPreference.getUserId(this));
+            actionBar.setTitle(LoginSharedPreference.getLoginId(this));
         else
             actionBar.setTitle(intent.getStringExtra("userid"));
 
@@ -264,7 +264,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             case R.id.profile_logout:
                 // LogoutAction
-                LoginSharedPreference.clearUserId(ProfileActivity.this);
+                LoginSharedPreference.clearLoginId(ProfileActivity.this);
                 Intent intent3 = new Intent(ProfileActivity.this, LoginActivity.class);
                 intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent3);

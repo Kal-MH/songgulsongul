@@ -66,7 +66,7 @@ public class FollowActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
 
-        actionBar.setTitle(LoginSharedPreference.getUserId(this)); // 사용자 아이디 추가
+        actionBar.setTitle(LoginSharedPreference.getLoginId(this)); // 사용자 아이디 추가
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
         Glide.with(FollowActivity.this).load(intent.getIntExtra("picture", 0)).into(follow_img);
