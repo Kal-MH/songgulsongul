@@ -253,7 +253,7 @@ const postController = {
                       '' ]
                 }                           
          */
-        var loggedUser = req.query.useid;
+        var loggedUser = req.query.userid;
         var text = req.body.text;
         var hashTagsAndItemTags = req.body.hash_tag;
         var items = {
