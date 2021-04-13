@@ -188,6 +188,33 @@ public  class JoinActivity extends AppCompatActivity {
         });
 
         // 비밀번호 일치 확인
+        join_pw_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(join_pw_check_text.getText().toString().trim().length() > 0) {
+                    if (s.toString().equals(join_pw_check_text.getText().toString())) {
+                        join_pw_correct_text.setText("비밀번호가 일치합니다.");
+                        join_pw_correct_text.setVisibility(View.VISIBLE);
+                        password_check_flag = 1;
+                    } else {
+                        join_pw_correct_text.setText("비밀번호가 일치하지 않습니다.");
+                        join_pw_correct_text.setVisibility(View.VISIBLE);
+                        password_check_flag = 0;
+                    }
+                }
+            }
+        });
+
         join_pw_check_text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -260,7 +287,6 @@ public  class JoinActivity extends AppCompatActivity {
                                 JsonObject result = response.body();
                                 auth = result.get("authNumber").getAsString();
                                 int resultCode = result.get("code").getAsInt();
-                                System.out.println(resultCode);
 
                                 if(resultCode == RESULT_OK) {
                                     join_check_key.setEnabled(true); // 인증번호 확인 버튼 활성화
