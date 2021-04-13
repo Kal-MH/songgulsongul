@@ -204,7 +204,7 @@ const apiController = {
                 'code' : statusCode.CLIENT_ERROR
             })
         } else {
-            var updateUserPointDaily = `update user set point = point + 100 where id = ${userId};`;
+            var updateUserPointDaily = `update user set point = point + 20 where id = ${userId};`;
             connection.query(updateUserPointDaily, function (err, result) {
                 if (err){
                     console.log(err);
