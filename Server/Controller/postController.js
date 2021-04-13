@@ -66,7 +66,7 @@ const postController = {
             
                             var options = {
                                 appName : "Caligraphy",
-                                user : res.locals.loggedUser,
+                                user : loggedUser,
                                 post : data[0].post,
                                 postUser : data[0].user,
                                 hashTags : data[0].hashTags,
@@ -210,11 +210,11 @@ const postController = {
                 })
             } else {
                 //이후에 res.json()으로 바꿔야 한다.
-                //res.render("mainfeed.ejs", {appName : appName, user : user, posts : result});
-                res.json({
-                    'code' : statusCode.OK,
-                    'data' : result
-                })
+                res.render("mainfeed.ejs", {appName : appName, user : 5, posts : result});
+                // res.json({
+                //     'code' : statusCode.OK,
+                //     'data' : result
+                // })
             }
         })
 
@@ -253,7 +253,7 @@ const postController = {
                       '' ]
                 }                           
          */
-        var loggedUser = req.query.userid;
+        var loggedUser = req.body.user_id;
         var text = req.body.text;
         var hashTagsAndItemTags = req.body.hash_tag;
         var items = {
@@ -274,7 +274,7 @@ const postController = {
         var date = new Date();
         var yearMonthDate = date.getFullYear() + "-" + ((date.getMonth() + 1 ) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + "-" + date.getDate();
         console.log(yearMonthDate);
-        updatePointinsertPostSql += `select post_time, post_date from post where post_date = '${yearMonthDate}';`;    
+        updatePointinsertPostSql += `select post_time, post_date from post where post_date = '${yearMonthDate}' and user_id = ${loggedUser};`;    
         
         connection.query(updatePointinsertPostSql, insertPostParams, function (err, result) {
             if (err){
@@ -329,8 +329,8 @@ const postController = {
         })
     },
     postUpdate : function (req, res) {
-        var postId = req.query.postid;
-        var loggedUser = req.query.userid;
+        var postId = req.body.post_id;
+        var loggedUser = req.body.user_id;
         var file = req.file;
 
         console.log(req.body);

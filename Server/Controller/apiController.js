@@ -198,13 +198,13 @@ const apiController = {
     apiPointDaily : function (req, res) {
         var userId = req.query.id;
         
-        console.log(updateUserPointDaily);
         if (userId == undefined){
             res.json({
                 'code' : statusCode.CLIENT_ERROR
             })
         } else {
             var updateUserPointDaily = `update user set point = point + 20 where id = ${userId};`;
+            console.log(updateUserPointDaily);
             connection.query(updateUserPointDaily, function (err, result) {
                 if (err){
                     console.log(err);

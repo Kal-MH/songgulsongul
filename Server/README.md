@@ -224,8 +224,9 @@
        'id' : userid
      }
      ```
-  - 고려사항
-    - id의 경우, 로그인 성공(200) 시에만 값이 반환된다.
+
+- 고려사항
+  - id의 경우, 로그인 성공(200) 시에만 값이 반환된다.
 
 3. 아이디 찾기
 
@@ -607,10 +608,10 @@
 
 5. 게시글 업로드
 
-   - api : “/post/upload?userid=?”
+   - api : “/post/upload”
    - method : POST
    - 전달받아야 하는 데이터
-     - user id (url query)
+     - user_id
      - 게시글 정보
        - image
        - text
@@ -640,11 +641,11 @@
 
 6. 게시글 업데이트
 
-   - api : “/post/update?userid=?&postid=?”
+   - api : “/post/update”
    - method : POST
    - 전달받아야 하는 데이터
-     - user id (url query)
-     - post id (url query)
+     - user_id
+     - post_id
      - 게시글 정보
        - image
        - text
