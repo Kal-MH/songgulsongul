@@ -22,22 +22,37 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.PostImageAdapter;
+import smu.capstone.paper.data.ProfileData;
+import smu.capstone.paper.data.UserData;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
 
 
 public class ProfileActivity extends AppCompatActivity {
-    public int Status = 1;
+    // ServiceApi 객체 생성
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
 
+    final int RESULT_OK = 200;
+    final int RESULT_CLIENT_ERR= 204;
+    final int RESULT_SERVER_ERR = 500;
+
+    public int Status = 1;
     final int MY = 1;
     final int FOLLOWING = 2;
     final int UNFOLLOWING = 3;
+    String login_id = LoginSharedPreference.getLoginId(this);
 
     private GridView gridView;
     private PostImageAdapter adapter;
@@ -77,7 +92,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         // 아이디 세팅
         if(Status == MY)
-            actionBar.setTitle(LoginSharedPreference.getLoginId(this));
+            //actionBar.setTitle(LoginSharedPreference.getLoginId(this));
+            actionBar.setTitle(login_id);
         else
             actionBar.setTitle(intent.getStringExtra("userid"));
 
@@ -123,13 +139,12 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent( ProfileActivity.this, FollowActivity.class);
 
                 // intro, picture 전달
-                try{
-                    JSONObject obj = getProfileData();
-                    intent.putExtra("intro", obj.getString("intro"));
-                    intent.putExtra("picture", obj.getInt("profile_image"));
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
+
+                    JsonObject obj = getProfileData();
+                    //JSONObject obj = getProfileData();
+                    intent.putExtra("intro", obj.get("intro").getAsString());
+                    intent.putExtra("picture", obj.get("profile_image").getAsInt());
+
 
                startActivity(intent);
             }
@@ -160,9 +175,28 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     // server에서 data전달
-    public JSONObject getProfileData(){
+    public JsonObject getProfileData(){
+        UserData data = new UserData(login_id, Status);
+        final JsonObject profile_data = new JsonObject();
 
-        profile_item = new JSONObject();
+        serviceApi.Profile(data).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject result = response.body();
+                int resultCode = result.get("code").getAsInt();
+
+                if(resultCode == RESULT_OK){
+                    profile_data.add("ProfileData", result);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+        return profile_data;
+        /*profile_item = new JSONObject();
 
         // 임시 데이터 저장
         try{
@@ -178,7 +212,7 @@ public class ProfileActivity extends AppCompatActivity {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        return profile_item;
+        return profile_item;*/
     }
     public JSONObject getPostData(){
         post_item = new JSONObject();
@@ -212,18 +246,15 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void setProfileData(){
 
-        JSONObject data = getProfileData();
-        try {
-            follow_count_tv.setText(data.getInt("followCnt") +"");
-            follower_count_tv.setText(data.getInt("followerCnt" )+"");
-            points_tv.setText(data.getInt("point") + "p");
-            intro_tv.setText(data.getString("intro"));
-            sns_tv.setText(data.getString("sns"));
-            Glide.with(this).load(data.getInt("profile_image")).into(profile_userimage); // 게시물 사진
+        JsonObject data = getProfileData();
+            follow_count_tv.setText(data.get("followCnt").getAsInt() +"");
+            follower_count_tv.setText(data.get("followerCnt" ).getAsInt()+"");
+            points_tv.setText(data.get("point").getAsInt() + "p");
+            intro_tv.setText(data.get("intro").getAsString());
+            sns_tv.setText(data.get("sns").getAsString());
+            Glide.with(this).load(data.get("profile_image").getAsInt()).into(profile_userimage); // 게시물 사진
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
 
     }
     public void setPostData(){

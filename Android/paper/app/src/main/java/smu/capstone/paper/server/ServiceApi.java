@@ -12,6 +12,7 @@ import smu.capstone.paper.data.EmailAuthData;
 import smu.capstone.paper.data.IdCheckData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.LoginData;
+import smu.capstone.paper.data.UserData;
 
 public interface ServiceApi {
     // 아이디 중복체크
@@ -29,4 +30,8 @@ public interface ServiceApi {
     // 로그인
     @POST("/login")
     Call<CodeResponse> Login(@Body LoginData data);
+
+    // 프로필
+    @POST("/user/profile")
+    Call<JsonObject> Profile(@Body UserData data);
 }
