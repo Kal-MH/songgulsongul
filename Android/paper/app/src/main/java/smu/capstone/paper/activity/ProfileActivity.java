@@ -3,9 +3,11 @@ package smu.capstone.paper.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,8 +22,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -60,7 +64,8 @@ public class ProfileActivity extends AppCompatActivity {
     private Button follow_btn;
     private LinearLayout profile_follows;
     private LinearLayout pointview;
-    private JSONObject post_item,profile_item;
+    private JSONObject post_item;
+    private JsonObject profile_item;
     private ImageView profile_userimage;
 
 
@@ -142,8 +147,8 @@ public class ProfileActivity extends AppCompatActivity {
 
                     JsonObject obj = getProfileData();
                     //JSONObject obj = getProfileData();
-                    intent.putExtra("intro", obj.get("intro").getAsString());
-                    intent.putExtra("picture", obj.get("profile_image").getAsInt());
+                    intent.putExtra("intro", obj.getAsJsonArray("profileInfo").get(1).getAsString());
+                    intent.putExtra("picture", obj.getAsJsonArray("profileInfo").get(0).getAsInt());
 
 
                startActivity(intent);
@@ -177,7 +182,7 @@ public class ProfileActivity extends AppCompatActivity {
     // server에서 data전달
     public JsonObject getProfileData(){
         UserData data = new UserData(login_id, Status);
-        final JsonObject profile_data = new JsonObject();
+        profile_item = new JsonObject();
 
         serviceApi.Profile(data).enqueue(new Callback<JsonObject>() {
             @Override
@@ -186,16 +191,36 @@ public class ProfileActivity extends AppCompatActivity {
                 int resultCode = result.get("code").getAsInt();
 
                 if(resultCode == RESULT_OK){
-                    profile_data.add("ProfileData", result);
+                    profile_item = result;
+                }
+                else if(resultCode == RESULT_SERVER_ERR){
+                    new AlertDialog.Builder(ProfileActivity.this)
+                            .setTitle("경고")
+                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 에러 발생 시 새로고침
+                                    Intent intent = getIntent();
+                                    finish();
+                                    startActivity(intent);
+                                }
+                            })
+                            .show();
+                }
+                else{
+                    Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Log.e("프로필 데이터 불러오기 에러", t.getMessage());
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
-        return profile_data;
+        return profile_item;
         /*profile_item = new JSONObject();
 
         // 임시 데이터 저장
@@ -247,12 +272,20 @@ public class ProfileActivity extends AppCompatActivity {
     public void setProfileData(){
 
         JsonObject data = getProfileData();
-            follow_count_tv.setText(data.get("followCnt").getAsInt() +"");
-            follower_count_tv.setText(data.get("followerCnt" ).getAsInt()+"");
-            points_tv.setText(data.get("point").getAsInt() + "p");
-            intro_tv.setText(data.get("intro").getAsString());
-            sns_tv.setText(data.get("sns").getAsString());
-            Glide.with(this).load(data.get("profile_image").getAsInt()).into(profile_userimage); // 게시물 사진
+        JsonArray post_data = data.getAsJsonArray("postInfo");
+
+        follow_count_tv.setText(data.get("followCnt").getAsInt() +"");
+        follower_count_tv.setText(data.get("followerCnt" ).getAsInt()+"");
+        points_tv.setText(data.get("point").getAsInt() + "p");
+        intro_tv.setText(data.get("intro").getAsString());
+        sns_tv.setText(data.get("sns").getAsString());
+        Glide.with(this).load(data.get("profile_image").getAsInt()).into(profile_userimage); // 게시물 사진
+
+        feed_count_tv.setText(post_data.size()+"");
+
+        // 컴파일x 임시 주석처리
+        //adapter = new PostImageAdapter(this,  R.layout.post_image_item , post_data ) ;
+        gridView.setAdapter(adapter);
 
 
 
