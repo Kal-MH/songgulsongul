@@ -144,8 +144,8 @@ public class ProfileActivity extends AppCompatActivity {
 
                 // intro, picture 전달
                 JsonArray profile_info = obj.getAsJsonArray("profileInfo");
-                    intent.putExtra("intro", profile_info.get(0).getAsJsonObject().get("intro").getAsString());
-                    intent.putExtra("picture", profile_info.get(0).getAsJsonObject().get("profile_image").getAsString());
+                intent.putExtra("intro", profile_info.get(0).getAsJsonObject().get("intro").getAsString());
+                intent.putExtra("picture", profile_info.get(0).getAsJsonObject().get("profile_image").getAsString());
 
 
                startActivity(intent);
@@ -161,12 +161,8 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(ProfileActivity.this, PostActivity.class);
 
                 // 게시글 id 전달
-                try {
-                    int postId = post_item.getJSONArray("data").getJSONObject(position).getInt("postId");
-                    intent.putExtra("postId", postId);
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
+                int postId = obj.getAsJsonArray("postInfo").get(position).getAsJsonObject().get("postId").getAsInt();
+                intent.putExtra("postId", postId);
 
                 startActivity(intent);
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.

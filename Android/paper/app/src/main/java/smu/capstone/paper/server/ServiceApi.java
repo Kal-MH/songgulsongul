@@ -34,4 +34,8 @@ public interface ServiceApi {
     // 프로필
     @POST("/user/profile")
     Call<JsonObject> Profile(@Body UserData data);
+
+    // 보관함
+    @POST("/user/keep")
+    Call<JsonObject> Keep(@Body UserData data);
 }
