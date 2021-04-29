@@ -272,14 +272,15 @@ public class ProfileActivity extends AppCompatActivity {
 
         follow_count_tv.setText(obj.get("followCnt").getAsInt() +"");
         follower_count_tv.setText(obj.get("followerCnt" ).getAsInt()+"");
-        points_tv.setText(obj.get("point").getAsInt() + "p");
-        intro_tv.setText(obj.get("intro").getAsString());
-        sns_tv.setText(obj.get("sns").getAsString());
-        Glide.with(this).load(obj.get("profile_image").getAsInt()).into(profile_userimage); // 게시물 사진
+
+        if(Status == MY)
+            points_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("point").getAsInt() + "p");
+
+        intro_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("intro").getAsString());
+        sns_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").getAsString());
+        Glide.with(this).load(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("profile_image").getAsString()).into(profile_userimage);
 
         feed_count_tv.setText(obj.getAsJsonArray("postInfo").size()+"");
-
-        // 컴파일x 임시 주석처리
         adapter = new PostImageAdapter(this,  R.layout.post_image_item , post_data ) ;
         gridView.setAdapter(adapter);
 
