@@ -13,19 +13,20 @@
        const id = req.body.id;
        const status = req.body.status;
 
-       var param = [id];
+       var params = [id, id, id, id];
        var follower_cnt;
        var follow_cnt;
        var post_info = [];
        var profile_info = [];
 
-       var sql1 = 'SELECT COUNT(*) FROM user JOIN follow ON follow.follower_id = user.id WHERE user.login_id = ?'; // 팔로우 수
-       var sql2 = 'SELECT COUNT(*) FROM user JOIN follow ON follow.follow_target_id = user.id WHERE user.login_id = ?'; // 팔로워 수
-       var sql3 = 'SELECT * FROM user JOIN post ON user.id = post.user_id WHERE user.login_id = ?'; // 게시글목록
-       var sql4 = 'SELECT * FROM user WHERE login_id = ?'; // 프로필 데이터(포인트, 소개글, sns 주소)
+       var sql1 = 'SELECT COUNT(*) AS cnt FROM user JOIN follow ON follow.follower_id = user.id WHERE user.login_id = ?;'; // 팔로우 수
+       var sql2 = 'SELECT COUNT(*) AS cnt FROM user JOIN follow ON follow.follow_target_id = user.id WHERE user.login_id = ?;'; // 팔로워 수
+       var sql3 = 'SELECT post.id, post.image FROM user JOIN post ON user.id = post.user_id WHERE user.login_id = ?;'; // 게시글목록
+       var sql4 = 'SELECT * FROM user WHERE login_id = ?;'; // 프로필 데이터(포인트, 소개글, sns 주소)
 
-         connection.query(sql1 + sql2 + sql3 + sql4, param, function(err, rows){
+         connection.query(sql1 + sql2 + sql3 + sql4, params, function(err, results){
            var resultCode = statusCode.CLIENT_ERROR;
+           console.log(id)
 
            if (err) {
              console.log(err);
@@ -35,25 +36,41 @@
            }
            else{
              resultCode = statusCode.OK;
-             follow_cnt = rows[0];
-             follower_cnt = rows[1];
+             follow_cnt = results[0][0].cnt;
+             follower_cnt = results[1][0].cnt;
 
-             for(let i = 0; i < rows[2].length(); i++){
+             for(let i = 0; i < results[2].length; i++){
                var pdata = {
-                 'image': rows[2][i].image,
-                 'postId': rows[2][i].id,
+                 'image': results[2][i].image,
+                 'postId': results[2][i].id,
                };
                post_info.push(pdata);
              }
 
              var prodata = {
-               'profile_image': rows[3].img_profile,
-               'intro': rows[3].intro,
-               'sns': rows[3].sns_url
+               'profile_image': results[3][0].img_profile,
+               'intro': results[3][0].intro,
+               'sns': results[3][0].sns_url
              }
 
              if(status === 1){ // 로그인한 사용자의 프로필일 경우
-               prodata.point = rows[3].point;
+               prodata.point = results[3][0].point;
+             }
+             else{
+               const user_id = req.body.user_id;
+               var sql = 'SELECT COUNT(*) AS flag FROM user JOIN follow ON follow.follower_id = user.id WHERE user.login_id = ?;';
+               connection.query(sql, [], function(err, results){
+                 if(err){
+                   console.log(err);
+                   resultCode = statusCode.CLIENT_ERROR;
+                   res.json({
+                     'code': resultCode
+                   })
+                 }
+                 else{
+                   prodata.flag = results[0][0].flag;
+                 }
+               })
              }
              profile_info.push(prodata);
 
@@ -65,6 +82,7 @@
                'profileInfo': profile_info
              })
            }
+           console.log(resultCode);
          })
      },
 

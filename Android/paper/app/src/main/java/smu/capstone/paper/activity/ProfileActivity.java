@@ -55,8 +55,10 @@ public class ProfileActivity extends AppCompatActivity {
     final int MY = 1;
     final int FOLLOWING = 2;
     final int UNFOLLOWING = 3;
-    public int Status;
-    String login_id = LoginSharedPreference.getLoginId(this);
+    public int Status = 1;
+    String login_id = "test1234";
+    String user_id = "aaa";
+    //String login_id = LoginSharedPreference.getLoginId(this);
 
     private GridView gridView;
     private PostImageAdapter adapter;
@@ -96,19 +98,22 @@ public class ProfileActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
 
         // 아이디 세팅
-        if(login_id.equals(intent.getStringExtra("userid") ) && intent.getStringExtra("userid") != null) {
+        /*if(!login_id.equals(intent.getStringExtra("userid") ) && intent.getStringExtra("userid") != null) {
+            user_id = intent.getStringExtra("userid");
             //actionBar.setTitle(LoginSharedPreference.getLoginId(this));
             actionBar.setTitle(intent.getStringExtra("userid"));
         }
         else {
             actionBar.setTitle(login_id);
             Status = MY;
-        }
+        }*/
+        actionBar.setTitle(LoginSharedPreference.getLoginId(this));
 
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
-        setProfileData();
+        getProfileData();
+        //setProfileData(profile_item);
 
         //Status에 떄라 버튼과 포인트 visibility와 enable 설정
         switch(Status){
@@ -143,7 +148,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent( ProfileActivity.this, FollowActivity.class);
 
                 // intro, picture 전달
-                JsonArray profile_info = obj.getAsJsonArray("profileInfo");
+                JsonArray profile_info = profile_item.getAsJsonArray("profileInfo");
                 intent.putExtra("intro", profile_info.get(0).getAsJsonObject().get("intro").getAsString());
                 intent.putExtra("picture", profile_info.get(0).getAsJsonObject().get("profile_image").getAsString());
 
@@ -161,7 +166,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(ProfileActivity.this, PostActivity.class);
 
                 // 게시글 id 전달
-                int postId = obj.getAsJsonArray("postInfo").get(position).getAsJsonObject().get("postId").getAsInt();
+                int postId = profile_item.getAsJsonArray("postInfo").get(position).getAsJsonObject().get("postId").getAsInt();
                 intent.putExtra("postId", postId);
 
                 startActivity(intent);
@@ -173,9 +178,10 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     // server에서 data전달
-    public JsonObject getProfileData(){
+    public void getProfileData(){
         UserData data = new UserData(login_id, Status);
-        profile_item = new JsonObject();
+        if(Status != 1) // 타인의 프로필일 경우
+            data.SetUserId(user_id);
 
         serviceApi.Profile(data).enqueue(new Callback<JsonObject>() {
             @Override
@@ -185,8 +191,9 @@ public class ProfileActivity extends AppCompatActivity {
 
                 if(resultCode == RESULT_OK){
                     profile_item = result;
+                    setProfileData(result);
                 }
-                else if(resultCode == RESULT_SERVER_ERR){
+                else if(resultCode == RESULT_CLIENT_ERR){
                     new AlertDialog.Builder(ProfileActivity.this)
                             .setTitle("경고")
                             .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
@@ -213,62 +220,12 @@ public class ProfileActivity extends AppCompatActivity {
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
-        return profile_item;
-        /*profile_item = new JSONObject();
-
-        // 임시 데이터 저장
-        try{
-            JSONObject obj = new JSONObject();
-            obj.put("followCnt", 100);
-            obj.put("followerCnt", 291);
-            obj.put("point", 4002);
-            obj.put("sns", "https://www.google.com");
-            obj.put("intro", "Good to see you Buddy!");
-            obj.put("profile_image", R.drawable.ic_baseline_emoji_emotions_24); //추후에 url 세팅으로변경
-
-            return obj;
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return profile_item;*/
-    }
-    public JSONObject getPostData(){
-        post_item = new JSONObject();
-        JSONArray arr= new JSONArray();
-
-
-        // 임시 데이터 저장
-        try{
-            JSONObject obj = new JSONObject();
-            obj.put("post_id", "111");
-            obj.put("image", R.drawable.ic_favorite);
-            arr.put(obj);
-
-            JSONObject obj2 = new JSONObject();
-            obj2.put("post_id", "123");
-            obj2.put("image", R.drawable.ic_favorite_border);
-            arr.put(obj2);
-
-            JSONObject obj3 = new JSONObject();
-            obj3.put("post_id", "144");
-            obj3.put("image", R.drawable.ic_favorite);
-            arr.put(obj3);
-
-            post_item.put("data", arr);
-
-        }catch (JSONException e){ e.printStackTrace(); }
-
-        return post_item;
     }
 
-
-    public void setProfileData(){
-
-        //JsonObject data = getProfileData();
-        //JsonArray post_data = data.getAsJsonArray("postInfo");
-        obj = getProfileData();
+    public void setProfileData(JsonObject obj){
         JsonObject post_data = new JsonObject();
-        post_data.add("data", obj.getAsJsonArray("postInfo"));
+        JsonArray arr = obj.getAsJsonArray("postInfo");
+        post_data.add("data", arr);
 
         follow_count_tv.setText(obj.get("followCnt").getAsInt() +"");
         follower_count_tv.setText(obj.get("followerCnt" ).getAsInt()+"");
@@ -283,20 +240,7 @@ public class ProfileActivity extends AppCompatActivity {
         feed_count_tv.setText(obj.getAsJsonArray("postInfo").size()+"");
         adapter = new PostImageAdapter(this,  R.layout.post_image_item , post_data ) ;
         gridView.setAdapter(adapter);
-
     }
-
-    /*public void setPostData(){
-        JSONObject data = getPostData();
-        try {
-            JSONArray arr = data.getJSONArray("data");
-            feed_count_tv.setText(arr.length()+"");
-            adapter = new PostImageAdapter(this,  R.layout.post_image_item , data ) ;
-            gridView.setAdapter(adapter);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
