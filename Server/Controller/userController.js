@@ -23,8 +23,19 @@
        var sql2 = 'SELECT COUNT(*) AS cnt FROM user JOIN follow ON follow.follow_target_id = user.id WHERE user.login_id = ?;'; // 팔로워 수
        var sql3 = 'SELECT post.id, post.image FROM user JOIN post ON user.id = post.user_id WHERE user.login_id = ?;'; // 게시글목록
        var sql4 = 'SELECT * FROM user WHERE login_id = ?;'; // 프로필 데이터(포인트, 소개글, sns 주소)
+       var sql5 = 'SELECT COUNT(*) AS flag FROM user JOIN follow ON follow.follower_id = user.id WHERE user.login_id = ? AND follow_target_id IN (SELECT id FROM user WHERE login_id = ?);'
+       var sql = sql1 + sql2 + sql3 + sql4;
 
-         connection.query(sql1 + sql2 + sql3 + sql4, params, function(err, results){
+       if(status !== 1){ // 선택한 사용자의 프로필일 경우
+         const user_id = req.body.user_id;
+         console.log(id + " " + user_id);
+
+         sql += sql5;
+         params = [];
+         params.push(user_id, user_id, user_id, user_id, id, user_id);
+       }
+
+         connection.query(sql, params, function(err, results){
            var resultCode = statusCode.CLIENT_ERROR;
            console.log(id)
 
@@ -57,23 +68,11 @@
                prodata.point = results[3][0].point;
              }
              else{
-               const user_id = req.body.user_id;
-               var sql = 'SELECT COUNT(*) AS flag FROM user JOIN follow ON follow.follower_id = user.id WHERE user.login_id = ?;';
-               connection.query(sql, [], function(err, results){
-                 if(err){
-                   console.log(err);
-                   resultCode = statusCode.CLIENT_ERROR;
-                   res.json({
-                     'code': resultCode
-                   })
-                 }
-                 else{
-                   prodata.flag = results[0][0].flag;
-                 }
-               })
+               prodata.flag = results[4][0].flag;
              }
-             profile_info.push(prodata);
 
+             profile_info.push(prodata);
+             console.log(profile_info);
              res.json({
                'code': resultCode,
                'followerCnt': follower_cnt,
@@ -92,8 +91,9 @@
        const user_id = req.body.userId;
 
        var params = [login_id, user_id];
-       var sql = 'INSERT INTO follow(follower_id, follow_target_id) VALUES(?,?)';
-       connection.query(sql, params, function(err, rows){
+       var sql1 = 'SELECT id FROM user WHERE login_id = ?;';
+       var sql2 = 'SELECT id FROM user WHERE login_id = ?;';
+       connection.query(sql1 + sql2, params, function(err, rows){
          var resultCode = statusCode.CLIENT_ERROR;
 
          if(err){
@@ -104,10 +104,21 @@
          }
          else{
            resultCode = statusCode.OK;
+           var sql = 'INSERT INTO follow VALUES(?,?);';
+           connection.query(sql, [rows[0][0].id, rows[1][0].id], function(err, rows){
+             if(err){
+               console.log(err);
+               resultCode = statusCode.CLIENT_ERROR;
+               res.json({
+                 'code': resultCode
+               })
+             }
+           })
            res.json({
              'code': resultCode
            })
          }
+         console.log(resultCode);
        })
      },
 

@@ -38,6 +38,8 @@ import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.PostImageAdapter;
+import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.data.FollowData;
 import smu.capstone.paper.data.ProfileData;
 import smu.capstone.paper.data.UserData;
 import smu.capstone.paper.server.RetrofitClient;
@@ -55,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
     final int MY = 1;
     final int FOLLOWING = 2;
     final int UNFOLLOWING = 3;
-    public int Status = 1;
+    public int Status = 0;
     String login_id = "test1234";
     String user_id = "aaa";
     //String login_id = LoginSharedPreference.getLoginId(this);
@@ -107,16 +109,15 @@ public class ProfileActivity extends AppCompatActivity {
             actionBar.setTitle(login_id);
             Status = MY;
         }*/
-        actionBar.setTitle(LoginSharedPreference.getLoginId(this));
+        actionBar.setTitle(login_id);
 
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
         getProfileData();
-        //setProfileData(profile_item);
 
         //Status에 떄라 버튼과 포인트 visibility와 enable 설정
-        switch(Status){
+        /*switch(Status){
             //본인의 계정 프로필
             case MY:
                 follow_btn.setEnabled(false);
@@ -137,7 +138,7 @@ public class ProfileActivity extends AppCompatActivity {
                 break;
             default:
                 break;
-        }
+        }*/
 
 
         profile_follows = findViewById(R.id.profile_follows);
@@ -171,6 +172,48 @@ public class ProfileActivity extends AppCompatActivity {
 
                 startActivity(intent);
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
+            }
+        });
+
+        // 팔로우 버튼 Click Listener
+        follow_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FollowData data = new FollowData(login_id, user_id);
+                serviceApi.Follow(data).enqueue(new Callback<CodeResponse>() {
+                    @Override
+                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                        CodeResponse result = response.body();
+                        int resultCode = result.getCode();
+                        if(resultCode == RESULT_OK){
+                            follow_btn.setEnabled(false);
+                            int follower_cnt = Integer.parseInt(follower_count_tv.getText().toString());
+                            follower_cnt++;
+                            follower_count_tv.setText(follower_cnt+"");
+                        }
+                        else if(resultCode == RESULT_CLIENT_ERR){
+                            new AlertDialog.Builder(ProfileActivity.this)
+                                    .setTitle("경고")
+                                    .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    })
+                                    .show();
+                        }
+                        else {
+                            Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                        Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Log.e("팔로우 하기 에러", t.getMessage());
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
             }
         });
     }
@@ -230,8 +273,25 @@ public class ProfileActivity extends AppCompatActivity {
         follow_count_tv.setText(obj.get("followCnt").getAsInt() +"");
         follower_count_tv.setText(obj.get("followerCnt" ).getAsInt()+"");
 
-        if(Status == MY)
+        if(Status == MY) {
+            follow_btn.setEnabled(false);
+            follow_btn.setVisibility(View.INVISIBLE);
+            pointview.setVisibility(View.VISIBLE);
             points_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("point").getAsInt() + "p");
+        }
+        else{ // 타인 프로필
+            int flag = obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("flag").getAsInt();
+            if(flag == 0) { // 팔로우 x
+                follow_btn.setEnabled(true);
+                follow_btn.setVisibility(View.VISIBLE);
+                pointview.setVisibility(View.INVISIBLE);
+            }
+            else{
+                follow_btn.setEnabled(false);
+                follow_btn.setVisibility(View.VISIBLE);
+                pointview.setVisibility(View.INVISIBLE);
+            }
+        }
 
         intro_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("intro").getAsString());
         sns_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").getAsString());

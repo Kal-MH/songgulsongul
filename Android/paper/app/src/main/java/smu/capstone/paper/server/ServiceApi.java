@@ -9,6 +9,7 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 import smu.capstone.paper.data.CodeResponse;
 import smu.capstone.paper.data.EmailAuthData;
+import smu.capstone.paper.data.FollowData;
 import smu.capstone.paper.data.IdCheckData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.LoginData;
@@ -34,6 +35,10 @@ public interface ServiceApi {
     // 프로필
     @POST("/user/profile")
     Call<JsonObject> Profile(@Body UserData data);
+
+    // 팔로우하기
+    @POST("/user/follow")
+    Call<CodeResponse> Follow(@Body FollowData data);
 
     // 보관함
     @POST("/user/keep")
