@@ -132,7 +132,7 @@ public class AddItemtagActivity extends Activity {
         return dataSplit2[0];
     }
 
-    public void foo(){
+    public void RunApi(){
         String clientId = "";
         String clientSecret = "";
         int display = 2;
