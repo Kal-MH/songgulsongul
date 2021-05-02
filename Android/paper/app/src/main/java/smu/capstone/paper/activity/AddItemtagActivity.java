@@ -124,4 +124,73 @@ public class AddItemtagActivity extends Activity {
         drawable.draw(canvas);
         return bitmap;
     }
+
+    /*static String getString(String input, String data) // API에서 필요한 문자 자르기.
+    {
+        String[] dataSplit = data.split("{" + input + "}");
+        String[] dataSplit2 = dataSplit[1].split("\"" + input + "\"");
+        return dataSplit2[0];
+    }
+
+    public void foo(){
+        String clientId = "";
+        String clientSecret = "";
+        int display = 2;
+
+        try {
+            String text = URLEncoder.encode("피그먼트 라이너", "utf-8");
+            String apiURL = "https://openapi.naver.com/v1/search/shop?query=" + text + "&display=" + display + "&";
+            URL url = new URL(apiURL);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("X-Naver-Client-Id", clientId);
+            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+            int responseCode = con.getResponseCode();
+            BufferedReader br;
+            if (responseCode == 200) {
+                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            } else {
+                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+            }
+            sb = new StringBuilder();
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+
+            br.close();
+            con.disconnect();
+            System.out.println(sb);
+            String data = sb.toString();
+            String[] array;
+            array = data.split("\"");
+            String[] productId = new String[display];
+            String[] image = new String[display];
+            String[] title = new String[display];
+            String[] hprice = new String[display];
+            String[] lprice = new String[display];
+            int k = 0;
+            for (int i = 0; i < array.length; i++) {
+                if (array[i].equals("productId"))
+                    productId[k] = array[i + 2];
+                if (array[i].equals("image"))
+                    image[k] = array[i + 2];
+                if (array[i].equals("title"))
+                    title[k] = array[i + 2];
+                if (array[i].equals("hprice"))
+                    hprice[k] = array[i + 2];
+                if (array[i].equals("lprice"))
+                    lprice[k] = array[i + 2];
+                    k++;
+                }
+            }
+            System.out.println(sb);
+            System.out.println("----------------------------");
+            System.out.println("첫번째 타이틀 : " + title[0]);
+            System.out.println("두번째 타이틀 : " + title[1]);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }*/
 }

@@ -65,7 +65,7 @@ public  class FragHomeMarket extends Fragment {
         });
 
         try {
-           adapter = new HomeMarketAdapter(this.getContext(), R.layout.market_item, obj);
+            adapter = new HomeMarketAdapter(this.getContext(), R.layout.itemsearch_item, obj);
         } catch (JSONException e){
             e.printStackTrace();
         }
