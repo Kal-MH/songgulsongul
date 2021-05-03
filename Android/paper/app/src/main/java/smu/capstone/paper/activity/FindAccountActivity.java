@@ -236,7 +236,7 @@ public class FindAccountActivity extends AppCompatActivity {
 
                         else{
                             // id, email로 서버와 통신
-                            FindData data = new FindData(id, pw_email);
+                            FindData data = new FindData(pw_email, id);
                             serviceApi.FindPw(data).enqueue(new Callback<CodeResponse>() {
                                 @Override
                                 public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
