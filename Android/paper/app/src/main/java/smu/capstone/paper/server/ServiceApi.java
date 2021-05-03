@@ -10,6 +10,7 @@ import retrofit2.http.POST;
 import smu.capstone.paper.data.CodeResponse;
 import smu.capstone.paper.data.EmailAuthData;
 import smu.capstone.paper.data.FollowData;
+import smu.capstone.paper.data.FollowListData;
 import smu.capstone.paper.data.IdCheckData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.LoginData;
@@ -39,6 +40,18 @@ public interface ServiceApi {
     // 팔로우하기
     @POST("/user/follow")
     Call<CodeResponse> Follow(@Body FollowData data);
+
+    // 팔로우 목록 받아오기
+    @POST("/user/lfollow-list")
+    Call<JsonObject> LFollowList(@Body FollowListData data);
+
+    // 선택한 사용자의 팔로우 목록 받아오기
+    @POST("/user/follow-list")
+    Call<JsonObject> FollowList(@Body FollowListData data);
+
+    // 팔로워 목록 받아오기
+    @POST("/user/follower-list")
+    Call<JsonObject> FollowerList(@Body FollowListData data);
 
     // 보관함
     @POST("/user/keep")

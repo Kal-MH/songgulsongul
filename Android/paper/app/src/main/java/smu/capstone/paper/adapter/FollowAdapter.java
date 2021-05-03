@@ -14,6 +14,9 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,26 +30,26 @@ import smu.capstone.paper.item.FollowItem;
 
 public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder> {
     Context context;
-    JSONObject obj = new JSONObject();
-    JSONArray dataList;
+    JsonObject obj = new JsonObject();
+    JsonArray dataList;
     int itemCnt;
+    int status;
+    String login_id = "test1234";
+    //String login_id = LoginSharedPreference.getLoginId(this);
 
-    public FollowAdapter (Context context, JSONObject obj) throws JSONException {
+    public FollowAdapter (Context context, JsonObject obj, int status) {
         this.context = context;
         this.obj = obj;
+        this.status = status;
 
-        dataList = obj.getJSONArray("data");
-        itemCnt = dataList.length();
+        dataList = obj.getAsJsonArray("data");
+        itemCnt = dataList.size();
     }
 
     // 받아온 데이터로 팔로우/팔로워 리스트 내용 셋팅
-    public void setItem(@NonNull FollowAdapter.ViewHolder holder, JSONObject item){
-        try {
-            holder.userid.setText(item.getString("userId"));
-            Glide.with(context).load(item.getInt("image")).into(holder.profile_image);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
+    public void setItem(@NonNull FollowAdapter.ViewHolder holder, JsonElement item){
+        holder.userid.setText(item.getAsJsonObject().get("userId").getAsString());
+        Glide.with(context).load(item.getAsJsonObject().get("image").getAsString()).into(holder.profile_image);
     }
 
     @NonNull
@@ -60,24 +63,27 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull final FollowAdapter.ViewHolder holder, final int position) {
-        try {
-            JSONObject item = dataList.getJSONObject(position);
+            JsonElement item = dataList.get(position);
             setItem(holder, item);
 
             holder.follow_btn.setVisibility(View.GONE);
             holder.follow_text.setVisibility(View.VISIBLE);
 
-            if(item.getInt("flag") == 1){
-                holder.follow_btn.setVisibility(View.GONE);
-                holder.follow_text.setVisibility(View.VISIBLE);
+            if(status != 1) { // 로그인한 사용자가 아닐경우
+                if (item.getAsJsonObject().get("flag").getAsBoolean() == true) {
+                    holder.follow_btn.setVisibility(View.GONE);
+                    holder.follow_text.setVisibility(View.VISIBLE);
+                } else if (item.getAsJsonObject().get("flag").getAsBoolean() == false) {
+                    if(item.getAsJsonObject().get("userId").getAsString().equals(login_id)){
+                        holder.follow_btn.setVisibility(View.GONE);
+                        holder.follow_text.setVisibility(View.GONE);
+                    }
+                    else{
+                        holder.follow_btn.setVisibility(View.VISIBLE);
+                        holder.follow_text.setVisibility(View.GONE);
+                    }
+                }
             }
-            else if(item.getInt("flag") == 0){
-                holder.follow_btn.setVisibility(View.VISIBLE);
-                holder.follow_text.setVisibility(View.GONE);
-            }
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         /*if ( item.getFollowing() ){
             holder.follow_btn.setVisibility(View.GONE);
@@ -130,15 +136,11 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
                     int pos = getAdapterPosition();
 
                     // 클릭한 사용자의 id 전달
-                    try {
-                        JSONObject item = dataList.getJSONObject(pos);
-                        if (pos != RecyclerView.NO_POSITION) {
-                            Intent intent = new Intent(context, ProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("userId", item.getString("userId"));
-                            context.startActivity(intent);
-                        }
-                    } catch (JSONException e){
-                        e.printStackTrace();
+                    JsonElement item = dataList.get(pos);
+                    if (pos != RecyclerView.NO_POSITION) {
+                        Intent intent = new Intent(context, ProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("userId", item.getAsJsonObject().get("userId").getAsString());
+                        context.startActivity(intent);
                     }
                 }
             });
