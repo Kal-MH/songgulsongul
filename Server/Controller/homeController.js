@@ -8,6 +8,7 @@ const smtpTransport = require("../config/email");
 const crypto = require('crypto');
 const statusCode = require("../config/serverStatusCode");
 const serverConfig = require("../config/serverConfig");
+const { checkLastLogin } = require("./apiController_sub");
 
  var homeController = {
      //회원가입
@@ -94,10 +95,11 @@ const serverConfig = require("../config/serverConfig");
                   'code' : statusCode.CLIENT_ERROR,
                 })
               } else {
-                res.json({
-                  'code' : statusCode.OK,
-                  'id' : result[0].id
-                })
+                checkLastLogin(req, res, result[0].id, 0)
+                // res.json({
+                //   'code' : statusCode.OK,
+                //   'id' : result[0].id
+                // })
               }
             })
           } 

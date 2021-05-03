@@ -4,6 +4,7 @@ const axios = require('axios');
 const smtpTransport = require("../config/email");
 const statusCode = require("../config/serverStatusCode");
 const connection = require("../db/db");
+const { checkLastLogin } = require("./apiController_sub");
 
 var generateRandom = function (min, max) {
     var randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -198,25 +199,26 @@ const apiController = {
     apiPointDaily : function (req, res) {
         var userId = req.query.id;
         
-        console.log(updateUserPointDaily);
         if (userId == undefined){
             res.json({
                 'code' : statusCode.CLIENT_ERROR
             })
         } else {
-            var updateUserPointDaily = `update user set point = point + 100 where id = ${userId};`;
-            connection.query(updateUserPointDaily, function (err, result) {
-                if (err){
-                    console.log(err);
-                    res.json({
-                        'code' : statusCode.SERVER_ERROR
-                    })
-                } else {
-                    res.json({
-                        'code' : statusCode.OK
-                    })
-                }
-            })
+            checkLastLogin(req, res, userId, 1);
+            // var updateUserPointDaily = `update user set point = point + 20 where id = ${userId};`;
+            // console.log(updateUserPointDaily);
+            // connection.query(updateUserPointDaily, function (err, result) {
+            //     if (err){
+            //         console.log(err);
+            //         res.json({
+            //             'code' : statusCode.SERVER_ERROR
+            //         })
+            //     } else {
+            //         res.json({
+            //             'code' : statusCode.OK
+            //         })
+            //     }
+            // })
         }
     },
     //itemTag naver api 사용하기

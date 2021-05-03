@@ -66,7 +66,7 @@ const postController = {
             
                             var options = {
                                 appName : "Caligraphy",
-                                user : res.locals.loggedUser,
+                                user : loggedUser,
                                 post : data[0].post,
                                 postUser : data[0].user,
                                 hashTags : data[0].hashTags,
@@ -210,11 +210,11 @@ const postController = {
                 })
             } else {
                 //이후에 res.json()으로 바꿔야 한다.
-                //res.render("mainfeed.ejs", {appName : appName, user : user, posts : result});
-                res.json({
-                    'code' : statusCode.OK,
-                    'data' : result
-                })
+                res.render("mainfeed.ejs", {appName : appName, user : 5, posts : result});
+                // res.json({
+                //     'code' : statusCode.OK,
+                //     'data' : result
+                // })
             }
         })
 
@@ -253,7 +253,7 @@ const postController = {
                       '' ]
                 }                           
          */
-        var loggedUser = req.query.userid;
+        var loggedUser = req.body.user_id;
         var text = req.body.text;
         var hashTagsAndItemTags = req.body.hash_tag;
         var items = {
@@ -265,23 +265,37 @@ const postController = {
         }
 
         var postImages = req.file.path;
-        
-        var insertPostSql = `insert into post (image, text, post_time, post_date, user_id, ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa) 
+
+        var updatePointinsertPostSql = `insert into post (image, text, post_time, post_date, user_id, ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa) 
         values (?, '${text}', curtime(), curdate(), ${loggedUser}, ?);`;
         var insertPostParams = [postImages, req.body.ccl];
-        connection.query(insertPostSql, insertPostParams, function (err, result) {
+        
+        //current date 계산
+        var date = new Date();
+        var yearMonthDate = date.getFullYear() + "-" + ((date.getMonth() + 1 ) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + "-" + date.getDate();
+        console.log(yearMonthDate);
+        updatePointinsertPostSql += `select post_time, post_date from post where post_date = '${yearMonthDate}' and user_id = ${loggedUser};`;    
+        
+        connection.query(updatePointinsertPostSql, insertPostParams, function (err, result) {
             if (err){
                 console.log(err);
                 res.json({
                     'code' : statusCode.CLIENT_ERROR
                 })
             } else {
-                var postId = result.insertId;
+                console.log(result[1]);
+                console.log(result[1].length);
+                var postId = result[0].insertId;
                 
-                //hashTag
-                var insertHashSql = "";
+                //update Point if post-count under 5 && insert hashTag 
+                var updatePointinsertHashSql = "";
+
+                // 오늘 날짜의 게시글이 5개 이하이면 포인트 100을 추가로 반영한다.
+                if (result[1].length <= 5)
+                    updatePointinsertHashSql += `update user set point = point + 100 where id = ${loggedUser};`
+
                 for(var i = 0;i < hashTagsAndItemTags.length; i++){
-                    insertHashSql += `insert into hash_tag (post_id, text) values (${postId}, ?);`
+                    updatePointinsertHashSql += `insert into hash_tag (post_id, text) values (${postId}, ?);`
                 }
                 //itemTag
                 //배열로 넘겨주기 위해 해시태그와 item태그를 한 배열로 넣는다.(해시태그 먼저, 아이템 태그는 그 뒤에)
@@ -298,7 +312,7 @@ const postController = {
                      }
 
                  }
-                 connection.query(insertHashSql + insertItemSql, hashTagsAndItemTags, function (err, result) {
+                 connection.query(updatePointinsertHashSql + insertItemSql, hashTagsAndItemTags, function (err, result) {
                     if (err){
                         console.log(err);
                         res.json({
@@ -306,7 +320,6 @@ const postController = {
                         })
                     }
                     else{
-                       
                         res.json({
                             'code' : statusCode.OK
                         })                                                  
@@ -316,8 +329,8 @@ const postController = {
         })
     },
     postUpdate : function (req, res) {
-        var postId = req.query.postid;
-        var loggedUser = req.query.userid;
+        var postId = req.body.post_id;
+        var loggedUser = req.body.user_id;
         var file = req.file;
 
         console.log(req.body);
