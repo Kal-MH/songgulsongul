@@ -124,8 +124,10 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             })
                             .show();
-                } else {
-                    // login_id, password로 서버와 통신
+                }
+
+                // login_id, password로 서버와 통신
+                else {
                     LoginData data = new LoginData(login_id, passsword);
                     serviceApi.Login(data).enqueue(new Callback<CodeResponse>() {
                         @Override

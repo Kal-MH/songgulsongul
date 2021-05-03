@@ -18,16 +18,14 @@ public class FirstAuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_first_auth);
 
         if(LoginSharedPreference.getLoginId(FirstAuthActivity.this).length() == 0) {
-            // call Login Activity
+            // 로그인 기록 저장 x --> 로그인 화면으로
             intent = new Intent(FirstAuthActivity.this, LoginActivity.class);
-            startActivity(intent);
-            this.finish();
-        } else {
-            // Call Next Activity
+        }
+        else { // 로그인 저장되어있음 -> 서버통신없이 자동 로그인
             intent = new Intent(FirstAuthActivity.this, HomeActivity.class);
             intent.putExtra("STD_NUM", LoginSharedPreference.getLoginId(this).toString());
-            startActivity(intent);
-            this.finish();
         }
+        startActivity(intent);
+        this.finish();
     }
 }
