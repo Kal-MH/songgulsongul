@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
@@ -22,6 +23,8 @@ public class FirstAuthActivity extends AppCompatActivity {
             intent = new Intent(FirstAuthActivity.this, LoginActivity.class);
         }
         else { // 로그인 저장되어있음 -> 서버통신없이 자동 로그인
+            Log.d("login", LoginSharedPreference.getLoginId(FirstAuthActivity.this)+"");
+            Log.d("login", LoginSharedPreference.getUserId(FirstAuthActivity.this)+"");
             intent = new Intent(FirstAuthActivity.this, HomeActivity.class);
             intent.putExtra("STD_NUM", LoginSharedPreference.getLoginId(this).toString());
         }
