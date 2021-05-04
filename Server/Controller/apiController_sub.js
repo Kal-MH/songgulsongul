@@ -3,8 +3,12 @@ const connection = require("../db/db");
 
 function generateCurrentDate(type) {
     var date = new Date();
-    var yearMonthDate = date.getFullYear() + "-" + ((date.getMonth() + 1 ) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + "-" + date.getDate();
-    console.log(yearMonthDate);
+
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    month = month >= 10 ? month : '0' + month;
+    day = day >= 10 ? day : '0' + day;
+    var yearMonthDate = date.getFullYear() + "-" + month + "-" + day;
     return (yearMonthDate);
 }
 
@@ -38,12 +42,13 @@ const apiController_subFunc = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.CLIENT_ERROR
+                    'code': statusCode.SERVER_ERROR
                 })
             } else {
                 const lastYearMonthDate = generateCurrentDate();
-
                 var setLastLoginUpdatePointSql = `update user set last_login = NOW() where id = ${userId};`;
+                console.log("result : " +  result[0].last_login);
+                console.log("now    : " + lastYearMonthDate);
                 if (result[0].last_login != lastYearMonthDate){
                     setLastLoginUpdatePointSql += `update user set point = point + 20 where id = ${userId};`
                 }
