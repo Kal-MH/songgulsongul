@@ -85,20 +85,18 @@ const { checkLastLogin } = require("./apiController_sub");
           })
         }else{
             if (result.length === 0) {
-            console.log('not exist ID')
             res.json({
               'code' : statusCode.CLIENT_ERROR,
             })
           } else {
             crypto.pbkdf2(password, result[0].salt, 100, 64, 'sha512', function (err, key) {
                 if (key.toString('base64') !== result[0].password) {
-                console.log("Different password");
                 res.json({
                   'code' : statusCode.CLIENT_ERROR,
                 })
               } else {
-                console.log("success");
-                checkLastLogin(req, res, result[0].id, 0)
+                console.log(loginId + " is logged in");
+                checkLastLogin(req, res, result[0].id)
               }
             })
           } 
