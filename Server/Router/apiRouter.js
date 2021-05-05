@@ -21,7 +21,8 @@ const routes = require('../routes');
  apiRouter.post(routes.apiPostCommentInsert,apiController.insertPostComment);
  apiRouter.get(routes.apiPostCommentDelete, apiController.deletePostComment);
 
- apiRouter.get(routes.apiPointDaily, apiController.apiPointDaily);
+//출석체크
+ apiRouter.post(routes.apiDailyAttendance, apiController.dailyAttendance);
 
  //임시
  apiRouter.get(routes.apiNaverItemtag, apiController.sendNaverAPI);

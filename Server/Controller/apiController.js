@@ -4,7 +4,32 @@ const axios = require('axios');
 const smtpTransport = require("../config/email");
 const statusCode = require("../config/serverStatusCode");
 const connection = require("../db/db");
-const { checkLastLogin } = require("./apiController_sub");
+
+function generateCurrentDate(type) {
+    var date = new Date();
+
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    month = month >= 10 ? month : '0' + month;
+    day = day >= 10 ? day : '0' + day;
+
+    return (date.getFullYear() + "-" + month + "-" + day);
+}
+
+function attendanceCheck(req, res, userId) {
+    var sql = `update user set last_login = NOW() where id = ${userId};`
+        + `update user set point = point + 20  where id = ${userId};`;
+
+    connection.query(sql, function (err, result) {
+        if (err) {
+            return false;
+        }
+        else {
+            console.log("First login !");
+            return true;
+        }
+    })
+}
 
 var generateRandom = function (min, max) {
     var randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -196,30 +221,47 @@ const apiController = {
             // })
         })
     },
-    apiPointDaily : function (req, res) {
-        var userId = req.query.id;
-        
-        if (userId == undefined){
-            res.json({
-                'code' : statusCode.CLIENT_ERROR
-            })
-        } else {
-            checkLastLogin(req, res, userId, 1);
-            // var updateUserPointDaily = `update user set point = point + 20 where id = ${userId};`;
-            // console.log(updateUserPointDaily);
-            // connection.query(updateUserPointDaily, function (err, result) {
-            //     if (err){
-            //         console.log(err);
-            //         res.json({
-            //             'code' : statusCode.SERVER_ERROR
-            //         })
-            //     } else {
-            //         res.json({
-            //             'code' : statusCode.OK
-            //         })
-            //     }
-            // })
-        }
+    dailyAttendance: function(req, res) {
+        console.log("dailyAttendance");
+
+        var userId = req.body.id;
+        var sql = `select last_login from user where id = ${userId}`
+
+        connection.query(sql, function (err, result) {
+
+            if (err) {
+                console.log(err);
+                res.json({
+                    'code': statusCode.SERVER_ERROR
+                })
+                return;
+            }
+            if (userId == undefined || result.length == 0) { //없는 아이디거나..
+                res.json({
+                    'code': statusCode.CLIENT_ERROR
+                })
+                return;
+            }
+            const lastYearMonthDate = generateCurrentDate();
+            if (result[0].last_login != lastYearMonthDate) {
+                if (attendanceCheck(req, res, userId) == false) { // 업데이트 실패함 
+                    res.json({
+                        'code': statusCode.SERVER_ERROR
+                    })
+                }
+                else { //출석체크 성공         
+                    res.json({
+                        'code': statusCode.OK
+                    })
+                }
+            }
+            else { //첫출석 아님
+                res.json({
+                    'code': statusCode.NO
+                })
+            }
+        })
+
     },
     //itemTag naver api 사용하기
     sendNaverAPI : async function (req, res) {

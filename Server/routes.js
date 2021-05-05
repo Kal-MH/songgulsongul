@@ -54,7 +54,7 @@ const API_POST_KEEP = "/keep";
 const API_POST_COMMENT_INSERT = "/comment";
 const API_POST_COMMENT_DELETE = "/comment/delete";
 
-const API_POINT_DAILY = "/point/daily";
+const API_DAILY_ATTENDANCE = "/point-attendance";
 
 //img tag api temporary
 const API_NAVER_ITEM_TAG = "/naver/item-tag";
@@ -70,7 +70,7 @@ const routes = {
     join : JOIN,
     login : LOGIN,
     findId : FIND_ID,
-    findPassword : FIND_PASSWORD,
+    findPassword: FIND_PASSWORD,
 
     user : USER,
     userProfile : USER_PROFILE,
@@ -110,7 +110,7 @@ const routes = {
     apiPostKeep : API_POST_KEEP,
     apiPostCommentInsert : API_POST_COMMENT_INSERT,
     apiPostCommentDelete : API_POST_COMMENT_DELETE,
-    apiPointDaily : API_POINT_DAILY,
+    apiDailyAttendance: API_DAILY_ATTENDANCE,
     apiNaverItemtag : API_NAVER_ITEM_TAG,
     apiNaverItemtagCallback : API_NAVER_ITEM_TAG_CALLBACK,
     me : ME,

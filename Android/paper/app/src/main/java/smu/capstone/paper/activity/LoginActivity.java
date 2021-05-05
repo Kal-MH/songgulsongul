@@ -19,8 +19,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
-import smu.capstone.paper.data.CodeResponse;
 import smu.capstone.paper.data.LoginData;
+import smu.capstone.paper.data.LoginResponse;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 
@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
     final int RESULT_OK = 200;
     final int RESULT_CLIENT_ERR= 204;
+    final int RESULT_NO = 201;
     final int RESULT_SERVER_ERR = 500;
 
     boolean test = true;
@@ -78,25 +79,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-                if(test){ // 현재 boolean test = true 이기 때문에 이 코드만 실행후 종료
-                    if (login_username.getText().toString().length() == 0)
-                        LoginSharedPreference.setLoginId(LoginActivity.this, "administer");
-                    else
-                        LoginSharedPreference.setLoginId(LoginActivity.this, login_id);
-
-
-                    //로그인 기록 저장
-                    LoginSharedPreference.setLoginId(LoginActivity.this,login_id);
-
-                    //   일단 바로 홈화면으로 전환
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    finish();
-
-                    return ;
-                }
-
-
 
                 // 입력한 아이디가 공백값일 경우 --> 서버 통신 x
                 if (login_id.getBytes().length <= 0) {
@@ -124,22 +106,37 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             })
                             .show();
-                } else {
-                    // login_id, password로 서버와 통신
+                }
+
+                // login_id, password로 서버와 통신
+                else {
                     LoginData data = new LoginData(login_id, passsword);
-                    serviceApi.Login(data).enqueue(new Callback<CodeResponse>() {
+                    serviceApi.Login(data).enqueue(new Callback<LoginResponse>() {
                         @Override
-                        public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                            CodeResponse result = response.body();
+                        public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                            LoginResponse result = response.body();
                             int resultCode = result.getCode();
 
                             // 로그인 성공시 --> 로그인 기록 저장, home으로 전환
-                            if (resultCode == RESULT_OK) {
-                                LoginSharedPreference.setLoginId(LoginActivity.this, login_id);
+                            if (resultCode == RESULT_OK) { // 로그인성공, 오늘의 첫로그인
+
+                                int user_id = result.getId();
+                                LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
+
+                                Toast.makeText(LoginActivity.this, "출석체크 되었습니다!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
-                            } else if (resultCode == RESULT_CLIENT_ERR) {
+                            }
+                            else if( resultCode == RESULT_NO){ // 로그인 성공, 오늘의 첫로그인 아님
+                                int user_id = result.getId();
+                                LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
+                                Toast.makeText(LoginActivity.this, "반갑습니다!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else if (resultCode == RESULT_CLIENT_ERR) {
                                 new AlertDialog.Builder(LoginActivity.this)
                                         .setMessage("아이디, 또는 패스워드가 잘못 입력되었습니다.")
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -151,13 +148,14 @@ public class LoginActivity extends AppCompatActivity {
                                         .show();
                                 login_username.setText(null);
                                 login_pw.setText(null);
-                            } else {
+                            }
+                            else {
                                 Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<CodeResponse> call, Throwable t) {
+                        public void onFailure(Call<LoginResponse> call, Throwable t) {
                             Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                             Log.e("로그인 에러", t.getMessage());
                             t.printStackTrace(); // 에러 발생 원인 단계별로 출력

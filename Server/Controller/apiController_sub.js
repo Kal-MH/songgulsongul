@@ -3,56 +3,84 @@ const connection = require("../db/db");
 
 function generateCurrentDate(type) {
     var date = new Date();
-    var yearMonthDate = date.getFullYear() + "-" + ((date.getMonth() + 1 ) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + "-" + date.getDate();
-    console.log(yearMonthDate);
-    return (yearMonthDate);
+
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    month = month >= 10 ? month : '0' + month;
+    day = day >= 10 ? day : '0' + day;
+
+    return (date.getFullYear() + "-" + month + "-" + day);
 }
 
-function updatePoint(req, res, sql, type, userId) {
+function updatePoint(req, res, point, userId) {
+    var sql = `update user set point = point + ${point} where id = ${userId};`;
+
     connection.query(sql, function (err, result) {
-        if (err){
-            console.log(err);
-            res.json({
-                'code' : statusCode.SERVER_ERROR
-            })
-        } else {
-            if (type == 0){
-                res.json({
-                    'code' : statusCode.OK,
-                    'id' : userId
-                })    
-            } else {
-                res.json({
-                    'code' : statusCode.OK
-                })
-            }
+        if (err) {
+            return false;
+        }
+        else {
+            console.log("point += " + point);
+            return true;
+        }
+    })
+}
+
+
+function attendanceCheck(req, res, userId) {
+    var sql = `update user set last_login = NOW() where id = ${userId};`
+        + `update user set point = point + 20  where id = ${userId};`;
+
+    connection.query(sql, function (err, result) {
+        if (err) {
+            return false;
+        }
+        else {
+            return true;
         }
     })
 }
 
 const apiController_subFunc = {
-    checkLastLogin : function (req, res, userId, type) {
-        var selectUserSql = `select * from user where id = ${userId};`;
 
-        connection.query(selectUserSql, function (err, result) {
-            if (err){
+    checkLastLogin: function (req, res, userId) {
+
+        var sql = `select last_login from user where id = ${userId}`
+
+        connection.query(sql, function (err, result) {
+
+            if (err) {
                 console.log(err);
                 res.json({
-                    'code' : statusCode.CLIENT_ERROR
+                    'code': statusCode.SERVER_ERROR
                 })
-            } else {
-                const lastYearMonthDate = generateCurrentDate();
+                return;
+            }
 
-                var setLastLoginUpdatePointSql = `update user set last_login = NOW() where id = ${userId};`;
-                if (result[0].last_login != lastYearMonthDate){
-                    setLastLoginUpdatePointSql += `update user set point = point + 20 where id = ${userId};`
+            const lastYearMonthDate = generateCurrentDate();
+            if (result[0].last_login != lastYearMonthDate) {
+                if (attendanceCheck(req, res, userId) == false) { //업데이트 실패함 
+                    res.json({
+                        'code': statusCode.SERVER_ERROR
+                    })
+                    return;
                 }
-                
-                console.log(setLastLoginUpdatePointSql);
-                updatePoint(req, res, setLastLoginUpdatePointSql, type, userId);
+                else { //출석체크 성공         
+                    res.json({
+                        'code': statusCode.OK,
+                        'id': userId
+                    })
+                }
+            }
+            else { //첫출석 아님
+                res.json({
+                    'code': statusCode.NO,
+                    'id': userId
+                })
             }
         })
     },
+    
 }
 
 module.exports = apiController_subFunc;

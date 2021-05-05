@@ -11,8 +11,10 @@ import smu.capstone.paper.data.CodeResponse;
 import smu.capstone.paper.data.EmailData;
 import smu.capstone.paper.data.FindData;
 import smu.capstone.paper.data.IdCheckData;
+import smu.capstone.paper.data.IdData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.LoginData;
+import smu.capstone.paper.data.LoginResponse;
 
 public interface ServiceApi {
     // 아이디 중복체크
@@ -29,7 +31,11 @@ public interface ServiceApi {
 
     // 로그인
     @POST("/login")
-    Call<CodeResponse> Login(@Body LoginData data);
+    Call<LoginResponse> Login(@Body LoginData data);
+
+    //출석체크 포인트
+    @POST("/api/point-attendance")
+    Call<CodeResponse> Attendance(@Body IdData data);
 
     // 아이디 찾기
     @POST("/find/id")
