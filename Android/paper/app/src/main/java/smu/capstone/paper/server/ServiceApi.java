@@ -41,6 +41,10 @@ public interface ServiceApi {
     @POST("/user/follow")
     Call<CodeResponse> Follow(@Body FollowData data);
 
+    // 언팔로우하기
+    @POST("/user/unfollow")
+    Call<CodeResponse> UnFollow(@Body FollowData data);
+
     // 팔로우 목록 받아오기
     @POST("/user/lfollow-list")
     Call<JsonObject> LFollowList(@Body FollowListData data);

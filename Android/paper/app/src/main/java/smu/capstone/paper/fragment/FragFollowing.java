@@ -50,9 +50,9 @@ public class FragFollowing extends Fragment {
 
     RecyclerView rv;
     FollowAdapter adapter;
-    int status = 0;
+    int status;
     String login_id = "test1234";
-    String user_id = "aaa";
+    String user_id;
     JsonObject login_following_list = new JsonObject();
     JsonObject user_following_list = new JsonObject();
 
@@ -68,6 +68,15 @@ public class FragFollowing extends Fragment {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rv.setLayoutManager(layoutManager);
+
+        Bundle bundle = getArguments();
+        if(!login_id.equals(bundle.getString("userId"))) {
+            user_id = bundle.getString("userId");
+            status = 0;
+        }
+        else {
+            status = 1;
+        }
 
         if(status == 1)
             getFollowingData();
@@ -135,31 +144,6 @@ public class FragFollowing extends Fragment {
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
-        // 임시 데이터 저장
-        /*try{
-            JSONObject obj1 = new JSONObject();
-            obj1.put("userId", "Prof.cho");
-            obj1.put("image", R.drawable.test);
-            arr.put(obj1);
-
-            JSONObject obj2 = new JSONObject();
-            obj2.put("userId", "yujin1292");
-            obj2.put("image", R.drawable.ic_baseline_emoji_emotions_24);
-            arr.put(obj2);
-
-            JSONObject obj3 = new JSONObject();
-            obj3.put("userId", "arami98");
-            obj3.put("image", R.drawable.ic_favorite);
-            arr.put(obj3);
-
-            JSONObject obj4 = new JSONObject();
-            obj4.put("userId", "wonhee123");
-            obj4.put("image", R.drawable.ic_chat_black);
-            arr.put(obj4);
-            item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }*/
     }
 
     // server에서 data전달 --> 로그인한 사용자가 아닐경우 (로그인한 사용자의 리스트 + 선택한 사용자의 리스트 전달)
@@ -222,49 +206,6 @@ public class FragFollowing extends Fragment {
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
-
-            // 임시 데이터 저장
-            /*JSONObject user_obj1 = new JSONObject();
-            user_obj1.put("userId", "yujin1292");
-            user_obj1.put("image", R.drawable.ic_baseline_emoji_emotions_24);
-            user_arr.put(user_obj1);
-
-            JSONObject user_obj2 = new JSONObject();
-            user_obj2.put("userId", "arami98");
-            user_obj2.put("image", R.drawable.ic_favorite);
-            user_arr.put(user_obj2);
-
-            JSONObject user_obj3 = new JSONObject();
-            user_obj3.put("userId", "wonhee123");
-            user_obj3.put("image", R.drawable.ic_chat_black);
-            user_arr.put(user_obj3);
-
-            JSONObject user_obj4 = new JSONObject();
-            user_obj4.put("userId", "hahahoho");
-            user_obj4.put("image", R.drawable.ic_baseline_face_24);
-            user_arr.put(user_obj4);*/
-
-            // 선택한 사용자의 팔로우 리스트에 있는 사용자를 팔로우 했는지 체크
-            /*for(int i = 0; i < user_arr.length(); i++){
-                for(int j = 0; j < arr.length(); j++){
-                    int check = 0;
-                    String user_follower_id = user_arr.getJSONObject(i).getString("userId");
-                    String follower_id = arr.getJSONObject(j).getString("userId");
-
-                    // Following
-                    if(user_follower_id == follower_id) {
-                        user_arr.getJSONObject(i).put("flag", 1);
-                        check = 1;
-                        break;
-                    }
-
-                    // Unfollowing
-                    if (check == 0)
-                        user_arr.getJSONObject(i).put("flag", 0);
-                }
-            }
-            item.put("data", user_arr);*/
-
     }
 
 }

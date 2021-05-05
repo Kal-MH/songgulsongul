@@ -61,7 +61,8 @@
              var prodata = {
                'profile_image': results[3][0].img_profile,
                'intro': results[3][0].intro,
-               'sns': results[3][0].sns_url
+               'sns': results[3][0].sns_url,
+               'userId': results[3][0].login_id
              }
 
              if(status === 1){ // 로그인한 사용자의 프로필일 경우
@@ -128,9 +129,10 @@
        const user_id = req.body.userId;
 
        var params = [login_id, user_id];
+       var sql1 = 'SELECT id FROM user WHERE login_id = ?;';
+       var sql2 = 'SELECT id FROM user WHERE login_id = ?;';
 
-       var sql = 'DELETE FROM follow WHERE follower_id = ? AND follow_target_id = ?';
-       connection.query(sql, params, function(err, rows){
+       connection.query(sql1 + sql2, params, function(err, rows){
          var resultCode = statusCode.SERVER_ERROR;
 
          if(err){
@@ -141,10 +143,21 @@
          }
          else{
            resultCode = statusCode.OK;
+           var sql = 'DELETE FROM follow WHERE follower_id = ? AND follow_target_id = ?;';
+           connection.query(sql, [rows[0][0].id, rows[1][0].id], function(err, rows){
+             if(err){
+               console.log(err);
+               resultCode = statusCode.CLIENT_ERROR;
+               res.json({
+                 'code': resultCode
+               })
+             }
+           })
            res.json({
              'code' : resultCode
            })
          }
+         console.log(resultCode);
        })
      },
 
@@ -213,7 +226,6 @@
 
            for(let i = 0; i < rows[0].length; i++){
              var loginFollowInfo = {
-               'image': rows[0][i].img_profile,
                'userId': rows[0][i].login_id
              };
              login_follow_info.push(loginFollowInfo);
@@ -243,11 +255,18 @@
      // 팔로워 리스트
      userFollowerList : function(req, res){
        const id = req.body.id;
-       var param = [id];
+       const status = req.body.status;
+       var params = [id, id];
        var follower_info = [];
+       var following_info = [];
 
        var sql = 'SELECT * FROM user JOIN follow ON follow.follower_id = user.id WHERE follow.follow_target_id = (SELECT id FROM user WHERE login_id = ?);'; // 사용자의 팔로워 리스트
-       connection.query(sql, param, function(err, rows){
+       var sql2 = 'SELECT * FROM user JOIN follow ON follow.follow_target_id = user.id WHERE follow.follower_id = (SELECT id FROM user WHERE login_id = ?);'
+       if(status !== 1){
+         params = [];
+         params.push(req.body.user_id, id);
+       }
+       connection.query(sql+sql2, params, function(err, rows){
          var resultCode = statusCode.CLIENT_ERROR;
 
          if(err){
@@ -259,18 +278,27 @@
          else{
            resultCode = statusCode.OK;
 
-           for(let i = 0; i < rows.length; i++){
+           for(let i = 0; i < rows[0].length; i++){
              var followerInfo = {
-               'image': rows[i].img_profile,
-               'userId': rows[i].login_id
+               'image': rows[0][i].img_profile,
+               'userId': rows[0][i].login_id
              };
              follower_info.push(followerInfo);
            }
 
+           for(let i = 0; i < rows[1].length; i++){
+             var followingInfo = {
+               'userId': rows[1][i].login_id
+             };
+             following_info.push(followingInfo);
+           }
+
            console.log(follower_info);
+           console.log(following_info);
            res.json({
              'code': resultCode,
-             'followerInfo': follower_info
+             'followerInfo': follower_info,
+             'followingInfo': following_info
            })
          }
          console.log(statusCode);

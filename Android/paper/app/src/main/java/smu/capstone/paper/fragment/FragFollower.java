@@ -46,11 +46,11 @@ public class FragFollower extends Fragment {
 
     RecyclerView rv;
     FollowAdapter adapter;
-    FragFollowing following = new FragFollowing();
-    JsonObject followingObj; // 로그인한 사용자의 following 리스트 가져오기
     JsonObject obj = new JsonObject();
-    int status = 1; // 로그인한 사용자 가정
+    int status;
+    int sflag = 0;
     String login_id = "test1234";
+    String user_id;
 
     @Nullable
     @Override
@@ -65,11 +65,16 @@ public class FragFollower extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rv.setLayoutManager(layoutManager);
 
-        getFollowerData();
+        Bundle bundle = getArguments();
+        if(!login_id.equals(bundle.getString("userId"))) {
+            user_id = bundle.getString("userId");
+            status = 0;
+        }
+        else {
+            status = 1;
+        }
 
-//        adapter = new FollowAdapter(getContext(), follower_list, status);
-//
-//        rv.setAdapter(adapter);
+        getFollowerData();
 
         return rootView;
     }
@@ -96,6 +101,10 @@ public class FragFollower extends Fragment {
     // server에서 data전달
     public void getFollowerData(){
         FollowListData data = new FollowListData(login_id);
+        data.addStatus(status);
+        if(status != 1){
+            data.addUserId(user_id);
+        }
         serviceApi.FollowerList(data).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -103,34 +112,31 @@ public class FragFollower extends Fragment {
                 int resultCode = result.get("code").getAsInt();
 
                 if(resultCode == RESULT_OK){
-                    following.getFollowingData();
-                    followingObj = following.login_following_list;
-                    JsonArray following_list = followingObj.getAsJsonArray("data");
+                    JsonArray following_list = result.getAsJsonArray("followingInfo");
                     JsonArray follower_list = result.getAsJsonArray("followerInfo");
 
                     // 팔로워 리스트에 있는 사용자를 팔로우 했는지 체크
                     for (int i = 0; i < follower_list.size(); i++) {
                         for (int j = 0; j < following_list.size(); j++) {
                             int check = 0;
-                            String following_id = following_list.get(j).getAsJsonObject().get("login_id").getAsString();
-                            String follower_id = follower_list.get(i).getAsJsonObject().get("login_id").getAsString();
+                            String following_id = following_list.get(j).getAsJsonObject().get("userId").getAsString();
+                            String follower_id = follower_list.get(i).getAsJsonObject().get("userId").getAsString();
 
                             // Following
-                            if (following_id == follower_id) {
-                                follower_list.get(i).getAsJsonObject().addProperty("flag", 1);
+                            if (following_id.equals(follower_id)) {
+                                follower_list.get(i).getAsJsonObject().addProperty("flag", true);
                                 check = 1;
                                 break;
                             }
 
                             // Unfollowing
                             if (check == 0)
-                                follower_list.get(i).getAsJsonObject().addProperty("flag", 1);
+                                follower_list.get(i).getAsJsonObject().addProperty("flag", false);
                         }
                     }
                     obj.add("data", follower_list);
-                    adapter = new FollowAdapter(getContext(), obj, status);
-//
-//        rv.setAdapter(adapter);
+                    adapter = new FollowAdapter(getContext(), obj, sflag);
+                    rv.setAdapter(adapter);
                 }
                 else if(resultCode == RESULT_CLIENT_ERR){
                     new AlertDialog.Builder(getContext())
@@ -155,110 +161,5 @@ public class FragFollower extends Fragment {
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
-        // 임시 데이터 저장 -- 로그인한 사용자의 팔로워 리스트
-        /*try{
-            JSONObject obj1 = new JSONObject();
-            obj1.put("userId", "yujin1292");
-            obj1.put("image", R.drawable.ic_baseline_emoji_emotions_24);
-            arr.put(obj1);
-
-            JSONObject obj2 = new JSONObject();
-            obj2.put("userId", "arami98");
-            obj2.put("image", R.drawable.ic_favorite);
-            arr.put(obj2);
-
-            JSONObject obj3 = new JSONObject();
-            obj3.put("userId", "wonhee123");
-            obj3.put("image", R.drawable.ic_chat_black);
-            arr.put(obj3);
-
-            JSONObject obj4 = new JSONObject();
-            obj4.put("userId", "rulurala");
-            obj4.put("image", R.drawable.ic_favorite_border);
-            arr.put(obj4);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }*/
-
-        /*switch (status){
-            // 로그인한 사용자의 리스트만 전달
-            case 1:
-                try{
-                    // 팔로워 리스트에 있는 사용자를 팔로우 했는지 체크
-                    JSONArray following_list = followingObj.getJSONArray("data");
-                    for(int i = 0; i < arr.length(); i++){
-                        for(int j = 0; j < following_list.length(); j++){
-                            int check = 0;
-                            String following_id = following_list.getJSONObject(j).getString("userId");
-                            String follower_id = arr.getJSONObject(i).getString("userId");
-
-                            // Following
-                            if(following_id == follower_id) {
-                                arr.getJSONObject(i).put("flag", 1);
-                                check = 1;
-                                break;
-                            }
-
-                            // Unfollowing
-                            if (check == 0)
-                                arr.getJSONObject(i).put("flag", 0);
-                        }
-                    }
-                    item.put("data", arr);
-
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-                break;*/
-
-            // 로그인한 사용자가 아닐경우 (로그인한 사용자의 리스트 + 선택한 사용자의 리스트 전달)
-           /* default:
-                try{
-                    // 임시 데이터 저장
-                    JSONObject user_obj1 = new JSONObject();
-                    user_obj1.put("userId", "yujin1292");
-                    user_obj1.put("image", R.drawable.ic_baseline_emoji_emotions_24);
-                    user_arr.put(user_obj1);
-
-                    JSONObject user_obj2 = new JSONObject();
-                    user_obj2.put("userId", "arami98");
-                    user_obj2.put("image", R.drawable.ic_favorite);
-                    user_arr.put(user_obj2);
-
-                    JSONObject user_obj3 = new JSONObject();
-                    user_obj3.put("userId", "wonhee123");
-                    user_obj3.put("image", R.drawable.ic_chat_black);
-                    user_arr.put(user_obj3);
-
-                    JSONObject user_obj4 = new JSONObject();
-                    user_obj4.put("userId", "hahahoho");
-                    user_obj4.put("image", R.drawable.ic_baseline_face_24);
-                    user_arr.put(user_obj4);
-
-                    // 선택한 사용자의 팔로워 리스트에 있는 사용자를 팔로우 했는지 체크
-                    JSONArray following_list = followingObj.getJSONArray("data");
-                    for(int i = 0; i < user_arr.length(); i++){
-                        for(int j = 0; j < following_list.length(); j++){
-                            int check = 0;
-                            String user_follower_id = user_arr.getJSONObject(i).getString("userId");
-                            String following_id = following_list.getJSONObject(j).getString("userId");
-
-                            // Following
-                            if(user_follower_id == following_id) {
-                                user_arr.getJSONObject(i).put("flag", 1);
-                                check = 1;
-                                break;
-                            }
-
-                            // Unfollowing
-                            if (check == 0)
-                                user_arr.getJSONObject(i).put("flag", 0);
-                        }
-                    }
-                    item.put("data", user_arr);
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-        }*/
     }
 }
