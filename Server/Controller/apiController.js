@@ -245,7 +245,6 @@ const apiController = {
             const lastYearMonthDate = generateCurrentDate();
             if (result[0].last_login != lastYearMonthDate) {
                 if (attendanceCheck(req, res, userId) == false) { // 업데이트 실패함 
-                    console.log("업데이트실패?")
                     res.json({
                         'code': statusCode.SERVER_ERROR
                     })
@@ -257,7 +256,6 @@ const apiController = {
                 }
             }
             else { //첫출석 아님
-                console.log("첫출석아니에요?")
                 res.json({
                     'code': statusCode.NO
                 })

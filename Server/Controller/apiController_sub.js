@@ -36,7 +36,6 @@ function attendanceCheck(req, res, userId) {
             return false;
         }
         else {
-            console.log("First login !");
             return true;
         }
     })
