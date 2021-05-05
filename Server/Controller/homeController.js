@@ -8,7 +8,7 @@ const smtpTransport = require("../config/email");
 const crypto = require('crypto');
 const statusCode = require("../config/serverStatusCode");
 const serverConfig = require("../config/serverConfig");
-const { checkLastLogin } = require("./apiController_sub");
+const { dailyAttendance_id } = require("./apiController");
 
 var homeController = {
     //회원가입
@@ -96,7 +96,7 @@ var homeController = {
                             })
                         } else {
                             console.log(loginId + " is logged in");
-                            checkLastLogin(req, res, result[0].id)
+                            dailyAttendance_id(req, res, result[0].id)
                         }
                     })
                 }

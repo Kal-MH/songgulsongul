@@ -54,7 +54,7 @@ const API_POST_KEEP = "/keep";
 const API_POST_COMMENT_INSERT = "/comment";
 const API_POST_COMMENT_DELETE = "/comment/delete";
 
-const API_DAILY_ATTENDANCE = "/point-attendance";
+const API_DAILY_ATTENDANCE = "/point/attendance";
 
 //img tag api temporary
 const API_NAVER_ITEM_TAG = "/naver/item-tag";
