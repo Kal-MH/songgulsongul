@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
     final int RESULT_OK = 200;
     final int RESULT_CLIENT_ERR= 204;
+    final int RESULT_NO = 201;
     final int RESULT_SERVER_ERR = 500;
 
     boolean test = true;
@@ -117,13 +118,20 @@ public class LoginActivity extends AppCompatActivity {
                             int resultCode = result.getCode();
 
                             // 로그인 성공시 --> 로그인 기록 저장, home으로 전환
-                            if (resultCode == RESULT_OK) {
+                            if (resultCode == RESULT_OK) { // 로그인성공, 오늘의 첫로그인
 
                                 int user_id = result.getId();
-                                LoginSharedPreference.setLoginId(LoginActivity.this, login_id);
-                                LoginSharedPreference.setUserId(LoginActivity.this, user_id);
+                                LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
 
-
+                                Toast.makeText(LoginActivity.this, "출석체크 되었습니다!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else if( resultCode == RESULT_NO){ // 로그인 성공, 오늘의 첫로그인 아님
+                                int user_id = result.getId();
+                                LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
+                                Toast.makeText(LoginActivity.this, "반갑습니다!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();

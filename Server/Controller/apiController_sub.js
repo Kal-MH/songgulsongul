@@ -8,34 +8,11 @@ function generateCurrentDate(type) {
     var day = date.getDate();
     month = month >= 10 ? month : '0' + month;
     day = day >= 10 ? day : '0' + day;
-    
+
     return (date.getFullYear() + "-" + month + "-" + day);
 }
 
-function updatePoint(req, res, sql, type, userId) {
-    connection.query(sql, function (err, result) {
-        if (err){
-            console.log(err);
-            res.json({
-                'code' : statusCode.SERVER_ERROR
-            })
-        } else {
-            if (type == 0) {
-                res.json({
-                    'code' : statusCode.OK,
-                    'id' : userId
-                })    
-            } else {
-                res.json({
-                    'code' : statusCode.OK
-                })
-            }
-        }
-    })
-}
-
-//point 올리기
-function updatePoints(req, res, point, userId)  {
+function updatePoint(req, res, point, userId) {
     var sql = `update user set point = point + ${point} where id = ${userId};`;
 
     connection.query(sql, function (err, result) {
@@ -49,10 +26,10 @@ function updatePoints(req, res, point, userId)  {
     })
 }
 
-// last_login업데이트, point 올리기
-function attendanceCheck(req, res , userId) {
+
+function attendanceCheck(req, res, userId) {
     var sql = `update user set last_login = NOW() where id = ${userId};`
-                 + `update user set point = point + 20  where id = ${userId};`;
+        + `update user set point = point + 20  where id = ${userId};`;
 
     connection.query(sql, function (err, result) {
         if (err) {
@@ -71,7 +48,7 @@ const apiController_subFunc = {
 
         var sql = `select last_login from user where id = ${userId}`
 
-        connection.query(sql, function (err, result){
+        connection.query(sql, function (err, result) {
 
             if (err) {
                 console.log(err);
@@ -83,19 +60,28 @@ const apiController_subFunc = {
 
             const lastYearMonthDate = generateCurrentDate();
             if (result[0].last_login != lastYearMonthDate) {
-                if (attendanceCheck(req, res, userId) == false) {
+                if (attendanceCheck(req, res, userId) == false) { //업데이트 실패함 
                     res.json({
                         'code': statusCode.SERVER_ERROR
                     })
                     return;
                 }
+                else { //출석체크 성공         
+                    res.json({
+                        'code': statusCode.OK,
+                        'id': userId
+                    })
+                }
             }
-            res.json({
-                'code': statusCode.OK,
-                'id': userId
-            })
+            else { //첫출석 아님
+                res.json({
+                    'code': statusCode.NO,
+                    'id': userId
+                })
+            }
         })
     },
+    
 }
 
 module.exports = apiController_subFunc;
