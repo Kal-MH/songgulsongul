@@ -35,14 +35,13 @@ import smu.capstone.paper.data.FollowListData;
 import smu.capstone.paper.item.FollowItem;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class FragFollower extends Fragment {
     // ServiceApi 객체 생성
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+    StatusCode statusCode;
 
-    final int RESULT_OK = 200;
-    final int RESULT_CLIENT_ERR= 204;
-    final int RESULT_SERVER_ERR = 500;
 
     RecyclerView rv;
     FollowAdapter adapter;
@@ -111,7 +110,7 @@ public class FragFollower extends Fragment {
                 JsonObject result = response.body();
                 int resultCode = result.get("code").getAsInt();
 
-                if(resultCode == RESULT_OK){
+                if(resultCode == statusCode.RESULT_OK){
                     JsonArray following_list = result.getAsJsonArray("followingInfo");
                     JsonArray follower_list = result.getAsJsonArray("followerInfo");
 
@@ -138,7 +137,7 @@ public class FragFollower extends Fragment {
                     adapter = new FollowAdapter(getContext(), obj, sflag);
                     rv.setAdapter(adapter);
                 }
-                else if(resultCode == RESULT_CLIENT_ERR){
+                else if(resultCode == statusCode.RESULT_CLIENT_ERR){
                     new AlertDialog.Builder(getContext())
                             .setTitle("경고")
                             .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")

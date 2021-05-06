@@ -46,15 +46,13 @@ import smu.capstone.paper.data.ProfileData;
 import smu.capstone.paper.data.UserData;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 
 public class ProfileActivity extends AppCompatActivity {
     // ServiceApi 객체 생성
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
-
-    final int RESULT_OK = 200;
-    final int RESULT_CLIENT_ERR= 204;
-    final int RESULT_SERVER_ERR = 500;
+    StatusCode statusCode;
 
     final int MY = 1;
     final int FOLLOWING = 2;
@@ -165,7 +163,7 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                         CodeResponse result = response.body();
                         int resultCode = result.getCode();
-                        if(resultCode == RESULT_OK){
+                        if(resultCode == statusCode.RESULT_OK){
                             follow_btn.setVisibility(View.INVISIBLE);
                             unfollow_btn.setVisibility(View.VISIBLE);
                             unfollow_btn.setEnabled(true);
@@ -173,7 +171,7 @@ public class ProfileActivity extends AppCompatActivity {
                             follower_cnt++;
                             follower_count_tv.setText(follower_cnt+"");
                         }
-                        else if(resultCode == RESULT_CLIENT_ERR){
+                        else if(resultCode == statusCode.RESULT_CLIENT_ERR){
                             new AlertDialog.Builder(ProfileActivity.this)
                                     .setTitle("경고")
                                     .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
@@ -217,7 +215,7 @@ public class ProfileActivity extends AppCompatActivity {
                             follower_cnt--;
                             follower_count_tv.setText(follower_cnt+"");
                         }
-                        else if(resultCode == RESULT_SERVER_ERR){
+                        else if(resultCode == statusCode.RESULT_SERVER_ERR){
                             new AlertDialog.Builder(ProfileActivity.this)
                                     .setTitle("경고")
                                     .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
@@ -262,7 +260,7 @@ public class ProfileActivity extends AppCompatActivity {
                     profile_item = result;
                     setProfileData(result);
                 }
-                else if(resultCode == RESULT_CLIENT_ERR){
+                else if(resultCode == statusCode.RESULT_CLIENT_ERR){
                     new AlertDialog.Builder(ProfileActivity.this)
                             .setTitle("경고")
                             .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
