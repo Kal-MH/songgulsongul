@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.FollowAdapter;
 import smu.capstone.paper.data.FollowListData;
@@ -48,7 +49,11 @@ public class FragFollower extends Fragment {
     JsonObject obj = new JsonObject();
     int status;
     int sflag = 0;
-    String login_id = "test1234";
+
+    final int MY = 1;
+    final int OTHER = 0;
+
+    String login_id;
     String user_id;
 
     @Nullable
@@ -64,13 +69,16 @@ public class FragFollower extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rv.setLayoutManager(layoutManager);
 
+        login_id = LoginSharedPreference.getLoginId(getContext());
+
+
         Bundle bundle = getArguments();
         if(!login_id.equals(bundle.getString("userId"))) {
             user_id = bundle.getString("userId");
-            status = 0;
+            status = OTHER;
         }
         else {
-            status = 1;
+            status = MY;
         }
 
         getFollowerData();
@@ -101,7 +109,7 @@ public class FragFollower extends Fragment {
     public void getFollowerData(){
         FollowListData data = new FollowListData(login_id);
         data.addStatus(status);
-        if(status != 1){
+        if(status == OTHER ){
             data.addUserId(user_id);
         }
         serviceApi.FollowerList(data).enqueue(new Callback<JsonObject>() {

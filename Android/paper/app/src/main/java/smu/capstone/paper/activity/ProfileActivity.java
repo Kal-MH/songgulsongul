@@ -55,11 +55,11 @@ public class ProfileActivity extends AppCompatActivity {
     StatusCode statusCode;
 
     final int MY = 1;
-    final int FOLLOWING = 2;
-    final int UNFOLLOWING = 3;
+    final int OTHER = 0;
+
     public int Status;
-    String login_id = "test1234"; // sp수정 전 임시 저장 --> 수정 후 아래코드로 적용
-    //String login_id = LoginSharedPreference.getLoginId(this);
+
+    String login_id;
     String user_id;
 
     private GridView gridView;
@@ -101,15 +101,18 @@ public class ProfileActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
 
         // 아이디 세팅
-        if(!login_id.equals(intent.getStringExtra("userId") ) && intent.getStringExtra("userId") != null) {
+        login_id = LoginSharedPreference.getLoginId(ProfileActivity.this);
+        user_id = intent.getStringExtra("userId");
+
+        if(!login_id.equals(user_id) ) { //남의 프로필 보기
             user_id = intent.getStringExtra("userId");
             //actionBar.setTitle(LoginSharedPreference.getLoginId(this));
             actionBar.setTitle(intent.getStringExtra("userId"));
-            Status = 0;
+            Status = OTHER;
         }
-        else {
+        else { //내 프로필
             actionBar.setTitle(login_id);
-            Status = 1;
+            Status = MY;
         }
 
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
@@ -207,7 +210,7 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                         CodeResponse result = response.body();
                         int resultCode = result.getCode();
-                        if(resultCode == RESULT_OK){
+                        if(resultCode == StatusCode.RESULT_OK){
                             unfollow_btn.setVisibility(View.INVISIBLE);
                             follow_btn.setVisibility(View.VISIBLE);
                             follow_btn.setEnabled(true);
@@ -247,7 +250,7 @@ public class ProfileActivity extends AppCompatActivity {
     // server에서 data전달
     public void getProfileData(){
         UserData data = new UserData(login_id, Status);
-        if(Status != 1) // 타인의 프로필일 경우
+        if(Status == OTHER) // 타인의 프로필일 경우
             data.SetUserId(user_id);
 
         serviceApi.Profile(data).enqueue(new Callback<JsonObject>() {
@@ -256,7 +259,7 @@ public class ProfileActivity extends AppCompatActivity {
                 JsonObject result = response.body();
                 int resultCode = result.get("code").getAsInt();
 
-                if(resultCode == RESULT_OK){
+                if(resultCode == statusCode.RESULT_OK){
                     profile_item = result;
                     setProfileData(result);
                 }
@@ -275,7 +278,7 @@ public class ProfileActivity extends AppCompatActivity {
                             })
                             .show();
                 }
-                else{
+                else if(resultCode == statusCode.RESULT_SERVER_ERR){
                     Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -313,26 +316,27 @@ public class ProfileActivity extends AppCompatActivity {
             gridView.setAdapter(adapter);
 
 
-        if(Status == MY) {
+        if(Status == MY) { // 내 프로필
             follow_btn.setEnabled(false);
             follow_btn.setVisibility(View.INVISIBLE);
             pointview.setVisibility(View.VISIBLE);
             points_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("point").getAsInt() + "p");
         }
-        else{ // 타인 프로필
-            int flag = obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("flag").getAsInt();
-            if(flag == 0) { // 팔로우 x
+        else if( Status == OTHER ){ // 타인 프로필
+            int isFollowing = obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("flag").getAsInt();
+
+            if(isFollowing == 0) { // 팔로우 x
                 follow_btn.setEnabled(true);
                 follow_btn.setVisibility(View.VISIBLE);
-                pointview.setVisibility(View.INVISIBLE);
             }
-            else{
+            else{ //팔로우중
                 follow_btn.setEnabled(false);
                 follow_btn.setVisibility(View.INVISIBLE);
                 unfollow_btn.setEnabled(true);
                 unfollow_btn.setVisibility(View.VISIBLE);
-                pointview.setVisibility(View.INVISIBLE);
             }
+
+            pointview.setVisibility(View.INVISIBLE);
         }
     }
 
