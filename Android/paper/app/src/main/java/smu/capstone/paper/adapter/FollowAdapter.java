@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.FollowActivity;
 import smu.capstone.paper.activity.ProfileActivity;
@@ -41,27 +42,25 @@ import smu.capstone.paper.data.FollowData;
 import smu.capstone.paper.item.FollowItem;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder> {
     // ServiceApi 객체 생성
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
-
-    final int RESULT_OK = 200;
-    final int RESULT_CLIENT_ERR= 204;
-    final int RESULT_SERVER_ERR = 500;
+    StatusCode statusCode;
 
     Context context;
     JsonObject obj = new JsonObject();
     JsonArray dataList;
     int itemCnt;
     int status;
-    String login_id = "test1234";
-    //String login_id = LoginSharedPreference.getLoginId(this);
+    String login_id;
 
     public FollowAdapter (Context context, JsonObject obj, int status) {
         this.context = context;
         this.obj = obj;
         this.status = status;
+        login_id = LoginSharedPreference.getLoginId(context);
 
         dataList = obj.getAsJsonArray("data");
         itemCnt = dataList.size();
@@ -117,11 +116,11 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
                     public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                         CodeResponse result = response.body();
                         int resultCode = result.getCode();
-                        if(resultCode == RESULT_OK){
+                        if(resultCode == statusCode.RESULT_OK){
                             holder.follow_btn.setVisibility(View.GONE);
                             holder.follow_text.setVisibility(View.VISIBLE);
                         }
-                        else if(resultCode == RESULT_CLIENT_ERR){
+                        else if(resultCode == statusCode.RESULT_CLIENT_ERR){
                             new AlertDialog.Builder(context)
                                     .setTitle("경고")
                                     .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")

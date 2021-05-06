@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.ProfileActivity;
 import smu.capstone.paper.adapter.FollowAdapter;
@@ -48,8 +49,12 @@ public class FragFollowing extends Fragment {
 
     RecyclerView rv;
     FollowAdapter adapter;
+
     int status;
-    String login_id = "test1234";
+    final int MY = 1;
+    final int OTHER = 0;
+
+    String login_id;
     String user_id;
     JsonObject login_following_list = new JsonObject();
     JsonObject user_following_list = new JsonObject();
@@ -67,16 +72,18 @@ public class FragFollowing extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rv.setLayoutManager(layoutManager);
 
+        login_id = LoginSharedPreference.getLoginId(getContext());
+
         Bundle bundle = getArguments();
         if(!login_id.equals(bundle.getString("userId"))) {
             user_id = bundle.getString("userId");
-            status = 0;
+            status = OTHER;
         }
         else {
-            status = 1;
+            status = MY;
         }
 
-        if(status == 1)
+        if(status == MY)
             getFollowingData();
         else
             getUserFollowingData();
@@ -114,7 +121,7 @@ public class FragFollowing extends Fragment {
 
                 if(resultCode == statusCode.RESULT_OK){
                     login_following_list.add("data", result.getAsJsonArray("followinfo"));
-                    if(status == 1) {
+                    if(status == MY) {
                         adapter = new FollowAdapter(getContext(), login_following_list, status);
                         rv.setAdapter(adapter);
                     }
