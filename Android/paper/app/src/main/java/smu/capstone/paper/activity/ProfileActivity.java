@@ -364,7 +364,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             case R.id.profile_logout:
                 // LogoutAction
-                LoginSharedPreference.clearLoginId(ProfileActivity.this);
+                LoginSharedPreference.clearLogin(ProfileActivity.this);
                 Intent intent3 = new Intent(ProfileActivity.this, LoginActivity.class);
                 intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent3);

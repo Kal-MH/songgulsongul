@@ -35,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.R;
 import smu.capstone.paper.data.CodeResponse;
-import smu.capstone.paper.data.EmailAuthData;
+import smu.capstone.paper.data.EmailData;
 import smu.capstone.paper.data.IdCheckData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.server.RetrofitClient;
@@ -188,6 +188,33 @@ public  class JoinActivity extends AppCompatActivity {
         });
 
         // 비밀번호 일치 확인
+        join_pw_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(join_pw_check_text.getText().toString().trim().length() > 0) {
+                    if (s.toString().equals(join_pw_check_text.getText().toString())) {
+                        join_pw_correct_text.setText("비밀번호가 일치합니다.");
+                        join_pw_correct_text.setVisibility(View.VISIBLE);
+                        password_check_flag = 1;
+                    } else {
+                        join_pw_correct_text.setText("비밀번호가 일치하지 않습니다.");
+                        join_pw_correct_text.setVisibility(View.VISIBLE);
+                        password_check_flag = 0;
+                    }
+                }
+            }
+        });
+
         join_pw_check_text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -217,7 +244,6 @@ public  class JoinActivity extends AppCompatActivity {
         join_send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Pattern email_pattern = Pattern.compile("^[a-zA-X0-9]@[a-zA-Z0-9].[a-zA-Z0-9]");
                 Pattern email_pattern = Patterns.EMAIL_ADDRESS;
                 String email = join_email_text.getText().toString();
                 email = email.trim();
@@ -254,14 +280,13 @@ public  class JoinActivity extends AppCompatActivity {
 
                 else {
                     // 입력한 email로 server통신
-                    EmailAuthData data = new EmailAuthData(email);
+                    EmailData data = new EmailData(email);
                     serviceApi.EmailAuth(data).enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                                 JsonObject result = response.body();
                                 auth = result.get("authNumber").getAsString();
                                 int resultCode = result.get("code").getAsInt();
-                                System.out.println(resultCode);
 
                                 if(resultCode == RESULT_OK) {
                                     join_check_key.setEnabled(true); // 인증번호 확인 버튼 활성화
@@ -395,20 +420,6 @@ public  class JoinActivity extends AppCompatActivity {
                 int login_id_num = login_id.getBytes().length;
                 int sns_url_num = sns_url.getBytes().length;
 
-                // 미입력한 값이 있을 경우 --> 서버 통신x
-                if(email_num <= 0 || password_num <= 0 || login_id_num <= 0){
-                    new AlertDialog.Builder(JoinActivity.this)
-                            .setTitle("경고")
-                            .setMessage("항목을 모두 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .show();
-                }
-
                 // sns계정 유 선택 --> 값 입력x 경우 --> 서버 통신x
                 if(sns_check_flag == 1 && sns_url_num <= 0 ){
                         new AlertDialog.Builder(JoinActivity.this)
@@ -421,6 +432,20 @@ public  class JoinActivity extends AppCompatActivity {
                                     }
                                 })
                                 .show();
+                }
+
+                // 미입력한 값이 있을 경우 --> 서버 통신x
+                if(email_num <= 0 || password_num <= 0 || login_id_num <= 0){
+                    new AlertDialog.Builder(JoinActivity.this)
+                            .setTitle("경고")
+                            .setMessage("항목을 모두 입력해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
                 }
 
                 // 아이디 중복확인 완료x --> 서버 통신x

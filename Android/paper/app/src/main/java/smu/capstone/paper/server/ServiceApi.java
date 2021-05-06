@@ -8,13 +8,17 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import smu.capstone.paper.data.CodeResponse;
-import smu.capstone.paper.data.EmailAuthData;
+
 import smu.capstone.paper.data.FollowData;
 import smu.capstone.paper.data.FollowListData;
+import smu.capstone.paper.data.EmailData;
+import smu.capstone.paper.data.FindData;
 import smu.capstone.paper.data.IdCheckData;
+import smu.capstone.paper.data.IdData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.LoginData;
 import smu.capstone.paper.data.UserData;
+import smu.capstone.paper.data.LoginResponse;
 
 public interface ServiceApi {
     // 아이디 중복체크
@@ -23,16 +27,12 @@ public interface ServiceApi {
 
     // 인증 이메일 보내기
     @POST("/api/email-auth")
-    Call<JsonObject> EmailAuth(@Body EmailAuthData data);
+    Call<JsonObject> EmailAuth(@Body EmailData data);
 
     // 회원가입
     @POST("/join")
     Call<CodeResponse> Join(@Body JoinData data);
-
-    // 로그인
-    @POST("/login")
-    Call<CodeResponse> Login(@Body LoginData data);
-
+  
     // 프로필
     @POST("/user/profile")
     Call<JsonObject> Profile(@Body UserData data);
@@ -60,4 +60,20 @@ public interface ServiceApi {
     // 보관함
     @POST("/user/keep")
     Call<JsonObject> Keep(@Body UserData data);
+
+    //로그인
+    Call<LoginResponse> Login(@Body LoginData data);
+
+    //출석체크 포인트
+    @POST("/api/point/attendance")
+    Call<CodeResponse> Attendance(@Body IdData data);
+
+    // 아이디 찾기
+    @POST("/find/id")
+    Call<CodeResponse> FindId(@Body EmailData data);
+
+    // 비밀번호 찾기
+    @POST("/find/password")
+    Call<CodeResponse> FindPw(@Body FindData data);
+
 }
