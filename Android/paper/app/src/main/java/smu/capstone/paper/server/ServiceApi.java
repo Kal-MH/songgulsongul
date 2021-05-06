@@ -62,6 +62,7 @@ public interface ServiceApi {
     Call<JsonObject> Keep(@Body UserData data);
 
     //로그인
+    @POST("/login")
     Call<LoginResponse> Login(@Body LoginData data);
 
     //출석체크 포인트
