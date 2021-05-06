@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +33,7 @@ public class FragHomeComu extends Fragment {
     private View view;
     private SearchView searchView;
     PostImageAdapter adapter;
+    JsonObject post_data;
 
     @Nullable
     @Override
@@ -64,14 +67,10 @@ public class FragHomeComu extends Fragment {
 
         // view에서 id 찾아야함
         GridView gridView = view.findViewById(R.id.comu_grid);
-        final JSONObject obj = getPostData();
+        final JsonObject obj = getPostData();
 
         // 어뎁터 적용
-        try {
-            adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, obj);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
+        adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, obj);
         gridView.setAdapter(adapter);
 
 
@@ -83,12 +82,8 @@ public class FragHomeComu extends Fragment {
                 Intent intent = new Intent(getContext(), PostActivity.class);
 
                 // 게시글 id 전달
-                try {
-                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("postId");
-                    intent.putExtra("postId", postId);
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
+                int postId = obj.getAsJsonArray("data").get(position).getAsJsonObject().get("id").getAsInt();
+                intent.putExtra("postId", postId);
 
                 startActivity(intent);
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
@@ -101,7 +96,8 @@ public class FragHomeComu extends Fragment {
     }
 
     //server에서 data전달
-    public JSONObject getPostData(){
+    public JsonObject getPostData(){
+        post_data = new JsonObject();
         JSONObject item = new JSONObject();
         JSONArray arr= new JSONArray();
         int pid = 1;
@@ -119,7 +115,7 @@ public class FragHomeComu extends Fragment {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        return item;
+        return post_data;
     }
 
 }

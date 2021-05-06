@@ -1,36 +1,60 @@
 package smu.capstone.paper.fragment;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import smu.capstone.paper.R;
+import smu.capstone.paper.activity.ProfileActivity;
 import smu.capstone.paper.adapter.FollowAdapter;
 import smu.capstone.paper.adapter.HomeFeedAdapter;
+import smu.capstone.paper.data.FollowListData;
 import smu.capstone.paper.item.FollowItem;
 import smu.capstone.paper.item.HomeFeedItem;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
 
 public class FragFollowing extends Fragment {
+    // ServiceApi 객체 생성
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+
+    final int RESULT_OK = 200;
+    final int RESULT_CLIENT_ERR= 204;
+    final int RESULT_SERVER_ERR = 500;
 
     RecyclerView rv;
     FollowAdapter adapter;
-    int status = 1;
-    JSONObject login_following_list = getFollowingData();
+    int status;
+    String login_id = "test1234";
+    String user_id;
+    JsonObject login_following_list = new JsonObject();
+    JsonObject user_following_list = new JsonObject();
 
     @Nullable
     @Override
@@ -45,17 +69,19 @@ public class FragFollowing extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rv.setLayoutManager(layoutManager);
 
-        JSONObject obj = getFollowingData();
-        try {
-            if(status == 1)
-                adapter = new FollowAdapter(getContext(), obj);
-            else
-                adapter = new FollowAdapter(getContext(), getUserFollowingData());
-        } catch (JSONException e){
-            e.printStackTrace();
+        Bundle bundle = getArguments();
+        if(!login_id.equals(bundle.getString("userId"))) {
+            user_id = bundle.getString("userId");
+            status = 0;
+        }
+        else {
+            status = 1;
         }
 
-        rv.setAdapter(adapter);
+        if(status == 1)
+            getFollowingData();
+        else
+            getUserFollowingData();
 
         return rootView;
     }
@@ -80,92 +106,106 @@ public class FragFollowing extends Fragment {
     }
 
     // server에서 data전달 --> 로그인한 사용자의 팔로우 리스트
-    public JSONObject getFollowingData(){
-        JSONObject item = new JSONObject();
-        JSONArray arr= new JSONArray();
+    public void getFollowingData(){
+        FollowListData data = new FollowListData(login_id);
+        serviceApi.LFollowList(data).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject result = response.body();
+                int resultCode = result.get("code").getAsInt();
 
-        // 임시 데이터 저장
-        try{
-            JSONObject obj1 = new JSONObject();
-            obj1.put("userId", "Prof.cho");
-            obj1.put("image", R.drawable.test);
-            arr.put(obj1);
+                if(resultCode == RESULT_OK){
+                    login_following_list.add("data", result.getAsJsonArray("followinfo"));
+                    if(status == 1) {
+                        adapter = new FollowAdapter(getContext(), login_following_list, status);
+                        rv.setAdapter(adapter);
+                    }
+                }
+                else if(resultCode == RESULT_CLIENT_ERR){
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("경고")
+                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .show();
+                }
+                else{
+                    Toast.makeText(getContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-            JSONObject obj2 = new JSONObject();
-            obj2.put("userId", "yujin1292");
-            obj2.put("image", R.drawable.ic_baseline_emoji_emotions_24);
-            arr.put(obj2);
-
-            JSONObject obj3 = new JSONObject();
-            obj3.put("userId", "arami98");
-            obj3.put("image", R.drawable.ic_favorite);
-            arr.put(obj3);
-
-            JSONObject obj4 = new JSONObject();
-            obj4.put("userId", "wonhee123");
-            obj4.put("image", R.drawable.ic_chat_black);
-            arr.put(obj4);
-            item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return item;
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(getContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Log.e("팔로우 리스트 불러오기 에러", t.getMessage());
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
     }
 
     // server에서 data전달 --> 로그인한 사용자가 아닐경우 (로그인한 사용자의 리스트 + 선택한 사용자의 리스트 전달)
-    public JSONObject getUserFollowingData(){
-        JSONObject item = new JSONObject();
-        JSONArray user_arr = new JSONArray();
+    public void getUserFollowingData(){
+        FollowListData data = new FollowListData(login_id);
+        data.addUserId(user_id);
+        serviceApi.FollowList(data).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject result = response.body();
+                int resultCode = result.get("code").getAsInt();
 
-        try{
-            JSONArray arr = getFollowingData().getJSONArray("data");
+                if(resultCode == RESULT_OK){
+                    JsonArray login_list = result.getAsJsonArray("loginFollowInfo");
+                    JsonArray user_list = result.getAsJsonArray("userFollowInfo");
+                    // 선택한 사용자의 팔로우 리스트에 있는 사용자를 팔로우 했는지 체크
+                    for(int i = 0; i < user_list.size(); i++){
+                        for(int j = 0; j < login_list.size(); j++){
+                            int check = 0;
+                            String user_follower_id = user_list.get(i).getAsJsonObject().get("userId").getAsString();
+                            String follower_id = login_list.get(j).getAsJsonObject().get("userId").getAsString();
 
-            // 임시 데이터 저장
-            JSONObject user_obj1 = new JSONObject();
-            user_obj1.put("userId", "yujin1292");
-            user_obj1.put("image", R.drawable.ic_baseline_emoji_emotions_24);
-            user_arr.put(user_obj1);
+                            // Following
+                            if(user_follower_id.equals(follower_id)) {
+                                user_list.get(i).getAsJsonObject().addProperty("flag", true);
+                                check = 1;
+                                break;
+                            }
 
-            JSONObject user_obj2 = new JSONObject();
-            user_obj2.put("userId", "arami98");
-            user_obj2.put("image", R.drawable.ic_favorite);
-            user_arr.put(user_obj2);
-
-            JSONObject user_obj3 = new JSONObject();
-            user_obj3.put("userId", "wonhee123");
-            user_obj3.put("image", R.drawable.ic_chat_black);
-            user_arr.put(user_obj3);
-
-            JSONObject user_obj4 = new JSONObject();
-            user_obj4.put("userId", "hahahoho");
-            user_obj4.put("image", R.drawable.ic_baseline_face_24);
-            user_arr.put(user_obj4);
-
-            // 선택한 사용자의 팔로우 리스트에 있는 사용자를 팔로우 했는지 체크
-            for(int i = 0; i < user_arr.length(); i++){
-                for(int j = 0; j < arr.length(); j++){
-                    int check = 0;
-                    String user_follower_id = user_arr.getJSONObject(i).getString("userId");
-                    String follower_id = arr.getJSONObject(j).getString("userId");
-
-                    // Following
-                    if(user_follower_id == follower_id) {
-                        user_arr.getJSONObject(i).put("flag", 1);
-                        check = 1;
-                        break;
+                            // Unfollowing
+                            if (check == 0)
+                                user_list.get(i).getAsJsonObject().addProperty("flag", false);
+                        }
                     }
+                    user_following_list.add("data", user_list);
+                    adapter = new FollowAdapter(getContext(), user_following_list, status);
+                    rv.setAdapter(adapter);
 
-                    // Unfollowing
-                    if (check == 0)
-                        user_arr.getJSONObject(i).put("flag", 0);
+                }
+                else if(resultCode == RESULT_CLIENT_ERR){
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("경고")
+                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .show();
+                }
+                else{
+                    Toast.makeText(getContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                 }
             }
-            item.put("data", user_arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
 
-        return item;
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(getContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Log.e("사용자 팔로우 리스트 불러오기 에러", t.getMessage());
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
     }
 
 }

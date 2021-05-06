@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +30,7 @@ public class FragPostTag extends Fragment {
 
     private View view;
     PostImageAdapter adapter;
+    JsonObject tag_data;
 
     @Nullable
     @Override
@@ -35,13 +38,9 @@ public class FragPostTag extends Fragment {
         view = inflater.inflate(R.layout.frag_post_tag, container, false);
 
         GridView gridView = view.findViewById(R.id.frag_tag_grid);
-        final JSONObject obj = getTagData();
+        final JsonObject obj = getTagData();
 
-        try {
-            adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, obj);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
+        adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, obj);
         gridView.setAdapter(adapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -51,12 +50,8 @@ public class FragPostTag extends Fragment {
                 Intent intent = new Intent(getContext(), PostActivity.class);
 
                 // 게시글 id 전달
-                try {
-                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("post_id");
-                    intent.putExtra("postId", postId);
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
+                int postId = obj.getAsJsonArray("data").get(position).getAsJsonObject().get("post_id").getAsInt();
+                intent.putExtra("postId", postId);
 
                 startActivity(intent);
 
@@ -69,7 +64,8 @@ public class FragPostTag extends Fragment {
     }
 
     // server에서 data전달
-    public JSONObject getTagData(){
+    public JsonObject getTagData(){
+        tag_data = new JsonObject();
         JSONObject item = new JSONObject();
         JSONArray arr= new JSONArray();
         int pid = 1;
@@ -87,6 +83,6 @@ public class FragPostTag extends Fragment {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        return item;
+        return tag_data;
     }
 }

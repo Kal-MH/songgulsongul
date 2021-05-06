@@ -3,9 +3,11 @@ package smu.capstone.paper.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,32 +22,56 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.PostImageAdapter;
+import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.data.FollowData;
+import smu.capstone.paper.data.ProfileData;
+import smu.capstone.paper.data.UserData;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
 
 
 public class ProfileActivity extends AppCompatActivity {
-    public int Status = 1;
+    // ServiceApi 객체 생성
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+
+    final int RESULT_OK = 200;
+    final int RESULT_CLIENT_ERR= 204;
+    final int RESULT_SERVER_ERR = 500;
 
     final int MY = 1;
     final int FOLLOWING = 2;
     final int UNFOLLOWING = 3;
+    public int Status;
+    String login_id = "test1234"; // sp수정 전 임시 저장 --> 수정 후 아래코드로 적용
+    //String login_id = LoginSharedPreference.getLoginId(this);
+    String user_id;
 
     private GridView gridView;
     private PostImageAdapter adapter;
     private TextView feed_count_tv, follow_count_tv, follower_count_tv, points_tv, intro_tv, sns_tv;
-    private Button follow_btn;
+    private Button follow_btn, unfollow_btn;
     private LinearLayout profile_follows;
     private LinearLayout pointview;
-    private JSONObject post_item,profile_item;
+    private JSONObject post_item;
+    private JsonObject obj, profile_item;
     private ImageView profile_userimage;
 
 
@@ -64,6 +90,7 @@ public class ProfileActivity extends AppCompatActivity {
         intro_tv = findViewById(R.id.profile_intro);
         sns_tv = findViewById(R.id.profile_snsurl);
         follow_btn = findViewById(R.id.profile_follow_btn);
+        unfollow_btn = findViewById(R.id.profile_unfollow_btn);
         pointview = findViewById(R.id.profile_pointview);
         gridView = findViewById(R.id.profile_grid);
         profile_userimage = findViewById(R.id.profile_userimage);
@@ -76,44 +103,21 @@ public class ProfileActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
 
         // 아이디 세팅
-        if(Status == MY)
-            actionBar.setTitle(LoginSharedPreference.getLoginId(this));
-        else
-            actionBar.setTitle(intent.getStringExtra("userid"));
+        if(!login_id.equals(intent.getStringExtra("userId") ) && intent.getStringExtra("userId") != null) {
+            user_id = intent.getStringExtra("userId");
+            //actionBar.setTitle(LoginSharedPreference.getLoginId(this));
+            actionBar.setTitle(intent.getStringExtra("userId"));
+            Status = 0;
+        }
+        else {
+            actionBar.setTitle(login_id);
+            Status = 1;
+        }
 
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
-
-
-
-        setProfileData();
-        setPostData();
-
-        //Status에 떄라 버튼과 포인트 visibility와 enable 설정
-        switch(Status){
-            //본인의 계정 프로필
-            case MY:
-                follow_btn.setEnabled(false);
-                follow_btn.setVisibility(View.INVISIBLE);
-                pointview.setVisibility(View.VISIBLE);
-                break;
-            //팔로우 한 타인의 프로필
-            case FOLLOWING :
-                follow_btn.setEnabled(false);
-                follow_btn.setVisibility(View.VISIBLE);
-                pointview.setVisibility(View.INVISIBLE);
-                break;
-            //팔로우 하지 않은 타인의 프로필
-            case UNFOLLOWING:
-                follow_btn.setEnabled(true);
-                follow_btn.setVisibility(View.VISIBLE);
-                pointview.setVisibility(View.INVISIBLE);
-                break;
-            default:
-                break;
-        }
-
+        getProfileData();
 
         profile_follows = findViewById(R.id.profile_follows);
 
@@ -123,13 +127,12 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent( ProfileActivity.this, FollowActivity.class);
 
                 // intro, picture 전달
-                try{
-                    JSONObject obj = getProfileData();
-                    intent.putExtra("intro", obj.getString("intro"));
-                    intent.putExtra("picture", obj.getInt("profile_image"));
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
+                JsonArray profile_info = profile_item.getAsJsonArray("profileInfo");
+                intent.putExtra("userId", profile_info.get(0).getAsJsonObject().get("userId").getAsString());
+                intent.putExtra("intro", profile_info.get(0).getAsJsonObject().get("intro").isJsonNull() ?
+                        "" :  profile_info.get(0).getAsJsonObject().get("intro").getAsString());
+                intent.putExtra("picture", profile_info.get(0).getAsJsonObject().get("profile_image").getAsString());
+
 
                startActivity(intent);
             }
@@ -144,15 +147,99 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(ProfileActivity.this, PostActivity.class);
 
                 // 게시글 id 전달
-                try {
-                    int postId = post_item.getJSONArray("data").getJSONObject(position).getInt("postId");
-                    intent.putExtra("postId", postId);
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
+                int postId = profile_item.getAsJsonArray("postInfo").get(position).getAsJsonObject().get("postId").getAsInt();
+                intent.putExtra("postId", postId);
 
                 startActivity(intent);
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
+            }
+        });
+
+        // 팔로우 버튼 Click Listener
+        follow_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FollowData data = new FollowData(login_id, user_id);
+                serviceApi.Follow(data).enqueue(new Callback<CodeResponse>() {
+                    @Override
+                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                        CodeResponse result = response.body();
+                        int resultCode = result.getCode();
+                        if(resultCode == RESULT_OK){
+                            follow_btn.setVisibility(View.INVISIBLE);
+                            unfollow_btn.setVisibility(View.VISIBLE);
+                            unfollow_btn.setEnabled(true);
+                            int follower_cnt = Integer.parseInt(follower_count_tv.getText().toString());
+                            follower_cnt++;
+                            follower_count_tv.setText(follower_cnt+"");
+                        }
+                        else if(resultCode == RESULT_CLIENT_ERR){
+                            new AlertDialog.Builder(ProfileActivity.this)
+                                    .setTitle("경고")
+                                    .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    })
+                                    .show();
+                        }
+                        else {
+                            Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                        Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Log.e("팔로우 하기 에러", t.getMessage());
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
+            }
+        });
+
+        // 언팔로우 버튼 Click Listener
+        unfollow_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FollowData data = new FollowData(login_id, user_id);
+                serviceApi.UnFollow(data).enqueue(new Callback<CodeResponse>() {
+                    @Override
+                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                        CodeResponse result = response.body();
+                        int resultCode = result.getCode();
+                        if(resultCode == RESULT_OK){
+                            unfollow_btn.setVisibility(View.INVISIBLE);
+                            follow_btn.setVisibility(View.VISIBLE);
+                            follow_btn.setEnabled(true);
+                            int follower_cnt = Integer.parseInt(follower_count_tv.getText().toString());
+                            follower_cnt--;
+                            follower_count_tv.setText(follower_cnt+"");
+                        }
+                        else if(resultCode == RESULT_SERVER_ERR){
+                            new AlertDialog.Builder(ProfileActivity.this)
+                                    .setTitle("경고")
+                                    .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    })
+                                    .show();
+                        }
+                        else {
+                            Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                        Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Log.e("언팔로우 하기 에러", t.getMessage());
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
             }
         });
     }
@@ -160,81 +247,94 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     // server에서 data전달
-    public JSONObject getProfileData(){
+    public void getProfileData(){
+        UserData data = new UserData(login_id, Status);
+        if(Status != 1) // 타인의 프로필일 경우
+            data.SetUserId(user_id);
 
-        profile_item = new JSONObject();
+        serviceApi.Profile(data).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject result = response.body();
+                int resultCode = result.get("code").getAsInt();
 
-        // 임시 데이터 저장
-        try{
-            JSONObject obj = new JSONObject();
-            obj.put("followCnt", 100);
-            obj.put("followerCnt", 291);
-            obj.put("point", 4002);
-            obj.put("sns", "https://www.google.com");
-            obj.put("intro", "Good to see you Buddy!");
-            obj.put("profile_image", R.drawable.ic_baseline_emoji_emotions_24); //추후에 url 세팅으로변경
+                if(resultCode == RESULT_OK){
+                    profile_item = result;
+                    setProfileData(result);
+                }
+                else if(resultCode == RESULT_CLIENT_ERR){
+                    new AlertDialog.Builder(ProfileActivity.this)
+                            .setTitle("경고")
+                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 에러 발생 시 새로고침
+                                    Intent intent = getIntent();
+                                    finish();
+                                    startActivity(intent);
+                                }
+                            })
+                            .show();
+                }
+                else{
+                    Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-            return obj;
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return profile_item;
-    }
-    public JSONObject getPostData(){
-        post_item = new JSONObject();
-        JSONArray arr= new JSONArray();
-
-
-        // 임시 데이터 저장
-        try{
-            JSONObject obj = new JSONObject();
-            obj.put("post_id", "111");
-            obj.put("image", R.drawable.ic_favorite);
-            arr.put(obj);
-
-            JSONObject obj2 = new JSONObject();
-            obj2.put("post_id", "123");
-            obj2.put("image", R.drawable.ic_favorite_border);
-            arr.put(obj2);
-
-            JSONObject obj3 = new JSONObject();
-            obj3.put("post_id", "144");
-            obj3.put("image", R.drawable.ic_favorite);
-            arr.put(obj3);
-
-            post_item.put("data", arr);
-
-        }catch (JSONException e){ e.printStackTrace(); }
-
-        return post_item;
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Log.e("프로필 데이터 불러오기 에러", t.getMessage());
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
     }
 
+    public void setProfileData(JsonObject obj){
+        JsonObject post_data = new JsonObject();
 
-    public void setProfileData(){
+            JsonArray arr = obj.getAsJsonArray("postInfo");
+            post_data.add("data", arr);
 
-        JSONObject data = getProfileData();
-        try {
-            follow_count_tv.setText(data.getInt("followCnt") +"");
-            follower_count_tv.setText(data.getInt("followerCnt" )+"");
-            points_tv.setText(data.getInt("point") + "p");
-            intro_tv.setText(data.getString("intro"));
-            sns_tv.setText(data.getString("sns"));
-            Glide.with(this).load(data.getInt("profile_image")).into(profile_userimage); // 게시물 사진
+            follow_count_tv.setText(obj.get("followCnt").getAsInt() + "");
+            follower_count_tv.setText(obj.get("followerCnt").getAsInt() + "");
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            intro_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("intro").isJsonNull() ?
+                   "" : obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("intro").getAsString());
 
-    }
-    public void setPostData(){
-        JSONObject data = getPostData();
-        try {
-            JSONArray arr = data.getJSONArray("data");
-            feed_count_tv.setText(arr.length()+"");
-            adapter = new PostImageAdapter(this,  R.layout.post_image_item , data ) ;
+            sns_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").isJsonNull() ?
+                    "" : obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").getAsString());
+
+            Glide.with(this).load(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("profile_image").getAsString()).into(profile_userimage);
+
+            feed_count_tv.setText(obj.getAsJsonArray("postInfo").isJsonNull() ?
+                    0 + "" : obj.getAsJsonArray("postInfo").size() + "");
+
+            adapter = new PostImageAdapter(this, R.layout.post_image_item, post_data);
             gridView.setAdapter(adapter);
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+
+        if(Status == MY) {
+            follow_btn.setEnabled(false);
+            follow_btn.setVisibility(View.INVISIBLE);
+            pointview.setVisibility(View.VISIBLE);
+            points_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("point").getAsInt() + "p");
+        }
+        else{ // 타인 프로필
+            int flag = obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("flag").getAsInt();
+            if(flag == 0) { // 팔로우 x
+                follow_btn.setEnabled(true);
+                follow_btn.setVisibility(View.VISIBLE);
+                pointview.setVisibility(View.INVISIBLE);
+            }
+            else{
+                follow_btn.setEnabled(false);
+                follow_btn.setVisibility(View.INVISIBLE);
+                unfollow_btn.setEnabled(true);
+                unfollow_btn.setVisibility(View.VISIBLE);
+                pointview.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
