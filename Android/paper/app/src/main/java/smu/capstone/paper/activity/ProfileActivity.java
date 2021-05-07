@@ -278,9 +278,6 @@ public class ProfileActivity extends AppCompatActivity {
                             })
                             .show();
                 }
-                else if(resultCode == statusCode.RESULT_SERVER_ERR){
-                    Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override
