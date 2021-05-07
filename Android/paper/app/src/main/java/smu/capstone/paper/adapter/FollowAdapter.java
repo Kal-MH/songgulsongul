@@ -69,7 +69,8 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
     // 받아온 데이터로 팔로우/팔로워 리스트 내용 셋팅
     public void setItem(@NonNull FollowAdapter.ViewHolder holder, JsonElement item){
         holder.userid.setText(item.getAsJsonObject().get("userId").getAsString());
-        Glide.with(context).load(item.getAsJsonObject().get("image").getAsString()).into(holder.profile_image);
+        String img_addr = RetrofitClient.getBaseUrl() + item.getAsJsonObject().get("image").getAsString();
+        Glide.with(context).load(img_addr).into(holder.profile_image);
     }
 
     @NonNull

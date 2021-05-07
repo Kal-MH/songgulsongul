@@ -307,7 +307,9 @@ public class ProfileActivity extends AppCompatActivity {
             sns_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").isJsonNull() ?
                     "" : obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").getAsString());
 
-            Glide.with(this).load(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("profile_image").getAsString()).into(profile_userimage);
+            String img_addr = RetrofitClient.getBaseUrl()+ obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("profile_image").getAsString();
+            Log.d("profile", img_addr);
+            Glide.with(this).load( img_addr).into(profile_userimage);
 
             feed_count_tv.setText(obj.getAsJsonArray("postInfo").isJsonNull() ?
                     0 + "" : obj.getAsJsonArray("postInfo").size() + "");
