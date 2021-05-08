@@ -15,7 +15,7 @@
 const statusCode = {
     OK: 200,
     NO : 201,
-    CLIENT_ERROR : 204,
+    CLIENT_ERROR : 400,
     SERVER_ERROR : 500
 }
 
