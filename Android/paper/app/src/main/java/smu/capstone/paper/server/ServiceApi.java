@@ -6,7 +6,9 @@ import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 import smu.capstone.paper.data.CodeResponse;
 
 import smu.capstone.paper.data.FollowData;
@@ -76,5 +78,9 @@ public interface ServiceApi {
     // 비밀번호 찾기
     @POST("/find/password")
     Call<CodeResponse> FindPw(@Body FindData data);
+
+    //피드 게시글 가져오기
+    @GET("/post/feeds")
+    Call<JsonObject> GetFeed(@Query("userid") int id, @Query("offset") int offset );
 
 }

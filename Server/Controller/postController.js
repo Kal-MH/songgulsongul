@@ -91,12 +91,15 @@ const postController = {
             }
         })
     },
-    getFeeds : function (req, res) {
+    getFeeds: function (req, res) {
+        
         const loggedUser = req.query.userid;
         const offset = req.query.offset;
 
         const selectFollowSql = `select follow_target_id from follow where follower_id = ${loggedUser};`;
+    
         connection.query(selectFollowSql, function (err, result) {
+      
             if (err){
                 console.log(err);
                 res.json({
@@ -104,7 +107,7 @@ const postController = {
                     'data' : null
                 })
             } else if (result.length == 0) { // 팔로우하는 사람이 없는 경우
-                res.json({
+                 res.json({
                     'code' : statusCode.OK,
                     'data' : result
                 })
@@ -121,6 +124,7 @@ const postController = {
                     order by post_date desc, post_time desc limit ${db_config.limitation};`;
                 }
                 connection.query(selectPostSql, function (req, result) {
+                    
                     if (err){
                         console.log(err);
                         res.json({
@@ -179,6 +183,7 @@ const postController = {
                                         'code' : statusCode.OK,
                                         'data' : data
                                     })
+
                                 }
                             })
                         }

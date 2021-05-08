@@ -6,7 +6,7 @@ const routes = require('../routes');
 var postRouter = express.Router();
 
 postRouter.get(routes.postCommunity, postController.getCommunity);
-postRouter.get(routes.postFeeds, middleWares.onlyPrivate, postController.getFeeds);
+postRouter.get(routes.postFeeds, postController.getFeeds);
 postRouter.get(routes.postSearch, postController.getSearch);
 postRouter.get(routes.postDetail, postController.getPostDetail);
 

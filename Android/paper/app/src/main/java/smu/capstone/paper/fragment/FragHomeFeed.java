@@ -1,12 +1,7 @@
 package smu.capstone.paper.fragment;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,31 +15,43 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
-import org.json.JSONArray;
+import com.google.gson.JsonObject;
+
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.jar.JarException;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HomeFeedAdapter;
-import smu.capstone.paper.item.HomeFeedItem;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class FragHomeFeed extends Fragment {
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
     HomeFeedAdapter adapter;
 
+    int user_id;
+
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+
+    StatusCode statusCode;
+
+    JsonObject feeds;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.frag_home_feed, container, false);
+        //id 세팅
+        user_id = LoginSharedPreference.getUserId(getActivity());
 
-        JSONObject obj = GetFeedData();
+
+
         recyclerView = rootView.findViewById(R.id.feed_recycler);
 
         //refresh
@@ -56,6 +63,7 @@ public class FragHomeFeed extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
 
                 //데이터 변경
+                GetFeedData();
 
             }
         });
@@ -63,12 +71,9 @@ public class FragHomeFeed extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        try {
-            adapter = new HomeFeedAdapter(getContext(), obj);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        recyclerView.setAdapter(adapter);
+        GetFeedData();
+
+
 
         return rootView;
     }
@@ -77,57 +82,41 @@ public class FragHomeFeed extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public static Bitmap drawable2Bitmap(Drawable drawable) {
-        Bitmap bitmap = Bitmap
-                .createBitmap(
-                        drawable.getIntrinsicWidth(),
-                        drawable.getIntrinsicHeight(),
-                        drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
-                                : Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight());
-        drawable.draw(canvas);
-        return bitmap;
+    public void setData(){
+       adapter = new HomeFeedAdapter(getContext(), feeds);
+        recyclerView.setAdapter(adapter);
     }
 
-    // server에서 data전달
-    public JSONObject GetFeedData(){
-        JSONObject item = new JSONObject();
-        JSONArray arr= new JSONArray();
+    // server 에서 data 전달
+    public boolean GetFeedData(){
+        serviceApi.GetFeed(user_id,20).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject result = response.body();
 
-        // 임시 데이터 저장
-        try{
-            JSONObject obj = new JSONObject();
-            obj.put("user_id", "wonhee");
-            obj.put("post_time", "21-02-07");
-            obj.put("likeNum", 499);
-            obj.put("commentsNum", 204);
-            obj.put("text", "hi everyone");
-            obj.put("img_profile",R.drawable.ic_baseline_emoji_emotions_24);
-            obj.put("image",R.drawable.sampleimg);
-            obj.put("likeOnset", 0);
-            obj.put("keepOnset",0);
-            obj.put("post_id", 1);
-            arr.put(obj);
+                int resultCode = result.get("code").getAsInt();
+                if(resultCode == statusCode.RESULT_SERVER_ERR){
+                    Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
+                }
+                else if( resultCode == statusCode.RESULT_OK){
+                    feeds = result;
+                }
+                else {
+                    feeds=result;
+                }
+                setData();
+            }
 
-            JSONObject obj2 = new JSONObject();
-            obj2.put("user_id", "YUJIN");
-            obj2.put("post_time", "21-02-07");
-            obj2.put("likeNum", 20);
-            obj2.put("commentsNum", 52);
-            obj2.put("text", "바쁘다 바빠 현대사회에 사는 이유진의 그림입니다~후후");
-            obj2.put("img_profile", R.drawable.sampleimg);
-            obj2.put("image", R.drawable.test);
-            obj2.put("likeOnset", 0);
-            obj2.put("keepOnset", 0);
-            obj2.put("post_id",2);
-            arr.put(obj2);
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                feeds = new JsonObject();
+                Log.d("feed" , "통신 실패");
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
+        return true;
 
-            item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return item;
     }
 }
