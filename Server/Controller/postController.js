@@ -13,7 +13,7 @@ const postController = {
         const loggedUser = req.query.userid; // 현재 로그인한 사용자 id(loginId가 아님)
         const postId = req.params.id; // 게시글의 id
 
-        if (loggedUser == undefined || postId == undefined) {
+        if (loggedUser == undefined || loggedUser == "" || postId == undefined || postId == "") {
             res.json ({
                 'code' : statusCode.CLIENT_ERROR,
                 'data' : null
