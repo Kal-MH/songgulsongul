@@ -101,24 +101,24 @@ const postController_subFunc = {
             })
         } else if (type == 1) { //getFeeds
             var data = [];
-            for(var i = 0;i < result.length; i += 5){
+            for(var i = 0;i < postData.length; i += 5){
                 var info = {
                     post : {
-                        id : result[i][0].id,
-                        image : result[i][0].image,
-                        text : result[i][0].text,
-                        post_time : result[i][0].post_time,
-                        post_date : result[i][0].post_date
+                        id : postData[i][0].id,
+                        image : postData[i][0].image,
+                        text : postData[i][0].text,
+                        post_time : postData[i][0].post_time,
+                        post_date : postData[i][0].post_date
                     },
                     user : {
-                        user_id : result[i][0].user_id,
-                        login_id : result[i][0].login_id,
-                        img_profile : result[i][0].img_profile
+                        user_id : postData[i][0].user_id,
+                        login_id : postData[i][0].login_id,
+                        img_profile : postData[i][0].img_profile
                     },
-                    commentsNum : (result[i + 1]) ? result[i + 1].length : 0,
-                    likeNum : (result[i + 2]) ? result[i + 2].length : 0,
-                    likeOnset : (result[i + 3] && result[i + 3].length != 0) ? 1 : 0,
-                    keepOnset : (result[i + 4] && result[i + 4].length != 0) ? 1 : 0
+                    commentsNum : (postData[i + 1]) ? postData[i + 1].length : 0,
+                    likeNum : (postData[i + 2]) ? postData[i + 2].length : 0,
+                    likeOnset : (postData[i + 3] && postData[i + 3].length != 0) ? 1 : 0,
+                    keepOnset : (postData[i + 4] && postData[i + 4].length != 0) ? 1 : 0
                 }
                 data.push(info);
             }
