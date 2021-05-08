@@ -1,12 +1,21 @@
 package smu.capstone.paper.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,6 +27,7 @@ import smu.capstone.paper.data.IdData;
 import smu.capstone.paper.data.LoginResponse;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class FirstAuthActivity extends AppCompatActivity {
 
@@ -25,16 +35,35 @@ public class FirstAuthActivity extends AppCompatActivity {
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     private Intent intent;
 
-    final int RESULT_OK = 200;
-    final int RESULT_NO = 201;
-    final int RESULT_CLIENT_ERR= 204;
-    final int RESULT_SERVER_ERR = 500;
+    private static final int MULTIPLE_PERMISSIONS = 101;
+    private String[] permissions = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, // 기기, 사진, 미디어, 파일 엑세스 권한
+            Manifest.permission.CAMERA
+    };
+
+    List<String> permissionList = new ArrayList<>();
+
+    StatusCode statusCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_auth);
 
+        // 퍼미션 체킹
+        if (Build.VERSION.SDK_INT >= 23) { // 안드로이드 6.0 이상일 경우 퍼미션 체크
+            if( checkPermissions())
+                doCheckAutoLogin();
+            else
+                ActivityCompat.requestPermissions(this, permissionList.toArray(new String[permissionList.size()]), MULTIPLE_PERMISSIONS);
+        }
+        else // 6.0 이하 퍼미션 체크이유없음
+            doCheckAutoLogin();
+
+
+    }
+
+    public void doCheckAutoLogin(){
         if(LoginSharedPreference.getLoginId(FirstAuthActivity.this).length() == 0) {
             // 로그인 기록 저장 x --> 로그인 화면으로
             intent = new Intent(FirstAuthActivity.this, LoginActivity.class);
@@ -50,13 +79,13 @@ public class FirstAuthActivity extends AppCompatActivity {
                 public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                     CodeResponse result = response.body();
                     int resultCode = result.getCode();
-                    if (resultCode == RESULT_OK) { //첫출석이고 포인트올렸음
+                    if (resultCode == statusCode.RESULT_OK) { //첫출석이고 포인트올렸음
                         Toast.makeText(FirstAuthActivity.this, "출석체크 되었습니다!", Toast.LENGTH_SHORT).show();
                     }
-                    else if(resultCode == RESULT_NO){ //첫출석아님
+                    else if(resultCode == statusCode.RESULT_NO){ //첫출석아님
                         Toast.makeText(FirstAuthActivity.this, "반갑습니다!", Toast.LENGTH_SHORT).show();
                     }
-                    else if(resultCode == RESULT_CLIENT_ERR){
+                    else if(resultCode == statusCode.RESULT_CLIENT_ERR){
                         // 없는 아이디가 저장됐다는것 만료된 아이디?.. 이럴일은 없지만그래두
                         Toast.makeText(FirstAuthActivity.this, "만료된 아이디입니다.", Toast.LENGTH_SHORT).show();
                         LoginSharedPreference.clearLogin(FirstAuthActivity.this); //로그아웃시키고
@@ -83,5 +112,37 @@ public class FirstAuthActivity extends AppCompatActivity {
         }
         startActivity(intent);
         this.finish();
+    }
+
+    private boolean checkPermissions() {
+        int result;
+        for (String pm : permissions) {
+            result = ContextCompat.checkSelfPermission(this, pm);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(pm);
+            }
+        }
+        if (!permissionList.isEmpty()) {
+
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == MULTIPLE_PERMISSIONS) {
+            for( int g : grantResults) {
+                if (g == PackageManager.PERMISSION_DENIED) {
+                    showToast_PermissionDeny();
+                    return;
+                }
+            }
+            doCheckAutoLogin();
+        }
+    }
+
+    private void showToast_PermissionDeny() {
+        ActivityCompat.requestPermissions(this, permissionList.toArray(new String[permissionList.size()]), MULTIPLE_PERMISSIONS);
     }
 }

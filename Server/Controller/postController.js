@@ -64,7 +64,8 @@ const postController = {
             })
         }
     },
-    getFeeds : function (req, res) {
+    getFeeds: function (req, res) {
+        
         const loggedUser = req.query.userid;
         const offset = req.query.offset;
 
@@ -101,6 +102,7 @@ const postController = {
                     if(offset == undefined){
                         selectPostSql += `user_id = ${result[result.length - 1].follow_target_id} )
                         order by post_date desc, post_time desc limit ${db_config.limitation};`;
+
                     } else {
                         selectPostSql += `user_id = ${result[result.length - 1].follow_target_id} ) and id < ${offset}
                         order by post_date desc, post_time desc limit ${db_config.limitation};`;
@@ -113,6 +115,7 @@ const postController = {
                                 'data' : null
                             })
                         } else {
+
                             if (result.length == 0) { //더 이상 가져올 게시글이 없는 경우.
                                 res.json({
                                     'code' : statusCode.OK,
@@ -129,6 +132,7 @@ const postController = {
                                     selectPostFeedSql += `select * from likes where post_id = ${result[i].id};`;
                                     selectPostFeedSql += `select * from likes where post_id = ${result[i].id} and user_id = ${loggedUser};`;
                                     selectPostFeedSql += `select id from keep where post_id = ${result[i].id} and user_id = ${loggedUser};`;
+
                                 }
                                 connection.query(selectPostFeedSql, function (req, result) {
                                     if (err){
