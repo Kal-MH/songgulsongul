@@ -191,9 +191,17 @@ const postController = {
             }
         }
     },
+    /*
+        확인 사항
+        1. 넘어오는 데이터 구조
+        2. 데이터 필드 이름
+        3. client error 에러 처리
+            -> 값 유효성 에러 처리
+            -> db connection 이후, result == 0 인 경우에 대한 에러 처리
+     */
     postUpload : function (req, res) {
         /*
-         * 현재 넘겨받는 데이터의 구조
+         * 현재 넘겨받는 데이터의 임시 구조
          * 추후에 안드로이드와 연결하는 부분에서 수정사항 발생할 수 있다.
          * hashTags = [ 'hash1', 'hash2', 'hash3' ]
            items = { 
@@ -229,13 +237,13 @@ const postController = {
         var date = new Date();
         var yearMonthDate = date.getFullYear() + "-" + ((date.getMonth() + 1 ) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + "-" + date.getDate();
         console.log(yearMonthDate);
-        updatePointinsertPostSql += `select post_time, post_date from post where post_date = '${yearMonthDate}' and user_id = ${loggedUser};`;    
+        updatePointinsertPostSql += `select post_time, post_date from post where post_date = '${yearMonthDate}' and user_id = ${loggedUser} limit ${db_config.limitation};`;    
         
         connection.query(updatePointinsertPostSql, insertPostParams, function (err, result) {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.CLIENT_ERROR
+                    'code' : statusCode.SERVER_ERROR
                 })
             } else {
                 console.log(result[1]);
@@ -271,7 +279,7 @@ const postController = {
                     if (err){
                         console.log(err);
                         res.json({
-                            'code' : statusCode.CLIENT_ERROR
+                            'code' : statusCode.SERVER_ERROR
                         })
                     }
                     else{
@@ -300,7 +308,7 @@ const postController = {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.CLIENT_ERROR
+                    'code' : statusCode.SERVER_ERROR
                 })
             } else {
                 //hashTag
@@ -317,7 +325,7 @@ const postController = {
                     if (err){
                         console.log(err);
                         res.json({
-                            'code' : statusCode.CLIENT_ERROR
+                            'code' : statusCode.SERVER_ERROR
                         })
                     } else {                      
                         var deleteItemTagSql = `delete from item_tag where post_id=${postId};`;
@@ -342,10 +350,12 @@ const postController = {
                             if (err){
                                 console.log(err);
                                 res.json({
-                                    'code' : statusCode.CLIENT_ERROR
+                                    'code' : statusCode.SERVER_ERROR
                                 })
                             } else {
-                                res.redirect(`/post/${postId}`);
+                                res.json({
+                                    'code' : statusCode.OK
+                                })
                             }
                         })
                     }
@@ -383,10 +393,9 @@ const postController = {
                                         'code' : statusCode.SERVER_ERROR,
                                     })
                                 } else {
-                                    res.redirect("/post/community?offset=0")
-                                    // res.json({
-                                    //     'code' : statusCode.OK
-                                    // })
+                                    res.json({
+                                        'code' : statusCode.OK
+                                    })
                                 }               
                             })
                         } else {
