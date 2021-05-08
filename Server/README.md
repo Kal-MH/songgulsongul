@@ -438,15 +438,20 @@
      		'text',
      		'post_time',
      		'post_data',
-     		'user_id'
+     		'user_id',
+        'ccl_cc',
+        'ccl_a',
+        'ccl_nc',
+        'ccl_nd',
+        'ccl_sa'
      	}
      }
-     **//data의 경우, 오류가 발생했을 때는 빈배열 혹은 undefined(null)로 넘어올 수 있다.**
+     **//data의 경우, 오류가 발생했을 때, undefined(null)로 넘어온다.**
      ```
 
    - 예시
 
-     ![postCommunity](https://user-images.githubusercontent.com/59648372/112145078-41c06480-8c1d-11eb-8303-68bbcdc80f26.png)
+     ![postCommunity](https://user-images.githubusercontent.com/59648372/117537009-545df400-b039-11eb-9fb6-e8857bf6b306.png)
 
 2. 팔로우 게시글 불러오기
 
@@ -466,7 +471,7 @@
      ```java
      json = {
      	'code', //상태코드
-     				  // 상태코드는 ok(200), server error(500)으로 나뉜다.
+     				  // 상태코드는 ok(200), client error(400), server error(500)으로 나뉜다.
      	'data'  = {
      		'post' : {
      			'id',  //post id
@@ -516,7 +521,7 @@
      ```java
      json = {
      	'code', //상태코드
-     					// 상태코드는 ok(200), server error(500)으로 나뉜다.
+     					// 상태코드는 ok(200), client error(400), server error(500)으로 나뉜다.
      	'data'  = { … }
      }
      ```
@@ -546,7 +551,7 @@
        ]
        ```
 
-       ![postSearchTag](https://user-images.githubusercontent.com/59648372/112144995-281f1d00-8c1d-11eb-8b30-d5bad38f3e5f.png)
+       ![postSearach](https://user-images.githubusercontent.com/59648372/117537120-f67ddc00-b039-11eb-8985-ddd03f762996.png)
 
      - <search Id>
 
@@ -560,7 +565,9 @@
        ]
        ```
 
-       ![postSearchId](https://user-images.githubusercontent.com/59648372/112145026-340adf00-8c1d-11eb-8af4-70810bc376aa.png)
+       ![postSearchId](https://user-images.githubusercontent.com/59648372/117537188-68562580-b03a-11eb-9356-495a8b75879e.png)
+     - search Error
+       ![postSearchError](https://user-images.githubusercontent.com/59648372/117537122-f978cc80-b039-11eb-85cd-195696cded0e.png)
 
 4. **특정 게시글 불러오기**
 
@@ -578,10 +585,10 @@
      	'data' : {
      		'post', //게시글 정보,
      		'user', //게시글 작성자 정보,
-     		'hashTags',
-     		'itemTags',
+     		'hashTags', //배열
+     		'itemTags', //배열
      		'likeNum', //좋아요 갯수,
-     		'comments', //해당 게시글에 달린 댓글,
+     		'comments', // 배열, 해당 게시글에 달린 댓글,
      		'likeOnset',
      		'keepOnset'
      	}
@@ -598,14 +605,13 @@
 
    //자세한 객체 구조는 예시 참조
 
-   **// 하나의 게시글만 가져오도록 변경할 예정,**
-
-   **// data는 배열이 아니라 객체로 넘어올 가능성 있음**
-
 - 예시
 
-  ![postDetail](https://user-images.githubusercontent.com/59648372/112144589-c5c61c80-8c1c-11eb-8dbc-2e50f8b86b2d.png)
-
+  ![postgetDetail](https://user-images.githubusercontent.com/59648372/117537319-021dd280-b03b-11eb-895e-9d2750422033.png)
+  
+  - 에러 발생
+    ![postgetDetailError](https://user-images.githubusercontent.com/59648372/117537320-03e79600-b03b-11eb-9dd4-abbf1e880703.png)
+    
 5. 게시글 업로드
 
    - api : “/post/upload”
