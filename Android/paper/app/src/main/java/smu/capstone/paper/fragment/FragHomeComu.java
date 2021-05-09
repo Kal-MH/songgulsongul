@@ -100,7 +100,7 @@ public class FragHomeComu extends Fragment {
 
                 // 게시글 id 전달
                 int postId = postData.getAsJsonArray("data").get(position).getAsJsonObject().get("id").getAsInt();
-                intent.putExtra("postId", postId);
+                intent.putExtra("post_id", postId);
 
                 startActivity(intent);
                 Log.d("TAG", position + "is Clicked");
