@@ -90,6 +90,6 @@ public interface ServiceApi {
 
     //세부 게시글 내용 가져오기
     @GET("/post/{id}")
-    Call<JsonObject> GetDetailPost(@Query("userid") int userid, @Query("id") int id);
+    Call<JsonObject> GetDetailPost(@Path("id") int id, @Query("userid") int userid);
 
 }

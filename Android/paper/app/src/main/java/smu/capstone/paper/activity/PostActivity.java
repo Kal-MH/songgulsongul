@@ -228,7 +228,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void getData(){
-        serviceApi.GetDetailPost(user_id,post_id).enqueue(new Callback<JsonObject>() {
+        serviceApi.GetDetailPost(post_id, user_id).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 JsonObject result = response.body();
