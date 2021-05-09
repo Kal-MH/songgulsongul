@@ -50,7 +50,7 @@ public class KeepActivity extends AppCompatActivity {
     TextView keep_count, keep_id;
     ImageView keep_imae;
     JsonObject keep_data;
-    String login_id = LoginSharedPreference.getLoginId(this);
+    String login_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +67,10 @@ public class KeepActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
+        login_id = LoginSharedPreference.getLoginId(KeepActivity.this);
 
         // view에서 id 찾아야함
-        GridView gridView = findViewById(R.id.keep_grid);
+        gridView = findViewById(R.id.keep_grid);
 
         getKeepData();
 
@@ -124,7 +125,7 @@ public class KeepActivity extends AppCompatActivity {
 
                 if(resultCode == StatusCode.RESULT_OK){
                     keep_data = result;
-                    setKeepData(keep_data);
+                    setKeepData(result);
                 }
                 else if(resultCode == StatusCode.RESULT_SERVER_ERR){
                     new AlertDialog.Builder(KeepActivity.this)
