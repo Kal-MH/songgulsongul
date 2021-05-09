@@ -21,21 +21,18 @@ import java.util.ArrayList;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.item.PostItem;
+import smu.capstone.paper.server.RetrofitClient;
 
 
 public class PostImageAdapter extends BaseAdapter {
 
     private Context mContext;
-    ArrayList<PostItem> items;
     JsonObject obj = new JsonObject();
     JsonArray dataList;
     LayoutInflater inf;
     int itemCnt;
     int layout;
 
-    public PostImageAdapter(Context mContext) {
-        this.mContext = mContext;
-    }
     public PostImageAdapter(Context mContext, int layout, JsonObject obj){
         this.mContext = mContext;
         inf =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -45,24 +42,10 @@ public class PostImageAdapter extends BaseAdapter {
         itemCnt = dataList.size();
     }
 
-    //삭제할 코드 --> 컴파일용 임시로 둠
-    public PostImageAdapter(Context mContext, int layout, ArrayList<PostItem> items) {
-        this.mContext = mContext;
-        inf = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.layout = layout;
-        this.items = items;
-    }
-
     // 받아온 데이터로 게시글 내용 셋팅
     public void setItem(ImageView imageView, JsonElement item){
-            Glide.with(mContext).load(item.getAsJsonObject().get("image").getAsString()).into(imageView); // 게시물 사진
-    }
-
-    //삭제할 코드 --> 컴파일용 임시로 둠
-    public void setItem2(ImageView imageView,  PostItem item){
-        Glide.with(mContext).load(item.getImg()).into(imageView); // 게시물 사진
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        imageView.setLayoutParams(new GridView.LayoutParams(340, 350));
+            Glide.with(mContext).load(RetrofitClient.getBaseUrl()+item.getAsJsonObject().get("image").getAsString())
+                    .into(imageView); // 게시물 사진
     }
 
     @Override
