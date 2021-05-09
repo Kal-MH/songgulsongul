@@ -111,29 +111,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_24));
         }
 
-        holder.comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, PostActivity.class);
-
-                // 게시글 id 넘겨주기
-                intent.putExtra("post_id", postId);
-
-                context.startActivity(intent);
-            }
-        });
-
-        holder.text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, PostActivity.class);
-
-                // 게시글 id 넘겨주기
-                intent.putExtra("post_id", postId);
-
-                context.startActivity(intent);
-            }
-        });
 
         // 좋아요 listener
         holder.favorite.setOnClickListener(new View.OnClickListener() {
@@ -202,8 +179,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             public void onClick(View view) {
                 Intent intent = new Intent(context, PostActivity.class);
                 // 게시글 id 전달
-                JsonObject post = obj.get("data").getAsJsonArray().get(position).getAsJsonObject();
-                int postId = post.get("post").getAsJsonObject().get("id").getAsInt();
                 intent.putExtra("post_id", postId);
 
                 context.startActivity(intent);
@@ -215,6 +190,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
        holder.text.setOnClickListener(goPostActivity);
 
     }
+
 
     @Override
     public int getItemCount() {

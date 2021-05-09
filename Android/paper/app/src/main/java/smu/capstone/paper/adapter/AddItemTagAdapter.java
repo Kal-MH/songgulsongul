@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
@@ -16,24 +18,19 @@ import smu.capstone.paper.activity.AddItemtagActivity;
 import smu.capstone.paper.activity.ItemDetailActivity;
 import smu.capstone.paper.activity.PostEditActivity;
 import smu.capstone.paper.item.ItemtagItem;
-
+import smu.capstone.paper.server.RetrofitClient;
 
 
 public class AddItemTagAdapter extends ItemTagAdapter {
-    public AddItemTagAdapter(Context context, JSONObject obj) throws JSONException {
+    public AddItemTagAdapter(Context context, JsonArray obj)  {
         super(context, obj);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-        try {
-            final JSONObject item = dataList.getJSONObject(position);
-            holder.pic.setImageBitmap((Bitmap) item.get("Image"));
-        } catch (JSONException e){
-            e.printStackTrace();
-
-        }
+        JsonObject item = dataList.get(position).getAsJsonObject();
+        Glide.with(context).load(RetrofitClient.getBaseUrl() + item.get("picture").getAsString() ).into(holder.pic); // 게시물 사진
 
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override

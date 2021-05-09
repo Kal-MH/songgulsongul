@@ -21,6 +21,8 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,34 +36,19 @@ import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.item.HomeFeedItem;
 import smu.capstone.paper.item.ItemtagItem;
 import smu.capstone.paper.item.PostItem;
+import smu.capstone.paper.server.RetrofitClient;
 
 public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHolder> {
     Context context;
-    JSONObject obj = new JSONObject();
-    JSONArray dataList;
-    LayoutInflater inf;
+    JsonArray dataList;
     int itemCnt;
-    int layout;
 
-    public ItemTagAdapter(Context context,JSONObject obj) throws JSONException{
+    public ItemTagAdapter(Context context, JsonArray obj) {
         this.context = context;
-        //this.items = items;
-        this.obj = obj;
 
-        dataList = obj.getJSONArray("data");
-        itemCnt = dataList.length();
+        dataList =obj;
+        itemCnt = dataList.size();
     }
-
-
-    public void setItem(@NonNull ItemTagAdapter.ViewHolder holder, JSONObject item, int position){
-        // 받아온 데이터로 셋팅
-        try {
-            Glide.with(context).load(item.getInt("picture")).into(holder.pic);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-    }
-
 
     @NonNull
     @Override
@@ -74,19 +61,14 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        try {
-            final JSONObject item = dataList.getJSONObject(position);
-            holder.pic.setImageBitmap((Bitmap) item.get("picture"));
-        } catch (JSONException e){
-            e.printStackTrace();
 
-        }
+        JsonObject item = dataList.get(position).getAsJsonObject();
+        Glide.with(context).load(RetrofitClient.getBaseUrl() + item.get("picture").getAsString() ).into(holder.pic); // 게시물 사진
 
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ItemDetailActivity.class);
-
                 context.startActivity(intent);
             }
         });
@@ -95,23 +77,15 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return dataList.length();
+        return dataList.size();
     }
-/*
-    public void insertItem(ItemtagItem data){
-        items.add(data);
-    }*/
 
     static class ViewHolder extends RecyclerView.ViewHolder{
-
         ImageView pic;
-
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             pic = (ImageView)itemView.findViewById(R.id.item_tag_img);
-
         }
-
     }
 }

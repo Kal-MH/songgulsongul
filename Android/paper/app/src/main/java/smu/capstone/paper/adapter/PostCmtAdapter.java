@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,44 +27,25 @@ import smu.capstone.paper.item.HashtagItem;
 import smu.capstone.paper.item.PostCmtItem;
 
 public class PostCmtAdapter extends BaseAdapter {
+
     ViewHolder holder;
     Context context;
-    JSONObject obj = new JSONObject();
-    JSONArray dataList;
-    LayoutInflater inf;
+    JsonArray dataList;
     int cmtCnt;
-    int layout;
 
 
-    public PostCmtAdapter (Context context, JSONObject obj) throws JSONException {
+    public PostCmtAdapter (Context context, JsonArray obj)  {
         this.context = context;
-        //this.items = items;
-        this.obj = obj;
-
-        dataList = obj.getJSONArray("data");
-        cmtCnt = dataList.length();
+        dataList = obj;
+        cmtCnt = dataList.size();
     }
-
-
-    public void setItem(@NonNull PostCmtAdapter.ViewHolder holder,JSONObject item, int position){
-        // 받아온 데이터로 셋팅
-        try {
-            holder.userId.setText(item.getString("login_id"));
-            holder.cmt.setText(item.getString("text"));
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-    }
-
     @Override public int getCount() {
-        return dataList.length();
+        return dataList.size();
     }
-
     @Override public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
 
-        final int pos = position;
-        final Context context = parent.getContext(); // "listview_item" Layout을 inflate하여 convertView 참조 획득.
+        int pos = position;
+        Context context = parent.getContext(); // "listview_item" Layout을 inflate하여 convertView 참조 획득.
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -78,23 +61,19 @@ public class PostCmtAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        try {
-            final JSONObject item = dataList.getJSONObject(position);
-            holder.userId.setText(item.getString("login_id"));
-            holder.cmt.setText(item.getString("text"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        JsonObject item = dataList.get(position).getAsJsonObject();
+        holder.userId.setText(item.get("login_id").getAsString());
+        holder.cmt.setText(item.get("text").getAsString());
+
 
         return convertView;
     }
-
     @Override public long getItemId(int position) {
-        return position;
+        return dataList.get(position).getAsJsonObject().get("id").getAsLong();
     }
 
     @Override public Object getItem(int position) {
-        return null;
+        return dataList.get(position).getAsJsonObject();
     }
 
     static class ViewHolder{

@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import smu.capstone.paper.data.CodeResponse;
 
@@ -86,5 +87,9 @@ public interface ServiceApi {
     //커뮤니트 게시글 가져오기
     @GET("/post/community")
     Call<JsonObject> GetCommunity(@Query("offset") int offset);
+
+    //세부 게시글 내용 가져오기
+    @GET("/post/{id}")
+    Call<JsonObject> GetDetailPost(@Query("userid") int userid, @Query("id") int id);
 
 }
