@@ -22,6 +22,8 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,46 +35,45 @@ import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.item.HomeFeedItem;
 import smu.capstone.paper.item.HomeMarketItem;
+import smu.capstone.paper.server.RetrofitClient;
 
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHolder> {
     Context context;
     ArrayList<HomeFeedItem> iconInfo = new ArrayList<HomeFeedItem>(); // 좋아요, 보관 상태에 따른 아이콘 변경 때문에 필요할듯 함,,
-    JSONObject obj = new JSONObject();
-    JSONArray dataList;
+    JsonObject obj = new JsonObject();
+    JsonArray dataList;
     int itemCnt;
 
-    public HomeFeedAdapter (Context context, JSONObject obj) throws JSONException{
+    public HomeFeedAdapter (Context context, JsonObject obj)  {
         this.context = context;
         this.obj = obj;
 
-        dataList = obj.getJSONArray("data");
-        itemCnt = dataList.length();
+        dataList = obj.get("data").getAsJsonArray();
+        itemCnt = dataList.size();
     }
 
-    public void setItem(@NonNull ViewHolder holder, JSONObject item, int position){
+    public void setItem(@NonNull ViewHolder holder, JsonObject item, int position){
+        JsonObject post = item.get("post").getAsJsonObject();
+
         // 받아온 데이터로 게시글 내용 셋팅
-        try {
-            String text = item.getString("text");
-            if(text.length() > 15) {// text가 15자 이상일 때
-                text = text.substring(0, 15);
-                text += " ...더 보기";
-                SpannableString newText= new SpannableString(text);
-                newText.setSpan(new ForegroundColorSpan(Color.parseColor("#D3D3D3")), 15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                newText.setSpan(new StyleSpan(Typeface.ITALIC),15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                holder.text.setText(newText); // 글 내용(15자 이상)
-            }
-            else{
-                holder.text.setText(text); // 글 내용(15자 이하)
-            }
-            holder.timestamp.setText(item.getString("post_time")); // 게시 시간
-            holder.comment_counter.setText(item.getInt("commentsNum") + ""); // 댓글 수
-            holder.favorite_counter.setText(iconInfo.get(position).getFavoriteCounter() + ""); // 좋아요 수
-            holder.user_id.setText(item.getString("user_id")); // 게시자 id
-            Glide.with(context).load(item.getInt("img_profile")).into(holder.profile_image); // 게시자 프로필 사진
-            Glide.with(context).load(item.getInt("image")).into(holder.picture); // 게시물 사진
-        } catch (JSONException e){
-            e.printStackTrace();
+        String text = post.get("text").getAsString();
+        if(text.length() > 15) {// text가 15자 이상일 때
+            text = text.substring(0, 15);
+            text += " ...더 보기";
+            SpannableString newText= new SpannableString(text);
+            newText.setSpan(new ForegroundColorSpan(Color.parseColor("#D3D3D3")), 15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            newText.setSpan(new StyleSpan(Typeface.ITALIC),15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.text.setText(newText); // 글 내용(15자 이상)
         }
+        else{
+            holder.text.setText(text); // 글 내용(15자 이하)
+        }
+        holder.timestamp.setText(post.get("post_date").getAsString() + "\n" + post.get("post_time").getAsString()); // 게시 시간
+        holder.comment_counter.setText(item.get("commentsNum").getAsString()); // 댓글 수
+        holder.favorite_counter.setText(iconInfo.get(position).getFavoriteCounter() + ""); // 좋아요 수
+        holder.user_id.setText(item.get("user").getAsJsonObject().get("login_id").getAsString()); // 게시자 id
+        Glide.with(context).load(RetrofitClient.getBaseUrl() + item.get("user").getAsJsonObject().get("img_profile").getAsString() ).into(holder.profile_image); // 게시자 프로필 사진
+        Glide.with(context).load(RetrofitClient.getBaseUrl() + post.get("image").getAsString() ).into(holder.picture); // 게시물 사진
     }
 
     @NonNull
@@ -86,55 +87,53 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-       try {
-           final JSONObject item = dataList.getJSONObject(position);
-           iconInfo.add(new HomeFeedItem(item.getInt("likeOnset"), item.getInt("likeNum"), item.getInt("keepOnset")));
-           final int postId = item.getInt("post_id");
-           setItem(holder, item, position);
-
-           if(iconInfo.get(position).getLike() == 0){
-               holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_border));
-           }
-           else{
-               holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite));
-           }
+        //post 가져옴
+        final JsonObject item = dataList.get(position).getAsJsonObject();
+        iconInfo.add(new HomeFeedItem(item.get("likeOnset").getAsInt() , item.get("likeNum").getAsInt(), item.get("keepOnset").getAsInt()));
 
 
-           if(iconInfo.get(position).getKeep() == 0){
-               holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_border_24));
-           }
-           else{
-               holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_24));
-           }
+        final int postId = item.get("post").getAsJsonObject().get("id").getAsInt();
 
-           holder.comment.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   Intent intent = new Intent(context, PostActivity.class);
+        setItem(holder, item, position);
 
-                   // 게시글 id 넘겨주기
-                   intent.putExtra("post_id", postId);
+        if(iconInfo.get(position).getLike() == 0){
+            holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_border));
+        }
+        else{
+            holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite));
+        }
 
-                   context.startActivity(intent);
-               }
-           });
 
-           holder.text.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   Intent intent = new Intent(context, PostActivity.class);
+        if(iconInfo.get(position).getKeep() == 0){
+            holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_border_24));
+        }
+        else{
+            holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_24));
+        }
 
-                   // 게시글 id 넘겨주기
-                   intent.putExtra("post_id", postId);
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PostActivity.class);
 
-                   context.startActivity(intent);
-               }
-           });
+                // 게시글 id 넘겨주기
+                intent.putExtra("post_id", postId);
 
-       } catch (JSONException e){
-           e.printStackTrace();
+                context.startActivity(intent);
+            }
+        });
 
-       }
+        holder.text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PostActivity.class);
+
+                // 게시글 id 넘겨주기
+                intent.putExtra("post_id", postId);
+
+                context.startActivity(intent);
+            }
+        });
 
         // 좋아요 listener
         holder.favorite.setOnClickListener(new View.OnClickListener() {
@@ -203,12 +202,9 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             public void onClick(View view) {
                 Intent intent = new Intent(context, PostActivity.class);
                 // 게시글 id 전달
-                try {
-                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("post_id");
-                    intent.putExtra("post_id", postId);
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
+                JsonObject post = obj.get("data").getAsJsonArray().get(position).getAsJsonObject();
+                int postId = post.get("post").getAsJsonObject().get("id").getAsInt();
+                intent.putExtra("post_id", postId);
 
                 context.startActivity(intent);
             }

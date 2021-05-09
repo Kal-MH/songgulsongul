@@ -29,7 +29,6 @@ import smu.capstone.paper.fragment.FragUploadCam;
 import smu.capstone.paper.fragment.FragUploadGal;
 
 public class UploadActivity extends AppCompatActivity {
-    private int RESULT_PERMISSIONS=100;
 
     final private int GALLERY = 123;
     final private int CAMERA = 456;
@@ -63,8 +62,6 @@ public class UploadActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
 
 
-        // 퍼미션 체킹
-        requestPermissionCamera();
 
         //프레그먼트 세팅
         fragUploadCam = new FragUploadCam(isQuick);
@@ -142,19 +139,17 @@ public class UploadActivity extends AppCompatActivity {
                 if( frag_status == GALLERY){
 
                     String filePath= fragUploadGal.getPicked_path();
-                    if(isQuick){
-                        Intent intent = new Intent(this, UploadDetailActivity.class);
-                        intent.putExtra("path", filePath);
-                        startActivity(intent);
-                        finish();
-                    }
-                    else{
-                        Intent intent = new Intent(this, DetectPaperActivity.class);
-                        intent.putExtra("path", filePath);
-                        startActivity(intent);
-                        finish();
+                    Intent intent;
+                    if(isQuick)
+                        intent = new Intent(this, UploadDetailActivity.class);
 
-                    }
+                    else
+                        intent = new Intent(this, DetectPaperActivity.class);
+
+
+                    intent.putExtra("path", filePath);
+                    startActivity(intent);
+                    finish();
                 }
                 else if( frag_status == CAMERA){
                     //  Not happened!
@@ -166,45 +161,5 @@ public class UploadActivity extends AppCompatActivity {
         return  true;
     }
 
-    public boolean requestPermissionCamera(){
-        int sdkVersion = Build.VERSION.SDK_INT;
-        if(sdkVersion >= Build.VERSION_CODES.M) {
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
-                ActivityCompat.requestPermissions(UploadActivity.this,
-                        new String[]{Manifest.permission.CAMERA},
-                        RESULT_PERMISSIONS);
-
-            }
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(UploadActivity.this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        RESULT_PERMISSIONS);
-
-            }
-        }else{  // version 6 이하일때
-            // setInit();
-            return true;
-        }
-        return true;
-    }
-
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-
-        if (RESULT_PERMISSIONS == requestCode) {
-
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 권한 허가시
-                //setInit();
-            } else {
-                // 권한 거부시
-            }
-            return;
-        }
-
-    }
 }
 

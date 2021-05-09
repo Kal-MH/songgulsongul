@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         //  actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
-        actionBar.setTitle("APP NAME");
+        actionBar.setTitle("송글손글");
 
 
         bottomNavigationView = findViewById(R.id.home_tap);
