@@ -63,7 +63,7 @@ public class FragHomeFeed extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
 
                 //데이터 변경
-              //  GetFeedData();
+                GetFeedData();
 
             }
         });
@@ -71,7 +71,7 @@ public class FragHomeFeed extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-       // GetFeedData();
+        GetFeedData();
 
 
 

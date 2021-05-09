@@ -38,7 +38,7 @@ const postController_subFunc = {
                         if (data.length == db_config.limitation)
                             break ;
                     }
-                } 
+                }
                 console.log(result)
                 res.json({
                     'code' : statusCode.OK,
@@ -124,7 +124,7 @@ const postController_subFunc = {
             }
             console.log(data);
             res.json({
-                'code' : statusCode.OK,
+                'code' : statusCode,
                 'data' : data
             })
         }
