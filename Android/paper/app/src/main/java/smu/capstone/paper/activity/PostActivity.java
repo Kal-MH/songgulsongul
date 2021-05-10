@@ -36,6 +36,7 @@ import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HashTagAdapter;
 import smu.capstone.paper.adapter.ItemTagAdapter;
 import smu.capstone.paper.adapter.PostCmtAdapter;
+import smu.capstone.paper.data.CodeResponse;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -109,7 +110,7 @@ public class PostActivity extends AppCompatActivity {
         user_id = LoginSharedPreference.getUserId(PostActivity.this);
         post_id = intent.getIntExtra("post_id",-1);
 
-        Log.d("TAG", user_id +":" + post_id);
+
         //서버통신
         getData();
 
@@ -164,15 +165,88 @@ public class PostActivity extends AppCompatActivity {
         post_like_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                post_like_btn.setSelected(!post_like_btn.isSelected());
-                Log.d("TAG", "하트라고;"+ post_like_btn.isSelected());
+                serviceApi.Like(LoginSharedPreference.getUserId(PostActivity.this),
+                        postData.get("id").getAsInt()  ).enqueue(new Callback<CodeResponse>() {
+                    @Override
+                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                        int like = data.get("likeOnset").getAsInt();
+                        int resultCode = response.body().getCode();
+                        if( resultCode == statusCode.RESULT_OK){
+
+                            int likeNum = data.get("likeNum").getAsInt();
+                            data.remove("likeNum");
+                            if( like == 1){ //좋아요 취소하기
+                                like = 0;
+                                data.addProperty("likeNum",--likeNum);
+                            }
+                            else{
+                                like = 1;
+                                data.addProperty("likeNum",++likeNum);
+                            }
+                            data.remove("likeOnset");
+                            data.addProperty("likeOnset",like);
+
+                            data.remove("likeNum");
+                            data.addProperty("likeNum",likeNum);
+
+                            post_like_cnt.setText("좋아요 " + likeNum);
+                            post_like_btn.setSelected(!post_like_btn.isSelected()); //버튼 반대로 체크
+                        }
+                        else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                            Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                        }
+                        else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                            Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                        Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
             }
         });
+
         post_keep_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                post_keep_btn.setSelected(!post_keep_btn.isSelected());
-                Log.d("TAG", "KEEP "+ post_keep_btn.isSelected());
+
+                serviceApi.Keep(LoginSharedPreference.getUserId(PostActivity.this),
+                        postData.get("id").getAsInt()  ).enqueue(new Callback<CodeResponse>() {
+                            @Override
+                            public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                                int keep = data.get("keepOnset").getAsInt();
+                                int resultCode = response.body().getCode();
+                                if( resultCode == statusCode.RESULT_OK){
+                                    keep = (keep==1)? 0 : 1;
+                                    data.remove("keepOnset");
+                                    data.addProperty("keepOnset",keep);
+                                    if( keep == 1)
+                                        Toast.makeText(PostActivity.this, "보관함에 저장 되었습니다", Toast.LENGTH_SHORT).show();
+                                    else
+                                        Toast.makeText(PostActivity.this, "보관함에서 삭제 되었습니다", Toast.LENGTH_SHORT).show();
+
+
+                                    post_keep_btn.setSelected(!post_keep_btn.isSelected());
+
+                                }
+                                else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                                    Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                                }
+                                else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                                    Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<CodeResponse> call, Throwable t) {
+                                Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                            }
+                        });
+
             }
         });
 
@@ -194,22 +268,6 @@ public class PostActivity extends AppCompatActivity {
                 }
             }
         });
-        //Status에 떄라 버튼과 포인트 visibility와 enable 설정
-        switch(status){
-            //본인의 계정 프로필
-            case MY:
-                post_setting_btn.setEnabled(true);
-                post_setting_btn.setVisibility(View.VISIBLE);
-                post_keep_btn.setVisibility(View.INVISIBLE);
-                break;
-            case OTHER:
-                post_setting_btn.setEnabled(false);
-                post_setting_btn.setVisibility(View.INVISIBLE);
-                post_keep_btn.setVisibility(View.VISIBLE);
-                break;
-            default:
-                break;
-        }
     }
 
 
@@ -238,6 +296,7 @@ public class PostActivity extends AppCompatActivity {
                     setHashTagData();
                     setItemTagData();
                     setCommentsData();
+                    setStatusData();
 
                 }
                 else if(resultCode == statusCode.RESULT_SERVER_ERR){
@@ -339,6 +398,30 @@ public class PostActivity extends AppCompatActivity {
         //코멘트 어뎁터 설정
         cmt_adapter = new PostCmtAdapter(post_cmt_list.getContext(), CommentsData );
         post_cmt_list.setAdapter(cmt_adapter);
+        return true;
+    }
+    public boolean setStatusData(){
+        if(LoginSharedPreference.getLoginId(PostActivity.this).equals( userData.get("login_id").getAsString() ) )
+            status = MY;
+        else
+            status = OTHER ;
+
+        //Status에 떄라 버튼과 포인트 visibility와 enable 설정
+        switch(status){
+            //본인의 계정 프로필
+            case MY:
+                post_setting_btn.setEnabled(true);
+                post_setting_btn.setVisibility(View.VISIBLE);
+                post_keep_btn.setVisibility(View.INVISIBLE);
+                break;
+            case OTHER:
+                post_setting_btn.setEnabled(false);
+                post_setting_btn.setVisibility(View.INVISIBLE);
+                post_keep_btn.setVisibility(View.VISIBLE);
+                break;
+            default:
+                break;
+        }
         return true;
     }
 
