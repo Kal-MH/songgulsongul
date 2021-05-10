@@ -79,7 +79,7 @@ public class KeepActivity extends AppCompatActivity {
 
                 // 게시글 id 전달
                 int postId = keep_data.getAsJsonArray("keepInfo").get(position).getAsJsonObject().get("postId").getAsInt();
-                intent.putExtra("postId", postId);
+                intent.putExtra("post_id", postId);
 
                 startActivity(intent);
 
