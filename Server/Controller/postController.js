@@ -12,6 +12,7 @@ const postController = {
     getPostDetail: function (req, res) {
         const loggedUser = req.query.userid; // 현재 로그인한 사용자 id(loginId가 아님)
         const postId = req.params.id; // 게시글의 id
+       // const postId = req.query.id; // 게시글의 id
 
         if (loggedUser == undefined || loggedUser == "" || postId == undefined || postId == "") {
             res.json({
