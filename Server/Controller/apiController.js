@@ -195,8 +195,8 @@ const apiController = {
         
     },
     insertPostComment : function (req, res) {
-        var postId = req.query.postid;
-        var userId = req.query.userid;
+        var postId = req.body.postid;
+        var userId = req.body.userid;
         var text = req.body.comment; //공백으로 오는 것을 어디서 걸러줄 것인가.
 
         var commentInsertSql = `insert into comment(user_id, post_id, text, c_time, c_date) values(?, ?, ?, curtime(), curdate());`
@@ -207,10 +207,10 @@ const apiController = {
                 console.log(err);
                 code = statusCode.CLIENT_ERROR;
             }
-            res.redirect(`/post/${postId}`)
-            // res.json({
-            //     'code' : code
-            // })
+            //res.redirect(`/post/${postId}`)
+             res.json({
+                 'code' : code
+             })
         })
     },
     deletePostComment : function (req, res) {
@@ -225,10 +225,10 @@ const apiController = {
                 console.log(err);
                 code = statusCode.CLIENT_ERROR;
             }
-            res.redirect(`/post/${postId}`)
-            // res.json({
-            //     'code' : code
-            // })
+            //res.redirect(`/post/${postId}`)
+             res.json({
+                 'code' : code
+             })
         })
     },
 

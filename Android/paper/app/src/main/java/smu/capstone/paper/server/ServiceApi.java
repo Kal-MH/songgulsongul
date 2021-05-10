@@ -12,6 +12,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import smu.capstone.paper.data.CodeResponse;
 
+import smu.capstone.paper.data.CommentData;
 import smu.capstone.paper.data.FollowData;
 import smu.capstone.paper.data.FollowListData;
 import smu.capstone.paper.data.EmailData;
@@ -39,6 +40,10 @@ public interface ServiceApi {
     //보관하기
     @GET("/api/keep")
     Call<CodeResponse> Keep(@Query("userid") int userid, @Query("postid") int postid);
+
+    //댓글 작성
+    @POST("/api/comment")
+    Call<CodeResponse> Comment(@Body CommentData commentData);
 
     // 회원가입
     @POST("/join")

@@ -37,6 +37,7 @@ import smu.capstone.paper.adapter.HashTagAdapter;
 import smu.capstone.paper.adapter.ItemTagAdapter;
 import smu.capstone.paper.adapter.PostCmtAdapter;
 import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.data.CommentData;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -250,7 +251,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        // 텍스트 입력시 로그인 버튼 활성화
+        // 텍스트 입력시 댓글작성 버튼 활성화
         post_input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -266,6 +267,42 @@ public class PostActivity extends AppCompatActivity {
                     post_write.setClickable(true);
                     post_write.setBackgroundColor(0x9A93C8B4);
                 }
+            }
+        });
+        //댓글 작성 기능
+        post_write.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //댓글 작성!
+                serviceApi.Comment(new CommentData(
+                        LoginSharedPreference.getUserId(PostActivity.this),
+                        postData.get("id").getAsInt(),
+                        post_input.getText().toString()
+                )).enqueue(new Callback<CodeResponse>() {
+                    @Override
+                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                        int resultCode = response.body().getCode();
+                        if( resultCode == statusCode.RESULT_OK){
+                             //다시 불러오기.. 아니면 댓글만 가져오는 코드 짜야함!
+                            post_input.setText("");
+                            getData();
+                        }
+                        else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                            Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                        }
+                        else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                            Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                        Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
+
+
             }
         });
     }
