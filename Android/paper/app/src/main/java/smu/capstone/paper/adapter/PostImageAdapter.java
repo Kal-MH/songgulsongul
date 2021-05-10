@@ -13,14 +13,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
 import smu.capstone.paper.R;
-import smu.capstone.paper.item.PostItem;
 import smu.capstone.paper.server.RetrofitClient;
 
 

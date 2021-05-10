@@ -2,18 +2,10 @@ package smu.capstone.paper.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -24,18 +16,8 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.ItemDetailActivity;
-import smu.capstone.paper.activity.PostActivity;
-import smu.capstone.paper.item.HomeFeedItem;
-import smu.capstone.paper.item.ItemtagItem;
-import smu.capstone.paper.item.PostItem;
 import smu.capstone.paper.server.RetrofitClient;
 
 public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHolder> {

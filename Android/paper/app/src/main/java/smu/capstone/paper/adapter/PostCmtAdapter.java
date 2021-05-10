@@ -1,30 +1,16 @@
 package smu.capstone.paper.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
 import smu.capstone.paper.R;
-import smu.capstone.paper.item.HashtagItem;
-import smu.capstone.paper.item.PostCmtItem;
 
 public class PostCmtAdapter extends BaseAdapter {
 

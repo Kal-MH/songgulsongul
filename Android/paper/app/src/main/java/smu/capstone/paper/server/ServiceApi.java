@@ -32,6 +32,14 @@ public interface ServiceApi {
     @POST("/api/email-auth")
     Call<JsonObject> EmailAuth(@Body EmailData data);
 
+    //좋아요
+    @GET("/api/like")
+    Call<CodeResponse> Like(@Query("userid") int userid, @Query("postid") int postid);
+
+    //보관하기
+    @GET("/api/keep")
+    Call<CodeResponse> Keep(@Query("userid") int userid, @Query("postid") int postid);
+
     // 회원가입
     @POST("/join")
     Call<CodeResponse> Join(@Body JoinData data);

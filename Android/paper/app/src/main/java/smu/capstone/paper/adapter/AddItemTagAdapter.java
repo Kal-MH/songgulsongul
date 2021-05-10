@@ -2,7 +2,6 @@ package smu.capstone.paper.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
@@ -11,13 +10,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import smu.capstone.paper.activity.AddItemtagActivity;
-import smu.capstone.paper.activity.ItemDetailActivity;
-import smu.capstone.paper.activity.PostEditActivity;
-import smu.capstone.paper.item.ItemtagItem;
 import smu.capstone.paper.server.RetrofitClient;
 
 

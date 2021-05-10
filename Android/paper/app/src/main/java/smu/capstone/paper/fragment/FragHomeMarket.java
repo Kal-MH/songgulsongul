@@ -19,14 +19,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.StickerDetailActivity;
 import smu.capstone.paper.activity.StickerSearchActivity;
 import smu.capstone.paper.adapter.HomeMarketAdapter;
-import smu.capstone.paper.item.HomeFeedItem;
-import smu.capstone.paper.item.HomeMarketItem;
 
 public  class FragHomeMarket extends Fragment {
     private View view;
