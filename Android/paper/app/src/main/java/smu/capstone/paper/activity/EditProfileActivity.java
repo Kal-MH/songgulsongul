@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,18 +20,35 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
 
+import javax.net.ssl.SSLEngineResult;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
+import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.data.IdCheckData;
+import smu.capstone.paper.data.IdData;
+import smu.capstone.paper.data.ProfileEditData;
+import smu.capstone.paper.data.UserData;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class EditProfileActivity extends AppCompatActivity {
+    // ServiceApi 객체 생성
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
 
     private RadioGroup sns_radio;
     private RadioButton profile_sns_radio_yes, profile_sns_radio_no;
@@ -40,6 +58,10 @@ public class EditProfileActivity extends AppCompatActivity {
     private JSONObject profile_item;
     private static final int REQUEST_CODE = 0;
     private int profile_sns_check;
+    private String login_id, new_id;
+    private int id_check, id_modify_check;
+    private int NO = 0;
+    private int YES = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +75,10 @@ public class EditProfileActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
+        login_id = LoginSharedPreference.getLoginId(EditProfileActivity.this);
+        id_check = NO;
+        id_modify_check = NO;
+
         profile_new_intro = (EditText)findViewById(R.id.profile_new_intro);
         profile_new_sns = (EditText)findViewById(R.id.profile_new_sns);
         profile_img_chnage = findViewById(R.id.profile_img_chnage);
@@ -63,7 +89,7 @@ public class EditProfileActivity extends AppCompatActivity {
         profile_sns_radio_no = findViewById(R.id.profile_sns_radio_no);
         profile_check = findViewById(R.id.profile_check);
 
-        setProfileData();
+        getProfileData();
 
         profile_img_chnage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,31 +106,103 @@ public class EditProfileActivity extends AppCompatActivity {
         profile_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // newId로 server와 통신
-                String newId = profile_newid.getText().toString();
+                new_id = profile_newid.getText().toString();
+                new_id.trim();
 
-                //if resultCode == 200
-                new AlertDialog.Builder(EditProfileActivity.this)
-                        .setMessage("사용할 수 있는 아이디입니다.")
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                // 입력값이 공백일 경우 --> 서버 통신x
+                if(new_id.getBytes().length <= 0){
+                    id_check = NO;
+                    id_modify_check = NO;
+                    new AlertDialog.Builder(EditProfileActivity.this)
+                            .setTitle("경고")
+                            .setMessage("변경할 아이디를 입력해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
+                                }
+                            })
+                            .show();
+                }
+
+                // 현재 사용중인 id와 동일한 id 입력시 --> 서버 통신x
+                else if (login_id.equals(new_id)){
+                    id_check = YES;
+                    id_modify_check = NO;
+                    new AlertDialog.Builder(EditProfileActivity.this)
+                            .setMessage("기존 아이디입니다.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
+                }
+
+                // new_id로 server와 통신
+                else {
+                    IdCheckData data = new IdCheckData(new_id);
+                    serviceApi.IdCheck(data).enqueue(new Callback<CodeResponse>() {
+                        @Override
+                        public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                            CodeResponse result = response.body();
+                            int resultCode = result.getCode();
+
+                            if(resultCode == StatusCode.RESULT_OK){
+                                new AlertDialog.Builder(EditProfileActivity.this)
+                                        .setMessage("사용할 수 있는 아이디입니다.")
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .show();
+                                id_check = YES;
+                                id_modify_check = YES;
                             }
-                        })
-                        .show();
 
-                //else
-                /*new AlertDialog.Builder(EditProfileActivity.this)
-                        .setTitle("경고")
-                        .setMessage("이미 사용중인 아이디입니다."+"\n"+"다시 입력해 주세요.")
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
+                            else if (resultCode == StatusCode.RESULT_CLIENT_ERR){
+                                id_check = NO;
+                                id_modify_check = NO;
+                                new AlertDialog.Builder(EditProfileActivity.this)
+                                        .setTitle("경고")
+                                        .setMessage("이미 사용중인 아이디입니다."+"\n"+"다시 입력해 주세요.")
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                profile_newid.setText(null);
+                                            }
+                                        })
+                                        .show();
                             }
-                        })
-                        .show();*/
+
+                            else if (resultCode == StatusCode.RESULT_SERVER_ERR){
+                                id_check = NO;
+                                id_modify_check = NO;
+                                new AlertDialog.Builder(EditProfileActivity.this)
+                                        .setTitle("경고")
+                                        .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        })
+                                        .show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<CodeResponse> call, Throwable t) {
+                            id_check = NO;
+                            id_modify_check = NO;
+                            Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Log.e("아이디 중복확인 에러", t.getMessage());
+                            t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                        }
+                    });
+                }
             }
         });
 
@@ -131,7 +229,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
         super.onActivityResult(requestCode, resultCode, data);
@@ -150,7 +248,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             }
         }
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,6 +263,74 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.toolbar_save:
+                String new_intro = profile_new_intro.getText().toString().trim();
+
+                if(sns_radio.getCheckedRadioButtonId() == R.id.profile_sns_radio_no)
+                    profile_sns_check = NO;
+                else if(sns_radio.getCheckedRadioButtonId() == R.id.profile_sns_radio_yes)
+                    profile_sns_check = YES;
+
+                String new_sns = profile_new_sns.getText().toString().trim();
+                ProfileEditData data = new ProfileEditData(id_modify_check, profile_sns_check, login_id, new_intro, new_sns);
+
+                if(id_check == NO){
+                    new AlertDialog.Builder(EditProfileActivity.this)
+                            .setMessage("아이디 중복확인을 완료해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
+                }
+                else if(id_check == YES){
+                    if(id_modify_check == YES)
+                        data.setNewId(new_id);
+                    serviceApi.EditProfile(data).enqueue(new Callback<CodeResponse>() {
+                        @Override
+                        public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                            CodeResponse result = response.body();
+                            int resultCode = result.getCode();
+
+                            if(resultCode == StatusCode.RESULT_OK){
+                                Toast.makeText(EditProfileActivity.this, "프로필 수정 완료!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
+                                startActivity(intent);
+                            }
+                            else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
+                                new AlertDialog.Builder(EditProfileActivity.this)
+                                        .setTitle("경고")
+                                        .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        })
+                                        .show();
+                            }
+                            else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                                new AlertDialog.Builder(EditProfileActivity.this)
+                                        .setTitle("경고")
+                                        .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        })
+                                        .show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<CodeResponse> call, Throwable t) {
+                            Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Log.e("프로필 수정 에러", t.getMessage());
+                            t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                        }
+                    });
+
+                }
                 return true;
 
             case android.R.id.home: // 뒤로가기 버튼 눌렀을 때
@@ -175,32 +341,53 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     //server에서 data전달
-    public JSONObject getProfileData(){
-        profile_item = new JSONObject();
+    public void getProfileData(){
+        UserData data = new UserData(login_id, 1);
+        serviceApi.ProfileData(data).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject result = response.body();
+                int resultCode = result.get("code").getAsInt();
 
-        // 임시 데이터 저장
-        try{
-            JSONObject obj = new JSONObject();
-            obj.put("intro", "Good to see you Buddy!");
-            obj.put("sns", "https://www.google.com");
-            obj.put("profile_image",R.drawable.ic_baseline_emoji_emotions_24);
-            obj.put("sns_check",1);
+                if(resultCode == StatusCode.RESULT_OK){
+                    setProfileData(result);
+                }
+                else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                    new AlertDialog.Builder(EditProfileActivity.this)
+                            .setTitle("경고")
+                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 에러 발생 시 새로고침
+                                    Intent intent = getIntent();
+                                    finish();
+                                    startActivity(intent);
+                                }
+                            })
+                            .show();
+                }
+            }
 
-            return obj;
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return profile_item;
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Log.e("기존 프로필 불러오기 에러", t.getMessage());
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
     }
 
-    public void setProfileData(){
+    public void setProfileData(JsonObject data){
 
-        JSONObject data = getProfileData();
-        try {
-            profile_new_intro.setText(data.getString("intro"));
-            profile_new_sns.setText(data.getString("sns"));
-            Glide.with(this).load(data.getInt("profile_image")).into(profile_set_img);
-            if(data.getInt("sns_check")==0){
+            profile_new_intro.setText(data.get("intro").getAsString());
+            profile_new_sns.setText(data.get("sns").getAsString());
+            String img_addr = RetrofitClient.getBaseUrl() + data.get("profileImg").getAsString();
+            Glide.with(this).load(img_addr).into(profile_set_img);
+
+            int sns_check = data.get("snsCheck").getAsInt();
+
+            if(sns_check == NO){
                 profile_sns_radio_no.setChecked(true);
                 profile_sns_radio_yes.setChecked(false);
                 profile_new_sns.setClickable(false);
@@ -215,10 +402,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 profile_new_sns.setFocusable(true);
                 profile_new_sns.setHint("sns 계정을 입력하세요");
             }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
     }
 

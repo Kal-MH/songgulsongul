@@ -73,7 +73,6 @@
              }
 
              profile_info.push(prodata);
-             console.log(profile_info);
              res.json({
                'code': resultCode,
                'followerCnt': follower_cnt,
@@ -191,7 +190,6 @@
               console.log(rows[i].login_id);
              follow_info.push(followInfo);
            }
-           console.log(follow_info);
 
            res.json({
              'code': resultCode,
@@ -238,9 +236,6 @@
              };
              user_follow_info.push(userFollowInfo);
            }
-
-           console.log(login_follow_info);
-           console.log(user_follow_info);
 
            res.json({
              'code': resultCode,
@@ -293,15 +288,13 @@
              following_info.push(followingInfo);
            }
 
-           console.log(follower_info);
-           console.log(following_info);
            res.json({
              'code': resultCode,
              'followerInfo': follower_info,
              'followingInfo': following_info
            })
          }
-         console.log(statusCode);
+         console.log(resultCode);
        })
      },
 
@@ -347,21 +340,48 @@
        })
      },
 
-     // 프로필수정 - 아이디 중복확인
-     profileEditIdCheck : function(req, res){
-       apiController.dupIdCheck(req, res);
+     // 기존 프로필 데이터 불러오기
+     profileData : function(req, res){
+       const id = req.body.id;
+       var param = [id];
+
+       var sql = 'SELECT * FROM user WHERE login_id = ?;';
+       connection.query(sql, param, function(err, rows){
+         var resultCode = statusCode.SERVER_ERROR;
+
+         if(err){
+           console.log(err);
+           res.json({
+             'code': resultCode
+           })
+         }
+         else{
+           resultCode = statusCode.OK;
+
+           res.json({
+             'code': resultCode,
+             'profileImg': rows[0].img_profile,
+             'intro': rows[0].intro,
+             'sns': rows[0].sns_url,
+             'snsCheck': rows[0].sns_check
+           })
+           console.log(resultCode)
+         }
+       })
      },
 
      // 프로필수정
      profileEdit : function(req, res) {
-       const id = req.body.id; // 기존 아이디
-       const new_id = req.body.newId; // 변경된 아이디
-       const new_intro = req.body.newIntro;
-       const new_sns = req.body.newSNS;
-       const new_image = req.body.profileImage;
+       const is_id_check = req.body.id_check_flag;
+       const is_sns_check = req.body.sns_check;
+       const id = req.body.login_id; // 기존 아이디
+       const new_id = req.body.new_id; // 변경된 아이디
+       const new_intro = req.body.new_intro;
+       const new_sns = req.body.new_SNS;
+       const new_image = req.body.profile_image;
        var param = [id];
 
-       var sql = 'SELECT * FROM user WHERE login_id = ?';
+       var sql = 'SELECT * FROM user WHERE login_id = ?;';
        connection.query(sql, param, function(err, rows){
          var resultCode = statusCode.CLIENT_ERROR;
 
@@ -373,59 +393,49 @@
          }
          else{
            resultCode = statusCode.OK;
-
-           // 기존 아이디와 비교 후 db갱신
-           if(rows[0].login_id !== new_id){
-             sql = 'UPDATE user SET login_id = ? WHERE login_id = ?';
-             connection.query(sql, [new_id, id], function(err, rows){
-               if(err){
-                 resultCode = statusCode.SERVER_ERROR;
-                 res.json({
-                   'code': resultCode
-                 })
-               }
-             })
-           }
+           sql = ""
+           param = [];
 
            // 기존 소개글과 비교 후 db갱신
            if(rows[0].intro !== new_intro){
-             sql = 'UPDATE user SET intro = ? WHERE login_id = ?';
-             connection.query(sql, [new_intro, id], function(err, rows){
-               if(err){
-                 resultCode = statusCode.SERVER_ERROR;
-                 res.json({
-                   'code': resultCode
-                 })
-               }
-             })
+             sql += 'UPDATE user SET intro = ? WHERE login_id = ?;';
+             param.push(new_intro, id);
            }
 
            // 기존 SNS계정과 비교 후 db갱신
-           if(rows[0].sns !== new_sns){
-             sql = 'UPDATE user SET sns = ? WHERE login_id = ?';
-             connection.query(sql, [new_sns, id], function(err, rows){
-               if(err){
-                 resultCode = statusCode.SERVER_ERROR;
-                 res.json({
-                   'code': resultCode
-                 })
-               }
-             })
+           if(rows[0].sns_url !== new_sns){
+             sql += 'UPDATE user SET sns = ? AND sns_check = ? WHERE login_id = ?;';
+             param.push(new_sns, id, is_sns_check);
+           }
+
+           // 기존 아이디와 비교 후 db갱신
+           if(is_id_check === 1){
+               sql += 'UPDATE user SET login_id = ? WHERE login_id = ?;';
+               param.push(new_id, id)
            }
 
            // 프로필 이미지 db갱신
-           sql = 'UPDATE user SET img_profile = ? WHERE login_id = ?';
-           connection.query(sql, [new_image, id], function(err, rows){
+           // sql = 'UPDATE user SET img_profile = ? WHERE login_id = ?';
+           // connection.query(sql, [new_image, id], function(err, rows){
+           //   if(err){
+           //     resultCode = statusCode.SERVER_ERROR;
+           //     res.json({
+           //       'code': resultCode
+           //     })
+           //   }
+           // })
+           connection.query(sql, param, function(err, rows){
              if(err){
                resultCode = statusCode.SERVER_ERROR;
-               res.json({
+               return res.json({
                  'code': resultCode
                })
              }
-           })
-
-           res.json({
-             'code': resultCode
+             else{
+               return res.json({
+                 'code': resultCode
+               })
+             }
            })
          }
        })

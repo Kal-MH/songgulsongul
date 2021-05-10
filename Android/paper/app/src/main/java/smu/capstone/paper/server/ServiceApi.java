@@ -20,6 +20,7 @@ import smu.capstone.paper.data.IdData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.LoginData;
+import smu.capstone.paper.data.ProfileEditData;
 import smu.capstone.paper.data.UserData;
 import smu.capstone.paper.data.LoginResponse;
 
@@ -82,6 +83,14 @@ public interface ServiceApi {
 
     //피드 게시글 가져오기
     @GET("/post/feeds")
-    Call<JsonObject> GetFeed(@Query("userid") int id, @Query("offset") int offset );
+    Call<JsonObject> GetFeed(@Query("userid") int id, @Query("offset") int offset);
+
+    //기존 프로필 데이터 불러오기
+    @POST("user/profile-data")
+    Call<JsonObject> ProfileData(@Body UserData data);
+
+    //프로필 수정
+    @POST("/user/profile-edit")
+    Call<CodeResponse> EditProfile(@Body ProfileEditData data);
 
 }
