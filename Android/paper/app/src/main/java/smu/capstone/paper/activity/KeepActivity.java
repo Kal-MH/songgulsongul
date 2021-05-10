@@ -23,10 +23,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +33,6 @@ import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.PostImageAdapter;
 import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.UserData;
-import smu.capstone.paper.item.PostItem;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;

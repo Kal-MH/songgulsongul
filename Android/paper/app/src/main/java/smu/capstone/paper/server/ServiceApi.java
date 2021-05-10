@@ -8,9 +8,11 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import smu.capstone.paper.data.CodeResponse;
 
+import smu.capstone.paper.data.CommentData;
 import smu.capstone.paper.data.FollowData;
 import smu.capstone.paper.data.FollowListData;
 import smu.capstone.paper.data.EmailData;
@@ -31,6 +33,18 @@ public interface ServiceApi {
     // 인증 이메일 보내기
     @POST("/api/email-auth")
     Call<JsonObject> EmailAuth(@Body EmailData data);
+
+    //좋아요
+    @GET("/api/like")
+    Call<CodeResponse> Like(@Query("userid") int userid, @Query("postid") int postid);
+
+    //보관하기
+    @GET("/api/keep")
+    Call<CodeResponse> Keep(@Query("userid") int userid, @Query("postid") int postid);
+
+    //댓글 작성
+    @POST("/api/comment")
+    Call<CodeResponse> Comment(@Body CommentData commentData);
 
     // 회원가입
     @POST("/join")
@@ -83,5 +97,13 @@ public interface ServiceApi {
     //피드 게시글 가져오기
     @GET("/post/feeds")
     Call<JsonObject> GetFeed(@Query("userid") int id, @Query("offset") int offset );
+
+    //커뮤니트 게시글 가져오기
+    @GET("/post/community")
+    Call<JsonObject> GetCommunity(@Query("offset") int offset);
+
+    //세부 게시글 내용 가져오기
+    @GET("/post/{id}")
+    Call<JsonObject> GetDetailPost(@Path("id") int id, @Query("userid") int userid);
 
 }

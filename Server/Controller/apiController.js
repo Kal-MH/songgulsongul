@@ -126,8 +126,6 @@ const apiController = {
     //좋아요 api
     setPostLike : function (req, res) {
         const postId = req.query.postid;
-
-        //일단은 사용자가 로그인되었다는 가정하에, 클라이언트에서 거른다는 가정하에 진행
         const loggedUser = req.query.userid;
         const apiLikeCheckSql = `select * from likes where post_id=${postId} and user_id=${loggedUser};`;
 
@@ -152,10 +150,10 @@ const apiController = {
                         console.log(err);
                         code = statusCode.SERVER_ERROR;
                     }
-                    res.redirect(`/post/${postId}`)
-                    // res.json({
-                    //     'code' : code
-                    // })
+                    //res.redirect(`/post/:${postId}`)
+                     res.json({
+                         'code' : code
+                     })
                 })
             }
         })
@@ -163,9 +161,7 @@ const apiController = {
     },
     setPostKeep : function (req, res) {
         const postId = req.query.postid;
-
-        //일단은 사용자가 로그인되었다는 가정하에, 클라이언트에서 거른다는 가정하에 진행
-        const loggedUser = res.query.userid;
+        const loggedUser = req.query.userid;
         const apiKeepCheckSql = `select * from keep where post_id=${postId} and user_id=${loggedUser};`;
 
         connection.query(apiKeepCheckSql, function (err, result) {
@@ -189,18 +185,18 @@ const apiController = {
                         console.log(err);
                         code = statusCode.SERVER_ERROR;
                     }
-                    res.redirect(`/post/${postId}`)
-                    // res.json({
-                    //     'code' : code
-                    // })
+                    //res.redirect(`/post/${postId}`)
+                    res.json({
+                        'code' : code
+                    })
                 })
             }
         })
         
     },
     insertPostComment : function (req, res) {
-        var postId = req.query.postid;
-        var userId = req.query.userid;
+        var postId = req.body.postid;
+        var userId = req.body.userid;
         var text = req.body.comment; //공백으로 오는 것을 어디서 걸러줄 것인가.
 
         var commentInsertSql = `insert into comment(user_id, post_id, text, c_time, c_date) values(?, ?, ?, curtime(), curdate());`
@@ -211,10 +207,10 @@ const apiController = {
                 console.log(err);
                 code = statusCode.CLIENT_ERROR;
             }
-            res.redirect(`/post/${postId}`)
-            // res.json({
-            //     'code' : code
-            // })
+            //res.redirect(`/post/${postId}`)
+             res.json({
+                 'code' : code
+             })
         })
     },
     deletePostComment : function (req, res) {
@@ -229,10 +225,10 @@ const apiController = {
                 console.log(err);
                 code = statusCode.CLIENT_ERROR;
             }
-            res.redirect(`/post/${postId}`)
-            // res.json({
-            //     'code' : code
-            // })
+            //res.redirect(`/post/${postId}`)
+             res.json({
+                 'code' : code
+             })
         })
     },
 

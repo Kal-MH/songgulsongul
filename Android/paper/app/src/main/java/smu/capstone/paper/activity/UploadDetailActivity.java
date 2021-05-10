@@ -127,6 +127,7 @@ public class UploadDetailActivity extends AppCompatActivity {
         });
 
 
+/*
 
         // 아이템 태그 어뎁터 설정
         itemtag_rv = findViewById(R.id.upload_itemtag_rv);
@@ -140,10 +141,10 @@ public class UploadDetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
         // 적용
         itemtag_rv.setAdapter(adapter);
 
+*/
 
     }
 
