@@ -95,6 +95,7 @@ const postController_subFunc = {
                 likeOnset : (likeKeep && likeKeep.likeOnset == 1) ? 1 : 0, //현재 작성자가 좋아요 눌렀는 지에 대한 여부
                 keepOnset :  (likeKeep && likeKeep.keepOnset == 1) ? 1 : 0 //현재 작성자가 보관하기 눌렀는 지에 대한 여부
             }
+            console.log(data);
             res.json({
                 'code' : statusCode,
                 'data' : data

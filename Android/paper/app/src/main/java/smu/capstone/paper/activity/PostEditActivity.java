@@ -5,14 +5,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,6 +24,8 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +33,6 @@ import org.json.JSONObject;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.AddItemTagAdapter;
-import smu.capstone.paper.item.ItemtagItem;
 
 public class PostEditActivity extends AppCompatActivity {
 
@@ -44,8 +40,8 @@ public class PostEditActivity extends AppCompatActivity {
     AddItemTagAdapter adapter;
     EditText hashtagText, post_edit_text;
     ImageView post_edit_pic;
-    JSONObject itemtag_obj, hashtag_obj;
-    JSONArray hashtag_list;
+    JsonObject itemtag_obj, hashtag_obj;
+    JsonArray hashtag_list;
     Switch post_edit_ccl_1, post_edit_ccl_2, post_edit_ccl_3, post_edit_ccl_4, post_edit_ccl_5;
     boolean ccl1,ccl2,ccl3,ccl4,ccl5;
     //int ccl[] = {1,0,1,1,1}; // 넘겨받은 ccl설정 값 --> 추후 intent로 PostActivity에서 넘겨받음
@@ -89,22 +85,19 @@ public class PostEditActivity extends AppCompatActivity {
         post_edit_ccl_4.setChecked(ccl4);
         post_edit_ccl_5.setChecked(ccl5);
 
-        try {
-            hashtag_obj = new JSONObject(intent.getStringExtra("hashtag"));
-            hashtag_list = hashtag_obj.getJSONArray("data");
-            hashtagText = findViewById(R.id.post_edit_hashtag);
-            for(int i = 0; i < hashtag_list.length(); i++){
-                hashtagText.append(hashtag_list.getJSONObject(i).getString("text"));
-                if(i < hashtag_list.length() - 1)
-                    hashtagText.append(" ");
-            }
-        } catch (JSONException e){
-            e.printStackTrace();
+
+      /*  hashtag_obj =  intent.??
+        hashtag_list = hashtag_obj.getAsJsonArray("data");
+        hashtagText = findViewById(R.id.post_edit_hashtag);
+        for(int i = 0; i < hashtag_list.size(); i++){
+            hashtagText.append(hashtag_list.get(i).getAsJsonObject().get("text").getAsString());
+            if(i < hashtag_list.size() - 1)
+                hashtagText.append(" ");
         }
+        */
 
         //해쉬태그 작성
-        //hashtagText = findViewById(R.id.post_edit_hashtag);
-        //hashtagText.append("#");
+
         hashtagText.setFilters(new InputFilter[]{new InputFilter() {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
@@ -139,52 +132,19 @@ public class PostEditActivity extends AppCompatActivity {
         });
 
 
+/*
         itemtag_obj = getItemtagData();
-
-        // 기존 itemtag data로 설정 --> bitmap 형식으로 되어있어 현재 컴파일 불가
-       /* try{
-            itemtag_obj = new JSONObject(intent.getStringExtra("itemtag"));
-            JSONObject obj = new JSONObject();
-            obj.put("Image", R.drawable.ic_baseline_add_24);
-            itemtag_obj.getJSONArray("data").put(0, obj);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }*/
 
         // 아이템 태그 어뎁터 설정
         itemtag_rv = findViewById(R.id.post_edit_itemtag_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         itemtag_rv.setLayoutManager(layoutManager);
-        try {
-            adapter = new AddItemTagAdapter(itemtag_rv.getContext(), itemtag_obj); // 추가모드 어뎁터 세팅
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-/*        //첫 데이터는 언제나 추가 아이콘으로 세팅
-        adapter.insertItem(
-                new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_baseline_add_24)),0,"add","add" )
-        );
-
-        adapter.insertItem(
-                new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" )
-        );
-        adapter.insertItem(
-                new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" )
-        );
-        adapter.insertItem(
-                new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" )
-        );
-        adapter.insertItem(
-                new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" )
-        );
-        adapter.insertItem(
-                new ItemtagItem(drawable2Bitmap(getResources().getDrawable(R.drawable.ic_favorite)),200,"지우개","fabercastel" )
-        );*/
+        adapter = new AddItemTagAdapter(itemtag_rv.getContext(), itemtag_obj); // 추가모드 어뎁터 세팅
 
         // 적용
         itemtag_rv.setAdapter(adapter);
+
+*/
 
 
     }
@@ -198,12 +158,12 @@ public class PostEditActivity extends AppCompatActivity {
 
 
             JSONObject obj2 = new JSONObject();
-            obj2.put("Image", drawable2Bitmap( getDrawable(R.drawable.ic_baseline_add_24)) );
+         //   obj2.put("Image", drawable2Bitmap( getDrawable(R.drawable.ic_baseline_add_24)) );
             arr.put(obj2);
 
             for(int i = 0; i < 5; i++){
                 JSONObject obj = new JSONObject();
-                obj.put("Image", drawable2Bitmap( getDrawable(R.drawable.sampleimg)) );
+         //       obj.put("Image", drawable2Bitmap( getDrawable(R.drawable.sampleimg)) );
                 arr.put(obj);
             }
             post_itemtag_item.put("data", arr);
@@ -212,6 +172,7 @@ public class PostEditActivity extends AppCompatActivity {
         }
         return post_itemtag_item;
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -244,17 +205,4 @@ public class PostEditActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static Bitmap drawable2Bitmap(Drawable drawable) {
-        Bitmap bitmap = Bitmap
-                .createBitmap(
-                        drawable.getIntrinsicWidth(),
-                        drawable.getIntrinsicHeight(),
-                        drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
-                                : Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
 }

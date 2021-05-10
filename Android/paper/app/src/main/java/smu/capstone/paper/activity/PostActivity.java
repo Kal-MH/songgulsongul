@@ -1,18 +1,12 @@
 package smu.capstone.paper.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,29 +25,35 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
-import smu.capstone.paper.adapter.AddItemTagAdapter;
 import smu.capstone.paper.adapter.HashTagAdapter;
-import smu.capstone.paper.adapter.HomeFeedAdapter;
 import smu.capstone.paper.adapter.ItemTagAdapter;
 import smu.capstone.paper.adapter.PostCmtAdapter;
-import smu.capstone.paper.item.ItemtagItem;
+import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.data.CommentData;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class PostActivity extends AppCompatActivity {
     ImageButton post_setting_btn, post_like_btn, post_keep_btn;
     ListView post_cmt_list;
-    PostCmtAdapter cmt_adapter;
     RecyclerView post_hashtag_rv, post_itemtag_rv;
+
     EditText post_input;
     Button post_write;
+
+    PostCmtAdapter cmt_adapter;
     ItemTagAdapter itemTagAdapter;
     HashTagAdapter hashTagAdapter;
-    JSONObject post_item, post_itemtag_item, post_hashtag_item, post_cmt_item;
+
     TextView post_user_id, post_like_cnt, post_cmt_cnt, post_text, post_date;
     ImageView post_pic, post_profile, post_ccl_cc, post_ccl_a, post_ccl_nc, post_ccl_nd, post_ccl_sa;
     boolean ccl1, ccl2, ccl3, ccl4, ccl5;
@@ -62,96 +62,60 @@ public class PostActivity extends AppCompatActivity {
     final int MY = 1;
     final int OTHER = 2;
 
+
+    int user_id, post_id;
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+    StatusCode statusCode;
+    JsonObject data, postData, userData;
+    JsonArray hashTagsData,  itemTagData, CommentsData;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        post_user_id = findViewById(R.id.post_id);
-        post_like_cnt = findViewById(R.id.post_like_cnt);
-        post_cmt_cnt = findViewById(R.id.post_cmt_cnt);
-        post_text = findViewById(R.id.post_text);
-        post_profile = findViewById(R.id.post_profile);
-        post_pic = findViewById(R.id.post_pic);
-        post_date = findViewById(R.id.post_date);
-        post_ccl_cc = findViewById(R.id.post_ccl_cc);
-        post_ccl_a = findViewById(R.id.post_ccl_a);
-        post_ccl_nc = findViewById(R.id.post_ccl_nc);
-        post_ccl_nd = findViewById(R.id.post_ccl_nd);
-        post_ccl_sa = findViewById(R.id.post_ccl_sa);
+        {
+            post_write = (Button) findViewById(R.id.post_write);
+            post_keep_btn=(ImageButton)findViewById(R.id.post_keep_btn);
+            post_like_btn = (ImageButton) findViewById(R.id.post_like_btn);
+            post_setting_btn = (ImageButton) findViewById(R.id.post_setting_btn);
+            post_input = (EditText) findViewById(R.id.post_input);
+            post_user_id = findViewById(R.id.post_id);
+            post_like_cnt = findViewById(R.id.post_like_cnt);
+            post_cmt_cnt = findViewById(R.id.post_cmt_cnt);
+            post_text = findViewById(R.id.post_text);
+            post_profile = findViewById(R.id.post_profile);
+            post_pic = findViewById(R.id.post_pic);
+            post_date = findViewById(R.id.post_date);
+            post_ccl_cc = findViewById(R.id.post_ccl_cc);
+            post_ccl_a = findViewById(R.id.post_ccl_a);
+            post_ccl_nc = findViewById(R.id.post_ccl_nc);
+            post_ccl_nd = findViewById(R.id.post_ccl_nd);
+            post_ccl_sa = findViewById(R.id.post_ccl_sa);
+            post_itemtag_rv = findViewById(R.id.post_itemtag_rv);
+            post_cmt_list = (ListView) findViewById(R.id.post_cmt_list);
+            post_hashtag_rv = findViewById(R.id.post_hashtag_rv);
+            post_cmt_list = findViewById(R.id.post_cmt_list);
+        }
 
-        Intent intent = getIntent();
-
-
-        final JSONObject post_obj = getPostData();
-        final JSONObject hashtag_obj = getHashtagData();
-        final JSONObject itemtag_obj = getItemtagData();
-        JSONObject cmt_obj = getCmtData();
-
-
-
-
+        //툴바 세팅
         Toolbar toolbar = (Toolbar)findViewById(R.id.post_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        //  actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
-        setPostData();
 
-        if(ccl1)
-            post_ccl_cc.setImageResource(R.drawable.ccl_cc_fill);
-        if(ccl2)
-            post_ccl_a.setImageResource(R.drawable.ccl_attribution_fill);
-        if(ccl3)
-            post_ccl_nc.setImageResource(R.drawable.ccl_noncommercial_fill);
-        if(ccl4)
-            post_ccl_nd.setImageResource(R.drawable.ccl_no_derivative_fill);
-        if(ccl5)
-            post_ccl_sa.setImageResource(R.drawable.ccl_share_alike_fill);
-
-        // 아이템 태그 어뎁터 설정
-        post_itemtag_rv = findViewById(R.id.post_itemtag_rv);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        post_itemtag_rv.setLayoutManager(layoutManager);
-
-        try {
-            itemTagAdapter = new ItemTagAdapter(post_itemtag_rv.getContext(), itemtag_obj);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        post_itemtag_rv.setAdapter(itemTagAdapter);
+        Intent intent = getIntent();
+        user_id = LoginSharedPreference.getUserId(PostActivity.this);
+        post_id = intent.getIntExtra("post_id",-1);
 
 
-        //해쉬 태그 어뎁터 설정
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        post_hashtag_rv = findViewById(R.id.post_hashtag_rv);
-        post_hashtag_rv.setLayoutManager(layoutManager2);
-        try{
-            hashTagAdapter = new HashTagAdapter(post_hashtag_rv.getContext(), hashtag_obj);
-        }
-        catch (JSONException e){
-            e.printStackTrace();
-        }
-        post_hashtag_rv.setAdapter(hashTagAdapter);
-
-        
-
-        //코멘트 어뎁터 설정
-        post_cmt_list = findViewById(R.id.post_cmt_list);
-        try {
-            cmt_adapter = new PostCmtAdapter(post_cmt_list.getContext(), cmt_obj );
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        post_cmt_list.setAdapter(cmt_adapter);
-
-        post_cmt_list = (ListView) findViewById(R.id.post_cmt_list);
+        //서버통신
+        getData();
 
 
-        post_setting_btn = (ImageButton) findViewById(R.id.post_setting_btn);
         post_setting_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,29 +128,27 @@ public class PostActivity extends AppCompatActivity {
                             case R.id.post_edit:
                                 Intent intent = new Intent(PostActivity.this, PostEditActivity.class);
                                 // postEditActivity로 기존 data 전달
-                                try {
-                                    intent.putExtra("postImg", post_obj.getInt("image"));
-                                    intent.putExtra("text", post_obj.getString("text"));
-                                    intent.putExtra("hashtag", hashtag_obj.toString());
-                                    intent.putExtra("itemtag", itemtag_obj.toString());
-                                    intent.putExtra("ccl1",post_obj.getBoolean("ccl1"));
-                                    intent.putExtra("ccl2",post_obj.getBoolean("ccl2"));
-                                    intent.putExtra("ccl3",post_obj.getBoolean("ccl3"));
-                                    intent.putExtra("ccl4",post_obj.getBoolean("ccl4"));
-                                    intent.putExtra("ccl5",post_obj.getBoolean("ccl5"));
-                                } catch (JSONException e){
-                                    e.printStackTrace();
-                                }
+
+                                intent.putExtra("postImg", postData.get("image").getAsString());
+                                intent.putExtra("text", postData.get("text").getAsString());
+                              //  intent.putExtra("hashtag",  ?? );
+                             //   intent.putExtra("itemtag", ??);
+
+                                /*
+                                intent.putExtra("ccl1",post_obj.getBoolean("ccl1"));
+                                intent.putExtra("ccl2",post_obj.getBoolean("ccl2"));
+                                intent.putExtra("ccl3",post_obj.getBoolean("ccl3"));
+                                intent.putExtra("ccl4",post_obj.getBoolean("ccl4"));
+                                intent.putExtra("ccl5",post_obj.getBoolean("ccl5"));*/
+
+
                                 startActivity(intent);
                                 break;
                             case R.id.post_save:
-                                Intent intent2 = new Intent(PostActivity.this, SaveImageActivity.class);
-                                try {
-                                    intent2.putExtra("postImg", post_obj.getInt("image"));
-                                } catch (JSONException e){
-                                    e.printStackTrace();
-                                }
-                                startActivity(intent2);
+                               /* Intent intent2 = new Intent(PostActivity.this, SaveImageActivity.class);
+                                intent2.putExtra("postImg", post_obj.getInt("image"));
+
+                                startActivity(intent2);*/
                                 break;
                             case R.id.post_delete:
                                 Toast.makeText(getApplicationContext(),"게시글 삭제",Toast.LENGTH_SHORT).show();
@@ -201,38 +163,102 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        post_like_btn = (ImageButton) findViewById(R.id.post_like_btn);
-        post_like_btn.setSelected(true);
         post_like_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                post_like_btn.setSelected(!post_like_btn.isSelected());
-                Log.d("TAG", "하트라고;"+ post_like_btn.isSelected());
+                serviceApi.Like(LoginSharedPreference.getUserId(PostActivity.this),
+                        postData.get("id").getAsInt()  ).enqueue(new Callback<CodeResponse>() {
+                    @Override
+                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                        int like = data.get("likeOnset").getAsInt();
+                        int resultCode = response.body().getCode();
+                        if( resultCode == statusCode.RESULT_OK){
+
+                            int likeNum = data.get("likeNum").getAsInt();
+                            data.remove("likeNum");
+                            if( like == 1){ //좋아요 취소하기
+                                like = 0;
+                                data.addProperty("likeNum",--likeNum);
+                            }
+                            else{
+                                like = 1;
+                                data.addProperty("likeNum",++likeNum);
+                            }
+                            data.remove("likeOnset");
+                            data.addProperty("likeOnset",like);
+
+                            data.remove("likeNum");
+                            data.addProperty("likeNum",likeNum);
+
+                            post_like_cnt.setText("좋아요 " + likeNum);
+                            post_like_btn.setSelected(!post_like_btn.isSelected()); //버튼 반대로 체크
+                        }
+                        else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                            Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                        }
+                        else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                            Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                        Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
             }
         });
 
-        post_keep_btn=(ImageButton)findViewById(R.id.post_keep_btn);
-        post_keep_btn.setSelected(true);
         post_keep_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                post_keep_btn.setSelected(!post_keep_btn.isSelected());
-                Log.d("TAG", "KEEP "+ post_keep_btn.isSelected());
+
+                serviceApi.Keep(LoginSharedPreference.getUserId(PostActivity.this),
+                        postData.get("id").getAsInt()  ).enqueue(new Callback<CodeResponse>() {
+                            @Override
+                            public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                                int keep = data.get("keepOnset").getAsInt();
+                                int resultCode = response.body().getCode();
+                                if( resultCode == statusCode.RESULT_OK){
+                                    keep = (keep==1)? 0 : 1;
+                                    data.remove("keepOnset");
+                                    data.addProperty("keepOnset",keep);
+                                    if( keep == 1)
+                                        Toast.makeText(PostActivity.this, "보관함에 저장 되었습니다", Toast.LENGTH_SHORT).show();
+                                    else
+                                        Toast.makeText(PostActivity.this, "보관함에서 삭제 되었습니다", Toast.LENGTH_SHORT).show();
+
+
+                                    post_keep_btn.setSelected(!post_keep_btn.isSelected());
+
+                                }
+                                else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                                    Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                                }
+                                else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                                    Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<CodeResponse> call, Throwable t) {
+                                Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                            }
+                        });
+
             }
         });
-        post_input = (EditText) findViewById(R.id.post_input);
-        post_write = (Button) findViewById(R.id.post_write);
 
-        // 텍스트 입력시 로그인 버튼 활성화
+        // 텍스트 입력시 댓글작성 버튼 활성화
         post_input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -243,6 +269,179 @@ public class PostActivity extends AppCompatActivity {
                 }
             }
         });
+        //댓글 작성 기능
+        post_write.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //댓글 작성!
+                serviceApi.Comment(new CommentData(
+                        LoginSharedPreference.getUserId(PostActivity.this),
+                        postData.get("id").getAsInt(),
+                        post_input.getText().toString()
+                )).enqueue(new Callback<CodeResponse>() {
+                    @Override
+                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                        int resultCode = response.body().getCode();
+                        if( resultCode == statusCode.RESULT_OK){
+                             //다시 불러오기.. 아니면 댓글만 가져오는 코드 짜야함!
+                            post_input.setText("");
+                            getData();
+                        }
+                        else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                            Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                        }
+                        else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                            Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                        Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
+
+
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void getData(){
+        serviceApi.GetDetailPost(post_id, user_id).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject result = response.body();
+
+                int resultCode = result.get("code").getAsInt();
+
+                if( resultCode == statusCode.RESULT_OK){
+                    data = result.getAsJsonObject("data");
+                    setPostData();
+                    setHashTagData();
+                    setItemTagData();
+                    setCommentsData();
+                    setStatusData();
+
+                }
+                else if(resultCode == statusCode.RESULT_SERVER_ERR){
+                    Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    // 빈화면 말고 다른행동..
+
+                }
+                else {
+                    Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
+
+
+    }
+
+    public boolean setPostData(){
+        postData = data.getAsJsonObject("post");
+        userData = data.getAsJsonObject("user");
+
+        //작성자 프로필
+        post_user_id.setText(userData.get("login_id").getAsString());
+        Glide.with(this).load(RetrofitClient.getBaseUrl() + userData.get("img_profile").getAsString()).into(post_profile);
+
+        // 게시글 정보 세팅
+        post_date.setText(postData.get("post_date").getAsString() + postData.get("post_time").getAsString());
+        post_text.setText(postData.get("text").getAsString());
+        Glide.with(this).load(RetrofitClient.getBaseUrl() + postData.get("image").getAsString()).into(post_pic);
+
+
+        // data 세팅
+        post_like_cnt.setText("좋아요 " + data.get("likeNum").getAsInt());
+        if( data.get("likeOnset").getAsInt() == 1)
+            post_like_btn.setSelected(true);
+        else
+            post_like_btn.setSelected(false);
+
+        if( data.get("keepOnset").getAsInt() == 1)
+            post_keep_btn.setSelected(true);
+        else
+            post_keep_btn.setSelected(false);
+
+
+
+        //CCL 세팅 ! 서버 코딩내용없어서 .. 놔둠..
+       /* ccl1=postData.getBoolean("ccl1");
+        ccl2=postData.getBoolean("ccl2");
+        ccl3=postData.getBoolean("ccl3");
+        ccl4=postData.getBoolean("ccl4");
+        ccl5=postData.getBoolean("ccl5");
+
+
+        if(ccl1)
+            post_ccl_cc.setImageResource(R.drawable.ccl_cc_fill);
+        if(ccl2)
+            post_ccl_a.setImageResource(R.drawable.ccl_attribution_fill);
+        if(ccl3)
+            post_ccl_nc.setImageResource(R.drawable.ccl_noncommercial_fill);
+        if(ccl4)
+            post_ccl_nd.setImageResource(R.drawable.ccl_no_derivative_fill);
+        if(ccl5)
+            post_ccl_sa.setImageResource(R.drawable.ccl_share_alike_fill);
+*/
+
+        return true;
+    }
+    public boolean setHashTagData(){
+
+        hashTagsData = data.getAsJsonArray("hashTags");
+        //해쉬 태그 어뎁터 설정
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+
+        post_hashtag_rv.setLayoutManager(layoutManager2);
+
+        hashTagAdapter = new HashTagAdapter(post_hashtag_rv.getContext(), hashTagsData);
+        post_hashtag_rv.setAdapter(hashTagAdapter);
+        return true;
+    }
+    public boolean setItemTagData(){
+        itemTagData = data.getAsJsonArray("itemTags");
+        // 아이템 태그 어뎁터 설정
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        post_itemtag_rv.setLayoutManager(layoutManager);
+
+        itemTagAdapter = new ItemTagAdapter(post_itemtag_rv.getContext(), itemTagData);
+        post_itemtag_rv.setAdapter(itemTagAdapter);
+        return true;
+    }
+    public boolean setCommentsData(){
+        CommentsData = data.getAsJsonArray("comments");
+        post_cmt_cnt.setText("댓글 " +CommentsData.size()+"");
+        //코멘트 어뎁터 설정
+        cmt_adapter = new PostCmtAdapter(post_cmt_list.getContext(), CommentsData );
+        post_cmt_list.setAdapter(cmt_adapter);
+        return true;
+    }
+    public boolean setStatusData(){
+        if(LoginSharedPreference.getLoginId(PostActivity.this).equals( userData.get("login_id").getAsString() ) )
+            status = MY;
+        else
+            status = OTHER ;
 
         //Status에 떄라 버튼과 포인트 visibility와 enable 설정
         switch(status){
@@ -260,150 +459,7 @@ public class PostActivity extends AppCompatActivity {
             default:
                 break;
         }
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
-                finish();
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    public static Bitmap drawable2Bitmap(Drawable drawable) {
-        Bitmap bitmap = Bitmap
-                .createBitmap(
-                        drawable.getIntrinsicWidth(),
-                        drawable.getIntrinsicHeight(),
-                        drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
-                                : Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
-
-    //server에서 data전달
-    public JSONObject getPostData(){
-        post_item = new JSONObject();
-
-        // 임시 데이터 저장
-        try{
-            JSONObject obj = new JSONObject();
-            obj.put("login_id", "wonhee");
-            obj.put("post_time", "21-02-07");
-            obj.put("likeNum", 499);
-            obj.put("commentsNum", 204);
-            obj.put("text", "hi everyone");
-            obj.put("img_profile",R.drawable.ic_baseline_emoji_emotions_24);
-            obj.put("image",R.drawable.sampleimg);
-            obj.put("likeOnset", 0);
-            obj.put("keepOnset",0);
-            obj.put("ccl1",false);
-            obj.put("ccl2",true);
-            obj.put("ccl3",false);
-            obj.put("ccl4",true);
-            obj.put("ccl5",false);
-
-            return obj;
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return post_item;
-    }
-
-    //server에서 data전달
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public JSONObject getHashtagData(){
-        post_hashtag_item = new JSONObject();
-        JSONArray arr= new JSONArray();
-
-        //임시 데이터 저장
-        try{
-            for(int i = 0; i < 5; i++){
-                JSONObject obj = new JSONObject();
-                obj.put("text", "#캘리그라피");
-                arr.put(obj);
-            }
-            post_hashtag_item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return post_hashtag_item;
-    }
-
-    //server에서 data전달
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public JSONObject getItemtagData(){
-        post_itemtag_item = new JSONObject();
-        JSONArray arr= new JSONArray();
-
-        //임시 데이터 저장
-        try{
-            for(int i = 0; i < 5; i++){
-                JSONObject obj = new JSONObject();
-                obj.put("picture", drawable2Bitmap( getDrawable(R.drawable.sampleimg)) );
-                arr.put(obj);
-            }
-            post_itemtag_item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return post_itemtag_item;
-    }
-
-    // server에서 data전달
-    public JSONObject getCmtData(){
-        post_cmt_item = new JSONObject();
-        JSONArray arr= new JSONArray();
-
-        // 임시 데이터 저장
-        try{
-            JSONObject obj = new JSONObject();
-            obj.put("login_id", "wonhee");
-            obj.put("text", "와 정말 멋져요");
-            arr.put(obj);
-
-            JSONObject obj2 = new JSONObject();
-            obj2.put("login_id", "YUJIN");
-            obj2.put("text", "좋아요 누르고 갑니다~");
-            arr.put(obj2);
-
-            JSONObject obj3 = new JSONObject();
-            obj2.put("login_id", "YUJIN");
-            obj2.put("text", "안녕하세요");
-            arr.put(obj2);
-
-            post_cmt_item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return post_cmt_item;
-    }
-
-    public void setPostData(){
-        JSONObject data = getPostData();
-        try {
-            post_user_id.setText(data.getString("login_id"));
-            post_like_cnt.setText(data.getInt("likeNum" )+"");
-            post_cmt_cnt.setText(data.getInt("commentsNum")+"");
-            post_date.setText(data.getString("post_time"));
-            post_text.setText(data.getString("text"));
-            ccl1=data.getBoolean("ccl1");
-            ccl2=data.getBoolean("ccl2");
-            ccl3=data.getBoolean("ccl3");
-            ccl4=data.getBoolean("ccl4");
-            ccl5=data.getBoolean("ccl5");
-            Glide.with(this).load(data.getInt("img_profile")).into(post_profile);
-            Glide.with(this).load(data.getInt("image")).into(post_pic);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+        return true;
     }
 
 }

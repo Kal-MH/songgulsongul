@@ -3,15 +3,11 @@ package smu.capstone.paper.data;
 import com.google.gson.annotations.SerializedName;
 
 public class KeepData {
-    @SerializedName("loginId")
-    String loginId;
+    @SerializedName("login_id")
+    String login_id;
 
-    @SerializedName("postId")
-    int postId;
-
-    public KeepData(String loginId, int postId){
-        this.loginId = loginId;
-        this.postId = postId;
+    public KeepData(String login_id){
+        this.login_id = login_id;
     }
 
 }

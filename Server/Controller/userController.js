@@ -307,14 +307,16 @@
 
      // 보관함
      profileKeep : function(req, res){
-       const id = req.body.id;
-       var param = [id];
+       const id = req.body.login_id;
+       var params = [id, id];
        var keep_info = [];
        var keep_cnt;
+       var profile_img;
 
-       var sql = 'SELECT * FROM post JOIN keep ON post.id = keep.post_id WHERE keep.user_id = (SELECT id FROM user WHERE user_id = ?)'; // 보관함목록
-       connection.query(sql, param, function(err, rows){
-         var resultCode = statusCode.CLIENT_ERROR;
+       var sql = 'SELECT * FROM post JOIN keep ON post.id = keep.post_id WHERE keep.user_id = (SELECT id FROM user WHERE login_id = ?);'; // 보관함목록
+       var sql2 = 'SELECT * FROM user WHERE login_id = ?;';
+       connection.query(sql+sql2, params, function(err, rows){
+         var resultCode = statusCode.SERVER_ERROR;
 
          if(err){
            console.log(err);
@@ -325,19 +327,21 @@
          else{
            resultCode = statusCode.OK;
 
-           for(let i = 0; i < rows.length(); i++){
+           for(let i = 0; i < rows[0].length; i++){
              var kdata = {
-               'image' : rows[i].image,
-               'postId': rows[i].id
+               'image' : rows[0][i].image,
+               'postId': rows[0][i].id
              };
              keep_info.push(kdata);
            }
-           keep_cnt = rows.length();
+           keep_cnt = rows[0].length;
+           profile_img = rows[1][0].img_profile;
 
            res.json({
              'code' : resultCode,
-             'keepinfo' : keep_info,
-             'keepcnt': keep_cnt
+             'keepInfo' : keep_info,
+             'keepCnt': keep_cnt,
+             'profileImg': profile_img
            })
          }
        })

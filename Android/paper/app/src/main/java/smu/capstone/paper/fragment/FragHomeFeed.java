@@ -88,7 +88,7 @@ public class FragHomeFeed extends Fragment {
     }
 
     // server 에서 data 전달
-    public boolean GetFeedData(){
+    public void GetFeedData(){
         serviceApi.GetFeed(user_id,20).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -116,7 +116,5 @@ public class FragHomeFeed extends Fragment {
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
-        return true;
-
     }
 }

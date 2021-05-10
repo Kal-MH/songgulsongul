@@ -19,12 +19,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.adapter.PostImageAdapter;
-import smu.capstone.paper.item.PostItem;
 
 public class FragPostTag extends Fragment {
 
