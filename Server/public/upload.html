@@ -10,6 +10,9 @@
     <form action="/post/upload" method="post" enctype="multipart/form-data">
         <table>
             <tr>
+                <input type="text" class="text" name="user_id" placeholder="user_id"> <br><br>
+            </tr>
+            <tr>
                 <input type="text" class="text" name="text" placeholder="text"> <br><br>
             </tr>
             <tr>
@@ -37,12 +40,15 @@
                 <div>
                     <label for="file">Post Image</label>
                     <input type="file" id="file" name="img_post" accept="image/*" > <br><br>
-                    <label for="file">Post Image</label>
-                    <input type="file" id="file" name="img_post" accept="image/*" > <br><br>
-                    <label for="file">Post Image</label>
-                    <input type="file" id="file" name="img_post" accept="image/*" > <br><br>
-                    <label for="file">Post Image</label>
-                    <input type="file" id="file" name="img_post" accept="image/*" > <br><br>
+                </div>
+            </tr>
+            <tr>
+                <div>
+                    <input type="number" name="ccl" placeholder="ccl_cc">
+                    <input type="number" name="ccl" placeholder="ccl_a">
+                    <input type="number" name="ccl" placeholder="ccl_nc">
+                    <input type="number" name="ccl" placeholder="ccl_nd">
+                    <input type="number" name="ccl" placeholder="ccl_sa">
                 </div>
             </tr>
         </table>

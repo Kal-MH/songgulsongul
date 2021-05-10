@@ -13,22 +13,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.adapter.PostImageAdapter;
-import smu.capstone.paper.item.PostItem;
 
 public class FragPostAccount extends Fragment {
 
     private View view;
     //ArrayList<PostItem> items = new ArrayList<PostItem>();
     PostImageAdapter adapter;
+    JsonObject account_data;
 
     @Nullable
     @Override
@@ -37,13 +37,9 @@ public class FragPostAccount extends Fragment {
 
         GridView gridView = view.findViewById(R.id.frag_account_grid);
 
-        final JSONObject obj = getAccountData();
+        final JsonObject obj = getAccountData();
 
-        try {
-            adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, obj);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
+        adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, obj);
         gridView.setAdapter(adapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -53,12 +49,8 @@ public class FragPostAccount extends Fragment {
                 Intent intent = new Intent(getContext(), PostActivity.class);
 
                 // 게시글 id 전달
-                try {
-                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("postId");
-                    intent.putExtra("postId", postId);
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
+                int postId = obj.getAsJsonArray("data").get(position).getAsJsonObject().get("post_id").getAsInt();
+                intent.putExtra("postId", postId);
 
                 startActivity(intent);
 
@@ -70,7 +62,8 @@ public class FragPostAccount extends Fragment {
         return view;
     }
 
-    public JSONObject getAccountData(){
+    public JsonObject getAccountData(){
+        account_data = new JsonObject();
         JSONObject item = new JSONObject();
         JSONArray arr= new JSONArray();
         int pid = 1;
@@ -79,8 +72,8 @@ public class FragPostAccount extends Fragment {
         try{
             for(int i = 0; i < 14; i++){
                 JSONObject obj = new JSONObject();
-                obj.put("postImage", R.drawable.ic_favorite_border);
-                obj.put("postId", pid);
+                obj.put("image", R.drawable.ic_favorite_border);
+                obj.put("post_id", pid);
                 pid++;
                 arr.put(obj);
             }
@@ -88,6 +81,6 @@ public class FragPostAccount extends Fragment {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        return item;
+        return account_data;
     }
 }

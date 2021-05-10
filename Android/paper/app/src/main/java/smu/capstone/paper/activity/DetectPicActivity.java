@@ -16,46 +16,47 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.theartofdev.edmodo.cropper.CropImageView;
-
-import org.opencv.android.Utils;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import smu.capstone.paper.ImageUtil;
-import smu.capstone.paper.R;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.imgcodecs.Imgcodecs;
+import smu.capstone.paper.ImageUtil;import smu.capstone.paper.R;
 
 public class DetectPicActivity extends AppCompatActivity {
 
     String filePath;
+    String sourceFilePath;
     ImageView detect_pic_imageView;
     Toolbar toolbar;
     CropImageView cropImageView;
     Button okbtn;
 
+    long first_time = 0;
+    long second_time = 0;
     public long imgInputAddress;
     int th1 = 15;
     int th2 = 150;
     Mat paperImage;
+    Mat croppedImage;
     //MatOfPoint picPoints;
     int[] picRectFromOpencv = new int[]{400,400,800,500};
 
     public native int[] DetectPic(long imgInput, int th1, int th2);
-    //public native void ProcessPic();
-
-    @Override
+    //public native void ProcessPic();    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detect_pic);
 
-
+        //detect_pic_imageView = findViewById(R.id.detect_pic_iv);
         filePath = getIntent().getStringExtra("path");
         Uri imageUri = Uri.fromFile(new File(filePath));
 
@@ -63,9 +64,9 @@ public class DetectPicActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.detect_pic_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
+        actionBar.setTitle("Step 2");
+        // actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
-
 
 
 
@@ -114,15 +115,16 @@ public class DetectPicActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Bitmap cropped = cropImageView.getCroppedImage();
+                Utils.bitmapToMat(cropped,croppedImage);
                 File temp = (File)saveBitmapToCache(cropped,"crop_temp");
                 String filePath= temp.getAbsolutePath();
                 Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
                 intent.putExtra("path", filePath);
+                intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
                 startActivity(intent);
                 finish();
             }
-        });
-    }
+        });    }
 
     private Object saveBitmapToCache(Bitmap bitmap, String name) {
 
@@ -149,25 +151,41 @@ public class DetectPicActivity extends AppCompatActivity {
         return true;
     }
 
+
+
+    @Override
+    public void onBackPressed() {
+        second_time = System.currentTimeMillis();
+        if(second_time-first_time <2000){
+            super.onBackPressed();
+            finish();
+        }
+        else{
+            Toast.makeText(this,"한번 더 누르면 편집을 종료합니다", Toast.LENGTH_SHORT).show();
+            first_time = System.currentTimeMillis();
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
 
             case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
-                finish();
+                // 알림팝업
+
                 return true;
             }
 
-            case R.id.toolbar_skip:// 건너뛰기
-
-
+            case R.id.toolbar_skip://  바로 다음 화면으로 건너뛰기
+                Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
+                intent.putExtra("path", filePath);
+                startActivity(intent);
+                finish();
                 return true;
 
         }
         return  true;
     }
-
 
 
 }

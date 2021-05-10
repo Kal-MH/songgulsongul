@@ -6,21 +6,19 @@ public class LoginResponse {
     @SerializedName("code")
     private int code;
 
-    @SerializedName("message")
-    private String message;
+    @SerializedName("id")
+    private int id;
 
-    @SerializedName("userId")
-    private int userId;
+    public LoginResponse(int code, int id) {
+        this.code = code;
+        this.id = id;
+    }
 
     public int getCode() {
         return code;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 }

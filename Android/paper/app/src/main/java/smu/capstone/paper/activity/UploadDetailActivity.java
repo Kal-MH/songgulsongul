@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,16 +21,22 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 import smu.capstone.paper.SettingSharedPreference;
 import smu.capstone.paper.R;
@@ -37,11 +44,17 @@ import smu.capstone.paper.adapter.AddItemTagAdapter;
 
 public class UploadDetailActivity extends AppCompatActivity {
 
+    String filePath;
+
     RecyclerView itemtag_rv;
     AddItemTagAdapter adapter;
     EditText hashtagText;
-    Switch upload_detail_ccl_1, upload_detail_ccl_2, upload_detail_ccl_3
-            , upload_detail_ccl_4, upload_detail_ccl_5;
+    Switch upload_detail_ccl_1, upload_detail_ccl_2, upload_detail_ccl_3 , upload_detail_ccl_4, upload_detail_ccl_5;
+    ImageView upload_detail_img;
+
+
+    long first_time = 0;
+    long second_time = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -49,24 +62,32 @@ public class UploadDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_detail);
 
+
+        //이미지 세팅
+        filePath = getIntent().getStringExtra("path");
+        upload_detail_img = findViewById(R.id.upload_detail_pic);
+        Glide.with(this).load(filePath).into(upload_detail_img);
+
+        //ccl 세팅
         upload_detail_ccl_1 = findViewById(R.id.upload_detail_ccl_1);
         upload_detail_ccl_2 = findViewById(R.id.upload_detail_ccl_2);
         upload_detail_ccl_3 = findViewById(R.id.upload_detail_ccl_3);
         upload_detail_ccl_4 = findViewById(R.id.upload_detail_ccl_4);
         upload_detail_ccl_5 = findViewById(R.id.upload_detail_ccl_5);
 
+        upload_detail_ccl_1.setChecked(SettingSharedPreference.getSetting(this,"ccl1"));
+        upload_detail_ccl_2.setChecked(SettingSharedPreference.getSetting(this,"ccl2"));
+        upload_detail_ccl_3.setChecked(SettingSharedPreference.getSetting(this,"ccl3"));
+        upload_detail_ccl_4.setChecked(SettingSharedPreference.getSetting(this,"ccl4"));
+        upload_detail_ccl_5.setChecked(SettingSharedPreference.getSetting(this,"ccl5"));
+
+        // 툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.upload_detail_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
-
-        upload_detail_ccl_1.setChecked(SettingSharedPreference.getSetting(this,"ccl1"));
-        upload_detail_ccl_2.setChecked(SettingSharedPreference.getSetting(this,"ccl2"));
-        upload_detail_ccl_3.setChecked(SettingSharedPreference.getSetting(this,"ccl3"));
-        upload_detail_ccl_4.setChecked(SettingSharedPreference.getSetting(this,"ccl4"));
-        upload_detail_ccl_5.setChecked(SettingSharedPreference.getSetting(this,"ccl5"));
 
 
         //해쉬태그 작성
@@ -106,6 +127,7 @@ public class UploadDetailActivity extends AppCompatActivity {
         });
 
 
+/*
 
         // 아이템 태그 어뎁터 설정
         itemtag_rv = findViewById(R.id.upload_itemtag_rv);
@@ -119,10 +141,10 @@ public class UploadDetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
         // 적용
         itemtag_rv.setAdapter(adapter);
 
+*/
 
     }
 
@@ -155,6 +177,19 @@ public class UploadDetailActivity extends AppCompatActivity {
 
 
     @Override
+    public void onBackPressed() {
+        second_time = System.currentTimeMillis();
+        if(second_time-first_time <2000){
+            super.onBackPressed();
+            finish();
+        }
+        else{
+            Toast.makeText(this,"한번 더 누르면 업로드를 종료합니다", Toast.LENGTH_SHORT).show();
+            first_time = System.currentTimeMillis();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.done_toolbar, menu);
@@ -165,8 +200,8 @@ public class UploadDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case android.R.id.home: // 뒤로가기 버튼 눌렀을 때
-                finish();
-                break;
+               // 알림 팝업
+                return true;
 
             case R.id.toolbar_done :
                 // 서버에 변경된 data(객체) 전송
@@ -180,7 +215,7 @@ public class UploadDetailActivity extends AppCompatActivity {
                 //if resultCode == 500
                 /*Toast toast = Toast.makeText(UploadDetailActivity.this, "업로드 실패", Toast.LENGTH_SHORT);
                 toast.show();*/
-                break;
+                return true;
 
         }
         return super.onOptionsItemSelected(item);

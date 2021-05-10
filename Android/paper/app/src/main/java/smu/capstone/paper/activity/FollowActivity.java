@@ -38,6 +38,8 @@ public class FollowActivity extends AppCompatActivity {
 
     private ImageView follow_img;
     private TextView follow_intro;
+
+    String user_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +59,6 @@ public class FollowActivity extends AppCompatActivity {
         fragFollower = new FragFollower();
         fragFollowing = new FragFollowing();
 
-
-
         // 사용자 정보 초기화 및 툴바초기화
         Intent intent = getIntent();
 
@@ -66,11 +66,14 @@ public class FollowActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
 
-        actionBar.setTitle(LoginSharedPreference.getUserName(this)); // 사용자 아이디 추가
+        actionBar.setTitle(LoginSharedPreference.getLoginId(this)); // 사용자 아이디 추가
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
-        Glide.with(FollowActivity.this).load(intent.getIntExtra("picture", 0)).into(follow_img);
+        Glide.with(FollowActivity.this).load(intent.getStringExtra("picture")).into(follow_img);
         follow_intro.setText(intent.getStringExtra("intro"));
+        user_id = intent.getStringExtra("userId");
+        final Bundle bundle = new Bundle();
+        bundle.putString("userId",user_id);
 
 
         //팔로우에 밑줄 긋고 팔로우창띄움
@@ -82,6 +85,8 @@ public class FollowActivity extends AppCompatActivity {
         ft = fm.beginTransaction();
         ft.replace(R.id.follow_frag, fragFollowing);
         ft.commit();
+        fragFollowing.setArguments(bundle);
+
 
 
         follow_follow.setOnClickListener(new View.OnClickListener() { // 나를 팔로잉 하는 사람들 보여줌
@@ -96,6 +101,7 @@ public class FollowActivity extends AppCompatActivity {
                 ft = fm.beginTransaction();
                 ft.replace(R.id.follow_frag, fragFollowing);
                 ft.commit();
+                fragFollowing.setArguments(bundle);
             }
         });
 
@@ -111,6 +117,7 @@ public class FollowActivity extends AppCompatActivity {
                 ft = fm.beginTransaction();
                 ft.replace(R.id.follow_frag, fragFollower);
                 ft.commit();
+                fragFollower.setArguments(bundle);
             }
         });
 

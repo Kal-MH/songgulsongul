@@ -74,6 +74,45 @@ Mat RGB2YCbCr(Mat img){
     return img_copy;
 
 }
+Mat ResizeTo2048(Mat img){
+    int width = img.cols;
+    int height = img.rows;
+
+    Mat outImg;
+    float sizeValue = 1.0f;
+
+    if(width>height){
+        if(width>2048){
+            resize(img,outImg,Size(2048,int(height*2048.0/width)),0, 0, INTER_LINEAR);
+            return outImg;
+        }
+    }
+    if(height>2048){
+        resize(img,outImg,Size(int(height*2048.0/height),2048),0, 0, INTER_LINEAR);
+        return outImg;
+    }
+
+    return img;
+}
+Size ResizeTo2048(Size originalSize){
+    int width = originalSize.width;
+    int height = originalSize.height;
+
+    Mat outImg;
+    float sizeValue = 1.0f;
+
+    if(width>height){
+        if(width>2048){
+            return Size(2048,int(height*2048.0/width);
+        }
+    }
+    if(height>2048){
+        return Size(int(height*2048.0/height),2048);
+    }
+
+    return originalSize;
+}
+
 
 Mat YCbCr2RGB(Mat img){
 
@@ -650,4 +689,24 @@ Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobjec
         points = Mat(ResizePoints(pointsFromBox,imgInput.cols/smallSizeX, imgInput.rows/smallSizeY), true);
     }*/
 
+}extern "C"
+JNIEXPORT void JNICALL
+Java_smu_capstone_paper_activity_EditImageRatioActivity_changeImageRatio(JNIEnv *env, jobject thiz,
+                                                                         jlong input_img_address,
+                                                                         jlong output_img_address,
+                                                                         jint seek_bar_progress) {
+    // TODO: implement changeImageRatio()
+
+    Mat &imgInput = *(Mat *) input_img_address;
+    Mat &img_output = *(Mat *) output_img_address;
+
+    Size targetSize;
+    if(seek_bar_progress == 0){
+        targetSize = Size(imgInput.cols*(0.5),imgInput.rows*(1.5));
+    }
+    else{
+        targetSize = Size(imgInput.cols*(1-(seek_bar_progress/100.0f-0.5)),imgInput.rows*(1+(seek_bar_progress/100.0f-0.5)));
+    }
+    targetSize = ResizeTo2048(targetSize);
+    resize(imgInput, img_output,targetSize,0,0,INTER_LINEAR);
 }

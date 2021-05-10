@@ -11,6 +11,9 @@
       var resultCode = statusCode.SERVER_ERROR;
        if(err){
          console.log(err);
+         res.json({
+           'code': resultCode
+         })
        }
        else{
          resultCode = statusCode.OK;
@@ -23,22 +26,22 @@
            };
            market_item.push(data);
          }
-       }
 
-       res.json({
-         'code': resultCode,
-         'marketItem': market_item
-       })
+         res.json({
+           'code': resultCode,
+           'marketItem': market_item
+         })
+       }
      })
    },
 
    // 마켓 아이템 상세보기
-   // 사용자의 현재 보유 포인트도 함께 전송한다. --> front에서 가격과 비교 후 buy버튼 클릭 시 반영
+   // 사용자의 현재 보유 포인트도 함께 전송한다. --> front에서 스티커 가격과 비교 후 buy버튼 클릭 시 반영
    getStickerDetail : function(req, res){
      const sticker_id = req.params.stickerId;
      const user_id = req.params.userId;
 
-     var item_detail = [];
+     var sticker_detail = [];
      var seller_info = [];
      var user_point;
      var params = [sticker_id, user_id];
@@ -49,9 +52,13 @@
        var resultCode = statusCode.CLIENT_ERROR;
        if(err){
          console.log(err);
+         res.json({
+           'code': resultCode
+         })
        }
        else{
          resultCode = statusCode.OK;
+
          // 마켓 스티커 data
          var data = {
            'image': rows[0].image,
@@ -59,7 +66,7 @@
            'price': rows[0].price,
            'text': rows[0].text
          };
-         item_detail.push(data);
+         sticker_detail.push(data);
 
          // 판매자 data
          var seller = {
@@ -67,17 +74,17 @@
            'userId': rows[0].login_id
          };
          seller_info.push(seller);
+
+         // 사용자의 보유 point
+         user_point = rows[1];
+
+         res.json({
+           'code': resultCode,
+           'stickerDetail': sticker_detail,
+           'sellerInfo': seller_info,
+           'userPoint': user_point
+         })
        }
-
-       // 사용자의 보유 point
-       user_point = rows[1];
-
-       res.json({
-         'code': resultCode,
-         'itemDetail': item_detail,
-         'sellerInfo': seller_info,
-         'userPoint': user_point
-       })
      })
   },
 
@@ -113,6 +120,9 @@
       var resultCode = statusCode.CLIENT_ERROR;
       if(err){
         console.log(err);
+        res.json({
+          'code': resultCode
+        })
       }
       else{
         resultCode = statusCode.OK;
@@ -126,12 +136,12 @@
           };
           market_item.push(data);
         }
-      }
 
-      res.json({
-        'code': resultCode,
-        'marketItem': market_item
-      })
+        res.json({
+          'code': resultCode,
+          'marketItem': market_item
+        })
+      }
     })
   },
 
@@ -145,6 +155,9 @@
       var resultCode = statusCode.CLIENT_ERROR;
       if(err){
         console.log(err);
+        res.json({
+          'code': resultCode
+        })
       }
       else{
         resultCode = statusCode.OK;
@@ -158,12 +171,12 @@
           };
           market_item.push(data);
         }
-      }
 
-      res.json({
-        'code': resultCode,
-        'marketItem': market_item
-      })
+        res.json({
+          'code': resultCode,
+          'marketItem': market_item
+        })
+      }
     })
   },
 
@@ -177,6 +190,9 @@
       var resultCode = statusCode.CLIENT_ERROR;
       if(err){
         console.log(err);
+        res.json({
+          'code': resultCode
+        })
       }
       else{
         resultCode = statusCode.OK;
@@ -190,14 +206,15 @@
           };
           market_item.push(data);
         }
-      }
 
-      res.json({
-        'code': resultCode,
-        'marketItem': market_item
-      })
+        res.json({
+          'code': resultCode,
+          'marketItem': market_item
+        })
+      }
     })
   }
+
  }
 
 module.exports = marketController;

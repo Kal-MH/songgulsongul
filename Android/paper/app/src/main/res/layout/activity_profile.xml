@@ -30,6 +30,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_marginStart="20dp"
+            android:scaleType="fitCenter"
             android:src="@mipmap/ic_launcher" />
 
         <LinearLayout
@@ -68,6 +69,15 @@
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@id/profile_userimage"
             android:text="팔로우"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/profile_unfollow_btn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/profile_userimage"
+            android:text="언팔로우"
             android:visibility="invisible" />
 
         <LinearLayout

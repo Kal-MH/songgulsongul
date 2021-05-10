@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -46,13 +48,11 @@ import org.opencv.imgcodecs.Imgcodecs;
 
 // 카메라 촬영및 갤러리에서 선택후 임시로 전달할 Activity
 public class DetectPaperActivity extends AppCompatActivity implements View.OnTouchListener  {
-
     ImageView zoom_background , help;
     static {
         System.loadLibrary("opencv_java4");
         System.loadLibrary("native-lib");
     }
-
     String filePath;
     FrameLayout zoomFrame , dots ;
     ZoomView zoomView;
@@ -66,7 +66,8 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     ConstraintLayout bottom;
     ArrayList<int[]> pos;
 
-
+    long first_time = 0;
+    long second_time = 0;
     int th1 = 15;
     int th2 = 150;
     float scaleFactor = 1.0f;
@@ -84,8 +85,6 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     public native void GetPaperPoints(long inputImage,long outputPoint, int th1, int th2);
 
     public native void PaperProcessing(long inputImage, long outputImage, long inputPoints, int offsetX, int offsetY, float scaleFactor ,int th1, int th2);
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +119,8 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         toolbar = findViewById(R.id.detect_paper_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
+        actionBar.setTitle("Step 1");
+        //actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
 
         //헬프버튼 세팅
@@ -171,7 +171,18 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     }
 
 
-
+    @Override
+    public void onBackPressed() {
+        second_time = System.currentTimeMillis();
+        if(second_time-first_time <2000){
+            super.onBackPressed();
+            finish();
+        }
+        else{
+            Toast.makeText(this,"한번 더 누르면 편집을 종료합니다", Toast.LENGTH_SHORT).show();
+            first_time = System.currentTimeMillis();
+        }
+    }
 
     ArrayList<int[]>getPos(){
 
@@ -583,12 +594,17 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         switch (item.getItemId()) {
 
             case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
-                finish();
+                // 알림팝업
                 return true;
             }
 
             case R.id.toolbar_skip:// 건너뛰기
 
+                Intent intent = new Intent(DetectPaperActivity.this , DetectPicActivity.class);
+                intent.putExtra("path", filePath);
+                intent.putExtra("imgInputAddress", imgOutput.getNativeObjAddr());
+                startActivity(intent);
+                finish();
 
                 return true;
 

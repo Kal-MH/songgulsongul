@@ -1,56 +1,79 @@
 package smu.capstone.paper.fragment;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import org.json.JSONArray;
+
+import com.google.gson.JsonObject;
+
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.jar.JarException;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HomeFeedAdapter;
-import smu.capstone.paper.item.HomeFeedItem;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class FragHomeFeed extends Fragment {
     RecyclerView recyclerView;
+    SwipeRefreshLayout swipeRefreshLayout;
     HomeFeedAdapter adapter;
+
+    int user_id;
+
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+
+    StatusCode statusCode;
+
+    JsonObject feeds;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.frag_home_feed, container, false);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.frag_home_feed, container, false);
+        //id 세팅
+        user_id = LoginSharedPreference.getUserId(getActivity());
 
-        JSONObject obj = GetFeedData();
+
+
         recyclerView = rootView.findViewById(R.id.feed_recycler);
 
+        //refresh
+        swipeRefreshLayout = rootView.findViewById(R.id.feed_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // cancel the Visual indication of a refresh
+                swipeRefreshLayout.setRefreshing(false);
+
+                //데이터 변경
+                GetFeedData();
+
+            }
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        try {
-            adapter = new HomeFeedAdapter(getContext(), obj);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        recyclerView.setAdapter(adapter);
+        GetFeedData();
+
+
 
         return rootView;
     }
@@ -59,57 +82,39 @@ public class FragHomeFeed extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public static Bitmap drawable2Bitmap(Drawable drawable) {
-        Bitmap bitmap = Bitmap
-                .createBitmap(
-                        drawable.getIntrinsicWidth(),
-                        drawable.getIntrinsicHeight(),
-                        drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
-                                : Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight());
-        drawable.draw(canvas);
-        return bitmap;
+    public void setData(){
+       adapter = new HomeFeedAdapter(getContext(), feeds);
+        recyclerView.setAdapter(adapter);
     }
 
-    // server에서 data전달
-    public JSONObject GetFeedData(){
-        JSONObject item = new JSONObject();
-        JSONArray arr= new JSONArray();
+    // server 에서 data 전달
+    public void GetFeedData(){
+        serviceApi.GetFeed(user_id,20).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject result = response.body();
 
-        // 임시 데이터 저장
-        try{
-            JSONObject obj = new JSONObject();
-            obj.put("userId", "wonhee");
-            obj.put("timeStamp", "21-02-07");
-            obj.put("likeCnt", 499);
-            obj.put("comCnt", 204);
-            obj.put("text", "hi everyone");
-            obj.put("profileImg",R.drawable.ic_baseline_emoji_emotions_24);
-            obj.put("postImg",R.drawable.sampleimg);
-            obj.put("like", 0);
-            obj.put("keep",0);
-            obj.put("postId", 1);
-            arr.put(obj);
+                int resultCode = result.get("code").getAsInt();
+                if(resultCode == statusCode.RESULT_SERVER_ERR){
+                    Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
+                }
+                else if( resultCode == statusCode.RESULT_OK){
+                    feeds = result;
+                }
+                else {
+                    feeds=result;
+                }
+                setData();
+            }
 
-            JSONObject obj2 = new JSONObject();
-            obj2.put("userId", "YUJIN");
-            obj2.put("timeStamp", "21-02-07");
-            obj2.put("likeCnt", 20);
-            obj2.put("comCnt", 52);
-            obj2.put("text", "바쁘다 바빠 현대사회에 사는 이유진의 그림입니다~후후");
-            obj2.put("profileImg", R.drawable.sampleimg);
-            obj2.put("postImg", R.drawable.test);
-            obj2.put("like", 0);
-            obj2.put("keep", 0);
-            obj2.put("postId",2);
-            arr.put(obj2);
-
-            item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return item;
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                feeds = new JsonObject();
+                Log.d("feed" , "통신 실패");
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
     }
 }

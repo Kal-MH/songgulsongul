@@ -42,7 +42,7 @@ public class HomeMarketAdapter extends BaseAdapter {
     // 받아온 데이터로 마켓 아이템 내용 셋팅
     public void setItem(JSONObject item, ImageView imageView, TextView nameText, TextView costText){
         try {
-            Glide.with(mContext).load(item.getInt("stickerImage")).into(imageView); // 사진
+            Glide.with(mContext).load(item.getInt("image")).into(imageView); // 사진
             nameText.setText(item.getString("name")); // 상품명
             costText.setText(item.getInt("price") + "p"); // 가격
         } catch (JSONException e){

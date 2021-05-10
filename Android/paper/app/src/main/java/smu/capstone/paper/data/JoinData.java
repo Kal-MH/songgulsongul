@@ -3,18 +3,22 @@ package smu.capstone.paper.data;
 import com.google.gson.annotations.SerializedName;
 
 public class JoinData {
-    @SerializedName("userName")
-    private String userName;
+    @SerializedName("email")
+    private String email;
 
-    @SerializedName("userEmail")
-    private String userEmail;
+    @SerializedName("password")
+    private String password;
 
-    @SerializedName("userPwd")
-    private String userPwd;
+    @SerializedName("login_id")
+    private String login_id;
 
-    public JoinData(String userName, String userEmail, String userPwd) {
-        this.userName = userName;
-        this.userEmail = userEmail;
-        this.userPwd = userPwd;
+    @SerializedName("sns_url")
+    private String sns_url;
+
+    public JoinData(String email, String password, String login_id, String sns_url) {
+        this.email = email;
+        this.password = password;
+        this.login_id = login_id;
+        this.sns_url = sns_url;
     }
 }
