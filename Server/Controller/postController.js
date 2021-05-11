@@ -158,9 +158,9 @@ const postController = {
         //offset값을 기준으로 20개 가져옴 -> offset이 지정되어 있지 않다면 최근 게시글 기준으로 20개 가져옴
         var selectPostSql;
         if (offset == undefined || offset == 0)
-            selectPostSql = `select * from post order by post_date desc, post_time desc limit ${db_config.limitation};`
+            selectPostSql = `select * from post order by post_date desc, post_time desc, id desc limit ${db_config.limitation};`
         else
-            selectPostSql = `select * from post where id < ${offset} order by post_date desc, post_time desc limit ${db_config.limitation};`
+            selectPostSql = `select * from post where id < ${offset} order by post_date desc, post_time desc, id desc limit ${db_config.limitation};`
 
         connection.query(selectPostSql, function (err, result) {
             if (err) {

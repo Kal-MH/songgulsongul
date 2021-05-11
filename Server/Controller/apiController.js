@@ -86,18 +86,22 @@ const apiController = {
     //이메일인증보내기
     sendEmail : async function (req, res) {
         const number = generateRandom(111111, 999999);
-        const queryEmail = req.body.email;
-        console.log(queryEmail)
+        const email = req.body.email;
+
+        if (email == undefined || email == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        }
 
         const mailOptions = {
             from:"paper.pen.smu@gmail.com",
-            to : queryEmail,
+            to : email,
             subject : "회원가입 인증메일입니다.",
-            text : "오른쪽 숫자 6자리를 입력해주세요" + number
+            text : "오른쪽 숫자 6자리를 입력해주세요 : " + number
         }
 
         console.log(number);
-        req.app.set('authNumber', number);
 
         const result = await smtpTransport.sendMail(mailOptions, function (err, responses) {
             var resultCode = statusCode.SERVER_ERROR;
@@ -111,22 +115,6 @@ const apiController = {
                 'authNumber' : number
             })
             smtpTransport.close();
-        })
-    },
-    //authNumber를 클라이언트에게 보내주기 때문에 추후에 삭제될 수 있음.
-    checkEmailAuthNumber : function (req, res) {
-        const authNumber = req.body.authNumber;
-        console.log(authNumber);
-
-        const generatedNumber = req.app.get("authNumber");
-        console.log(generatedNumber);
-        var resultCode = statusCode.CLIENT_ERROR;
-
-        if (authNumber == generatedNumber){
-            resultCode = statusCode.OK;
-        }
-        res.json({
-            'code' : resultCode
         })
     },
     //좋아요 api
