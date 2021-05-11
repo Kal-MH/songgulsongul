@@ -25,7 +25,7 @@ public class EditImageRatioActivity extends AppCompatActivity {
     long originalImgAddress;
     long editingImageAddress;
 
-    int seekBarProgress;
+    int seekBarProgress = 50;
 
     Mat previewImage;
 

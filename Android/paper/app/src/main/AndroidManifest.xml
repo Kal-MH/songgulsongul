@@ -23,7 +23,14 @@
             android:name=".activity.DetectPaperHelpActivity"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
         <activity android:name=".activity.DetectPicActivity" />
-        <activity android:name=".activity.EditImageRatioActivity" />
+        <activity android:name=".activity.EditImageRatioActivity"
+            android:parentActivityName=".activity.EditActivity"/>
+        <activity android:name=".activity.EditImageColorActivity"
+            android:parentActivityName=".activity.EditActivity"/>
+        <activity android:name=".activity.EditImageHistogram"
+            android:parentActivityName=".activity.EditActivity"/>
+        <activity android:name=".activity.EditImageFilter"
+            android:parentActivityName=".activity.EditActivity"/>
         <activity android:name=".activity.FirstAuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

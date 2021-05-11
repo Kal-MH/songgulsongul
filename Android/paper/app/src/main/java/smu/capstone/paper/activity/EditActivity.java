@@ -22,6 +22,10 @@ import com.bumptech.glide.Glide;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import smu.capstone.paper.R;
 
 public class EditActivity extends AppCompatActivity {
@@ -65,6 +69,24 @@ public class EditActivity extends AppCompatActivity {
     }
 
 
+    private Object saveBitmapToCache(Bitmap bitmap, String name) {
+
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile(name, null, getCacheDir());
+
+            FileOutputStream out = new FileOutputStream(tempFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.close();
+            return tempFile;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,8 +118,13 @@ public class EditActivity extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bitmap edited = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(editingImage,edited);
+                File temp = (File)saveBitmapToCache(edited,"edit_temp");
+                String filePath= temp.getAbsolutePath();
                 Intent intent = new Intent( EditActivity.this , EditDoneActivity.class);
                 intent.putExtra("path", filePath);
+                intent.putExtra("editedImageAddress",editingImage.getNativeObjAddr());
                 startActivity(intent);
                 finish();
             }

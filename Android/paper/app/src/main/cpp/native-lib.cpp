@@ -707,6 +707,6 @@ Java_smu_capstone_paper_activity_EditImageRatioActivity_changeImageRatio(JNIEnv 
     else{
         targetSize = Size(imgInput.cols*(1-((seek_bar_progress/100.0f)-0.5)),imgInput.rows*(1+((seek_bar_progress/100.0f)-0.5)));
     }
-    targetSize = ResizeTo2048(targetSize);
+    //targetSize = ResizeTo2048(targetSize);
     resize(imgInput, img_output,targetSize,0,0,INTER_LINEAR);
 }
