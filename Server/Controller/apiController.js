@@ -156,7 +156,6 @@ const apiController = {
                         console.log(err);
                         code = statusCode.SERVER_ERROR;
                     }
-                    //res.redirect(`/post/:${postId}`)
                      res.json({
                          'code' : code
                      })
@@ -191,7 +190,6 @@ const apiController = {
                         console.log(err);
                         code = statusCode.SERVER_ERROR;
                     }
-                    //res.redirect(`/post/${postId}`)
                     res.json({
                         'code' : code
                     })
@@ -213,7 +211,6 @@ const apiController = {
                 console.log(err);
                 code = statusCode.CLIENT_ERROR;
             }
-            //res.redirect(`/post/${postId}`)
              res.json({
                  'code' : code
              })
@@ -231,7 +228,6 @@ const apiController = {
                 console.log(err);
                 code = statusCode.CLIENT_ERROR;
             }
-            //res.redirect(`/post/${postId}`)
              res.json({
                  'code' : code
              })
