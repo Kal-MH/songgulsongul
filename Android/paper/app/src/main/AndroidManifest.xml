@@ -27,9 +27,9 @@
             android:parentActivityName=".activity.EditActivity"/>
         <activity android:name=".activity.EditImageColorActivity"
             android:parentActivityName=".activity.EditActivity"/>
-        <activity android:name=".activity.EditImageHistogram"
+        <activity android:name=".activity.EditImageHistogramActivity"
             android:parentActivityName=".activity.EditActivity"/>
-        <activity android:name=".activity.EditImageFilter"
+        <activity android:name=".activity.EditImageFilterActivity"
             android:parentActivityName=".activity.EditActivity"/>
         <activity android:name=".activity.FirstAuthActivity">
             <intent-filter>

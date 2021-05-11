@@ -38,7 +38,10 @@ public class EditActivity extends AppCompatActivity {
 
 
     LinearLayout editRatio;
-
+    LinearLayout editColors;
+    LinearLayout editHistogram;
+    LinearLayout editFilter;
+    LinearLayout editTransparency;
 
     long first_time = 0;
     long second_time = 0;
@@ -104,7 +107,7 @@ public class EditActivity extends AppCompatActivity {
 
 
         editRatio = findViewById(R.id.edit_image_ratio);
-
+        editColors = findViewById(R.id.edit_image_colors);
 
         filePath = getIntent().getStringExtra("path");
         edit_iv = findViewById(R.id.edit_pic);
@@ -140,6 +143,38 @@ public class EditActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        editColors.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent( EditActivity.this , EditImageColorActivity.class);
+                intent.putExtra("path", filePath);
+                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                startActivity(intent);
+            }
+        });
+
+        /*
+        editHistogram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent( EditActivity.this , EditImageHistogramActivity.class);
+                intent.putExtra("path", filePath);
+                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                startActivity(intent);
+            }
+        });
+        editFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent( EditActivity.this , EditImageFilterActivity.class);
+                intent.putExtra("path", filePath);
+                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                startActivity(intent);
+            }
+        });
+        */
+
 
 
     }

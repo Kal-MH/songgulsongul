@@ -20,6 +20,21 @@ Mat RGB2MinGrey(Mat img){
 //water filling
 //https://github.com/seungjun45/Water-Filling
 
+float progressToValue(int currentProgress,float on0, float on100){
+    float alpha = currentProgress*0.01;
+    return on0 * (1 - alpha) + on100 * alpha;
+}
+float progressToValue(int currentProgress,float on0, float on100, float on50){
+    float alpha;
+    if(currentProgress<50){
+        alpha = currentProgress*0.02;
+        return on0 * (1 - alpha) + on50 * alpha;
+    }
+    else if(currentProgress==50)
+        return on50;
+    alpha = (currentProgress-50)*0.02;
+    return on50 * (1 - alpha) + on100 * alpha;
+}
 
 
 Mat RGB2YCbCr(Mat img){
@@ -308,7 +323,8 @@ Mat getImageCannyBorders( Mat src, int th1 = 25, int th2 = 200)
 
     /// Convert it to gray
     border =  Mat();
-    cvtColor(src, border, COLOR_RGB2GRAY );
+    //cvtColor(src, border, COLOR_RGB2GRAY );
+    cvtColor(src, border, COLOR_BGR2GRAY );
     //cvtColor( src, border, COLOR_RGB2GRAY );
     GaussianBlur( border, border, Size(5,5), 0, 0, BORDER_DEFAULT );
     // Canny edge detector
@@ -689,14 +705,13 @@ Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobjec
         points = Mat(ResizePoints(pointsFromBox,imgInput.cols/smallSizeX, imgInput.rows/smallSizeY), true);
     }*/
 
-}extern "C"
+}
+extern "C"
 JNIEXPORT void JNICALL
 Java_smu_capstone_paper_activity_EditImageRatioActivity_changeImageRatio(JNIEnv *env, jobject thiz,
                                                                          jlong input_img_address,
                                                                          jlong output_img_address,
                                                                          jint seek_bar_progress) {
-    // TODO: implement changeImageRatio()
-
     Mat &imgInput = *(Mat *) input_img_address;
     Mat &img_output = *(Mat *) output_img_address;
 
@@ -709,4 +724,111 @@ Java_smu_capstone_paper_activity_EditImageRatioActivity_changeImageRatio(JNIEnv 
     }
     //targetSize = ResizeTo2048(targetSize);
     resize(imgInput, img_output,targetSize,0,0,INTER_LINEAR);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogram(JNIEnv *env,
+                                                                              jobject thiz,
+                                                                              jlong input_img_address,
+                                                                              jlong output_img_address) {
+    Mat &imgInput = *(Mat *) input_img_address;
+    Mat &img_output = *(Mat *) output_img_address;
+
+    equalizeHist(imgInput,img_output);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogramClahe(JNIEnv *env,
+                                                                                   jobject thiz,
+                                                                                   jlong input_img_address,
+                                                                                   jlong output_img_address) {
+    Mat &imgInput = *(Mat *) input_img_address;
+    Mat &img_output = *(Mat *) output_img_address;
+
+    //Mat img_clahe;
+
+    Ptr<CLAHE> clahe = createCLAHE();
+    clahe->setClipLimit(20);
+    clahe->setTilesGridSize(Size(8,8));
+
+    clahe->apply(imgInput,img_output);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_smu_capstone_paper_activity_EditImageColorActivity_setColors(JNIEnv *env, jobject thiz,
+                                                                  jlong input_image_address,
+                                                                  jlong output_image_address,
+                                                                  jint hue_progress,
+                                                                  jint saturation_progress,
+                                                                  jint brightness_progress,
+                                                                  jint contrast_progress) {
+    // TODO: 알파채널 호완성 업데이트 할것
+    Mat &imgInput = *(Mat *) input_image_address;
+    Mat &img_output = *(Mat *) output_image_address;
+
+    Mat locMat = imgInput.clone();
+
+
+
+    int hue_shift = progressToValue(hue_progress,-90,90,0);
+    int saturation = progressToValue(saturation_progress,-255,255,0);
+    int value = progressToValue(brightness_progress,-255,255,0);
+
+
+    cvtColor(locMat,locMat,COLOR_BGR2HSV);
+    for (int j = 0; j < locMat.rows; j++)
+    {
+        for (int i = 0; i < locMat.cols; i++)
+        {
+
+            //색상(Hue)
+            // Get hue.
+            // Saturation is hsv.at<Vec3b>(j, i)[1], and
+            // Value is hsv.at<Vec3b>(j, i)[2].
+            unsigned char h = locMat.at<Vec3b>(j, i)[0];
+            if (h + hue_shift >= 180)
+                h = (h + hue_shift) - 180;
+            else if(h + hue_shift < 0){
+                h = (h + hue_shift) + 180;
+            }
+            else
+                h = h + hue_shift;
+            locMat.at<Vec3b>(j, i)[0] = h;
+
+
+            //채도(Saturation)
+            unsigned char s = locMat.at<Vec3b>(j, i)[1];
+            if (s + saturation >= 256)
+                s = 255;
+            else if(s + saturation < 0){
+                s = 0;
+            }
+            else
+                s = s + saturation;
+            locMat.at<Vec3b>(j, i)[1] = h;
+
+            //밝기(Value(Brightness))
+            unsigned char v = locMat.at<Vec3b>(j, i)[2];
+            if (v + value >= 256)
+                v = 255;
+            else if(v + value < 0){
+                v = 0;
+            }
+            else
+                v = v + value;
+            locMat.at<Vec3b>(j, i)[2] = v;
+
+        }
+    }
+
+    cvtColor(locMat,locMat,COLOR_HSV2BGR);
+
+    //밝기(brightness) //알파 문제 있을 수 있음 // HSV에서 조절
+    //locMat = locMat + ((brightness_progress-50)*(255.0/50));
+    //명암(contrast) //알파 문제 있을 수 있음
+    //locMat = locMat * ((contrast_progress-50)*(255.0/50));
+    locMat = locMat * progressToValue(contrast_progress,0.25,4,1);
+
+
+    img_output = locMat;
 }

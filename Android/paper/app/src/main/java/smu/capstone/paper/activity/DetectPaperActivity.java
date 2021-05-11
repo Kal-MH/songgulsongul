@@ -44,6 +44,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.MatOfPoint;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 
 // 카메라 촬영및 갤러리에서 선택후 임시로 전달할 Activity
@@ -91,8 +92,9 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         setContentView(R.layout.activity_detect_paper);
 
         //gets the file path
-       filePath = getIntent().getStringExtra("path");
+        filePath = getIntent().getStringExtra("path");
         imgInput = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
+        Imgproc.cvtColor(imgInput,imgInput, Imgproc.COLOR_BGR2RGB);//RGB BGR 채널 뒤밖임 수정
         paperPoints = new MatOfPoint();
 
         //zoom View 세팅
@@ -602,7 +604,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
                 Intent intent = new Intent(DetectPaperActivity.this , DetectPicActivity.class);
                 intent.putExtra("path", filePath);
-                intent.putExtra("imgInputAddress", imgOutput.getNativeObjAddr());
+                intent.putExtra("imgInputAddress", imgInput.getNativeObjAddr());
                 startActivity(intent);
                 finish();
 
