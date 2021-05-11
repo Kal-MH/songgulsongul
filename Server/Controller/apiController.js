@@ -123,11 +123,16 @@ const apiController = {
         const loggedUser = req.query.userid;
         const apiLikeCheckSql = `select * from likes where post_id=${postId} and user_id=${loggedUser};`;
 
+        if (postId == undefined || postId == "" || loggedUser == undefined || loggedUser == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        }
         connection.query(apiLikeCheckSql, function (err, result) {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.CLIENT_ERROR
+                    'code' : statusCode.SERVER_ERROR
                 })
             } else {
                 var apiLikeSql = "";
@@ -157,11 +162,16 @@ const apiController = {
         const loggedUser = req.query.userid;
         const apiKeepCheckSql = `select * from keep where post_id=${postId} and user_id=${loggedUser};`;
 
+        if (postId == undefined || postId == "" || loggedUser == undefined || loggedUser == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        }
         connection.query(apiKeepCheckSql, function (err, result) {
             if (err){
                 console.log(err);
                 res.json({
-                    'code' : statusCode.CLIENT_ERROR
+                    'code' : statusCode.SERVER_ERROR
                 })
             } else {
                 var apiKeepSql = "";
@@ -193,11 +203,17 @@ const apiController = {
 
         var commentInsertSql = `insert into comment(user_id, post_id, text, c_time, c_date) values(?, ?, ?, curtime(), curdate());`
         var commentParams = [userId, postId, text];
+
+        if (postId == undefined || postId == "" || userId == undefined || userId == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        }
         connection.query(commentInsertSql, commentParams, function (err, result) {
             var code = statusCode.OK;
             if (err){
                 console.log(err);
-                code = statusCode.CLIENT_ERROR;
+                code = statusCode.SERVER_ERROR;
             }
              res.json({
                  'code' : code
