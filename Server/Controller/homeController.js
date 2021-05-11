@@ -42,7 +42,12 @@ var homeController = {
                     var hashedPassword = key.toString('base64');
                     var salt = buf.toString('base64');
                     // 삽입을 수행하는 sql문.
-                    var sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, last_login, point) VALUES (?, ?, ?, ?, ?, ?, NOW() ,1000)';
+                    var sql = "";
+                    if (snsUrl == undefined || snsUrl == ""){
+                        sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, last_login, point, sns_check) VALUES (?, ?, ?, ?, ?, ?, NOW() ,1000, 0)';
+                    } else {
+                        sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, last_login, point, sns_check) VALUES (?, ?, ?, ?, ?, ?, NOW() ,1000, 1)';
+                    }
                     var params = [email, loginId, hashedPassword, salt, snsUrl, imgProfile];
 
                     connection.query(sql, params, function (err, result) {
@@ -207,21 +212,6 @@ var homeController = {
             }
         })
     },
-    //임시 컨트롤러 - 유저 프로필 보기(img업로드 확인을 위해)
-    tmpgetMeProfile: function (req, res) {
-        const me = req.user;
-
-        if (!me) {
-            res.redirect("/public/login.html");
-        } else {
-            res.render("profile.ejs", { user: me });
-        }
-
-    },
-    logout: function (req, res) {
-        req.logout();
-        res.redirect("/public/login.html");
-    }
 }
 
 module.exports = homeController; 

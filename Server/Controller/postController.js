@@ -22,12 +22,14 @@ const postController = {
         } else {
             // 게시글과 관련된 정보를 가져오는 쿼리문
             // 게시글, 작성자, 해시태그, 아이템 태그, 좋아요, 코멘트를 차례로 가져오고 있다.
-            var selectPostDetailSql = `select p.id, p.image, p.text, p.post_time, p.post_date, p.user_id, u.login_id, u.img_profile from post as p join user as u 
-            on p.id = ${postId} and p.user_id = u.id;`;
+            // 댓글은 댓글 레코드 id에 상관없이, 최신 댓글순으로 정렬한 후, 가져오고 있다.(20개씩 받아오도록 설정했으나, 추후 수정될 수 있음)
+            var selectPostDetailSql = `select p.id, p.image, p.text, p.post_time, p.post_date, p.user_id, p.ccl_cc, p.ccl_a, p.ccl_nc, p.ccl_nd, p.ccl_sa, u.login_id, u.img_profile 
+            from post as p join user as u on p.id = ${postId} and p.user_id = u.id;`;
             selectPostDetailSql += `select text from hash_tag where post_id=${postId};`;
             selectPostDetailSql += `select * from item_tag where post_id=${postId};`;
             selectPostDetailSql += `select * from likes where post_id=${postId};`;
-            selectPostDetailSql += `select c.id, c.user_id, c.text, u.img_profile, u.login_id from comment as c join user as u on c.post_id=${postId} and c.user_id=u.id;`;
+            selectPostDetailSql += `select c.id, c.user_id, c.text, u.img_profile, u.login_id, c.c_date, c.c_time from comment as c 
+            join user as u on c.post_id=${postId} and c.user_id=u.id order by c.c_date desc, c_time desc limit ${db_config.limitation};`;
             connection.query(selectPostDetailSql, function (err, result) {
                 if (err) {
                     console.log(err);
