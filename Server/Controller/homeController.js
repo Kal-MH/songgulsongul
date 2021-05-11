@@ -113,6 +113,11 @@ var homeController = {
         const email = req.body.email;
         console.log(email);
 
+        if (email == undefined || email == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        }
 
         var sql = "select * from user where email = ?";
         connection.query(sql, email, async function (err, result) {
@@ -155,6 +160,12 @@ var homeController = {
     findPassword: function (req, res) {
         const email = req.body.email;
         const loginId = req.body.login_id;
+
+        if (email == undefined || email == "" || loginId == undefined || loginId == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        }
 
         var sql = "select * from user where email = ? and login_id = ?";
         var params = [email, loginId];

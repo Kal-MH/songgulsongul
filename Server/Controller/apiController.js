@@ -57,6 +57,12 @@ const apiController = {
         const id = req.body.login_id;
         console.log(id);
 
+        if (id == undefined || id == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        }
+
         var sql = "SELECT login_id from user;";
         connection.query(sql, function (err, result) {
             var resultCode = statusCode.OK;
@@ -314,29 +320,6 @@ const apiController = {
             }
         })
     },
-
-    //itemTag naver api 사용하기
-    sendNaverAPI : async function (req, res) {
-        const itemName = encodeURI(req.query.item);
-
-        const CLIENTID = "JEvadN6iDuJaQLpKAkUf";
-        const cLIENTPASSWORD = "PzQWeURFmU";
-
-        await axios.get(`https://openapi.naver.com/v1/search/shop.json?query=${itemName}&start=1&display=10&sort=sim`,{
-            headers:{
-                "X-Naver-Client-Id" : CLIENTID,
-                "X-Naver-Client-Secret" : cLIENTPASSWORD
-            }
-        })
-        .then(function (response) {
-            console.log(response.data.items[0]);
-            res.json({
-                result : response.data.items
-            })
-        }).catch(function (error) {
-            console.log(error);
-        })
-    }
 }
 
 module.exports = apiController;

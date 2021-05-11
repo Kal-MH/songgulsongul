@@ -73,7 +73,7 @@
 
      ```
      json = {
-     	'code' // 200 or 204(중복 존재) or 500(database connection error)
+     	'code' // 동작 확인 예정
      }
 
      ```
@@ -141,11 +141,11 @@
 
 5. 댓글쓰기
 
-   - api : "/api/comment?userid=?&postid=?"
-   - method : GET
+   - api : "/api/comment"
+   - method : POST
    - 전달받아야 하는 데이터
-     - user id (url query)
-     - post id (url query)
+     - user id (url body)
+     - post id (url body)
    - 응답데이터
 
      ```
@@ -204,8 +204,7 @@
 
      ```
      json = {
-     	'code' : 200(ok) or 204(client error)
-     	// 에러 메세지를 좀 더 세부적으로 나눌 필요가 있다면 204(client error), 500(server error)로 나눌 수 있음.**
+     	'code' : 200(ok), 400(client error), 500(server error)
      }
 
      ```
@@ -221,14 +220,14 @@
 
      ```
      json = {
-     	'code' : 200 or 204(error),
+     	'code' : 200, 201(첫출석 아님), 400(client error), 500(server error)
        'id' : userid
      }
 
      ```
 
 - 고려사항
-  - id의 경우, 로그인 성공(200) 시에만 값이 반환된다.
+  - id의 경우, 로그인 성공(200, 201) 시에만 값이 반환된다.
 
 1. 아이디 찾기
 
@@ -240,7 +239,7 @@
 
      ```
      json = {
-     	'code' : 200 or 204(일치하는 이메일 없음) or 500(서버에러),
+     	'code' : 200 or 400(빈 값, 일치하는 이메일 x) or 500(서버에러), //동작 확인 예정
      }
 
      ```
@@ -256,7 +255,7 @@
 
      ```
      json = {
-     	'code' : 200 or 204(일치하는 이메일, login_id 없음) or 500(서버에러),
+     	'code' : 200 or 400(일치하는 이메일, login_id 없음) or 500(서버에러), //동작 확인 예정
      }
 
      ```
@@ -629,7 +628,7 @@
 
 - 예시
 
-  ![https://user-images.githubusercontent.com/59648372/117537319-021dd280-b03b-11eb-895e-9d2750422033.png](https://user-images.githubusercontent.com/59648372/117537319-021dd280-b03b-11eb-895e-9d2750422033.png)
+  ![postDetail](https://user-images.githubusercontent.com/59648372/117741315-234e1100-b23d-11eb-9277-e777e27f9216.png)
 
 - 에러 발생
 
@@ -663,8 +662,7 @@
 
      ```
      json = {
-     	'code', //상태코드
-     					// 상태코드는 ok(200), client error(500)으로 나뉜다.
+     	'code', //200, 400, 500
      }
 
      ```
@@ -691,8 +689,7 @@
 
      ```
      json = {
-     	'code', //상태코드
-     					// 상태코드는 ok(200), client error(204)으로 나뉜다.
+     	'code', //200, 400, 500
      }
 
      ```
