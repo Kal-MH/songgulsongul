@@ -46,7 +46,7 @@ public class DetectPicActivity extends AppCompatActivity {
     int th1 = 15;
     int th2 = 150;
     Mat paperImage;
-    Mat croppedImage;
+    Mat croppedImage = new Mat();
     //MatOfPoint picPoints;
     int[] picRectFromOpencv = new int[]{400,400,800,500};
 
@@ -179,6 +179,9 @@ public class DetectPicActivity extends AppCompatActivity {
             case R.id.toolbar_skip://  바로 다음 화면으로 건너뛰기
                 Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
                 intent.putExtra("path", filePath);
+
+                intent.putExtra("croppedImageAddress",paperImage.getNativeObjAddr());
+
                 startActivity(intent);
                 finish();
                 return true;

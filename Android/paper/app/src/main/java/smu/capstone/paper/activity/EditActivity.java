@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
 
 import smu.capstone.paper.R;
 
@@ -34,8 +39,30 @@ public class EditActivity extends AppCompatActivity {
     long first_time = 0;
     long second_time = 0;
 
+
     long croppedImageAddress;
     long paperImageAddress;
+
+    Mat editingImage;
+
+    public void setImageViewFromMat(){
+        try {
+            editingImage = new Mat(croppedImageAddress);
+        }
+        catch (Exception e){
+
+        }
+
+        if(editingImage != null){
+            Bitmap loc_bitmap = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(editingImage,loc_bitmap);
+            edit_iv.setImageBitmap(loc_bitmap);
+        }
+        else{
+            // TODO: Mat 채우기
+
+        }
+    }
 
 
     @Override
@@ -61,6 +88,10 @@ public class EditActivity extends AppCompatActivity {
         edit_iv = findViewById(R.id.edit_pic);
         Glide.with(this).load(filePath).into(edit_iv);
 
+        croppedImageAddress = getIntent().getLongExtra("croppedImageAddress", 0x00);
+
+        setImageViewFromMat();
+
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,8 +108,8 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 Intent intent = new Intent( EditActivity.this , EditImageRatioActivity.class);
-                //intent.putExtra("path", filePath);
-                //intent.putExtra("imageAddress",);
+                intent.putExtra("path", filePath);
+                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
                 startActivity(intent);
             }
         });
@@ -127,5 +158,15 @@ public class EditActivity extends AppCompatActivity {
         }
         return  true;
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if(hasFocus){
+            setImageViewFromMat();
+        }
+
+
+    }
+
 
 }

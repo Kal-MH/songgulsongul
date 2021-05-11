@@ -103,7 +103,7 @@ Size ResizeTo2048(Size originalSize){
 
     if(width>height){
         if(width>2048){
-            return Size(2048,int(height*2048.0/width);
+            return Size(2048,int(height*2048.0/width));
         }
     }
     if(height>2048){
@@ -702,10 +702,10 @@ Java_smu_capstone_paper_activity_EditImageRatioActivity_changeImageRatio(JNIEnv 
 
     Size targetSize;
     if(seek_bar_progress == 0){
-        targetSize = Size(imgInput.cols*(0.5),imgInput.rows*(1.5));
+        targetSize = Size(imgInput.cols*(1.5),imgInput.rows*(0.5));
     }
     else{
-        targetSize = Size(imgInput.cols*(1-(seek_bar_progress/100.0f-0.5)),imgInput.rows*(1+(seek_bar_progress/100.0f-0.5)));
+        targetSize = Size(imgInput.cols*(1-((seek_bar_progress/100.0f)-0.5)),imgInput.rows*(1+((seek_bar_progress/100.0f)-0.5)));
     }
     targetSize = ResizeTo2048(targetSize);
     resize(imgInput, img_output,targetSize,0,0,INTER_LINEAR);

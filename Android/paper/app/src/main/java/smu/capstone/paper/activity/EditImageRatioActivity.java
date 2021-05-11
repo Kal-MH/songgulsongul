@@ -1,16 +1,20 @@
 package smu.capstone.paper.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
+import okhttp3.internal.Util;
 import smu.capstone.paper.R;
 
 public class EditImageRatioActivity extends AppCompatActivity {
@@ -19,11 +23,16 @@ public class EditImageRatioActivity extends AppCompatActivity {
     long second_time = 0;
 
     long originalImgAddress;
+    long editingImageAddress;
+
+    int seekBarProgress;
 
     Mat previewImage;
 
     SeekBar ratioSeekBar;
     Button done;
+
+    ImageView editPreview;
 
     public native void changeImageRatio(long inputImgAddress, long outputImgAddress ,int seekBarProgress);
 
@@ -36,6 +45,22 @@ public class EditImageRatioActivity extends AppCompatActivity {
 
         ratioSeekBar = findViewById(R.id.ratioSeekBar);
         done = findViewById(R.id.edit_done);
+        editPreview = findViewById(R.id.editPreview);
+
+        editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0x00);
+        try{
+            previewImage = new Mat(editingImageAddress);
+            originalImgAddress = editingImageAddress;
+            previewImage.copyTo(previewImage);//편집 취소해도 연동되지 않게 별도 객체로 분리
+        }
+        catch (Exception e){
+
+        }
+        if(previewImage != null){
+            Bitmap loc_bitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(previewImage, loc_bitmap);
+            editPreview.setImageBitmap(loc_bitmap);
+        }
 
 
         done.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +68,8 @@ public class EditImageRatioActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Intent intent = new Intent( EditActivity.this , EditDoneActivity.class);
                 //startActivity(intent);
+
+                changeImageRatio(originalImgAddress,originalImgAddress,seekBarProgress);
                 finish();
             }
         });
@@ -52,7 +79,11 @@ public class EditImageRatioActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                 if(fromUser){
+                    seekBarProgress = progress;
                     changeImageRatio(originalImgAddress,previewImage.getNativeObjAddr(),progress);
+                    Bitmap loc_bitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(previewImage, loc_bitmap);
+                    editPreview.setImageBitmap(loc_bitmap);
                 }
 
             }
