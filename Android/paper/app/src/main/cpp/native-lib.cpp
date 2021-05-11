@@ -584,6 +584,8 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_PaperProcessing(JNIEnv *env
 
     //Canny( img_output, img_output, th1, th2);
 
+
+
 }extern "C"
 JNIEXPORT void JNICALL
 Java_smu_capstone_paper_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env, jobject thiz,
@@ -628,6 +630,7 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env,
      //메모리 누수 위험
      //이상하게 include 쪽에서 오류남
     */
+    img_output.release();
 }extern "C"
 JNIEXPORT jintArray JNICALL
 Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobject thiz,
@@ -698,6 +701,11 @@ Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobjec
     ptrArray[3] = rect.y + rect.height;
     env->ReleaseIntArrayElements(rectFromJava, ptrArray, 0);
 
+
+    imgInput.release();
+    sizedImage.release();
+    borders.release();
+
     return rectFromJava;
 
     /*
@@ -714,6 +722,8 @@ Java_smu_capstone_paper_activity_EditImageRatioActivity_changeImageRatio(JNIEnv 
                                                                          jint seek_bar_progress) {
     Mat &imgInput = *(Mat *) input_img_address;
     Mat &img_output = *(Mat *) output_img_address;
+
+
 
     Size targetSize;
     if(seek_bar_progress == 0){

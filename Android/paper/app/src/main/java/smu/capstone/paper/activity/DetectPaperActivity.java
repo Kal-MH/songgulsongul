@@ -614,5 +614,10 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         return  true;
     }
 
+    @Override
+    public void finish() {
 
+        imgInput.release();
+        super.finish();
+    }
 }

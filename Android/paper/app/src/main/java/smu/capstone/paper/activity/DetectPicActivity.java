@@ -180,7 +180,8 @@ public class DetectPicActivity extends AppCompatActivity {
                 Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
                 intent.putExtra("path", filePath);
 
-                intent.putExtra("croppedImageAddress",paperImage.getNativeObjAddr());
+                croppedImage = paperImage.clone();
+                intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
 
                 startActivity(intent);
                 finish();
@@ -190,5 +191,9 @@ public class DetectPicActivity extends AppCompatActivity {
         return  true;
     }
 
-
+    @Override
+    public void finish() {
+        paperImage.release();
+        super.finish();
+    }
 }

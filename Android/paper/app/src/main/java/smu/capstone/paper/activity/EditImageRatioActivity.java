@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 import smu.capstone.paper.R;
 
@@ -20,19 +22,23 @@ public class EditImageRatioActivity extends AppCompatActivity {
     long first_time = 0;
     long second_time = 0;
 
+    String filePath;
+
     long paperImgAddress;
     long croppedImgAddress;
     long editingImageAddress;
     long editingImageRatioAddress;
 
-    int seekBarProgress = 50;
 
+
+    Mat preEditImage;
     Mat previewImage;
 
     SeekBar ratioSeekBar;
     Button done;
 
     ImageView editPreview;
+    Bitmap editPreviewBitmap;
 
     public native void changeImageRatio(long inputImgAddress, long outputImgAddress ,int seekBarProgress);
 
@@ -47,13 +53,20 @@ public class EditImageRatioActivity extends AppCompatActivity {
         done = findViewById(R.id.edit_done);
         editPreview = findViewById(R.id.editPreview);
 
-        editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0x00);
-        try{
-            Mat locMat = new Mat(editingImageAddress);
 
+        filePath = getIntent().getStringExtra("path");
+        preEditImage = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
+        Imgproc.cvtColor(preEditImage,preEditImage, Imgproc.COLOR_BGR2RGB);//RGB BGR 채널 뒤밖임 수정
+
+
+        editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
+        try{
+            //preEditImage = new Mat(editingImageAddress);//주소에서 파일복사
+            //preEditImage = preEditImage.clone();//test
             //편집 취소해도 연동되지 않게 별도 객체로 분리
             //previewImage.copyTo(previewImage);
-            previewImage = locMat.clone();
+            previewImage = preEditImage.clone();
+             editPreviewBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
             //previewImage = previewImage.clone();
         }
         catch (Exception e){
@@ -72,7 +85,7 @@ public class EditImageRatioActivity extends AppCompatActivity {
                 //Intent intent = new Intent( EditActivity.this , EditDoneActivity.class);
                 //startActivity(intent);
 
-                changeImageRatio(editingImageAddress, editingImageAddress,seekBarProgress);
+                changeImageRatio(preEditImage.getNativeObjAddr(), editingImageAddress, ratioSeekBar.getProgress());
                 finish();
             }
         });
@@ -82,11 +95,14 @@ public class EditImageRatioActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                 if(fromUser){
-                    seekBarProgress = progress;
-                    changeImageRatio(editingImageAddress,previewImage.getNativeObjAddr(),progress);
-                    Bitmap loc_bitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
-                    Utils.matToBitmap(previewImage, loc_bitmap);
-                    editPreview.setImageBitmap(loc_bitmap);
+                    if(previewImage==null)
+                        previewImage = preEditImage.clone();
+                    changeImageRatio(preEditImage.getNativeObjAddr(),previewImage.getNativeObjAddr(),progress);
+                    editPreviewBitmap.recycle();
+                    editPreviewBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(previewImage, editPreviewBitmap);
+                    editPreview.setImageBitmap(editPreviewBitmap);
+                    //System.gc();
                 }
 
             }
@@ -103,7 +119,12 @@ public class EditImageRatioActivity extends AppCompatActivity {
         });
 
 
+
+
     }
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -118,4 +139,10 @@ public class EditImageRatioActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void finish() {
+        previewImage.release();
+        preEditImage.release();
+        super.finish();
+    }
 }

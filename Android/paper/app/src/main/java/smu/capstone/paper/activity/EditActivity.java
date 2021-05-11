@@ -54,7 +54,8 @@ public class EditActivity extends AppCompatActivity {
 
     public void setImageViewFromMat(){
         try {
-            editingImage = new Mat(croppedImageAddress);
+            if(editingImage == null)
+                editingImage = new Mat(croppedImageAddress);
         }
         catch (Exception e){
 
@@ -80,6 +81,7 @@ public class EditActivity extends AppCompatActivity {
 
             FileOutputStream out = new FileOutputStream(tempFile);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            //bitmap.compress(Bitmap.CompressFormat.PNG,90,out);
             out.close();
             return tempFile;
 
@@ -137,10 +139,15 @@ public class EditActivity extends AppCompatActivity {
         editRatio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
+                Bitmap edited = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(editingImage,edited);
+                File temp = (File)saveBitmapToCache(edited,"edit_temp");
+                String filePath= temp.getAbsolutePath();
                 Intent intent = new Intent( EditActivity.this , EditImageRatioActivity.class);
                 intent.putExtra("path", filePath);
                 intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
                 startActivity(intent);
+                //finish();//test
             }
         });
 
@@ -224,11 +231,17 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if(hasFocus){
-            setImageViewFromMat();
+//            setImageViewFromMat();
         }
 
 
     }
 
 
+
+    @Override
+    public void finish() {
+        //editingImage.release();
+        super.finish();
+    }
 }
