@@ -51,6 +51,12 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ItemDetailActivity.class);
+                intent.putExtra("id" , dataList.get(position).getAsJsonObject().get("id").getAsInt());
+                intent.putExtra("name" , dataList.get(position).getAsJsonObject().get("name").getAsString());
+                intent.putExtra("hprice" , dataList.get(position).getAsJsonObject().get("hprice").getAsInt());
+                intent.putExtra("lprice" , dataList.get(position).getAsJsonObject().get("lprice").getAsInt());
+                intent.putExtra("url" , dataList.get(position).getAsJsonObject().get("url").getAsString());
+                intent.putExtra("picture" , dataList.get(position).getAsJsonObject().get("picture").getAsString());
                 context.startActivity(intent);
             }
         });

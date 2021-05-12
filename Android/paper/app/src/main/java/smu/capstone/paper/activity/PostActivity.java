@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -56,7 +55,7 @@ public class PostActivity extends AppCompatActivity {
 
     TextView post_user_id, post_like_cnt, post_cmt_cnt, post_text, post_date;
     ImageView post_pic, post_profile, post_ccl_cc, post_ccl_a, post_ccl_nc, post_ccl_nd, post_ccl_sa;
-    boolean ccl1, ccl2, ccl3, ccl4, ccl5;
+    int ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa;
     int status;
 
     final int MY = 1;
@@ -127,22 +126,10 @@ public class PostActivity extends AppCompatActivity {
                         switch(item.getItemId()){
                             case R.id.post_edit:
                                 Intent intent = new Intent(PostActivity.this, PostEditActivity.class);
-                                // postEditActivity로 기존 data 전달
-
-                                intent.putExtra("postImg", postData.get("image").getAsString());
-                                intent.putExtra("text", postData.get("text").getAsString());
-                              //  intent.putExtra("hashtag",  ?? );
-                             //   intent.putExtra("itemtag", ??);
-
-                                /*
-                                intent.putExtra("ccl1",post_obj.getBoolean("ccl1"));
-                                intent.putExtra("ccl2",post_obj.getBoolean("ccl2"));
-                                intent.putExtra("ccl3",post_obj.getBoolean("ccl3"));
-                                intent.putExtra("ccl4",post_obj.getBoolean("ccl4"));
-                                intent.putExtra("ccl5",post_obj.getBoolean("ccl5"));*/
-
-
+                                intent.putExtra("postID", postData.get("id").getAsInt());
                                 startActivity(intent);
+                                finish();
+
                                 break;
                             case R.id.post_save:
                                /* Intent intent2 = new Intent(PostActivity.this, SaveImageActivity.class);
@@ -386,24 +373,24 @@ public class PostActivity extends AppCompatActivity {
 
 
         //CCL 세팅 ! 서버 코딩내용없어서 .. 놔둠..
-       /* ccl1=postData.getBoolean("ccl1");
-        ccl2=postData.getBoolean("ccl2");
-        ccl3=postData.getBoolean("ccl3");
-        ccl4=postData.getBoolean("ccl4");
-        ccl5=postData.getBoolean("ccl5");
+        ccl_cc =postData.get("ccl").getAsJsonObject().get("ccl_cc").getAsInt();
+        ccl_a =postData.get("ccl").getAsJsonObject().get("ccl_a").getAsInt();
+        ccl_nc =postData.get("ccl").getAsJsonObject().get("ccl_nc").getAsInt();
+        ccl_nd =postData.get("ccl").getAsJsonObject().get("ccl_nd").getAsInt();
+        ccl_sa =postData.get("ccl").getAsJsonObject().get("ccl_sa").getAsInt();
 
 
-        if(ccl1)
+        if(ccl_cc==1)
             post_ccl_cc.setImageResource(R.drawable.ccl_cc_fill);
-        if(ccl2)
+        if(ccl_a==1)
             post_ccl_a.setImageResource(R.drawable.ccl_attribution_fill);
-        if(ccl3)
+        if(ccl_nc==1)
             post_ccl_nc.setImageResource(R.drawable.ccl_noncommercial_fill);
-        if(ccl4)
+        if(ccl_nd==1)
             post_ccl_nd.setImageResource(R.drawable.ccl_no_derivative_fill);
-        if(ccl5)
+        if(ccl_sa==1)
             post_ccl_sa.setImageResource(R.drawable.ccl_share_alike_fill);
-*/
+
 
         return true;
     }
