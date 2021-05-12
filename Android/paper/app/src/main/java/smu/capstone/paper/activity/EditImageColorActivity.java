@@ -37,6 +37,7 @@ public class EditImageColorActivity extends AppCompatActivity {
     //long editingImageColorAddress;
 
     Mat previewImage;
+    Bitmap previewImageBitmap;
 
 
     public native void setColors(long inputImageAddress, long outputImageAddress, int hueProgress, int saturationProgress, int brightnessProgress, int contrastProgress);
@@ -49,9 +50,11 @@ public class EditImageColorActivity extends AppCompatActivity {
     }
 
     public void updatePreviewImageView(){
-        Bitmap loc_bitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(previewImage, loc_bitmap);
-        editPreview.setImageBitmap(loc_bitmap);
+        if(previewImageBitmap!=null)
+            previewImageBitmap.recycle();
+        previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(previewImage, previewImageBitmap);
+        editPreview.setImageBitmap(previewImageBitmap);
     }
 
 
@@ -68,7 +71,6 @@ public class EditImageColorActivity extends AppCompatActivity {
 
         done = findViewById(R.id.edit_done);
 
-        done = findViewById(R.id.edit_done);
         editPreview = findViewById(R.id.editPreview);
 
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0x00);

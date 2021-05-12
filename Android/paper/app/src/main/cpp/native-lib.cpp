@@ -785,16 +785,16 @@ Java_smu_capstone_paper_activity_EditImageColorActivity_setColors(JNIEnv *env, j
     int value = progressToValue(brightness_progress,-255,255,0);
 
 
-    cvtColor(locMat,locMat,COLOR_BGR2HSV);
+    //cvtColor(locMat,locMat,COLOR_BGR2HSV);
+    cvtColor(locMat,locMat,COLOR_RGB2HSV);
     for (int j = 0; j < locMat.rows; j++)
     {
         for (int i = 0; i < locMat.cols; i++)
         {
 
             //색상(Hue)
-            // Get hue.
-            // Saturation is hsv.at<Vec3b>(j, i)[1], and
-            // Value is hsv.at<Vec3b>(j, i)[2].
+
+
             unsigned char h = locMat.at<Vec3b>(j, i)[0];
             if (h + hue_shift >= 180)
                 h = (h + hue_shift) - 180;
@@ -815,7 +815,7 @@ Java_smu_capstone_paper_activity_EditImageColorActivity_setColors(JNIEnv *env, j
             }
             else
                 s = s + saturation;
-            locMat.at<Vec3b>(j, i)[1] = h;
+            locMat.at<Vec3b>(j, i)[1] = s;
 
             //밝기(Value(Brightness))
             unsigned char v = locMat.at<Vec3b>(j, i)[2];
@@ -831,7 +831,8 @@ Java_smu_capstone_paper_activity_EditImageColorActivity_setColors(JNIEnv *env, j
         }
     }
 
-    cvtColor(locMat,locMat,COLOR_HSV2BGR);
+    //cvtColor(locMat,locMat,COLOR_HSV2BGR);
+    cvtColor(locMat,locMat,COLOR_HSV2RGB);
 
     //밝기(brightness) //알파 문제 있을 수 있음 // HSV에서 조절
     //locMat = locMat + ((brightness_progress-50)*(255.0/50));
