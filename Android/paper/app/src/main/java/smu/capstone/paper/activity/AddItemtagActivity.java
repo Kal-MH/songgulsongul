@@ -125,16 +125,17 @@ public class AddItemtagActivity extends Activity {
         return bitmap;
     }
 
-    /*static String getString(String input, String data) // API에서 필요한 문자 자르기.
+    static String getString(String input, String data) // API에서 필요한 문자 자르기
     {
         String[] dataSplit = data.split("{" + input + "}");
         String[] dataSplit2 = dataSplit[1].split("\"" + input + "\"");
         return dataSplit2[0];
     }
 
+    /*
     public void RunApi(){
-        String clientId = "";
-        String clientSecret = "";
+        String clientId = "vzYQ1acA6vGEyvjeQHAB";
+        String clientSecret = "cg4YKUanSV";
         int display = 2;
 
         try {
