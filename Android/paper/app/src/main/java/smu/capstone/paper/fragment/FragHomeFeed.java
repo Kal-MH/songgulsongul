@@ -1,5 +1,7 @@
 package smu.capstone.paper.fragment;
 
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -82,14 +85,19 @@ public class FragHomeFeed extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setData(){
+       if(feeds.get("data").getAsJsonArray().size() == 0){
+           recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
+       }
        adapter = new HomeFeedAdapter(getContext(), feeds);
-        recyclerView.setAdapter(adapter);
+       recyclerView.setAdapter(adapter);
     }
 
     // server 에서 data 전달
     public void GetFeedData(){
         serviceApi.GetFeed(user_id,20).enqueue(new Callback<JsonObject>() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 JsonObject result = response.body();

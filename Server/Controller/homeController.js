@@ -42,7 +42,12 @@ var homeController = {
                     var hashedPassword = key.toString('base64');
                     var salt = buf.toString('base64');
                     // 삽입을 수행하는 sql문.
-                    var sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, last_login, point) VALUES (?, ?, ?, ?, ?, ?, NOW() ,1000)';
+                    var sql = "";
+                    if (snsUrl == undefined || snsUrl == ""){
+                        sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, last_login, point, sns_check) VALUES (?, ?, ?, ?, ?, ?, NOW() ,1000, 0)';
+                    } else {
+                        sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, last_login, point, sns_check) VALUES (?, ?, ?, ?, ?, ?, NOW() ,1000, 1)';
+                    }
                     var params = [email, loginId, hashedPassword, salt, snsUrl, imgProfile];
 
                     connection.query(sql, params, function (err, result) {
@@ -108,6 +113,11 @@ var homeController = {
         const email = req.body.email;
         console.log(email);
 
+        if (email == undefined || email == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        }
 
         var sql = "select * from user where email = ?";
         connection.query(sql, email, async function (err, result) {
@@ -150,6 +160,12 @@ var homeController = {
     findPassword: function (req, res) {
         const email = req.body.email;
         const loginId = req.body.login_id;
+
+        if (email == undefined || email == "" || loginId == undefined || loginId == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        }
 
         var sql = "select * from user where email = ? and login_id = ?";
         var params = [email, loginId];
@@ -207,21 +223,6 @@ var homeController = {
             }
         })
     },
-    //임시 컨트롤러 - 유저 프로필 보기(img업로드 확인을 위해)
-    tmpgetMeProfile: function (req, res) {
-        const me = req.user;
-
-        if (!me) {
-            res.redirect("/public/login.html");
-        } else {
-            res.render("profile.ejs", { user: me });
-        }
-
-    },
-    logout: function (req, res) {
-        req.logout();
-        res.redirect("/public/login.html");
-    }
 }
 
 module.exports = homeController; 

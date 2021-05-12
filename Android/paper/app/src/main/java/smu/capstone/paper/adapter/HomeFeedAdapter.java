@@ -107,13 +107,9 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         //post 가져옴
         final JsonObject item = dataList.get(position).getAsJsonObject();
-
-
         final int postId = item.get("post").getAsJsonObject().get("id").getAsInt();
 
         setItem(holder, item, position);
-
-
 
         // 좋아요 listener
         holder.favorite.setOnClickListener(new View.OnClickListener() {

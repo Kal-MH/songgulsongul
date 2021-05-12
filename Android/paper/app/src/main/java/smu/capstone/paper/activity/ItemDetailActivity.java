@@ -11,7 +11,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import smu.capstone.paper.R;
+import smu.capstone.paper.server.RetrofitClient;
 
 public class ItemDetailActivity extends Activity {
 
@@ -36,18 +39,17 @@ public class ItemDetailActivity extends Activity {
         });
 
         Display display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        int width = (int)(display.getWidth() * 0.9);
-        int height = (int)(display.getHeight() * 0.7);
+        int width = (int)(display.getWidth() * 0.98);
+        int height = (int)(display.getHeight() * 0.9);
         getWindow().getAttributes().width=width;
         getWindow().getAttributes().height=height;
 
         // 넘겨받은 item tag정보로 내용 변경
         Intent intent = getIntent();
-        item_name.setText(intent.getStringExtra("name"));
-        image.setImageResource(intent.getIntExtra("image", 1));
-        item_co.setText(intent.getStringExtra("co"));
-        item_price.setText(intent.getStringExtra("price"));
-        item_link.setText(intent.getStringExtra("link"));
+        item_name.setText("제품명 : " + intent.getStringExtra("name"));
+        Glide.with(ItemDetailActivity.this).load(RetrofitClient.getBaseUrl() + intent.getStringExtra("image")).into(image); // 게시물 사진
+        item_price.setText(intent.getIntExtra("lprice" , 0) + " ");
+        item_link.setText(intent.getStringExtra("url"));
 
     }
 }

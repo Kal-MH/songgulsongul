@@ -82,7 +82,14 @@ const postController_subFunc = {
                     text : postData[0][0].text,
                     post_time : postData[0][0].post_time,
                     post_date : postData[0][0].post_date,
-                    user_id : postData[0][0].user_id
+                    user_id : postData[0][0].user_id,
+                    ccl : {
+                        ccl_cc : postData[0][0].ccl_cc,
+                        ccl_a : postData[0][0].ccl_a,
+                        ccl_nc : postData[0][0].ccl_nc,
+                        ccl_nd : postData[0][0].ccl_nd,
+                        ccl_sa : postData[0][0].ccl_sa,
+                    }
                 },
                 user : { //작성자 정보
                     login_id : postData[0][0].login_id,
