@@ -29,7 +29,7 @@ const postController = {
             selectPostDetailSql += `select * from item_tag where post_id=${postId};`;
             selectPostDetailSql += `select * from likes where post_id=${postId};`;
             selectPostDetailSql += `select c.id, c.user_id, c.text, u.img_profile, u.login_id, c.c_date, c.c_time from comment as c 
-            join user as u on c.post_id=${postId} and c.user_id=u.id order by c.c_date desc, c.c_time desc, c.id desc limit ${db_config.limitation};`;
+            join user as u on c.post_id=${postId} and c.user_id=u.id order by c.c_date, c.c_time, c.id limit ${db_config.limitation};`;
             connection.query(selectPostDetailSql, function (err, result) {
                 if (err) {
                     console.log(err);
