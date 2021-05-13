@@ -73,7 +73,7 @@ public class EditImageColorActivity extends AppCompatActivity {
 
         editPreview = findViewById(R.id.editPreview);
 
-        editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0x00);
+        editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
         try{
 
             Mat locMat = new Mat(editingImageAddress);

@@ -55,18 +55,17 @@ public class EditImageRatioActivity extends AppCompatActivity {
 
 
         filePath = getIntent().getStringExtra("path");
-        preEditImage = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
-        Imgproc.cvtColor(preEditImage,preEditImage, Imgproc.COLOR_BGR2RGB);//RGB BGR 채널 뒤밖임 수정
+        //preEditImage = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
+        //Imgproc.cvtColor(preEditImage,preEditImage, Imgproc.COLOR_BGR2RGB);//RGB BGR 채널 뒤밖임 수정
 
 
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
         try{
-            //preEditImage = new Mat(editingImageAddress);//주소에서 파일복사
-            //preEditImage = preEditImage.clone();//test
+            preEditImage = new Mat(editingImageAddress).clone();//주소에서 파일복사 //TODO: 메모리 누수 체크
             //편집 취소해도 연동되지 않게 별도 객체로 분리
             //previewImage.copyTo(previewImage);
             previewImage = preEditImage.clone();
-             editPreviewBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+            editPreviewBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
             //previewImage = previewImage.clone();
         }
         catch (Exception e){

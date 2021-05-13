@@ -12,11 +12,16 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
 import smu.capstone.paper.R;
 
 public class EditImageHistogramActivity extends AppCompatActivity {
+
+    public enum editHistogramMod{
+        None, Default, CLAHE
+    }
 
     long first_time = 0;
     long second_time = 0;
@@ -35,6 +40,8 @@ public class EditImageHistogramActivity extends AppCompatActivity {
 
     Mat previewImage;
     Bitmap previewImageBitmap;
+
+    editHistogramMod selectedHistogramMod = editHistogramMod.None;
 
     // 기본히스토그램 평활화
     public native void equalizeHistogram(long inputImgAddress, long outputImgAddress);
@@ -57,25 +64,68 @@ public class EditImageHistogramActivity extends AppCompatActivity {
         histogramCLAHE = findViewById(R.id.histogramCLAHE);
 
 
+
+        editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
+        try{
+
+            Mat locMat = new Mat(editingImageAddress);
+            //편집 취소해도 연동되지 않게 별도 객체로 분리
+            //previewImage.copyTo(previewImage);
+            previewImage = locMat.clone();
+            //previewImage = previewImage.clone();
+        }
+        catch (Exception e){
+
+        }
+        if(previewImage != null){
+            previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(previewImage, previewImageBitmap);
+            editPreview.setImageBitmap(previewImageBitmap);
+        }
+
+
         //히스토그램평활화 없음 적용
         histogramNone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                selectedHistogramMod = editHistogramMod.None;
+                Mat locMat = new  Mat(editingImageAddress).clone(); // TODO: 얕은복사(new Mat(address))에서 메모리 누수 나는지 체크 필요
+                if(previewImageBitmap!=null)
+                    previewImageBitmap.recycle();
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(locMat,previewImageBitmap);
+                editPreview.setImageBitmap(previewImageBitmap);
+                locMat.release();
             }
         });
         //히스토그램평활화 기본 적용
         histogramDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                selectedHistogramMod = editHistogramMod.Default;
+                Mat locMat = new  Mat(editingImageAddress).clone(); // TODO: 얕은복사(new Mat(address))에서 메모리 누수 나는지 체크 필요
+                equalizeHistogram(locMat.getNativeObjAddr(),previewImage.getNativeObjAddr());
+                if(previewImageBitmap!=null)
+                    previewImageBitmap.recycle();
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(previewImage,previewImageBitmap);
+                editPreview.setImageBitmap(previewImageBitmap);
+                locMat.release();
             }
         });
         //히스토그램평활화 적응형 (부분구역별) 적용
         histogramCLAHE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                selectedHistogramMod = editHistogramMod.CLAHE;
+                Mat locMat = new  Mat(editingImageAddress).clone(); // TODO: 얕은복사(new Mat(address))에서 메모리 누수 나는지 체크 필요
+                equalizeHistogramClahe(locMat.getNativeObjAddr(),previewImage.getNativeObjAddr());
+                if(previewImageBitmap!=null)
+                    previewImageBitmap.recycle();
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(previewImage,previewImageBitmap);
+                editPreview.setImageBitmap(previewImageBitmap);
+                locMat.release();
             }
         });
 
@@ -85,6 +135,17 @@ public class EditImageHistogramActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                //TODO: 프리뷰 Mat을 그대로 옮길지 아니면 프리뷰 연산 크기를 줄이고 별도로 둘지 선택할것
+                switch (selectedHistogramMod){
+                    case None: //do nothing
+                        break;
+                    case Default: equalizeHistogram(editingImageAddress,editingImageAddress);
+                        break;
+                    case CLAHE: equalizeHistogramClahe(editingImageAddress,editingImageAddress);
+                        break;
+                    default:
+                        break;
+                }
                 finish();
             }
         });
@@ -102,5 +163,12 @@ public class EditImageHistogramActivity extends AppCompatActivity {
             Toast.makeText(this,"한번 더 누르면 적용을 취소합니다", Toast.LENGTH_SHORT).show();
             first_time = System.currentTimeMillis();
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        previewImageBitmap.recycle();
+        previewImage.release();
     }
 }

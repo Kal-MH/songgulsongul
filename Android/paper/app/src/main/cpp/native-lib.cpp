@@ -324,7 +324,7 @@ Mat getImageCannyBorders( Mat src, int th1 = 25, int th2 = 200)
     /// Convert it to gray
     border =  Mat();
     //cvtColor(src, border, COLOR_RGB2GRAY );
-    cvtColor(src, border, COLOR_BGR2GRAY );
+    cvtColor(src, border, COLOR_BGR2GRAY ); //TODO: BRG or RGB 테스트
     //cvtColor( src, border, COLOR_RGB2GRAY );
     GaussianBlur( border, border, Size(5,5), 0, 0, BORDER_DEFAULT );
     // Canny edge detector
@@ -743,8 +743,25 @@ Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogram(JN
                                                                               jlong output_img_address) {
     Mat &imgInput = *(Mat *) input_img_address;
     Mat &img_output = *(Mat *) output_img_address;
+    //equalizeHist(imgInput,img_output);
 
-    equalizeHist(imgInput,img_output);
+    Mat ycrcb= imgInput.clone();
+
+    cvtColor(imgInput,ycrcb,COLOR_RGB2YCrCb);//BGR 대신 RGB
+
+    vector<Mat> channels;
+    split(ycrcb,channels);
+
+    equalizeHist(channels[0], channels[0]);
+
+    Mat result;
+    merge(channels,ycrcb);
+
+    cvtColor(ycrcb,result,COLOR_YCrCb2RGB);
+
+    img_output = result;
+    ycrcb.release();
+
 }
 extern "C"
 JNIEXPORT void JNICALL
@@ -756,12 +773,25 @@ Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogramCla
     Mat &img_output = *(Mat *) output_img_address;
 
     //Mat img_clahe;
+    Mat ycrcb= imgInput.clone();
+
+    cvtColor(imgInput,ycrcb,COLOR_RGB2YCrCb);//BGR 대신 RGB
+
+    vector<Mat> channels;
+    split(ycrcb,channels);
 
     Ptr<CLAHE> clahe = createCLAHE();
     clahe->setClipLimit(20);
     clahe->setTilesGridSize(Size(8,8));
 
-    clahe->apply(imgInput,img_output);
+    clahe->apply(channels[0],channels[0]);
+    Mat result;
+    merge(channels,ycrcb);
+
+    cvtColor(ycrcb,result,COLOR_YCrCb2RGB);
+
+    img_output = result;
+    ycrcb.release();
 }
 extern "C"
 JNIEXPORT void JNICALL

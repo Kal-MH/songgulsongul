@@ -51,6 +51,7 @@ public class EditActivity extends AppCompatActivity {
     long paperImageAddress;
 
     Mat editingImage;
+    Bitmap editingImageBitmap;
 
     public void setImageViewFromMat(){
         try {
@@ -62,9 +63,11 @@ public class EditActivity extends AppCompatActivity {
         }
 
         if(editingImage != null){
-            Bitmap loc_bitmap = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(editingImage,loc_bitmap);
-            edit_iv.setImageBitmap(loc_bitmap);
+            if(editingImageBitmap !=null)
+                editingImageBitmap.recycle();
+            editingImageBitmap = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(editingImage,editingImageBitmap);
+            edit_iv.setImageBitmap(editingImageBitmap);
         }
         else{
             // TODO: Mat 채우기
@@ -110,6 +113,8 @@ public class EditActivity extends AppCompatActivity {
 
         editRatio = findViewById(R.id.edit_image_ratio);
         editColors = findViewById(R.id.edit_image_colors);
+        //editFilter = findViewById(R.id.edit_image_filter);
+        editHistogram = findViewById(R.id.edit_image_filter);//TODO: 히스토그램 버튼 만들기 //지금은 없어서 필터 버튼 사용
 
         filePath = getIntent().getStringExtra("path");
         edit_iv = findViewById(R.id.edit_pic);
@@ -123,10 +128,10 @@ public class EditActivity extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bitmap edited = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(editingImage,edited);
-                File temp = (File)saveBitmapToCache(edited,"edit_temp");
-                String filePath= temp.getAbsolutePath();
+                //Bitmap edited = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
+                //Utils.matToBitmap(editingImage,edited);
+                //File temp = (File)saveBitmapToCache(edited,"edit_temp");
+                //String filePath= temp.getAbsolutePath();
                 Intent intent = new Intent( EditActivity.this , EditDoneActivity.class);
                 intent.putExtra("path", filePath);
                 intent.putExtra("editedImageAddress",editingImage.getNativeObjAddr());
@@ -139,10 +144,10 @@ public class EditActivity extends AppCompatActivity {
         editRatio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                Bitmap edited = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(editingImage,edited);
-                File temp = (File)saveBitmapToCache(edited,"edit_temp");
-                String filePath= temp.getAbsolutePath();
+                //Bitmap edited = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
+                //Utils.matToBitmap(editingImage,edited);
+                //File temp = (File)saveBitmapToCache(edited,"edit_temp");
+                //String filePath= temp.getAbsolutePath();
                 Intent intent = new Intent( EditActivity.this , EditImageRatioActivity.class);
                 intent.putExtra("path", filePath);
                 intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
@@ -161,7 +166,7 @@ public class EditActivity extends AppCompatActivity {
             }
         });
 
-        /*
+
         editHistogram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
@@ -171,6 +176,7 @@ public class EditActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        /*
         editFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
@@ -231,7 +237,7 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if(hasFocus){
-//            setImageViewFromMat();
+            setImageViewFromMat();
         }
 
 
@@ -242,6 +248,7 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public void finish() {
         //editingImage.release();
+        editingImageBitmap.recycle();
         super.finish();
     }
 }
