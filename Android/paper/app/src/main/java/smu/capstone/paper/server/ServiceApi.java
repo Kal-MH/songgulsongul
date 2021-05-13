@@ -93,4 +93,8 @@ public interface ServiceApi {
     @POST("/user/profile-edit")
     Call<CodeResponse> EditProfile(@Body ProfileEditData data);
 
+    //회원 탈퇴
+    @POST("/user/data-delete")
+    Call<CodeResponse> DeleteAccount(@Body UserData data);
+
 }

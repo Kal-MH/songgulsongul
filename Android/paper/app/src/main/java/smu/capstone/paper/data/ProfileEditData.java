@@ -9,6 +9,9 @@ public class ProfileEditData {
     @SerializedName("sns_check_flag")
     int sns_check_flag;
 
+    @SerializedName("img_check_flag")
+    int img_check_flag;
+
     @SerializedName("login_id") // 기존 id
     String login_id;
 
@@ -24,12 +27,14 @@ public class ProfileEditData {
     @SerializedName("profile_image")
     String profile_image; // 실제 image url로 전달
 
-    public ProfileEditData(int id_check_flag, int sns_check_flag, String login_id, String new_intro, String new_SNS){
+    public ProfileEditData(int id_check_flag, int sns_check_flag, int img_check_flag, String login_id, String new_intro, String new_SNS, String profile_image){
         this.id_check_flag = id_check_flag;
         this.sns_check_flag = sns_check_flag;
+        this.img_check_flag = img_check_flag;
         this.login_id = login_id;
         this.new_intro = new_intro;
         this.new_SNS = new_SNS;
+        this.profile_image = profile_image;
     }
 
     public void setNewId(String new_id){

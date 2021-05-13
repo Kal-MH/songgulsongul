@@ -61,6 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     String login_id;
     String user_id;
+    String profile_img_default;
 
     private GridView gridView;
     private PostImageAdapter adapter;
@@ -295,6 +296,8 @@ public class ProfileActivity extends AppCompatActivity {
             JsonArray arr = obj.getAsJsonArray("postInfo");
             post_data.add("data", arr);
 
+            profile_img_default = obj.get("defaultImg").getAsString();
+
             follow_count_tv.setText(obj.get("followCnt").getAsInt() + "");
             follower_count_tv.setText(obj.get("followerCnt").getAsInt() + "");
 
@@ -304,8 +307,10 @@ public class ProfileActivity extends AppCompatActivity {
             sns_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").isJsonNull() ?
                     "" : obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").getAsString());
 
-            String img_addr = RetrofitClient.getBaseUrl()+ obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("profile_image").getAsString();
-            Log.d("profile", img_addr);
+            String img_addr = obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("profile_image").getAsString();
+            String base_url = RetrofitClient.getBaseUrl();
+            if(img_addr.equals(profile_img_default))
+                img_addr = base_url + img_addr;
             Glide.with(this).load( img_addr).into(profile_userimage);
 
             feed_count_tv.setText(obj.getAsJsonArray("postInfo").isJsonNull() ?
@@ -379,4 +384,10 @@ public class ProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
 }
