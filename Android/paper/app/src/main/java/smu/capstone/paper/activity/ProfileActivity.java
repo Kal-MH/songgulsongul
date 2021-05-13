@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -34,6 +35,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.ReferenceQueue;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,6 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
     final int OTHER = 0;
 
     public int Status;
+    public static final int REQUEST_CODE = 100;
 
     String login_id;
     String user_id;
@@ -69,7 +73,6 @@ public class ProfileActivity extends AppCompatActivity {
     private Button follow_btn, unfollow_btn;
     private LinearLayout profile_follows;
     private LinearLayout pointview;
-    private JSONObject post_item;
     private JsonObject obj, profile_item;
     private ImageView profile_userimage;
 
@@ -360,7 +363,8 @@ public class ProfileActivity extends AppCompatActivity {
 
             case R.id.profile_edit :
                 Intent intent1 = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                startActivity(intent1);
+                //startActivity(intent1);
+                startActivityForResult(intent1, REQUEST_CODE);
                 break;
 
             case R.id.profile_keep:
@@ -385,9 +389,18 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRestart(){
-        super.onRestart();
-        finish();
-        startActivity(getIntent());
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE){
+            if(resultCode != Activity.RESULT_OK){
+                return;
+            }
+            String new_id = data.getStringExtra("userId");
+            Intent intent = getIntent();
+            intent.putExtra("userId", new_id);
+            finish();
+            startActivity(intent);
+        }
     }
 }

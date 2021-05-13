@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -379,7 +380,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                 .show();
                     }
                 }
-                else if(id_check == YES){
+                if(id_check == YES){
                     if(id_modify_check == YES)
                         data.setNewId(new_id);
                     serviceApi.EditProfile(data).enqueue(new Callback<CodeResponse>() {
@@ -389,11 +390,14 @@ public class EditProfileActivity extends AppCompatActivity {
                             int resultCode = result.getCode();
 
                             if(resultCode == StatusCode.RESULT_OK){
+                                Intent intent = new Intent();
+                                if(id_modify_check == YES) {
+                                    LoginSharedPreference.changeLoginId(EditProfileActivity.this, new_id);
+                                }
+                                intent.putExtra("userId", new_id);
+                                setResult(RESULT_OK, intent);
+                                finish();
                                 Toast.makeText(EditProfileActivity.this, "프로필 수정 완료!", Toast.LENGTH_SHORT).show();
-                                // sp아이디 변경
-                                LoginSharedPreference.changeLoginId(EditProfileActivity.this, new_id);
-                                // 프로필로 돌아가기
-                                onBackPressed();
                             }
                             else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
                                 new AlertDialog.Builder(EditProfileActivity.this)
