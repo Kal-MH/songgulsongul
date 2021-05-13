@@ -1,12 +1,15 @@
 package smu.capstone.paper.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import org.w3c.dom.Comment;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -305,6 +311,38 @@ public class PostActivity extends AppCompatActivity {
 
         post_user_id.setOnClickListener(goProfile);
         post_profile.setOnClickListener(goProfile);
+
+        post_cmt_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
+                Log.d("comment", "long click!" +  CommentsData.get(i).getAsJsonObject().get("user_id").getAsInt() + " : "
+                     + LoginSharedPreference.getUserId(PostActivity.this) );
+                if( CommentsData.get(i).getAsJsonObject().get("user_id").getAsInt() == LoginSharedPreference.getUserId(PostActivity.this) ){
+                    //댓글 삭제 알림 팝업
+                    Log.d("comment", "삭제해보자요");
+                    new AlertDialog.Builder(PostActivity.this)
+                            .setTitle("경고")
+                            .setMessage("댓글을 삭제하시겠습니까?")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    deleteComment(CommentsData.get(i).getAsJsonObject().get("id").getAsInt());
+                                }
+                            })
+                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            }
+                            )
+                            .show();
+                }
+
+
+                return false;
+            }
+        });
     }
 
 
@@ -460,6 +498,12 @@ public class PostActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    public void deleteComment(int id){
+        Toast.makeText(PostActivity.this, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+
+
     }
 
 }

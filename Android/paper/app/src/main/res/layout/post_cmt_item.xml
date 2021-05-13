@@ -7,10 +7,10 @@
 
     <TextView
         android:id="@+id/post_item_id"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:text="user_id"/>
+        android:text="user_id" />
 
     <TextView
         android:id="@+id/post_item_cmt"
