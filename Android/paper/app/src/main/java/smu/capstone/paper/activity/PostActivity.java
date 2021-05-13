@@ -292,6 +292,19 @@ public class PostActivity extends AppCompatActivity {
 
             }
         });
+
+        View.OnClickListener goProfile = new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PostActivity.this, ProfileActivity.class);
+                // 게시글 사용자 id 전달
+                intent.putExtra("userId", post_user_id.getText());
+                startActivity(intent);
+            }
+        };
+
+        post_user_id.setOnClickListener(goProfile);
+        post_profile.setOnClickListener(goProfile);
     }
 
 
