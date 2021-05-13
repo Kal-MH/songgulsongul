@@ -25,8 +25,8 @@ public class ItemDetailActivity extends Activity {
         setContentView(R.layout.activity_item_detail);
 
         ImageView image = (ImageView)findViewById(R.id.item_detail_pic);
-        TextView item_co = (TextView)findViewById(R.id.item_detail_co);
-        TextView item_price = (TextView)findViewById(R.id.item_detail_price);
+        TextView item_hprice = (TextView)findViewById(R.id.item_detail_hprice);
+        TextView item_lprice = (TextView)findViewById(R.id.item_detail_lprice);
         TextView close = (TextView)findViewById(R.id.item_detail_close);
         TextView item_name = (TextView)findViewById(R.id.item_detail_name);
         TextView item_link = (TextView)findViewById(R.id.item_detail_link);
@@ -40,15 +40,14 @@ public class ItemDetailActivity extends Activity {
 
         Display display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         int width = (int)(display.getWidth() * 0.98);
-        int height = (int)(display.getHeight() * 0.9);
         getWindow().getAttributes().width=width;
-        getWindow().getAttributes().height=height;
 
         // 넘겨받은 item tag정보로 내용 변경
         Intent intent = getIntent();
-        item_name.setText("제품명 : " + intent.getStringExtra("name"));
-        Glide.with(ItemDetailActivity.this).load(RetrofitClient.getBaseUrl() + intent.getStringExtra("image")).into(image); // 게시물 사진
-        item_price.setText(intent.getIntExtra("lprice" , 0) + " ");
+        item_name.setText(intent.getStringExtra("name"));
+        Glide.with(ItemDetailActivity.this).load(RetrofitClient.getBaseUrl() + intent.getStringExtra("picture")).into(image); // 게시물 사진
+        item_lprice.setText(intent.getIntExtra("lprice" , 0) + " ");
+        item_hprice.setText(intent.getIntExtra("hprice" , 0) + " ");
         item_link.setText(intent.getStringExtra("url"));
 
     }
