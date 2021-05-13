@@ -338,8 +338,6 @@ public class PostActivity extends AppCompatActivity {
                             )
                             .show();
                 }
-
-
                 return false;
             }
         });
@@ -501,9 +499,29 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void deleteComment(int id){
-        Toast.makeText(PostActivity.this, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+        serviceApi.DeleteComment(post_id,id).enqueue(new Callback<CodeResponse>() {
+            @Override
+            public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                int resultCode = response.body().getCode();
+                if( resultCode == statusCode.RESULT_OK){
+                    //다시 불러오기.. 아니면 댓글만 가져오는 코드 짜야함!
+                    Toast.makeText(PostActivity.this, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                    getData();
+                }
+                else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                    Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                }
+                else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                    Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-
+            @Override
+            public void onFailure(Call<CodeResponse> call, Throwable t) {
+                Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
     }
 
 }

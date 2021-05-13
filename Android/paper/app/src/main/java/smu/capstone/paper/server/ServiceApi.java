@@ -46,6 +46,10 @@ public interface ServiceApi {
     @POST("/api/comment")
     Call<CodeResponse> Comment(@Body CommentData commentData);
 
+    //댓글 삭제
+    @GET("/api/comment/delete")
+    Call<CodeResponse> DeleteComment(@Query("postid") int postid, @Query("commentid") int commentid );
+
     // 회원가입
     @POST("/join")
     Call<CodeResponse> Join(@Body JoinData data);
