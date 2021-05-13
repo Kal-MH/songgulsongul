@@ -402,7 +402,7 @@ public class PostActivity extends AppCompatActivity {
         Glide.with(this).load(RetrofitClient.getBaseUrl() + userData.get("img_profile").getAsString()).into(post_profile);
 
         // 게시글 정보 세팅
-        post_date.setText(postData.get("post_date").getAsString() + postData.get("post_time").getAsString());
+        post_date.setText(postData.get("post_date").getAsString() + "\n" + postData.get("post_time").getAsString());
         post_text.setText(postData.get("text").getAsString());
         Glide.with(this).load(RetrofitClient.getBaseUrl() + postData.get("image").getAsString()).into(post_pic);
 
