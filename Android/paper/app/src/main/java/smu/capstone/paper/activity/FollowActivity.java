@@ -120,11 +120,15 @@ public class FollowActivity extends AppCompatActivity {
                 fragFollower.setArguments(bundle);
             }
         });
-
-
-
-
     }
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
