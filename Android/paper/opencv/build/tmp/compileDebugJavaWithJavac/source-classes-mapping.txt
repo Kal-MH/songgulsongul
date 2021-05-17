@@ -8,6 +8,10 @@ org/opencv/android/OpenCVLoader.java
  org.opencv.android.OpenCVLoader
 org/opencv/core/MatOfPoint3.java
  org.opencv.core.MatOfPoint3
+org/opencv/features2d/AffineFeature.java
+ org.opencv.features2d.AffineFeature
+org/opencv/dnn/ClassificationModel.java
+ org.opencv.dnn.ClassificationModel
 org/opencv/photo/AlignMTB.java
  org.opencv.photo.AlignMTB
 org/opencv/android/JavaCamera2View.java
@@ -16,6 +20,7 @@ org/opencv/android/JavaCamera2View.java
  org.opencv.android.JavaCamera2View$2
  org.opencv.android.JavaCamera2View$3
  org.opencv.android.JavaCamera2View$JavaCamera2Frame
+ org.opencv.android.JavaCamera2View$JavaCameraSizeAccessor
 org/opencv/core/MatOfByte.java
  org.opencv.core.MatOfByte
 org/opencv/features2d/MSER.java
@@ -28,6 +33,8 @@ org/opencv/objdetect/CascadeClassifier.java
  org.opencv.objdetect.CascadeClassifier
 org/opencv/core/MatOfInt.java
  org.opencv.core.MatOfInt
+org/opencv/dnn/DetectionModel.java
+ org.opencv.dnn.DetectionModel
 org/opencv/video/BackgroundSubtractorMOG2.java
  org.opencv.video.BackgroundSubtractorMOG2
 org/opencv/core/Rect2d.java
@@ -36,6 +43,8 @@ org/opencv/core/MatOfKeyPoint.java
  org.opencv.core.MatOfKeyPoint
 org/opencv/imgproc/GeneralizedHough.java
  org.opencv.imgproc.GeneralizedHough
+org/opencv/calib3d/UsacParams.java
+ org.opencv.calib3d.UsacParams
 org/opencv/calib3d/StereoBM.java
  org.opencv.calib3d.StereoBM
 org/opencv/video/KalmanFilter.java
@@ -48,6 +57,8 @@ org/opencv/ml/Boost.java
  org.opencv.ml.Boost
 org/opencv/videoio/VideoWriter.java
  org.opencv.videoio.VideoWriter
+org/opencv/video/TrackerMIL.java
+ org.opencv.video.TrackerMIL
 org/opencv/features2d/Feature2D.java
  org.opencv.features2d.Feature2D
 org/opencv/photo/MergeDebevec.java
@@ -70,6 +81,8 @@ org/opencv/imgproc/Imgproc.java
 org/opencv/core/Core.java
  org.opencv.core.Core
  org.opencv.core.Core$MinMaxLocResult
+org/opencv/video/TrackerMIL_Params.java
+ org.opencv.video.TrackerMIL_Params
 org/opencv/core/CvException.java
  org.opencv.core.CvException
 org/opencv/features2d/AgastFeatureDetector.java
@@ -87,6 +100,8 @@ org/opencv/videoio/VideoCapture.java
  org.opencv.videoio.VideoCapture
 org/opencv/video/FarnebackOpticalFlow.java
  org.opencv.video.FarnebackOpticalFlow
+org/opencv/dnn/KeypointsModel.java
+ org.opencv.dnn.KeypointsModel
 org/opencv/features2d/ORB.java
  org.opencv.features2d.ORB
 org/opencv/dnn/Layer.java
@@ -111,12 +126,16 @@ org/opencv/imgcodecs/Imgcodecs.java
  org.opencv.imgcodecs.Imgcodecs
 org/opencv/core/MatOfRect2d.java
  org.opencv.core.MatOfRect2d
+org/opencv/features2d/SimpleBlobDetector.java
+ org.opencv.features2d.SimpleBlobDetector
 org/opencv/video/BackgroundSubtractor.java
  org.opencv.video.BackgroundSubtractor
 org/opencv/android/LoaderCallbackInterface.java
  org.opencv.android.LoaderCallbackInterface
 org/opencv/objdetect/QRCodeDetector.java
  org.opencv.objdetect.QRCodeDetector
+org/opencv/dnn/SegmentationModel.java
+ org.opencv.dnn.SegmentationModel
 org/opencv/objdetect/Objdetect.java
  org.opencv.objdetect.Objdetect
 org/opencv/photo/CalibrateRobertson.java
@@ -127,10 +146,14 @@ org/opencv/ml/Ml.java
  org.opencv.ml.Ml
 org/opencv/core/MatOfRect.java
  org.opencv.core.MatOfRect
+org/opencv/video/TrackerGOTURN.java
+ org.opencv.video.TrackerGOTURN
 org/opencv/imgproc/GeneralizedHoughBallard.java
  org.opencv.imgproc.GeneralizedHoughBallard
 org/opencv/core/MatOfInt4.java
  org.opencv.core.MatOfInt4
+org/opencv/dnn/TextDetectionModel.java
+ org.opencv.dnn.TextDetectionModel
 org/opencv/photo/CalibrateDebevec.java
  org.opencv.photo.CalibrateDebevec
 org/opencv/photo/TonemapMantiuk.java
@@ -167,6 +190,8 @@ org/opencv/android/JavaCameraView.java
  org.opencv.android.JavaCameraView$JavaCameraSizeAccessor
 org/opencv/core/Algorithm.java
  org.opencv.core.Algorithm
+org/opencv/dnn/TextRecognitionModel.java
+ org.opencv.dnn.TextRecognitionModel
 org/opencv/ml/ANN_MLP.java
  org.opencv.ml.ANN_MLP
 org/opencv/ml/EM.java
@@ -177,10 +202,14 @@ org/opencv/photo/MergeRobertson.java
  org.opencv.photo.MergeRobertson
 org/opencv/core/MatOfRotatedRect.java
  org.opencv.core.MatOfRotatedRect
+org/opencv/features2d/SIFT.java
+ org.opencv.features2d.SIFT
 org/opencv/video/DenseOpticalFlow.java
  org.opencv.video.DenseOpticalFlow
 org/opencv/android/Utils.java
  org.opencv.android.Utils
+org/opencv/dnn/TextDetectionModel_EAST.java
+ org.opencv.dnn.TextDetectionModel_EAST
 org/opencv/android/CameraBridgeViewBase.java
  org.opencv.android.CameraBridgeViewBase
  org.opencv.android.CameraBridgeViewBase$1
@@ -226,12 +255,16 @@ org/opencv/features2d/AKAZE.java
  org.opencv.features2d.AKAZE
 org/opencv/photo/TonemapReinhard.java
  org.opencv.photo.TonemapReinhard
+org/opencv/dnn/TextDetectionModel_DB.java
+ org.opencv.dnn.TextDetectionModel_DB
 org/opencv/video/BackgroundSubtractorKNN.java
  org.opencv.video.BackgroundSubtractorKNN
 org/opencv/photo/MergeMertens.java
  org.opencv.photo.MergeMertens
 org/opencv/features2d/DescriptorMatcher.java
  org.opencv.features2d.DescriptorMatcher
+org/opencv/video/TrackerGOTURN_Params.java
+ org.opencv.video.TrackerGOTURN_Params
 org/opencv/video/SparseOpticalFlow.java
  org.opencv.video.SparseOpticalFlow
 org/opencv/android/AsyncServiceHelper.java
@@ -247,6 +280,8 @@ org/opencv/ml/LogisticRegression.java
  org.opencv.ml.LogisticRegression
 org/opencv/core/MatOfFloat.java
  org.opencv.core.MatOfFloat
+org/opencv/video/Tracker.java
+ org.opencv.video.Tracker
 org/opencv/core/Scalar.java
  org.opencv.core.Scalar
 org/opencv/features2d/FastFeatureDetector.java
@@ -267,12 +302,16 @@ org/opencv/photo/Photo.java
  org.opencv.photo.Photo
 org/opencv/video/SparsePyrLKOpticalFlow.java
  org.opencv.video.SparsePyrLKOpticalFlow
+org/opencv/features2d/SimpleBlobDetector_Params.java
+ org.opencv.features2d.SimpleBlobDetector_Params
 org/opencv/core/MatOfFloat4.java
  org.opencv.core.MatOfFloat4
 org/opencv/imgproc/Subdiv2D.java
  org.opencv.imgproc.Subdiv2D
 org/opencv/photo/CalibrateCRF.java
  org.opencv.photo.CalibrateCRF
+org/opencv/android/CameraActivity.java
+ org.opencv.android.CameraActivity
 org/opencv/core/TickMeter.java
  org.opencv.core.TickMeter
 org/opencv/features2d/BOWImgDescriptorExtractor.java
@@ -283,6 +322,8 @@ org/opencv/calib3d/Calib3d.java
  org.opencv.calib3d.Calib3d
 org/opencv/core/MatOfDMatch.java
  org.opencv.core.MatOfDMatch
+org/opencv/dnn/Model.java
+ org.opencv.dnn.Model
 org/opencv/calib3d/StereoMatcher.java
  org.opencv.calib3d.StereoMatcher
 org/opencv/dnn/Dnn.java
