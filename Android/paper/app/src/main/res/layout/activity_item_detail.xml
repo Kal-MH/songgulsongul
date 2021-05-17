@@ -16,72 +16,35 @@
         android:text="제품명"
         android:textSize="25dp" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
         android:layout_marginTop="30dp">
 
         <ImageView
             android:id="@+id/item_detail_pic"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_marginStart="15dp"
+            android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/sampleimg" />
 
-        <TextView
-            android:id="@+id/item_detail_cate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="category1/.../category4"
-            android:textSize="18dp"
-            app:layout_constraintStart_toEndOf="@+id/item_detail_pic"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toEndOf="@+id/item_detail_pic"
-            app:layout_constraintTop_toBottomOf="@+id/item_detail_cate">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/item_detail_pic"
-                android:gravity="center"
-                android:text="Brand/Maker"
-                android:textSize="17dp" />
-
-            <TextView
-                android:id="@+id/item_detail_co"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="TextView"
-                android:textSize="14dp"/>
-        </LinearLayout>
-
         <LinearLayout
             android:id="@+id/linearLayout5"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="9dp"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="center"
             app:layout_constraintStart_toEndOf="@+id/item_detail_pic"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+            tools:layout_editor_absoluteY="68dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -90,15 +53,29 @@
                 android:textSize="17dp" />
 
             <TextView
-                android:id="@+id/item_detail_price"
+                android:id="@+id/item_detail_lprice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="TextView"
-                android:textSize="14dp"/>
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=" ~ " />
+
+            <TextView
+                android:id="@+id/item_detail_hprice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

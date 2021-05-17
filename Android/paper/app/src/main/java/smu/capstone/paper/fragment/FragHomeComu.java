@@ -64,11 +64,8 @@ public class FragHomeComu extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) { // 검색 버튼 눌렀을 시 발생
-                // 서버에 query객체 전달 코드 작성
-                // ----------------------------
-
-                // if resultCode == 200
                 Intent intent = new Intent(getActivity(), PostSearchActivity.class);
+                intent.putExtra("keyword",query);
                 startActivity(intent);
                 return true;
             }

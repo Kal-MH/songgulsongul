@@ -53,9 +53,9 @@ const postController_subFunc = {
 
         var sql;
         if (offset == undefined || offset == 0){
-            sql = `select id, login_id, img_profile from user where login_id like'${searchKeyword}%' limit ${db_config.limitation};`;
+            sql = `select id, login_id, img_profile, intro from user where login_id like'${searchKeyword}%' limit ${db_config.limitation};`;
         } else {
-            sql = `select id, login_id, img_profile from user where login_id like'${searchKeyword}%' and id > ${offset} limit ${db_config.limitation};`;
+            sql = `select id, login_id, img_profile, intro from user where login_id like'${searchKeyword}%' and id > ${offset} limit ${db_config.limitation};`;
         }
         connection.query(sql, function (err, result) {
             if (err){
@@ -65,6 +65,7 @@ const postController_subFunc = {
                     'data' : null
                 })
             } else {
+                console.log(result);
                 res.json({
                     'code' : statusCode.OK,
                     'data' : result

@@ -46,6 +46,10 @@ public interface ServiceApi {
     @POST("/api/comment")
     Call<CodeResponse> Comment(@Body CommentData commentData);
 
+    //댓글 삭제
+    @GET("/api/comment/delete")
+    Call<CodeResponse> DeleteComment(@Query("postid") int postid, @Query("commentid") int commentid );
+
     // 회원가입
     @POST("/join")
     Call<CodeResponse> Join(@Body JoinData data);
@@ -105,5 +109,9 @@ public interface ServiceApi {
     //세부 게시글 내용 가져오기
     @GET("/post/{id}")
     Call<JsonObject> GetDetailPost(@Path("id") int id, @Query("userid") int userid);
+
+    // 검색
+    @GET("/post/search")
+    Call<JsonObject> SearchPost(@Query("method") String method , @Query("keyword") String keyword , @Query("offset") int offset);
 
 }

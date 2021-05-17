@@ -1,12 +1,15 @@
 package smu.capstone.paper.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import org.w3c.dom.Comment;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -292,6 +298,49 @@ public class PostActivity extends AppCompatActivity {
 
             }
         });
+
+        View.OnClickListener goProfile = new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PostActivity.this, ProfileActivity.class);
+                // 게시글 사용자 id 전달
+                intent.putExtra("userId", post_user_id.getText());
+                startActivity(intent);
+            }
+        };
+
+        post_user_id.setOnClickListener(goProfile);
+        post_profile.setOnClickListener(goProfile);
+
+        post_cmt_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
+                Log.d("comment", "long click!" +  CommentsData.get(i).getAsJsonObject().get("user_id").getAsInt() + " : "
+                     + LoginSharedPreference.getUserId(PostActivity.this) );
+                if( CommentsData.get(i).getAsJsonObject().get("user_id").getAsInt() == LoginSharedPreference.getUserId(PostActivity.this) ){
+                    //댓글 삭제 알림 팝업
+                    Log.d("comment", "삭제해보자요");
+                    new AlertDialog.Builder(PostActivity.this)
+                            .setTitle("경고")
+                            .setMessage("댓글을 삭제하시겠습니까?")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    deleteComment(CommentsData.get(i).getAsJsonObject().get("id").getAsInt());
+                                }
+                            })
+                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            }
+                            )
+                            .show();
+                }
+                return false;
+            }
+        });
     }
 
 
@@ -353,7 +402,7 @@ public class PostActivity extends AppCompatActivity {
         Glide.with(this).load(RetrofitClient.getBaseUrl() + userData.get("img_profile").getAsString()).into(post_profile);
 
         // 게시글 정보 세팅
-        post_date.setText(postData.get("post_date").getAsString() + postData.get("post_time").getAsString());
+        post_date.setText(postData.get("post_date").getAsString() + "\n" + postData.get("post_time").getAsString());
         post_text.setText(postData.get("text").getAsString());
         Glide.with(this).load(RetrofitClient.getBaseUrl() + postData.get("image").getAsString()).into(post_pic);
 
@@ -447,6 +496,32 @@ public class PostActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    public void deleteComment(int id){
+        serviceApi.DeleteComment(post_id,id).enqueue(new Callback<CodeResponse>() {
+            @Override
+            public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                int resultCode = response.body().getCode();
+                if( resultCode == statusCode.RESULT_OK){
+                    //다시 불러오기.. 아니면 댓글만 가져오는 코드 짜야함!
+                    Toast.makeText(PostActivity.this, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                    getData();
+                }
+                else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                    Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                }
+                else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                    Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CodeResponse> call, Throwable t) {
+                Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
     }
 
 }

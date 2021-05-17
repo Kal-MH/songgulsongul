@@ -34,6 +34,7 @@ import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
+import smu.capstone.paper.activity.ProfileActivity;
 import smu.capstone.paper.data.CodeResponse;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
@@ -188,9 +189,10 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                     }
                 });
-
             }
         });
+
+
 
 
         View.OnClickListener goPostActivity = new View.OnClickListener() {
@@ -202,9 +204,22 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 context.startActivity(intent);
             }
         };
+        View.OnClickListener goProfile = new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ProfileActivity.class);
+                // 게시글 사용자 id 전달
+                intent.putExtra("userId", item.get("user").getAsJsonObject().get("login_id").getAsString());
+                context.startActivity(intent);
+            }
+        };
+
        holder.comment.setOnClickListener(goPostActivity);
        holder.picture.setOnClickListener(goPostActivity);
        holder.text.setOnClickListener(goPostActivity);
+
+       holder.user_id.setOnClickListener(goProfile);
+       holder.profile_image.setOnClickListener(goProfile);
     }
 
 
