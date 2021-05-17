@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
 
@@ -29,6 +31,7 @@ import retrofit2.Response;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.adapter.PostImageAdapter;
+import smu.capstone.paper.adapter.UserlistAdapter;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -36,47 +39,30 @@ import smu.capstone.paper.server.StatusCode;
 public class FragPostAccount extends Fragment {
 
     private View view;
-    //ArrayList<PostItem> items = new ArrayList<PostItem>();
-    PostImageAdapter adapter;
+    UserlistAdapter adapter;
 
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
     JsonObject accountData;
 
-    GridView gridView;
+    RecyclerView recyclerView;
     String keyword;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_post_account, container, false);
 
-        gridView = view.findViewById(R.id.frag_account_grid);
+
+        view = (ViewGroup) inflater.inflate(R.layout.frag_post_account, container, false);
+        recyclerView = view.findViewById(R.id.frag_account_rv);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
 
 
         //Activity에서 가져옴
         keyword = this.getArguments().getString("keyword");
         getAccountData();
-
-
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                Intent intent = new Intent(getContext(), PostActivity.class);
-
-/*                // 게시글 id 전달
-                int postId = obj.getAsJsonArray("data").get(position).getAsJsonObject().get("post_id").getAsInt();
-                intent.putExtra("postId", postId);
-
-                startActivity(intent);
-
-                Log.d("TAG", position + "is Clicked");      // Can not getting this method.*/
-
-            }
-        });
 
         return view;
     }
@@ -155,14 +141,14 @@ public class FragPostAccount extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setAccountData(){
-     /*   if(accountData.get("data").getAsJsonArray().size() == 0)
-            gridView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
+        if(accountData.get("data").getAsJsonArray().size() == 0)
+            recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
 
         else
-            gridView.setBackgroundColor(Color.argb(0,10,10,10));
+            recyclerView.setBackgroundColor(Color.argb(0,10,10,10));
 
-        adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, accountData);
-        gridView.setAdapter(adapter);*/
+        adapter = new UserlistAdapter(this.getContext(),accountData);
+        recyclerView.setAdapter(adapter);
 
     }
 

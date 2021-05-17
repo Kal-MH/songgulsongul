@@ -77,7 +77,7 @@ public class PostSearchActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 keyword = query;
                 if(status == ACCOUNT){
-                    //fragPostAccount.getAccountData(query);
+                    fragPostAccount.getAccountData(query);
                 }
                 else if( status == POSTTAG){
                     fragPostTag.getTagData(query);
