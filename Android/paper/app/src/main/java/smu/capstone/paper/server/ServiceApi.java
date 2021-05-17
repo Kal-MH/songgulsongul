@@ -110,4 +110,8 @@ public interface ServiceApi {
     @GET("/post/{id}")
     Call<JsonObject> GetDetailPost(@Path("id") int id, @Query("userid") int userid);
 
+    // 검색
+    @GET("/post/search")
+    Call<JsonObject> SearchPost(@Query("method") String method , @Query("keyword") String keyword , @Query("offset") int offset);
+
 }
