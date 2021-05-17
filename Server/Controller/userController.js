@@ -7,6 +7,10 @@
  var apiController = require("./apiController");
  var statusCode = require("../config/serverStatusCode");
 
+ const fs = require("fs");
+ const path = require("path");
+ const mime = require("mime");
+
  var userController = {
      // 프로필
      userProfilePost : function (req, res) {
@@ -383,9 +387,10 @@
        const new_id = req.body.new_id; // 변경된 아이디
        const new_intro = req.body.new_intro;
        const new_sns = req.body.new_SNS;
-       const new_image = req.body.profile_image;
+       const new_image = req.file.path;
        var param = [id];
        var check_cnt = 0;
+       console.log(new_image);
 
        var sql = 'SELECT * FROM user WHERE login_id = ?;';
        connection.query(sql, param, function(err, rows){

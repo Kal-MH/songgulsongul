@@ -42,9 +42,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 
 import javax.net.ssl.SSLEngineResult;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -352,8 +356,28 @@ public class EditProfileActivity extends AppCompatActivity {
                 else
                     profile_modify_check = NO;
 
+                File file = new File(profile_img_path);
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("image_file", file.getName(), requestFile);
+
                 String new_sns = profile_new_sns.getText().toString().trim();
-                ProfileEditData data = new ProfileEditData(id_modify_check, profile_sns_check, profile_modify_check, login_id, new_intro, new_sns, profile_img_path);
+
+                RequestBody id_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(id_modify_check));
+                RequestBody sns_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(profile_sns_check));
+                RequestBody profile_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(profile_modify_check));
+                RequestBody login_id_body = RequestBody.create(MediaType.parse("text/plain"), login_id);
+                RequestBody new_intro_body = RequestBody.create(MediaType.parse("text/plain"), new_intro);
+                RequestBody new_sns_body = RequestBody.create(MediaType.parse("text/plain"), new_sns);
+
+                HashMap<String, RequestBody> requestMap = new HashMap<>();
+                requestMap.put("id_check_flag", id_flag_body);
+                requestMap.put("sns_check_flag", sns_flag_body);
+                requestMap.put("img_check_flag", profile_flag_body);
+                requestMap.put("login_id", login_id_body);
+                requestMap.put("new_intro", new_intro_body);
+                requestMap.put("new_SNS", new_sns_body);
+
+                //ProfileEditData data = new ProfileEditData(id_modify_check, profile_sns_check, profile_modify_check, login_id, new_intro, new_sns);
 
                 if(id_check == NO){
                     new AlertDialog.Builder(EditProfileActivity.this)
@@ -381,9 +405,11 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
                 }
                 if(id_check == YES){
-                    if(id_modify_check == YES)
-                        data.setNewId(new_id);
-                    serviceApi.EditProfile(data).enqueue(new Callback<CodeResponse>() {
+                    if(id_modify_check == YES) {
+                        RequestBody new_id_body = RequestBody.create(MediaType.parse("text/plain"), new_id);
+                        requestMap.put("new_id", new_id_body);
+                    }
+                    serviceApi.EditProfile(requestMap, body).enqueue(new Callback<CodeResponse>() {
                         @Override
                         public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                             CodeResponse result = response.body();
