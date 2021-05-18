@@ -365,12 +365,14 @@
          else{
            resultCode = statusCode.OK;
 
+           console.log(rows);
+
            res.json({
              'code': resultCode,
              'profileImg': rows[0].img_profile,
-             'intro': rows[0].intro,
-             'sns': rows[0].sns_url,
-             'snsCheck': rows[0].sns_check,
+             'intro': rows[0].intro == null ? "" : rows[0].intro,
+             'sns': rows[0].sns_url == null ? "" : rows[0].sns_url,
+             'snsCheck': rows[0].sns_check == null ? 0 : rows[0].sns_check,
              'defaultImg': default_img
            })
            console.log(resultCode)
@@ -387,10 +389,18 @@
        const new_id = req.body.new_id; // 변경된 아이디
        const new_intro = req.body.new_intro;
        const new_sns = req.body.new_SNS;
-       const new_image = req.file.path;
+       var new_image = req.file.path;
        var param = [id];
        var check_cnt = 0;
+
+       // 수정
+       var fileString = `${req.file.path}`;
+       new_image = "/"+fileString.replace(/\\/g, '/');
+       //new_image = "/public/default/user.png";
+
+       console.log("here");
        console.log(new_image);
+       // 수정 end
 
        var sql = 'SELECT * FROM user WHERE login_id = ?;';
        connection.query(sql, param, function(err, rows){

@@ -39,7 +39,7 @@ const postController_subFunc = {
                             break ;
                     }
                 }
-                console.log(result)
+                //console.log(result)
                 res.json({
                     'code' : statusCode.OK,
                     'data' : data
@@ -122,7 +122,7 @@ const postController_subFunc = {
                 }
                 data.push(info);
             }
-            console.log(data);
+            //console.log(data);
             res.json({
                 'code' : statusCode,
                 'data' : data

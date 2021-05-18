@@ -7,7 +7,7 @@ const multer = require("multer");
 
 var profileStorage = multer.diskStorage({
     destination : function (req, file, cb) {
-        cb(null, "upload/profile")
+        cb(null, "upload/profile/")
     }, 
     filename : function (req, file, cb) {
         var mimeType;
@@ -35,7 +35,7 @@ var profileStorage = multer.diskStorage({
 
 var postStorage = multer.diskStorage({
     destination : function (req, file, cb) {
-        cb(null, "upload/post")
+        cb(null, "upload/post/")
     }, 
     filename : function (req, file, cb) {
         var mimeType;
