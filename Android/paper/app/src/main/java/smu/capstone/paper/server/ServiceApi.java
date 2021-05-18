@@ -98,7 +98,7 @@ public interface ServiceApi {
 
     //프로필 수정
     @Multipart
-    @POST("/user/profile-edit/upload")
+    @POST("/user/profile-edit")
     Call<CodeResponse> EditProfile(@PartMap Map<String, RequestBody> params, @Part MultipartBody.Part File);
 
     //회원 탈퇴

@@ -74,7 +74,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private ImageView profile_set_img;
     private static final int REQUEST_CODE = 0;
     private int profile_sns_check;
-    private String login_id, new_id, profile_img_path, profile_img_default, profile_img_old;
+    private String login_id, new_id, profile_img_default, profile_img_old, profile_img_path;
     private int id_check, id_modify_check, profile_modify_check;
     private int NO = 0;
     private int YES = 1;
@@ -358,7 +358,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 File file = new File(profile_img_path);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
-                MultipartBody.Part body = MultipartBody.Part.createFormData("image_file", file.getName(), requestFile);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("img_profile", file.getName(), requestFile);
 
                 String new_sns = profile_new_sns.getText().toString().trim();
 
@@ -404,7 +404,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                 .show();
                     }
                 }
-                if(id_check == YES){
+                else if(id_check == YES){
                     if(id_modify_check == YES) {
                         RequestBody new_id_body = RequestBody.create(MediaType.parse("text/plain"), new_id);
                         requestMap.put("new_id", new_id_body);
@@ -552,6 +552,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 if(uri != null){
                     profile_set_img.setImageURI(uri);
                     profile_img_path = createCopyAndReturnRealPath(this, uri);
+                    Log.d("img_path", profile_img_path);
                 }
             }
         }

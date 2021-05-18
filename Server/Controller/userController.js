@@ -445,9 +445,10 @@
            }
 
            // 기존 프로필 이미지와 비교 후 db갱신
-           if(is_img_check === 1){
+           if(Number(is_img_check) === 1){
              sql += 'UPDATE user SET img_profile = ? WHERE login_id = ?;';
              param.push(new_image, id)
+             console.log("이거실행");
              check_cnt += 1;
            }
 

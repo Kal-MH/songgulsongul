@@ -312,9 +312,10 @@ public class ProfileActivity extends AppCompatActivity {
 
             String img_addr = obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("profile_image").getAsString();
             String base_url = RetrofitClient.getBaseUrl();
-            if(img_addr.equals(profile_img_default))
-                img_addr = base_url + img_addr;
-            Glide.with(this).load( img_addr).into(profile_userimage);
+//            if(img_addr.equals(profile_img_default))
+//                img_addr = base_url + img_addr;
+            Glide.with(this).load(base_url + img_addr).into(profile_userimage);
+            Log.d("profile_img", img_addr);
 
             feed_count_tv.setText(obj.getAsJsonArray("postInfo").isJsonNull() ?
                     0 + "" : obj.getAsJsonArray("postInfo").size() + "");
