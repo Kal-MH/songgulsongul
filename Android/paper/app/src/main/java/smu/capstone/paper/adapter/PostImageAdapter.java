@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.item.PostItem;
+import smu.capstone.paper.server.RetrofitClient;
 
 
 public class PostImageAdapter extends BaseAdapter {
@@ -55,7 +56,8 @@ public class PostImageAdapter extends BaseAdapter {
 
     // 받아온 데이터로 게시글 내용 셋팅
     public void setItem(ImageView imageView, JsonElement item){
-            Glide.with(mContext).load(item.getAsJsonObject().get("image").getAsString()).into(imageView); // 게시물 사진
+        String img_addr = RetrofitClient.getBaseUrl() + item.getAsJsonObject().get("image").getAsString();
+        Glide.with(mContext).load(img_addr).into(imageView); // 게시물 사진
     }
 
     //삭제할 코드 --> 컴파일용 임시로 둠

@@ -25,6 +25,7 @@ import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.fragment.FragFollower;
 import smu.capstone.paper.fragment.FragFollowing;
+import smu.capstone.paper.server.RetrofitClient;
 
 public class FollowActivity extends AppCompatActivity {
     private FragmentManager fm;
@@ -69,7 +70,9 @@ public class FollowActivity extends AppCompatActivity {
         actionBar.setTitle(LoginSharedPreference.getLoginId(this)); // 사용자 아이디 추가
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
-        Glide.with(FollowActivity.this).load(intent.getStringExtra("picture")).into(follow_img);
+
+        String base_url = RetrofitClient.getBaseUrl();
+        Glide.with(FollowActivity.this).load(base_url + intent.getStringExtra("picture")).into(follow_img);
         follow_intro.setText(intent.getStringExtra("intro"));
         user_id = intent.getStringExtra("userId");
         final Bundle bundle = new Bundle();
