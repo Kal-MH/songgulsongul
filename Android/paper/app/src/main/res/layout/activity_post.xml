@@ -223,15 +223,19 @@
                 android:id="@+id/post_hashtag_rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:orientation="horizontal"
-                tools:listitem="@layout/post_hashtag_item"/>
+                tools:listitem="@layout/post_hashtag_item" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/post_itemtag_rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:orientation="horizontal"
-                tools:listitem="@layout/itemtag_item"/>
+                tools:listitem="@layout/itemtag_item" />
 
 
             <smu.capstone.paper.layout.MyListView

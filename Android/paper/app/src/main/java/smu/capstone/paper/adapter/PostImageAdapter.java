@@ -13,30 +13,21 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
 import smu.capstone.paper.R;
 import smu.capstone.paper.item.PostItem;
+
 import smu.capstone.paper.server.RetrofitClient;
 
 
 public class PostImageAdapter extends BaseAdapter {
 
     private Context mContext;
-    ArrayList<PostItem> items;
     JsonObject obj = new JsonObject();
     JsonArray dataList;
     LayoutInflater inf;
     int itemCnt;
     int layout;
 
-    public PostImageAdapter(Context mContext) {
-        this.mContext = mContext;
-    }
     public PostImageAdapter(Context mContext, int layout, JsonObject obj){
         this.mContext = mContext;
         inf =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -48,8 +39,10 @@ public class PostImageAdapter extends BaseAdapter {
 
     // 받아온 데이터로 게시글 내용 셋팅
     public void setItem(ImageView imageView, JsonElement item){
+
         String img_addr = RetrofitClient.getBaseUrl() + item.getAsJsonObject().get("image").getAsString();
         Glide.with(mContext).load(img_addr).into(imageView); // 게시물 사진
+
     }
 
     @Override

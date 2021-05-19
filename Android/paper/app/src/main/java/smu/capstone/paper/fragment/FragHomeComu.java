@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.JsonObject;
 
@@ -20,27 +22,39 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.activity.PostSearchActivity;
 import smu.capstone.paper.adapter.PostImageAdapter;
-import smu.capstone.paper.item.HomeFeedItem;
-import smu.capstone.paper.item.PostItem;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class FragHomeComu extends Fragment {
     private View view;
     private SearchView searchView;
+    GridView gridView;
+    SwipeRefreshLayout swipeRefreshLayout;
+
     PostImageAdapter adapter;
-    JsonObject post_data;
+    JsonObject postData;
+
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+    StatusCode statusCode;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_home_comu, container, false);
 
+        // id 세팅
+        gridView = view.findViewById(R.id.comu_grid);
         searchView = view.findViewById(R.id.comu_search);
+        swipeRefreshLayout = view.findViewById(R.id.comu_refresh_layout);
+
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,11 +64,8 @@ public class FragHomeComu extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) { // 검색 버튼 눌렀을 시 발생
-                // 서버에 query객체 전달 코드 작성
-                // ----------------------------
-
-                // if resultCode == 200
                 Intent intent = new Intent(getActivity(), PostSearchActivity.class);
+                intent.putExtra("keyword",query);
                 startActivity(intent);
                 return true;
             }
@@ -65,15 +76,18 @@ public class FragHomeComu extends Fragment {
             }
         });
 
-        // view에서 id 찾아야함
-        GridView gridView = view.findViewById(R.id.comu_grid);
-        final JsonObject obj = getPostData();
-
-        // 어뎁터 적용
-        adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, obj);
-        gridView.setAdapter(adapter);
+        GetCommunityData();
 
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // cancel the Visual indication of a refresh
+                swipeRefreshLayout.setRefreshing(false);
+                //데이터 변경
+                GetCommunityData();
+            }
+        });
         //Click Listener
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -82,11 +96,11 @@ public class FragHomeComu extends Fragment {
                 Intent intent = new Intent(getContext(), PostActivity.class);
 
                 // 게시글 id 전달
-                int postId = obj.getAsJsonArray("data").get(position).getAsJsonObject().get("id").getAsInt();
-                intent.putExtra("postId", postId);
+                int postId = postData.getAsJsonArray("data").get(position).getAsJsonObject().get("id").getAsInt();
+                intent.putExtra("post_id", postId);
 
                 startActivity(intent);
-                Log.d("TAG", position + "is Clicked");      // Can not getting this method.
+                Log.d("TAG", position + "is Clicked");
             }
         });
 
@@ -96,26 +110,41 @@ public class FragHomeComu extends Fragment {
     }
 
     //server에서 data전달
-    public JsonObject getPostData(){
-        post_data = new JsonObject();
-        JSONObject item = new JSONObject();
-        JSONArray arr= new JSONArray();
-        int pid = 1;
+    public void GetCommunityData(){
+        serviceApi.GetCommunity(20).enqueue((new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonObject result = response.body();
 
-        //임시 데이터 저장
-        try{
-            for(int i = 0; i < 10; i++){
-                JSONObject obj = new JSONObject();
-                obj.put("image", R.drawable.sampleimg);
-                obj.put("post_id", pid);
-                pid++;
-                arr.put(obj);
+                int resultCode = result.get("code").getAsInt();
+                if(resultCode == statusCode.RESULT_SERVER_ERR){
+                    Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
+                }
+                else if( resultCode == statusCode.RESULT_OK){
+                    postData = result;
+                }
+                else {
+                    postData=result;
+                }
+
+                setData();
             }
-            item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return post_data;
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+              //  feeds = new JsonObject();
+                Log.d("feed" , "통신 실패");
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        }));
+    }
+
+    public  void setData(){
+        // 어뎁터 적용
+        adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, postData);
+        gridView.setAdapter(adapter);
     }
 
 }

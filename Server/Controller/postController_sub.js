@@ -53,9 +53,9 @@ const postController_subFunc = {
 
         var sql;
         if (offset == undefined || offset == 0){
-            sql = `select id, login_id, img_profile from user where login_id like'${searchKeyword}%' limit ${db_config.limitation};`;
+            sql = `select id, login_id, img_profile, intro from user where login_id like'${searchKeyword}%' limit ${db_config.limitation};`;
         } else {
-            sql = `select id, login_id, img_profile from user where login_id like'${searchKeyword}%' and id > ${offset} limit ${db_config.limitation};`;
+            sql = `select id, login_id, img_profile, intro from user where login_id like'${searchKeyword}%' and id > ${offset} limit ${db_config.limitation};`;
         }
         connection.query(sql, function (err, result) {
             if (err){
@@ -65,6 +65,7 @@ const postController_subFunc = {
                     'data' : null
                 })
             } else {
+                console.log(result);
                 res.json({
                     'code' : statusCode.OK,
                     'data' : result
@@ -82,7 +83,14 @@ const postController_subFunc = {
                     text : postData[0][0].text,
                     post_time : postData[0][0].post_time,
                     post_date : postData[0][0].post_date,
-                    user_id : postData[0][0].user_id
+                    user_id : postData[0][0].user_id,
+                    ccl : {
+                        ccl_cc : postData[0][0].ccl_cc,
+                        ccl_a : postData[0][0].ccl_a,
+                        ccl_nc : postData[0][0].ccl_nc,
+                        ccl_nd : postData[0][0].ccl_nd,
+                        ccl_sa : postData[0][0].ccl_sa,
+                    }
                 },
                 user : { //작성자 정보
                     login_id : postData[0][0].login_id,
@@ -95,6 +103,7 @@ const postController_subFunc = {
                 likeOnset : (likeKeep && likeKeep.likeOnset == 1) ? 1 : 0, //현재 작성자가 좋아요 눌렀는 지에 대한 여부
                 keepOnset :  (likeKeep && likeKeep.keepOnset == 1) ? 1 : 0 //현재 작성자가 보관하기 눌렀는 지에 대한 여부
             }
+            console.log(data);
             res.json({
                 'code' : statusCode,
                 'data' : data
