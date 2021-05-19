@@ -10,6 +10,27 @@ public class User {
     int user_id;
     String login_id;
     String img_profile;
+    String intro;
+    String sns;
+    int point;
+
+    int flag;
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public String getSns() {
+        return sns;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public String getIntro() {
+        return intro;
+    }
 
     public int getUser_id() {
         return user_id;

@@ -20,9 +20,14 @@ import smu.capstone.paper.data.IdData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.LoginData;
+import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.responseData.PostFeedResponse;
 import smu.capstone.paper.data.UserData;
 import smu.capstone.paper.responseData.LoginResponse;
+import smu.capstone.paper.responseData.PostResponse;
+import smu.capstone.paper.responseData.ProfileResponse;
+import smu.capstone.paper.responseData.SearchIdResponse;
 
 public interface ServiceApi {
     // 아이디 중복체크
@@ -55,7 +60,7 @@ public interface ServiceApi {
   
     // 프로필
     @POST("/user/profile")
-    Call<JsonObject> Profile(@Body UserData data);
+    Call<ProfileResponse> Profile(@Body UserData data);
 
     // 팔로우하기
     @POST("/user/follow")
@@ -103,14 +108,17 @@ public interface ServiceApi {
 
     //커뮤니트 게시글 가져오기
     @GET("/post/community")
-    Call<JsonObject> GetCommunity(@Query("offset") int offset);
+    Call<PostListResponse> GetCommunity(@Query("offset") int offset);
 
     //세부 게시글 내용 가져오기
     @GET("/post/{id}")
-    Call<JsonObject> GetDetailPost(@Path("id") int id, @Query("userid") int userid);
+    Call<PostResponse> GetDetailPost(@Path("id") int id, @Query("userid") int userid);
 
     // 검색
-    @GET("/post/search")
-    Call<JsonObject> SearchPost(@Query("method") String method , @Query("keyword") String keyword , @Query("offset") int offset);
+    @GET("/post/search/id")
+    Call<SearchIdResponse> SearchPostId(@Query("keyword") String keyword , @Query("offset") int offset);
+
+    @GET("/post/search/tag")
+    Call<PostListResponse> SearchPostTag(@Query("keyword") String keyword , @Query("offset") int offset);
 
 }

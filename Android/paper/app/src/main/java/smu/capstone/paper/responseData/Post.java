@@ -1,13 +1,21 @@
 package smu.capstone.paper.responseData;
 
-
 public class Post {
-    public Post(int id, String image, String text, String post_time, String post_date) {
+    int id;
+    String image;
+    String text;
+    String post_time;
+    String post_date;
+
+    Ccl ccl;
+
+    public Ccl getCcl() {
+        return ccl;
+    }
+
+    public Post(int id, String image) {
         this.id = id;
         this.image = image;
-        this.text = text;
-        this.post_time = post_time;
-        this.post_date = post_date;
     }
 
     public int getId() {
@@ -30,9 +38,4 @@ public class Post {
         return post_date;
     }
 
-    int id;
-    String image;
-    String text;
-    String post_time;
-    String post_date;
 }

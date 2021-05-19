@@ -17,11 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import com.google.gson.JsonObject;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,6 +25,8 @@ import retrofit2.Response;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.adapter.PostImageAdapter;
+import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -43,7 +41,7 @@ public class FragPostTag extends Fragment {
 
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
-    JsonObject tagData;
+    List<Post> tagData;
 
     @Nullable
     @Override
@@ -63,11 +61,11 @@ public class FragPostTag extends Fragment {
                 Intent intent = new Intent(getContext(), PostActivity.class);
 
                 // 게시글 id 전달
-                int postId = tagData.get("data").getAsJsonArray().get(position).getAsJsonObject().get("post_id").getAsInt();
+                int postId = tagData.get(position).getId();
                 intent.putExtra("post_id", postId);
 
                 startActivity(intent);
-                Log.d("TAG", position + "is Clicked");
+                Log.d("TAG", position + "is Clicked" + postId);
 
             }
         });
@@ -79,30 +77,28 @@ public class FragPostTag extends Fragment {
     public void getTagData(){
        Log.d("search" , "FragPostTag--> " + keyword);
 
-        serviceApi.SearchPost("tag",keyword, 0 ).enqueue(new Callback<JsonObject>() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        serviceApi.SearchPostTag(keyword, 0 ).enqueue(new Callback<PostListResponse>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject result = response.body();
-
-                int resultCode = result.get("code").getAsInt();
+            public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
+                PostListResponse result = response.body();
+                int resultCode = result.getCode();
                 if(resultCode == statusCode.RESULT_SERVER_ERR){
                     Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                     // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
                 }
                 else if( resultCode == statusCode.RESULT_OK){
-                    tagData = result;
+                    tagData = result.getData();
                 }
                 else {
-                    tagData=result;
+                    tagData = result.getData();
                 }
                 setTagData();
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<PostListResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                tagData = new JsonObject();
+                tagData = null;
                 Log.d("feed" , "통신 실패");
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
@@ -113,30 +109,29 @@ public class FragPostTag extends Fragment {
     public void getTagData(String query){
         Log.d("search" , "FragPostTag--> " + query);
 
-        serviceApi.SearchPost("tag",query, 0 ).enqueue(new Callback<JsonObject>() {
+        serviceApi.SearchPostTag(query, 0 ).enqueue(new Callback<PostListResponse>() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject result = response.body();
-
-                int resultCode = result.get("code").getAsInt();
+            public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
+                PostListResponse result = response.body();
+                int resultCode = result.getCode();
                 if(resultCode == statusCode.RESULT_SERVER_ERR){
                     Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                     // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
                 }
                 else if( resultCode == statusCode.RESULT_OK){
-                    tagData = result;
+                    tagData = result.getData();
                 }
                 else {
-                    tagData=result;
+                    tagData = result.getData();
                 }
                 setTagData();
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<PostListResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                tagData = new JsonObject();
+                tagData = null;
                 Log.d("feed" , "통신 실패");
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
@@ -146,7 +141,7 @@ public class FragPostTag extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setTagData(){
-        if(tagData.get("data").getAsJsonArray().size() == 0)
+        if(tagData.size() == 0)
             gridView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
 
         else

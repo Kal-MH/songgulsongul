@@ -14,17 +14,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 import smu.capstone.paper.R;
+import smu.capstone.paper.responseData.HashTag;
 
 public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHolder>{
     Context context;
-    JsonArray dataList;
+    List<HashTag> dataList;
     LayoutInflater inf;
     int hashCnt;
     int layout;
 
 
-    public HashTagAdapter(Context context, JsonArray obj){
+    public HashTagAdapter(Context context, List<HashTag>  obj){
         this.context = context;
         dataList = obj;
         hashCnt = dataList.size();
@@ -41,8 +44,8 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHold
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull HashTagAdapter.ViewHolder holder, final int position) {
-        JsonObject item = dataList.get(position).getAsJsonObject();
-        holder.content.setText("#"+item.get("text").getAsString() +" ");
+        HashTag item = dataList.get(position);
+        holder.content.setText("#"+item.getText() +" ");
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

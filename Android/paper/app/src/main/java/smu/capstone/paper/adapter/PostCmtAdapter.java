@@ -11,19 +11,22 @@ import android.widget.TextView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.activity.ProfileActivity;
+import smu.capstone.paper.responseData.Comment;
 
 public class PostCmtAdapter extends BaseAdapter {
 
     ViewHolder holder;
     Context context;
-    JsonArray dataList;
+    List<Comment> dataList;
     int cmtCnt;
 
 
-    public PostCmtAdapter (Context context, JsonArray obj)  {
+    public PostCmtAdapter (Context context, List<Comment>  obj)  {
         this.context = context;
         dataList = obj;
         cmtCnt = dataList.size();
@@ -50,16 +53,16 @@ public class PostCmtAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final JsonObject item = dataList.get(position).getAsJsonObject();
-        holder.userId.setText(item.get("login_id").getAsString());
-        holder.cmt.setText(item.get("text").getAsString());
+        final Comment item = dataList.get(position);
+        holder.userId.setText(item.getLogin_id());
+        holder.cmt.setText(item.getText());
 
         holder.userId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ProfileActivity.class);
                 // 게시글 사용자 id 전달
-                intent.putExtra("userId",item.get("login_id").getAsString());
+                intent.putExtra("userId",item.getLogin_id());
                 context.startActivity(intent);
             }
         });
@@ -67,11 +70,11 @@ public class PostCmtAdapter extends BaseAdapter {
         return convertView;
     }
     @Override public long getItemId(int position) {
-        return dataList.get(position).getAsJsonObject().get("id").getAsLong();
+        return dataList.get(position).getId();
     }
 
     @Override public Object getItem(int position) {
-        return dataList.get(position).getAsJsonObject();
+        return dataList.get(position);
     }
 
     static class ViewHolder{

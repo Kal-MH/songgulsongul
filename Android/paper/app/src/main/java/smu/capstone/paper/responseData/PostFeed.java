@@ -5,6 +5,10 @@ public class PostFeed {
     User user;
     int commentsNum;
 
+    int likeNum;
+    int likeOnset;
+    int keepOnset;
+
     public Post getPost() {
         return post;
     }
@@ -57,8 +61,5 @@ public class PostFeed {
         this.keepOnset = keepOnset;
     }
 
-    int likeNum;
-    int likeOnset;
-    int keepOnset;
 }
 

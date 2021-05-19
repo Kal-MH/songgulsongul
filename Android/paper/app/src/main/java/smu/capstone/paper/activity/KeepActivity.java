@@ -20,10 +20,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +36,7 @@ import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.PostImageAdapter;
 import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.UserData;
+import smu.capstone.paper.responseData.Post;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -90,9 +94,12 @@ public class KeepActivity extends AppCompatActivity {
     }
 
     public void setKeepData(JsonObject data){
-        JsonObject keep_info = new JsonObject();
+        List<Post> keep_info = null;
         JsonArray keep_info_arr = data.getAsJsonArray("keepInfo");
-        keep_info.add("data", keep_info_arr);
+        for( JsonElement i :keep_info_arr){
+            keep_info.add(new Post(i.getAsJsonObject().get("id").getAsInt() , i.getAsJsonObject().get("image").getAsString()));
+        }
+
 
         // 로그인한 Id로 셋팅
         keep_id.setText(login_id);
