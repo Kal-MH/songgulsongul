@@ -16,11 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.gson.JsonObject;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,6 +25,8 @@ import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.activity.PostSearchActivity;
 import smu.capstone.paper.adapter.PostImageAdapter;
+import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -40,7 +38,7 @@ public class FragHomeComu extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
 
     PostImageAdapter adapter;
-    JsonObject postData;
+    List<Post> postData;
 
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
@@ -96,7 +94,7 @@ public class FragHomeComu extends Fragment {
                 Intent intent = new Intent(getContext(), PostActivity.class);
 
                 // 게시글 id 전달
-                int postId = postData.getAsJsonArray("data").get(position).getAsJsonObject().get("id").getAsInt();
+                int postId = postData.get(position).getId();
                 intent.putExtra("post_id", postId);
 
                 startActivity(intent);
@@ -111,28 +109,28 @@ public class FragHomeComu extends Fragment {
 
     //server에서 data전달
     public void GetCommunityData(){
-        serviceApi.GetCommunity(20).enqueue((new Callback<JsonObject>() {
+        serviceApi.GetCommunity(20).enqueue((new Callback<PostListResponse>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject result = response.body();
+            public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
+                PostListResponse result = response.body();
 
-                int resultCode = result.get("code").getAsInt();
+                int resultCode = result.getCode();
                 if(resultCode == statusCode.RESULT_SERVER_ERR){
                     Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                     // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
                 }
                 else if( resultCode == statusCode.RESULT_OK){
-                    postData = result;
+                    postData = result.getData();
                 }
                 else {
-                    postData=result;
+                    postData = result.getData();
                 }
 
                 setData();
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<PostListResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
               //  feeds = new JsonObject();
                 Log.d("feed" , "통신 실패");

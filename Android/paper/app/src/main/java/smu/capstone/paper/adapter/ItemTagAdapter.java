@@ -16,16 +16,19 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.ItemDetailActivity;
+import smu.capstone.paper.responseData.ItemTag;
 import smu.capstone.paper.server.RetrofitClient;
 
 public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHolder> {
     Context context;
-    JsonArray dataList;
+    List<ItemTag> dataList;
     int itemCnt;
 
-    public ItemTagAdapter(Context context, JsonArray obj) {
+    public ItemTagAdapter(Context context, List<ItemTag>  obj) {
         this.context = context;
 
         dataList =obj;
@@ -44,19 +47,19 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-        JsonObject item = dataList.get(position).getAsJsonObject();
-        Glide.with(context).load(RetrofitClient.getBaseUrl() + item.get("picture").getAsString() ).into(holder.pic); // 게시물 사진
+        final ItemTag item = dataList.get(position);
+        Glide.with(context).load(RetrofitClient.getBaseUrl() + item.getPicture() ).into(holder.pic); // 게시물 사진
 
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ItemDetailActivity.class);
-                intent.putExtra("id" , dataList.get(position).getAsJsonObject().get("id").getAsInt());
-                intent.putExtra("name" , dataList.get(position).getAsJsonObject().get("name").getAsString());
-                intent.putExtra("hprice" , dataList.get(position).getAsJsonObject().get("hprice").getAsInt());
-                intent.putExtra("lprice" , dataList.get(position).getAsJsonObject().get("lprice").getAsInt());
-                intent.putExtra("url" , dataList.get(position).getAsJsonObject().get("url").getAsString());
-                intent.putExtra("picture" , dataList.get(position).getAsJsonObject().get("picture").getAsString());
+                intent.putExtra("id" , item.getId());
+                intent.putExtra("name" ,  item.getName());
+                intent.putExtra("hprice" ,  item.getH_price());
+                intent.putExtra("lprice" ,  item.getL_price());
+                intent.putExtra("url" ,  item.getUrl());
+                intent.putExtra("picture" ,  item.getPicture());
                 context.startActivity(intent);
             }
         });

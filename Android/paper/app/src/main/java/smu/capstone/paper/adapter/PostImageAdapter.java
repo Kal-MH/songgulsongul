@@ -13,8 +13,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 import smu.capstone.paper.R;
-import smu.capstone.paper.item.PostItem;
+import smu.capstone.paper.responseData.Post;
 
 import smu.capstone.paper.server.RetrofitClient;
 
@@ -22,26 +24,24 @@ import smu.capstone.paper.server.RetrofitClient;
 public class PostImageAdapter extends BaseAdapter {
 
     private Context mContext;
-    JsonObject obj = new JsonObject();
-    JsonArray dataList;
+    List<Post> dataList;
     LayoutInflater inf;
     int itemCnt;
     int layout;
 
-    public PostImageAdapter(Context mContext, int layout, JsonObject obj){
+    public PostImageAdapter(Context mContext, int layout, List<Post> dataList){
         this.mContext = mContext;
         inf =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.layout = layout;
-        this.obj = obj;
-        dataList = obj.getAsJsonArray("data");
+        this.dataList = dataList;
         itemCnt = dataList.size();
     }
 
     // 받아온 데이터로 게시글 내용 셋팅
-    public void setItem(ImageView imageView, JsonElement item){
 
-        String img_addr = RetrofitClient.getBaseUrl() + item.getAsJsonObject().get("image").getAsString();
-        Glide.with(mContext).load(img_addr).into(imageView); // 게시물 사진
+    public void setItem(ImageView imageView, Post item){
+            Glide.with(mContext).load(RetrofitClient.getBaseUrl()+item.getImage())
+                    .into(imageView); // 게시물 사진
 
     }
 
@@ -52,8 +52,7 @@ public class PostImageAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        JsonElement item = dataList.get(position);
-        return item;
+        return  dataList.get(position);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class PostImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        JsonElement item = dataList.get(position);
+        Post post = (Post)dataList.get(position);
 
         if (convertView == null)
             convertView = inf.inflate(layout, null);
@@ -71,7 +70,7 @@ public class PostImageAdapter extends BaseAdapter {
         ImageView imageView = convertView.findViewById(R.id.post_image_iv);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setLayoutParams(new GridView.LayoutParams(350, 350));
-        setItem(imageView, item);
+        setItem(imageView, post);
         return imageView;
     }
 

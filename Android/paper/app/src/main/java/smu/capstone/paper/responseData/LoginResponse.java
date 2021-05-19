@@ -1,4 +1,4 @@
-package smu.capstone.paper.data;
+package smu.capstone.paper.responseData;
 
 import com.google.gson.annotations.SerializedName;
 

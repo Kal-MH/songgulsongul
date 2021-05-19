@@ -28,10 +28,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
-import org.w3c.dom.Comment;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,8 +39,16 @@ import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HashTagAdapter;
 import smu.capstone.paper.adapter.ItemTagAdapter;
 import smu.capstone.paper.adapter.PostCmtAdapter;
-import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.responseData.Ccl;
+import smu.capstone.paper.responseData.CodeResponse;
 import smu.capstone.paper.data.CommentData;
+import smu.capstone.paper.responseData.Comment;
+import smu.capstone.paper.responseData.HashTag;
+import smu.capstone.paper.responseData.ItemTag;
+import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.PostDetail;
+import smu.capstone.paper.responseData.PostResponse;
+import smu.capstone.paper.responseData.User;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -61,9 +67,8 @@ public class PostActivity extends AppCompatActivity {
 
     TextView post_user_id, post_like_cnt, post_cmt_cnt, post_text, post_date;
     ImageView post_pic, post_profile, post_ccl_cc, post_ccl_a, post_ccl_nc, post_ccl_nd, post_ccl_sa;
-    int ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa;
-    int status;
 
+    int status;
     final int MY = 1;
     final int OTHER = 2;
 
@@ -71,8 +76,14 @@ public class PostActivity extends AppCompatActivity {
     int user_id, post_id;
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
-    JsonObject data, postData, userData;
-    JsonArray hashTagsData,  itemTagData, CommentsData;
+
+    PostDetail data;
+    User userData;
+    Post postData;
+    List<HashTag> hashTagsData;
+    List<ItemTag> itemTagData;
+    List<Comment> CommentsData;
+    Ccl ccl;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -132,7 +143,7 @@ public class PostActivity extends AppCompatActivity {
                         switch(item.getItemId()){
                             case R.id.post_edit:
                                 Intent intent = new Intent(PostActivity.this, PostEditActivity.class);
-                                intent.putExtra("postID", postData.get("id").getAsInt());
+                                intent.putExtra("postID", postData.getId());
                                 startActivity(intent);
                                 finish();
 
@@ -160,29 +171,24 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 serviceApi.Like(LoginSharedPreference.getUserId(PostActivity.this),
-                        postData.get("id").getAsInt()  ).enqueue(new Callback<CodeResponse>() {
+                        postData.getId() ).enqueue(new Callback<CodeResponse>() {
                     @Override
                     public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                        int like = data.get("likeOnset").getAsInt();
+                        int like = data.getLikeOnset();
                         int resultCode = response.body().getCode();
                         if( resultCode == statusCode.RESULT_OK){
 
-                            int likeNum = data.get("likeNum").getAsInt();
-                            data.remove("likeNum");
+                            int likeNum = data.getLikeNum();
+
                             if( like == 1){ //좋아요 취소하기
                                 like = 0;
-                                data.addProperty("likeNum",--likeNum);
+                                data.setLikeNum(--likeNum);
                             }
                             else{
                                 like = 1;
-                                data.addProperty("likeNum",++likeNum);
+                                data.setLikeNum(++likeNum);
                             }
-                            data.remove("likeOnset");
-                            data.addProperty("likeOnset",like);
-
-                            data.remove("likeNum");
-                            data.addProperty("likeNum",likeNum);
-
+                            data.setLikeOnset(like);
                             post_like_cnt.setText("좋아요 " + likeNum);
                             post_like_btn.setSelected(!post_like_btn.isSelected()); //버튼 반대로 체크
                         }
@@ -207,16 +213,15 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                serviceApi.Keep(LoginSharedPreference.getUserId(PostActivity.this),
-                        postData.get("id").getAsInt()  ).enqueue(new Callback<CodeResponse>() {
+                serviceApi.Keep(LoginSharedPreference.getUserId(PostActivity.this),postData.getId())
+                        .enqueue(new Callback<CodeResponse>() {
                             @Override
                             public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                                int keep = data.get("keepOnset").getAsInt();
+                                int keep = data.getKeepOnset();
                                 int resultCode = response.body().getCode();
                                 if( resultCode == statusCode.RESULT_OK){
                                     keep = (keep==1)? 0 : 1;
-                                    data.remove("keepOnset");
-                                    data.addProperty("keepOnset",keep);
+                                    data.setKeepOnset(keep);
                                     if( keep == 1)
                                         Toast.makeText(PostActivity.this, "보관함에 저장 되었습니다", Toast.LENGTH_SHORT).show();
                                     else
@@ -269,7 +274,7 @@ public class PostActivity extends AppCompatActivity {
                 //댓글 작성!
                 serviceApi.Comment(new CommentData(
                         LoginSharedPreference.getUserId(PostActivity.this),
-                        postData.get("id").getAsInt(),
+                        postData.getId(),
                         post_input.getText().toString()
                 )).enqueue(new Callback<CodeResponse>() {
                     @Override
@@ -315,9 +320,9 @@ public class PostActivity extends AppCompatActivity {
         post_cmt_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                Log.d("comment", "long click!" +  CommentsData.get(i).getAsJsonObject().get("user_id").getAsInt() + " : "
+                Log.d("comment", "long click!" +  CommentsData.get(i).getUser_id() + " : "
                      + LoginSharedPreference.getUserId(PostActivity.this) );
-                if( CommentsData.get(i).getAsJsonObject().get("user_id").getAsInt() == LoginSharedPreference.getUserId(PostActivity.this) ){
+                if( CommentsData.get(i).getUser_id() == LoginSharedPreference.getUserId(PostActivity.this) ){
                     //댓글 삭제 알림 팝업
                     Log.d("comment", "삭제해보자요");
                     new AlertDialog.Builder(PostActivity.this)
@@ -326,7 +331,7 @@ public class PostActivity extends AppCompatActivity {
                             .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    deleteComment(CommentsData.get(i).getAsJsonObject().get("id").getAsInt());
+                                    deleteComment(CommentsData.get(i).getId());
                                 }
                             })
                             .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -356,15 +361,15 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void getData(){
-        serviceApi.GetDetailPost(post_id, user_id).enqueue(new Callback<JsonObject>() {
+        serviceApi.GetDetailPost(post_id, user_id).enqueue(new Callback<PostResponse>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject result = response.body();
+            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                PostResponse result = response.body();
 
-                int resultCode = result.get("code").getAsInt();
+                int resultCode = result.getCode();
 
                 if( resultCode == statusCode.RESULT_OK){
-                    data = result.getAsJsonObject("data");
+                    data = result.getData();
                     setPostData();
                     setHashTagData();
                     setItemTagData();
@@ -383,8 +388,10 @@ public class PostActivity extends AppCompatActivity {
                 }
             }
 
+
+
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<PostResponse> call, Throwable t) {
                 Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
@@ -394,50 +401,44 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public boolean setPostData(){
-        postData = data.getAsJsonObject("post");
-        userData = data.getAsJsonObject("user");
+        postData = data.getPost();
+        userData = data.getUser();
+        ccl = postData.getCcl();
 
         //작성자 프로필
-        post_user_id.setText(userData.get("login_id").getAsString());
-        Glide.with(this).load(RetrofitClient.getBaseUrl() + userData.get("img_profile").getAsString()).into(post_profile);
+        post_user_id.setText(userData.getLogin_id());
+        Glide.with(this).load(RetrofitClient.getBaseUrl() + userData.getImg_profile()).into(post_profile);
 
         // 게시글 정보 세팅
-        post_date.setText(postData.get("post_date").getAsString() + "\n" + postData.get("post_time").getAsString());
-        post_text.setText(postData.get("text").getAsString());
-        Glide.with(this).load(RetrofitClient.getBaseUrl() + postData.get("image").getAsString()).into(post_pic);
+        post_date.setText(postData.getPost_date() + "\n" + postData.getPost_time());
+        post_text.setText(postData.getText());
+        Glide.with(this).load(RetrofitClient.getBaseUrl() + postData.getImage()).into(post_pic);
 
 
         // data 세팅
-        post_like_cnt.setText("좋아요 " + data.get("likeNum").getAsInt());
-        if( data.get("likeOnset").getAsInt() == 1)
+        post_like_cnt.setText("좋아요 " + data.getLikeNum());
+        if( data.getLikeOnset() == 1)
             post_like_btn.setSelected(true);
         else
             post_like_btn.setSelected(false);
 
-        if( data.get("keepOnset").getAsInt() == 1)
+        if( data.getKeepOnset() == 1)
             post_keep_btn.setSelected(true);
         else
             post_keep_btn.setSelected(false);
 
 
 
-        //CCL 세팅 ! 서버 코딩내용없어서 .. 놔둠..
-        ccl_cc =postData.get("ccl").getAsJsonObject().get("ccl_cc").getAsInt();
-        ccl_a =postData.get("ccl").getAsJsonObject().get("ccl_a").getAsInt();
-        ccl_nc =postData.get("ccl").getAsJsonObject().get("ccl_nc").getAsInt();
-        ccl_nd =postData.get("ccl").getAsJsonObject().get("ccl_nd").getAsInt();
-        ccl_sa =postData.get("ccl").getAsJsonObject().get("ccl_sa").getAsInt();
 
-
-        if(ccl_cc==1)
+        if(ccl.getCcl_cc()==1)
             post_ccl_cc.setImageResource(R.drawable.ccl_cc_fill);
-        if(ccl_a==1)
+        if(ccl.getCcl_a()==1)
             post_ccl_a.setImageResource(R.drawable.ccl_attribution_fill);
-        if(ccl_nc==1)
+        if(ccl.getCcl_nc()==1)
             post_ccl_nc.setImageResource(R.drawable.ccl_noncommercial_fill);
-        if(ccl_nd==1)
+        if(ccl.getCcl_nd()==1)
             post_ccl_nd.setImageResource(R.drawable.ccl_no_derivative_fill);
-        if(ccl_sa==1)
+        if(ccl.getCcl_sa()==1)
             post_ccl_sa.setImageResource(R.drawable.ccl_share_alike_fill);
 
 
@@ -445,7 +446,7 @@ public class PostActivity extends AppCompatActivity {
     }
     public boolean setHashTagData(){
 
-        hashTagsData = data.getAsJsonArray("hashTags");
+        hashTagsData = data.getHashTags();
         //해쉬 태그 어뎁터 설정
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
@@ -456,7 +457,7 @@ public class PostActivity extends AppCompatActivity {
         return true;
     }
     public boolean setItemTagData(){
-        itemTagData = data.getAsJsonArray("itemTags");
+        itemTagData = data.getItemTags();
         // 아이템 태그 어뎁터 설정
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         post_itemtag_rv.setLayoutManager(layoutManager);
@@ -466,7 +467,7 @@ public class PostActivity extends AppCompatActivity {
         return true;
     }
     public boolean setCommentsData(){
-        CommentsData = data.getAsJsonArray("comments");
+        CommentsData = data.getComments();
         post_cmt_cnt.setText("댓글 " +CommentsData.size()+"");
         //코멘트 어뎁터 설정
         cmt_adapter = new PostCmtAdapter(post_cmt_list.getContext(), CommentsData );
@@ -474,7 +475,7 @@ public class PostActivity extends AppCompatActivity {
         return true;
     }
     public boolean setStatusData(){
-        if(LoginSharedPreference.getLoginId(PostActivity.this).equals( userData.get("login_id").getAsString() ) )
+        if(LoginSharedPreference.getLoginId(PostActivity.this).equals( userData.getLogin_id()) )
             status = MY;
         else
             status = OTHER ;

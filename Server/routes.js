@@ -38,6 +38,8 @@ const POST_COMMUNITY = "/community";
 const POST_FEEDS = "/feeds";
 const POST_DETAIL = "/:id";
 const POST_SEARCH = "/search";
+const POST_SEARCH_TAG = "/search/tag";
+const POST_SEARCH_ID = "/search/id";
 const POST_UPLOAD = "/upload";
 const POST_UPDATE = "/update";
 const POST_DELETE = "/delete";
@@ -96,7 +98,9 @@ const routes = {
     postCommunity : POST_COMMUNITY,
     postFeeds : POST_FEEDS,
     postUpload : POST_UPLOAD,
-    postSearch : POST_SEARCH,
+    postSearch: POST_SEARCH,
+    postSearchTag : POST_SEARCH_TAG,
+    postSearchId :POST_SEARCH_ID,
     postDetail : POST_DETAIL,
     postUpdate : POST_UPDATE,
     postDelete : POST_DELETE,

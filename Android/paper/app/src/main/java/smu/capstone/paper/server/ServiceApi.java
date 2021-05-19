@@ -2,12 +2,7 @@ package smu.capstone.paper.server;
 
 import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
 
-import java.util.Map;
-
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -17,7 +12,7 @@ import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.responseData.CodeResponse;
 
 import smu.capstone.paper.data.CommentData;
 import smu.capstone.paper.data.FollowData;
@@ -29,9 +24,16 @@ import smu.capstone.paper.data.IdData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.LoginData;
-import smu.capstone.paper.data.ProfileEditData;
+
+import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.PostListResponse;
+import smu.capstone.paper.responseData.PostFeedResponse;
+
 import smu.capstone.paper.data.UserData;
-import smu.capstone.paper.data.LoginResponse;
+import smu.capstone.paper.responseData.LoginResponse;
+import smu.capstone.paper.responseData.PostResponse;
+import smu.capstone.paper.responseData.ProfileResponse;
+import smu.capstone.paper.responseData.SearchIdResponse;
 
 public interface ServiceApi {
     // 아이디 중복체크
@@ -62,10 +64,6 @@ public interface ServiceApi {
     @POST("/join")
     Call<CodeResponse> Join(@Body JoinData data);
   
-    // 프로필
-    @POST("/user/profile")
-    Call<JsonObject> Profile(@Body UserData data);
-
     // 팔로우하기
     @POST("/user/follow")
     Call<CodeResponse> Follow(@Body FollowData data);
@@ -108,12 +106,12 @@ public interface ServiceApi {
 
     //피드 게시글 가져오기
     @GET("/post/feeds")
-    Call<JsonObject> GetFeed(@Query("userid") int id, @Query("offset") int offset);
-
-    //기존 프로필 데이터 불러오기
-    @POST("user/profile-data")
-    Call<JsonObject> ProfileData(@Body UserData data);
-
+    Call<PostFeedResponse> GetFeed(@Query("userid") int id, @Query("offset") int offset );
+ 
+    // 프로필
+    @POST("/user/profile")
+    Call<ProfileResponse> Profile(@Body UserData data);
+  
     //프로필 수정
     @Multipart
     @POST("/user/profile-edit")
@@ -123,16 +121,20 @@ public interface ServiceApi {
     @POST("/user/data-delete")
     Call<CodeResponse> DeleteAccount(@Body UserData data);
 
+
     //커뮤니트 게시글 가져오기
     @GET("/post/community")
-    Call<JsonObject> GetCommunity(@Query("offset") int offset);
+    Call<PostListResponse> GetCommunity(@Query("offset") int offset);
 
     //세부 게시글 내용 가져오기
     @GET("/post/{id}")
-    Call<JsonObject> GetDetailPost(@Path("id") int id, @Query("userid") int userid);
+    Call<PostResponse> GetDetailPost(@Path("id") int id, @Query("userid") int userid);
 
     // 검색
-    @GET("/post/search")
-    Call<JsonObject> SearchPost(@Query("method") String method , @Query("keyword") String keyword , @Query("offset") int offset);
+    @GET("/post/search/id")
+    Call<SearchIdResponse> SearchPostId(@Query("keyword") String keyword , @Query("offset") int offset);
+
+    @GET("/post/search/tag")
+    Call<PostListResponse> SearchPostTag(@Query("keyword") String keyword , @Query("offset") int offset);
 
 }

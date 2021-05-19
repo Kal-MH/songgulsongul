@@ -15,11 +15,9 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -29,9 +27,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,9 +35,14 @@ import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.AddItemTagAdapter;
-import smu.capstone.paper.adapter.HashTagAdapter;
-import smu.capstone.paper.adapter.ItemTagAdapter;
-import smu.capstone.paper.adapter.PostCmtAdapter;
+import smu.capstone.paper.responseData.Ccl;
+import smu.capstone.paper.responseData.Comment;
+import smu.capstone.paper.responseData.HashTag;
+import smu.capstone.paper.responseData.ItemTag;
+import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.PostDetail;
+import smu.capstone.paper.responseData.PostResponse;
+import smu.capstone.paper.responseData.User;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -58,8 +59,15 @@ public class PostEditActivity extends AppCompatActivity {
     int post_id, user_id;
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
-    JsonObject data, postData, userData;
-    JsonArray hashTagsData,  itemTagData, CommentsData;
+
+    PostDetail data;
+    Post postData;
+    User userData;
+    Ccl ccl;
+
+    List<HashTag> hashTagsData;
+    List<ItemTag> itemTagData;
+    List<Comment> CommentsData;
 
 
 
@@ -140,15 +148,14 @@ public class PostEditActivity extends AppCompatActivity {
 
 
     public void getData(){
-        serviceApi.GetDetailPost(post_id, user_id).enqueue(new Callback<JsonObject>() {
+        serviceApi.GetDetailPost(post_id, user_id).enqueue(new Callback<PostResponse>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject result = response.body();
-
-                int resultCode = result.get("code").getAsInt();
+            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                PostResponse result = response.body();
+                int resultCode = result.getCode();
 
                 if( resultCode == statusCode.RESULT_OK){
-                    data = result.getAsJsonObject("data");
+                    data = result.getData();
                     setPostData();
                     setHashTagData();
                     setItemTagData();
@@ -166,7 +173,7 @@ public class PostEditActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<PostResponse> call, Throwable t) {
                 Toast.makeText(PostEditActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
@@ -176,22 +183,21 @@ public class PostEditActivity extends AppCompatActivity {
     }
 
     public boolean setPostData(){
-        postData = data.getAsJsonObject("post");
-        userData = data.getAsJsonObject("user");
-
+        postData = data.getPost();
+        userData = data.getUser();
+        ccl = postData.getCcl();
 
         // 게시글 정보 세팅
-        post_edit_text.setText(postData.get("text").getAsString());
-        Glide.with(this).load(RetrofitClient.getBaseUrl() + postData.get("image").getAsString()).into(post_edit_pic);
+        post_edit_text.setText(postData.getText());
+        Glide.with(this).load(RetrofitClient.getBaseUrl() + postData.getImage()).into(post_edit_pic);
 
 
         //CCL 세팅
-        ccl_cc =postData.get("ccl").getAsJsonObject().get("ccl_cc").getAsInt();
-        ccl_a =postData.get("ccl").getAsJsonObject().get("ccl_a").getAsInt();
-        ccl_nc =postData.get("ccl").getAsJsonObject().get("ccl_nc").getAsInt();
-        ccl_nd =postData.get("ccl").getAsJsonObject().get("ccl_nd").getAsInt();
-        ccl_sa =postData.get("ccl").getAsJsonObject().get("ccl_sa").getAsInt();
-
+        ccl_cc = ccl.getCcl_cc();
+        ccl_a  = ccl.getCcl_a();
+        ccl_nc =ccl.getCcl_nc();
+        ccl_nd = ccl.getCcl_nd();
+        ccl_sa = ccl.getCcl_sa();
         post_edit_ccl_1.setChecked(ccl_cc==1);
         post_edit_ccl_2.setChecked(ccl_a==1);
         post_edit_ccl_3.setChecked(ccl_nc==1);
@@ -202,13 +208,12 @@ public class PostEditActivity extends AppCompatActivity {
     }
     public boolean setHashTagData(){
 
-        hashTagsData = data.getAsJsonArray("hashTags");
+        hashTagsData = data.getHashTags();
         //해쉬 태그 어뎁터 설정
 
         String hashtags = "";
-        for(int i = 0; i < hashTagsData.size(); i++){
-            JsonObject item = hashTagsData.get(i).getAsJsonObject();
-            String text = "#"+item.get("text").getAsString() +" ";
+        for( HashTag h : hashTagsData){
+            String text = "#"+ h.getText()+" ";
             hashtags += text;
         }
         hashtags +="#";
@@ -251,10 +256,8 @@ public class PostEditActivity extends AppCompatActivity {
         return true;
     }
     public boolean setItemTagData(){
-        itemTagData = data.getAsJsonArray("itemTags");
-        JsonObject addElement = new JsonObject();
-        addElement.addProperty("id" , -1);
-        itemTagData.add(addElement);
+        itemTagData = data.getItemTags();
+        itemTagData.add(new ItemTag(-1));
         adapter = new AddItemTagAdapter(itemtag_rv.getContext(), itemTagData); // 추가모드 어뎁터 세팅
         itemtag_rv.setAdapter(adapter);
 

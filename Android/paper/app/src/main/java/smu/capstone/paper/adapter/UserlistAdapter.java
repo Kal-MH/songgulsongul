@@ -15,20 +15,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import java.util.List;
+
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.ProfileActivity;
+import smu.capstone.paper.responseData.User;
 import smu.capstone.paper.server.RetrofitClient;
 
 
 public class UserlistAdapter extends  RecyclerView.Adapter<UserlistAdapter.ViewHolder>{
 
-    JsonArray userList;
+    List<User> userList;
     Context context;
     int len = 15;
 
-    public UserlistAdapter (Context context, JsonObject obj) {
+    public UserlistAdapter (Context context,  List<User>  obj) {
         this.context = context;
-        userList = obj.get("data").getAsJsonArray();
+        userList = obj;
     }
 
     @NonNull
@@ -41,13 +45,13 @@ public class UserlistAdapter extends  RecyclerView.Adapter<UserlistAdapter.ViewH
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        JsonObject item = userList.get(position).getAsJsonObject();
-        holder.login_id.setText(item.getAsJsonObject().get("login_id").getAsString());
-        String intro = item.getAsJsonObject().get("intro").getAsString();
+        User item = (User) userList.get(position);
+        holder.login_id.setText(item.getLogin_id());
+        String intro = item.getIntro();
         if( intro.length() > len)
             intro = intro.substring(0,len) +" ...";
         holder.intro.setText(intro);
-        String img_addr = RetrofitClient.getBaseUrl() + item.getAsJsonObject().get("img_profile").getAsString();
+        String img_addr = RetrofitClient.getBaseUrl() + item.getImg_profile();
         Glide.with(context).load(img_addr).into(holder.image);
 
     }

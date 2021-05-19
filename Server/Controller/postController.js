@@ -194,6 +194,28 @@ const postController = {
             }
         }
     },
+
+    getSearchTag: function (req, res) {
+        if ( req.query.keyword == undefined || req.query.keyword == "") {
+            res.json({
+                'code': statusCode.CLIENT_ERROR,
+                'data': null
+            })
+        } else {
+            postController_subFunc.getSearchTag(req, res);
+        }
+    },
+    getSearchId: function (req, res) {
+        if (req.query.keyword == undefined || req.query.keyword == "") {
+            res.json({
+                'code': statusCode.CLIENT_ERROR,
+                'data': null
+            })
+        } else {
+            postController_subFunc.getSearchId(req, res);
+        }
+    },
+
     /*
         확인 사항
         1. 넘어오는 데이터 구조
