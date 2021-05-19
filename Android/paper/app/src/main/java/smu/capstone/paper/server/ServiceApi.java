@@ -4,10 +4,17 @@ import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import smu.capstone.paper.data.CodeResponse;
@@ -22,6 +29,7 @@ import smu.capstone.paper.data.IdData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.LoginData;
+import smu.capstone.paper.data.ProfileEditData;
 import smu.capstone.paper.data.UserData;
 import smu.capstone.paper.data.LoginResponse;
 
@@ -100,7 +108,20 @@ public interface ServiceApi {
 
     //피드 게시글 가져오기
     @GET("/post/feeds")
-    Call<JsonObject> GetFeed(@Query("userid") int id, @Query("offset") int offset );
+    Call<JsonObject> GetFeed(@Query("userid") int id, @Query("offset") int offset);
+
+    //기존 프로필 데이터 불러오기
+    @POST("user/profile-data")
+    Call<JsonObject> ProfileData(@Body UserData data);
+
+    //프로필 수정
+    @Multipart
+    @POST("/user/profile-edit")
+    Call<CodeResponse> EditProfile(@PartMap Map<String, RequestBody> params, @Part MultipartBody.Part File);
+
+    //회원 탈퇴
+    @POST("/user/data-delete")
+    Call<CodeResponse> DeleteAccount(@Body UserData data);
 
     //커뮤니트 게시글 가져오기
     @GET("/post/community")

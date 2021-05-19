@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -34,6 +35,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.ReferenceQueue;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,6 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
     final int OTHER = 0;
 
     public int Status;
+    public static final int REQUEST_CODE = 100;
 
     String login_id;
     String user_id;
@@ -68,7 +72,6 @@ public class ProfileActivity extends AppCompatActivity {
     private Button follow_btn, unfollow_btn;
     private LinearLayout profile_follows;
     private LinearLayout pointview;
-    private JSONObject post_item;
     private JsonObject obj, profile_item;
     private ImageView profile_userimage;
 
@@ -304,9 +307,10 @@ public class ProfileActivity extends AppCompatActivity {
             sns_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").isJsonNull() ?
                     "" : obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").getAsString());
 
-            String img_addr = RetrofitClient.getBaseUrl()+ obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("profile_image").getAsString();
-            Log.d("profile", img_addr);
-            Glide.with(this).load( img_addr).into(profile_userimage);
+            String img_addr = obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("profile_image").getAsString();
+            String base_url = RetrofitClient.getBaseUrl();
+            Glide.with(this).load(base_url + img_addr).into(profile_userimage);
+            Log.d("profile_img", img_addr);
 
             feed_count_tv.setText(obj.getAsJsonArray("postInfo").isJsonNull() ?
                     0 + "" : obj.getAsJsonArray("postInfo").size() + "");
@@ -355,7 +359,8 @@ public class ProfileActivity extends AppCompatActivity {
 
             case R.id.profile_edit :
                 Intent intent1 = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                startActivity(intent1);
+                //startActivity(intent1);
+                startActivityForResult(intent1, REQUEST_CODE);
                 break;
 
             case R.id.profile_keep:
@@ -379,4 +384,19 @@ public class ProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE){
+            if(resultCode != Activity.RESULT_OK){
+                return;
+            }
+            String new_id = data.getStringExtra("userId");
+            Intent intent = getIntent();
+            intent.putExtra("userId", new_id);
+            finish();
+            startActivity(intent);
+        }
+    }
 }
