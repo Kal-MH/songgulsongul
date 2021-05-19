@@ -63,7 +63,7 @@
              }
 
              var prodata = {
-               'profile_image': results[3][0].img_profile,
+               'img_profile': results[3][0].img_profile,
                'intro': results[3][0].intro,
                'sns': results[3][0].sns_url,
                'userId': results[3][0].login_id
@@ -82,7 +82,7 @@
                'followerCnt': follower_cnt,
                'followCnt': follow_cnt,
                'postInfo': post_info,
-               'profileInfo': profile_info
+               'profileInfo': prodata
              })
            }
            console.log(resultCode);
