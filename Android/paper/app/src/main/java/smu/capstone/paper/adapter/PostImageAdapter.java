@@ -46,25 +46,10 @@ public class PostImageAdapter extends BaseAdapter {
         itemCnt = dataList.size();
     }
 
-    //삭제할 코드 --> 컴파일용 임시로 둠
-    public PostImageAdapter(Context mContext, int layout, ArrayList<PostItem> items) {
-        this.mContext = mContext;
-        inf = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.layout = layout;
-        this.items = items;
-    }
-
     // 받아온 데이터로 게시글 내용 셋팅
     public void setItem(ImageView imageView, JsonElement item){
         String img_addr = RetrofitClient.getBaseUrl() + item.getAsJsonObject().get("image").getAsString();
         Glide.with(mContext).load(img_addr).into(imageView); // 게시물 사진
-    }
-
-    //삭제할 코드 --> 컴파일용 임시로 둠
-    public void setItem2(ImageView imageView,  PostItem item){
-        Glide.with(mContext).load(item.getImg()).into(imageView); // 게시물 사진
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        imageView.setLayoutParams(new GridView.LayoutParams(340, 350));
     }
 
     @Override

@@ -271,40 +271,54 @@ public class EditProfileActivity extends AppCompatActivity {
         profile_delete_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserData data = new UserData(login_id, 1);
-                serviceApi.DeleteAccount(data).enqueue(new Callback<CodeResponse>() {
-                    @Override
-                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                        CodeResponse result = response.body();
-                        int resultCode = result.getCode();
+                final UserData data = new UserData(login_id, 1);
 
-                        if(resultCode == StatusCode.RESULT_OK){
-                            Toast.makeText(EditProfileActivity.this, "회원 탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                            LoginSharedPreference.clearLogin(EditProfileActivity.this);
-                            Intent intent3 = new Intent(EditProfileActivity.this, LoginActivity.class);
-                            intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent3);
-                        }
-                        else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                            new AlertDialog.Builder(EditProfileActivity.this)
-                                    .setTitle("경고")
-                                    .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
+                new AlertDialog.Builder(EditProfileActivity.this)
+                        .setMessage("정말 탈퇴 하시겠습니까?")
+                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                serviceApi.DeleteAccount(data).enqueue(new Callback<CodeResponse>() {
+                                    @Override
+                                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                                        CodeResponse result = response.body();
+                                        int resultCode = result.getCode();
+
+                                        if(resultCode == StatusCode.RESULT_OK){
+                                            Toast.makeText(EditProfileActivity.this, "회원 탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                            LoginSharedPreference.clearLogin(EditProfileActivity.this);
+                                            Intent intent3 = new Intent(EditProfileActivity.this, LoginActivity.class);
+                                            intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent3);
                                         }
-                                    })
-                                    .show();
-                        }
-                    }
+                                        else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                                            new AlertDialog.Builder(EditProfileActivity.this)
+                                                    .setTitle("경고")
+                                                    .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                        }
+                                                    })
+                                                    .show();
+                                        }
+                                    }
 
-                    @Override
-                    public void onFailure(Call<CodeResponse> call, Throwable t) {
-                        Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                        Log.e("회원탈퇴 에러", t.getMessage());
-                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
-                    }
-                });
+                                    @Override
+                                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                                        Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                        Log.e("회원탈퇴 에러", t.getMessage());
+                                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                                    }
+                                });
+                            }
+                        })
+                        .show();
             }
         });
 
