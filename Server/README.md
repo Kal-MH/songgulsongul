@@ -188,6 +188,21 @@
 
      ```
 
+8. 비밀번호 확인하기
+
+    - api : "/api/check/password/:userid
+    - method : POST
+    - 전달받아야 하는 데이터
+      - userid (url param)
+      - password (req body)
+    - 응답데이터
+
+      ```
+      json = {
+        'code' //200(password 일치), 400(client error), 500(server error)
+      }
+      ```
+
 ## Home Controller
 
 1. 회원가입
