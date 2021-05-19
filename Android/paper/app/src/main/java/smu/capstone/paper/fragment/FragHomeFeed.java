@@ -1,6 +1,5 @@
 package smu.capstone.paper.fragment;
 
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.JsonObject;
 
-import org.json.JSONException;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,6 +27,8 @@ import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HomeFeedAdapter;
+import smu.capstone.paper.data.PostResponse;
+import smu.capstone.paper.item.PostComu;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -43,7 +44,7 @@ public class FragHomeFeed extends Fragment {
 
     StatusCode statusCode;
 
-    JsonObject feeds;
+    List<PostComu> feeds;
 
     @Nullable
     @Override
@@ -87,7 +88,7 @@ public class FragHomeFeed extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setData(){
-       if(feeds.get("data").getAsJsonArray().size() == 0){
+       if(feeds.size() == 0){
            recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
        }
        adapter = new HomeFeedAdapter(getContext(), feeds);
@@ -96,30 +97,30 @@ public class FragHomeFeed extends Fragment {
 
     // server 에서 data 전달
     public void GetFeedData(){
-        serviceApi.GetFeed(user_id,20).enqueue(new Callback<JsonObject>() {
+        serviceApi.GetFeed(user_id,20).enqueue(new Callback<PostResponse>() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject result = response.body();
+            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                PostResponse result = response.body();
 
-                int resultCode = result.get("code").getAsInt();
+                int resultCode = result.getCode();
                 if(resultCode == statusCode.RESULT_SERVER_ERR){
                     Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                     // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
                 }
                 else if( resultCode == statusCode.RESULT_OK){
-                    feeds = result;
+                    feeds = result.getData();
                 }
                 else {
-                    feeds=result;
+                    feeds=result.getData();
                 }
                 setData();
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<PostResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                feeds = new JsonObject();
+                feeds = null;
                 Log.d("feed" , "통신 실패");
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
