@@ -74,7 +74,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private ImageView profile_set_img;
     private static final int REQUEST_CODE = 0;
     private int profile_sns_check;
-    private String login_id, new_id, profile_img_default, profile_img_old, profile_img_path;
+    private String login_id, new_id, profile_img_old, profile_img_path;
     private int id_check, id_modify_check, profile_modify_check;
     private int NO = 0;
     private int YES = 1;
@@ -345,39 +345,29 @@ public class EditProfileActivity extends AppCompatActivity {
 
             case R.id.toolbar_save:
                 String new_intro = profile_new_intro.getText().toString().trim();
+                RequestBody requestFile;
+                MultipartBody.Part body;
 
                 if(sns_radio.getCheckedRadioButtonId() == R.id.profile_sns_radio_no)
                     profile_sns_check = NO;
                 else if(sns_radio.getCheckedRadioButtonId() == R.id.profile_sns_radio_yes)
                     profile_sns_check = YES;
 
-                if(!profile_img_old.equals(profile_img_path))
+                if(!profile_img_old.equals(profile_img_path)) {
                     profile_modify_check = YES;
-                else
+                    File file = new File(profile_img_path);
+                    requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
+                    body = MultipartBody.Part.createFormData("img_profile", file.getName(), requestFile);
+                }
+                else {
                     profile_modify_check = NO;
-
-                File file = new File(profile_img_path);
-                RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
-                MultipartBody.Part body = MultipartBody.Part.createFormData("img_profile", file.getName(), requestFile);
+                    requestFile = RequestBody.create(MediaType.parse("image/jpeg"), profile_img_path);
+                    body = MultipartBody.Part.createFormData("img_profile", profile_img_path);
+                }
 
                 String new_sns = profile_new_sns.getText().toString().trim();
 
-                RequestBody id_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(id_modify_check));
-                RequestBody sns_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(profile_sns_check));
-                RequestBody profile_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(profile_modify_check));
-                RequestBody login_id_body = RequestBody.create(MediaType.parse("text/plain"), login_id);
-                RequestBody new_intro_body = RequestBody.create(MediaType.parse("text/plain"), new_intro);
-                RequestBody new_sns_body = RequestBody.create(MediaType.parse("text/plain"), new_sns);
-
-                HashMap<String, RequestBody> requestMap = new HashMap<>();
-                requestMap.put("id_check_flag", id_flag_body);
-                requestMap.put("sns_check_flag", sns_flag_body);
-                requestMap.put("img_check_flag", profile_flag_body);
-                requestMap.put("login_id", login_id_body);
-                requestMap.put("new_intro", new_intro_body);
-                requestMap.put("new_SNS", new_sns_body);
-
-                //ProfileEditData data = new ProfileEditData(id_modify_check, profile_sns_check, profile_modify_check, login_id, new_intro, new_sns);
+                HashMap<String, RequestBody> requestMap = getMapData(id_modify_check, profile_sns_check, profile_modify_check, login_id, new_intro, new_sns);
 
                 if(id_check == NO){
                     new AlertDialog.Builder(EditProfileActivity.this)
@@ -390,9 +380,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             })
                             .show();
                 }
-                else if(profile_sns_check == YES){
-                    String sns_text = profile_new_sns.getText().toString().trim();
-                    if(sns_text.getBytes().length <= 0){
+                else if(profile_sns_check == YES && new_sns.getBytes().length <= 0){
                         new AlertDialog.Builder(EditProfileActivity.this)
                                 .setMessage("SNS계정을 입력해주세요.")
                                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -402,7 +390,6 @@ public class EditProfileActivity extends AppCompatActivity {
                                     }
                                 })
                                 .show();
-                    }
                 }
                 else if(id_check == YES){
                     if(id_modify_check == YES) {
@@ -467,6 +454,25 @@ public class EditProfileActivity extends AppCompatActivity {
         return  true;
     }
 
+    public HashMap<String, RequestBody> getMapData(int id_modify_check, int profile_sns_check, int profile_modify_check, String login_id, String new_intro, String new_SNS){
+        HashMap<String, RequestBody> requestMap = new HashMap<>();
+
+        RequestBody id_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(id_modify_check));
+        RequestBody sns_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(profile_sns_check));
+        RequestBody profile_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(profile_modify_check));
+        RequestBody login_id_body = RequestBody.create(MediaType.parse("text/plain"), login_id);
+        RequestBody new_intro_body = RequestBody.create(MediaType.parse("text/plain"), new_intro);
+        RequestBody new_sns_body = RequestBody.create(MediaType.parse("text/plain"), new_SNS);
+
+        requestMap.put("id_check_flag", id_flag_body);
+        requestMap.put("sns_check_flag", sns_flag_body);
+        requestMap.put("img_check_flag", profile_flag_body);
+        requestMap.put("login_id", login_id_body);
+        requestMap.put("new_intro", new_intro_body);
+        requestMap.put("new_SNS", new_sns_body);
+        return requestMap;
+    }
+
     //server에서 data전달
     public void getProfileData(){
         UserData data = new UserData(login_id, 1);
@@ -508,17 +514,13 @@ public class EditProfileActivity extends AppCompatActivity {
     public void setProfileData(JsonObject data){
             profile_new_intro.setText(data.get("intro").isJsonNull() ? "" : data.get("intro").getAsString());
             profile_new_sns.setText(data.get("sns").isJsonNull() ? "" : data.get("sns").getAsString());
-            profile_img_default = data.get("defaultImg").getAsString();
             profile_img_old = data.get("profileImg").getAsString();
             profile_img_path = profile_img_old;
 
             String img_addr = profile_img_old;
             String base_url = RetrofitClient.getBaseUrl();
 
-            if(img_addr.equals(profile_img_default))
-                img_addr = base_url + img_addr;
-
-            Glide.with(this).load(img_addr).into(profile_set_img);
+            Glide.with(this).load(base_url + img_addr).into(profile_set_img);
 
             int sns_check = data.get("snsCheck").getAsInt();
 

@@ -22,7 +22,6 @@
        var follow_cnt;
        var post_info = [];
        var profile_info = [];
-       var default_img = '/public/default/user.png';
 
        var sql1 = 'SELECT COUNT(*) AS cnt FROM user JOIN follow ON follow.follower_id = user.id WHERE user.login_id = ?;'; // 팔로우 수
        var sql2 = 'SELECT COUNT(*) AS cnt FROM user JOIN follow ON follow.follow_target_id = user.id WHERE user.login_id = ?;'; // 팔로워 수
@@ -83,8 +82,7 @@
                'followerCnt': follower_cnt,
                'followCnt': follow_cnt,
                'postInfo': post_info,
-               'profileInfo': profile_info,
-               'defaultImg': default_img
+               'profileInfo': profile_info
              })
            }
            console.log(resultCode);
@@ -350,7 +348,6 @@
      profileData : function(req, res){
        const id = req.body.id;
        var param = [id];
-       var default_img = '/public/default/user.png' ;
 
        var sql = 'SELECT * FROM user WHERE login_id = ?;';
        connection.query(sql, param, function(err, rows){
@@ -365,15 +362,12 @@
          else{
            resultCode = statusCode.OK;
 
-           console.log(rows);
-
            res.json({
              'code': resultCode,
              'profileImg': rows[0].img_profile,
              'intro': rows[0].intro == null ? "" : rows[0].intro,
              'sns': rows[0].sns_url == null ? "" : rows[0].sns_url,
-             'snsCheck': rows[0].sns_check == null ? 0 : rows[0].sns_check,
-             'defaultImg': default_img
+             'snsCheck': rows[0].sns_check == null ? 0 : rows[0].sns_check
            })
            console.log(resultCode)
          }
@@ -383,23 +377,23 @@
      // 프로필수정
      profileEdit : function(req, res) {
        const is_id_check = req.body.id_check_flag;
-       const is_sns_check = req.body.sns_check_flag;
-       const is_img_check = req.body.img_check_flag;
+       const is_sns_check = Number(req.body.sns_check_flag);
+       const is_img_check = Number(req.body.img_check_flag);
        const id = req.body.login_id; // 기존 아이디
        const new_id = req.body.new_id; // 변경된 아이디
        const new_intro = req.body.new_intro;
        const new_sns = req.body.new_SNS;
-       var new_image = req.file.path;
+       var new_image;
        var param = [id];
        var check_cnt = 0;
 
        // 수정
-       var fileString = `${req.file.path}`;
-       new_image = "/"+fileString.replace(/\\/g, '/');
-       //new_image = "/public/default/user.png";
-
-       console.log("here");
-       console.log(new_image);
+       // var fileString = `${req.file.path}`;
+       // new_image = "/"+fileString.replace(/\\/g, '/');
+       // //new_image = "/public/default/user.png";
+       //
+       // console.log("here");
+       // console.log(new_image);
        // 수정 end
 
        var sql = 'SELECT * FROM user WHERE login_id = ?;';
@@ -447,19 +441,23 @@
              }
            }
 
+           // 기존 프로필 이미지와 비교 후 db갱신
+           if(is_img_check === 1){
+             var fileString = `${req.file.path}`;
+             new_image = "/"+fileString.replace(/\\/g, '/');
+             console.log("here");
+             console.log(new_image);
+
+             sql += 'UPDATE user SET img_profile = ? WHERE login_id = ?;';
+             param.push(new_image, id)
+             check_cnt += 1;
+           }
+
            // 기존 아이디와 비교 후 db갱신
-           if(is_id_check === 1){
+           if(Number(is_id_check) === 1){
                sql += 'UPDATE user SET login_id = ? WHERE login_id = ?;';
                param.push(new_id, id)
                check_cnt += 1;
-           }
-
-           // 기존 프로필 이미지와 비교 후 db갱신
-           if(Number(is_img_check) === 1){
-             sql += 'UPDATE user SET img_profile = ? WHERE login_id = ?;';
-             param.push(new_image, id)
-             console.log("이거실행");
-             check_cnt += 1;
            }
 
            if(check_cnt > 0){
