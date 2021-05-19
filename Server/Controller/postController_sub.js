@@ -30,16 +30,25 @@ const postController_subFunc = {
 
                 if (result.length > 0){
                     var post_id = result[0].post_id;
-                    for(var i = 0;i < result.length ; i++){
+                    for (var i = 0; i < result.length; i++){
+                       
                         if (i == 0 || post_id != result[i].post_id){
                             post_id = result[i].post_id;
-                            data.push(result[i]);
+                            var post_data = {
+                                'id': result[i].post_id,
+                                'text': result[i].text,
+                                'image': result[i].image,
+                                'post_time': result[i].post_time,
+                                'post_date': result[i].post_date
+                            };
+
+                            data.push(post_data);
                         }
                         if (data.length == db_config.limitation)
                             break ;
                     }
                 }
-                //console.log(result)
+                console.log(data)
                 res.json({
                     'code' : statusCode.OK,
                     'data' : data
