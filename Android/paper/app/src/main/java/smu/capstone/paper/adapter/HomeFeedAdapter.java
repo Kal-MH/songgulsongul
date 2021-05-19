@@ -33,30 +33,30 @@ import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.activity.ProfileActivity;
 import smu.capstone.paper.responseData.CodeResponse;
 import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.PostFeed;
 import smu.capstone.paper.responseData.User;
-import smu.capstone.paper.responseData.PostComu;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
 
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHolder> {
     Context context;
-    List<PostComu> postComuList;
+    List<PostFeed> postFeedList;
     int itemCnt;
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
 
-    public HomeFeedAdapter (Context context, List<PostComu> postComuList)  {
+    public HomeFeedAdapter (Context context, List<PostFeed> postFeedList)  {
         this.context = context;
-        this.postComuList = postComuList;
-        itemCnt = postComuList.size();
+        this.postFeedList = postFeedList;
+        itemCnt = postFeedList.size();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setItem(@NonNull ViewHolder holder, int position){
 
-        Post post = postComuList.get(position).getPost();
-        User user = postComuList.get(position).getUser();
+        Post post = postFeedList.get(position).getPost();
+        User user = postFeedList.get(position).getUser();
 
         // 받아온 데이터로 게시글 내용 셋팅
         String text = post.getText();
@@ -73,20 +73,20 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         }
         holder.timestamp.setText( post.getPost_time() ); // 게시 시간
         Glide.with(context).load(RetrofitClient.getBaseUrl() + post.getImage() ).into(holder.picture); // 게시물 사진
-        holder.comment_counter.setText("댓글 " + postComuList.get(position).getCommentsNum()); // 댓글 수
-        holder.favorite_counter.setText("좋아요 " + postComuList.get(position).getLikeNum()); // 좋아요 수
+        holder.comment_counter.setText("댓글 " + postFeedList.get(position).getCommentsNum()); // 댓글 수
+        holder.favorite_counter.setText("좋아요 " + postFeedList.get(position).getLikeNum()); // 좋아요 수
 
         holder.user_id.setText(user.getLogin_id()); // 게시자 id
         Glide.with(context).load(RetrofitClient.getBaseUrl() + user.getImg_profile()).into(holder.profile_image); // 게시자 프로필 사진
 
 
-        if(postComuList.get(position).getLikeOnset()== 0)
+        if(postFeedList.get(position).getLikeOnset()== 0)
             holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_border));
         else
             holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite));
 
 
-        if(postComuList.get(position).getKeepOnset() == 0)
+        if(postFeedList.get(position).getKeepOnset() == 0)
             holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_border_24));
         else
             holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_24));
@@ -106,7 +106,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         //post 가져옴
-        final PostComu item = postComuList.get(position);
+        final PostFeed item = postFeedList.get(position);
         final int postId = item.getPost().getId();
 
 

@@ -10,18 +10,18 @@ public class PostResponse {
     private int code;
 
     @SerializedName("data")
-    private List<PostComu> data;
+    private List<PostFeed> data;
 
-    public void addData(List<PostComu> p){
-        for (PostComu postComu : p)
-            data.add(postComu);
+    public void addData(List<PostFeed> p){
+        for (PostFeed postFeed : p)
+            data.add(postFeed);
     }
 
     public int getCode() {
         return code;
     }
 
-    public List<PostComu> getData() {
+    public List<PostFeed> getData() {
         return data;
     }
 }

@@ -1,6 +1,6 @@
 package smu.capstone.paper.responseData;
 
-public class PostComu {
+public class PostFeed {
     Post post;
     User user;
     int commentsNum;
@@ -45,10 +45,10 @@ public class PostComu {
         return keepOnset;
     }
 
-    public PostComu(){
+    public PostFeed(){
 
     }
-    public PostComu(Post post, User user, int commentsNum, int likeNum, int likeOnset, int keepOnset) {
+    public PostFeed(Post post, User user, int commentsNum, int likeNum, int likeOnset, int keepOnset) {
         this.post = post;
         this.user = user;
         this.commentsNum = commentsNum;

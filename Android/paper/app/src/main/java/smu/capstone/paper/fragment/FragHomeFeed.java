@@ -26,7 +26,7 @@ import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HomeFeedAdapter;
 import smu.capstone.paper.responseData.PostResponse;
-import smu.capstone.paper.responseData.PostComu;
+import smu.capstone.paper.responseData.PostFeed;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -42,7 +42,7 @@ public class FragHomeFeed extends Fragment {
 
     StatusCode statusCode;
 
-    List<PostComu> feeds;
+    List<PostFeed> feeds;
 
     @Nullable
     @Override
