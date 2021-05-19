@@ -44,8 +44,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 
-import javax.net.ssl.SSLEngineResult;
-
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -54,11 +52,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
-import smu.capstone.paper.data.CodeResponse;
 import smu.capstone.paper.data.IdCheckData;
-import smu.capstone.paper.data.IdData;
 import smu.capstone.paper.data.ProfileEditData;
 import smu.capstone.paper.data.UserData;
+import smu.capstone.paper.responseData.CodeResponse;
+import smu.capstone.paper.responseData.ProfileResponse;
+import smu.capstone.paper.responseData.User;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -187,7 +186,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     IdCheckData data = new IdCheckData(new_id);
                     serviceApi.IdCheck(data).enqueue(new Callback<CodeResponse>() {
                         @Override
-                        public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                        public void onResponse(Call<CodeResponse>call, Response<CodeResponse> response) {
                             CodeResponse result = response.body();
                             int resultCode = result.getCode();
 
@@ -490,11 +489,11 @@ public class EditProfileActivity extends AppCompatActivity {
     //server에서 data전달
     public void getProfileData(){
         UserData data = new UserData(login_id, 1);
-        serviceApi.ProfileData(data).enqueue(new Callback<JsonObject>() {
+        serviceApi.Profile(data).enqueue(new Callback<ProfileResponse>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject result = response.body();
-                int resultCode = result.get("code").getAsInt();
+            public void onResponse(Call<ProfileResponse> call, Response<ProfileResponse> response) {
+                ProfileResponse result = response.body();
+                int resultCode = result.getCode();
 
                 if(resultCode == StatusCode.RESULT_OK){
                     setProfileData(result);
@@ -517,28 +516,31 @@ public class EditProfileActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<ProfileResponse> call, Throwable t) {
                 Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                Log.e("기존 프로필 불러오기 에러", t.getMessage());
+                Log.e("프로필 데이터 불러오기 에러", t.getMessage());
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
     }
 
-    public void setProfileData(JsonObject data){
-            profile_new_intro.setText(data.get("intro").isJsonNull() ? "" : data.get("intro").getAsString());
-            profile_new_sns.setText(data.get("sns").isJsonNull() ? "" : data.get("sns").getAsString());
-            profile_img_old = data.get("profileImg").getAsString();
-            profile_img_path = profile_img_old;
+    public void setProfileData(ProfileResponse data){
+        User user = data.getProfileInfo();
 
-            String img_addr = profile_img_old;
-            String base_url = RetrofitClient.getBaseUrl();
 
-            Glide.with(this).load(base_url + img_addr).into(profile_set_img);
+        profile_new_intro.setText(user.getIntro());
+        profile_new_sns.setText(user.getSns());
 
-            int sns_check = data.get("snsCheck").getAsInt();
+        profile_img_old =  user.getImg_profile();
+        profile_img_path = profile_img_old;
 
-            if(sns_check == NO){
+        String img_addr = profile_img_old;
+        String base_url = RetrofitClient.getBaseUrl();
+
+        Glide.with(this).load(base_url + img_addr).into(profile_set_img);
+        int sns_check = user.getSnsCheck();
+
+        if(sns_check == NO){
                 profile_sns_radio_no.setChecked(true);
                 profile_sns_radio_yes.setChecked(false);
                 profile_new_sns.setClickable(false);
@@ -546,7 +548,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 profile_new_sns.setHint("sns 계정 없음");
                 profile_new_sns.setText("");
             }
-            else{
+        else{
                 profile_sns_radio_yes.setChecked(true);
                 profile_sns_radio_no.setChecked(false);
                 profile_new_sns.setFocusableInTouchMode(true);

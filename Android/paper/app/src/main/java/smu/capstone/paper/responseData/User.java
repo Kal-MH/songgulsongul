@@ -13,6 +13,15 @@ public class User {
     String intro;
     String sns;
     int point;
+    int snsCheck;
+
+    public int getSnsCheck() {
+        return snsCheck;
+    }
+
+    public void setSnsCheck(int snsCheck) {
+        this.snsCheck = snsCheck;
+    }
 
     int flag;
 
