@@ -25,7 +25,7 @@ import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HomeFeedAdapter;
-import smu.capstone.paper.responseData.PostResponse;
+import smu.capstone.paper.responseData.PostFeedResponse;
 import smu.capstone.paper.responseData.PostFeed;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
@@ -95,11 +95,11 @@ public class FragHomeFeed extends Fragment {
 
     // server 에서 data 전달
     public void GetFeedData(){
-        serviceApi.GetFeed(user_id,20).enqueue(new Callback<PostResponse>() {
+        serviceApi.GetFeed(user_id,20).enqueue(new Callback<PostFeedResponse>() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
-            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                PostResponse result = response.body();
+            public void onResponse(Call<PostFeedResponse> call, Response<PostFeedResponse> response) {
+                PostFeedResponse result = response.body();
 
                 int resultCode = result.getCode();
                 if(resultCode == statusCode.RESULT_SERVER_ERR){
@@ -116,7 +116,7 @@ public class FragHomeFeed extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PostResponse> call, Throwable t) {
+            public void onFailure(Call<PostFeedResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                 feeds = null;
                 Log.d("feed" , "통신 실패");

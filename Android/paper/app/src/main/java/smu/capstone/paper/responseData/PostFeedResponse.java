@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class PostResponse {
+public class PostFeedResponse {
 
     @SerializedName("code")
     private int code;
