@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -23,14 +24,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import org.json.JSONObject;
-
 import java.util.List;
+import java.lang.ref.ReferenceQueue;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,6 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
     final int OTHER = 0;
 
     public int Status;
+    public static final int REQUEST_CODE = 100;
 
     String login_id;
     String user_id;
@@ -71,7 +71,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private List<Post> post_data;
     private User user_data;
-
     private ImageView profile_userimage;
 
 
@@ -298,6 +297,7 @@ public class ProfileActivity extends AppCompatActivity {
         intro_tv.setText(user_data.getIntro());
         sns_tv.setText(user_data.getSns());
 
+
         String img_addr = RetrofitClient.getBaseUrl()+ user_data.getImg_profile();
         Log.d("profile", img_addr);
         Glide.with(this).load( img_addr).into(profile_userimage);
@@ -347,7 +347,8 @@ public class ProfileActivity extends AppCompatActivity {
 
             case R.id.profile_edit :
                 Intent intent1 = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                startActivity(intent1);
+                //startActivity(intent1);
+                startActivityForResult(intent1, REQUEST_CODE);
                 break;
 
             case R.id.profile_keep:
@@ -371,4 +372,19 @@ public class ProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE){
+            if(resultCode != Activity.RESULT_OK){
+                return;
+            }
+            String new_id = data.getStringExtra("userId");
+            Intent intent = getIntent();
+            intent.putExtra("userId", new_id);
+            finish();
+            startActivity(intent);
+        }
+    }
 }

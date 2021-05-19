@@ -17,6 +17,7 @@ import java.util.List;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.responseData.Post;
+
 import smu.capstone.paper.server.RetrofitClient;
 
 
@@ -37,9 +38,11 @@ public class PostImageAdapter extends BaseAdapter {
     }
 
     // 받아온 데이터로 게시글 내용 셋팅
+
     public void setItem(ImageView imageView, Post item){
             Glide.with(mContext).load(RetrofitClient.getBaseUrl()+item.getImage())
                     .into(imageView); // 게시물 사진
+
     }
 
     @Override

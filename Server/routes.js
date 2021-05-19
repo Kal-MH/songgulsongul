@@ -14,8 +14,8 @@ const FIND_PASSWORD = "/find/password";
 const USER = "/user";
 const USER_PROFILE = "/profile";
 const USER_KEEP = "/keep";
+const USER_PROFILE_DATA = "/profile-data";
 const USER_PROFILE_EDIT = "/profile-edit";
-const USER_PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
 const USER_FOLLOW = "/follow";
 const USER_UNFOLLOW = "/unfollow";
 const USER_FOLLOW_LIST = "/follow-list";
@@ -77,7 +77,7 @@ const routes = {
     user : USER,
     userProfile : USER_PROFILE,
     userKeep : USER_KEEP,
-    userProfileEditIdcheck : USER_PROFILE_EDIT_IDCHECK,
+    userProfileData : USER_PROFILE_DATA,
     userProfileEdit : USER_PROFILE_EDIT,
     userFollow : USER_FOLLOW,
     userUnfollow : USER_UNFOLLOW,

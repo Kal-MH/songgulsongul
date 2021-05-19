@@ -2,10 +2,14 @@ package smu.capstone.paper.server;
 
 import com.google.gson.JsonObject;
 
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import smu.capstone.paper.responseData.CodeResponse;
@@ -20,9 +24,11 @@ import smu.capstone.paper.data.IdData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.LoginData;
+
 import smu.capstone.paper.responseData.Post;
 import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.responseData.PostFeedResponse;
+
 import smu.capstone.paper.data.UserData;
 import smu.capstone.paper.responseData.LoginResponse;
 import smu.capstone.paper.responseData.PostResponse;
@@ -58,10 +64,6 @@ public interface ServiceApi {
     @POST("/join")
     Call<CodeResponse> Join(@Body JoinData data);
   
-    // 프로필
-    @POST("/user/profile")
-    Call<ProfileResponse> Profile(@Body UserData data);
-
     // 팔로우하기
     @POST("/user/follow")
     Call<CodeResponse> Follow(@Body FollowData data);
@@ -105,6 +107,20 @@ public interface ServiceApi {
     //피드 게시글 가져오기
     @GET("/post/feeds")
     Call<PostFeedResponse> GetFeed(@Query("userid") int id, @Query("offset") int offset );
+ 
+    // 프로필
+    @POST("/user/profile")
+    Call<ProfileResponse> Profile(@Body UserData data);
+  
+    //프로필 수정
+    @Multipart
+    @POST("/user/profile-edit")
+    Call<CodeResponse> EditProfile(@PartMap Map<String, RequestBody> params, @Part MultipartBody.Part File);
+
+    //회원 탈퇴
+    @POST("/user/data-delete")
+    Call<CodeResponse> DeleteAccount(@Body UserData data);
+
 
     //커뮤니트 게시글 가져오기
     @GET("/post/community")
