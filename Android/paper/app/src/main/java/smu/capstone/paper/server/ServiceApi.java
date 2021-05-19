@@ -2,15 +2,13 @@ package smu.capstone.paper.server;
 
 import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.responseData.CodeResponse;
 
 import smu.capstone.paper.data.CommentData;
 import smu.capstone.paper.data.FollowData;
@@ -22,9 +20,9 @@ import smu.capstone.paper.data.IdData;
 import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.LoginData;
-import smu.capstone.paper.data.PostResponse;
+import smu.capstone.paper.responseData.PostResponse;
 import smu.capstone.paper.data.UserData;
-import smu.capstone.paper.data.LoginResponse;
+import smu.capstone.paper.responseData.LoginResponse;
 
 public interface ServiceApi {
     // 아이디 중복체크

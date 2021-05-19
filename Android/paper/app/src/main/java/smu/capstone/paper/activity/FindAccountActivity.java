@@ -8,8 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -18,15 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.gson.JsonObject;
-
 import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.R;
-import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.responseData.CodeResponse;
 import smu.capstone.paper.data.EmailData;
 import smu.capstone.paper.data.FindData;
 import smu.capstone.paper.fragment.FragFindId;

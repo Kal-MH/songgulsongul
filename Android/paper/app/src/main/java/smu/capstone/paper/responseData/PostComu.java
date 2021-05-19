@@ -1,7 +1,4 @@
-package smu.capstone.paper.item;
-
-import smu.capstone.paper.data.Post;
-import smu.capstone.paper.data.User;
+package smu.capstone.paper.responseData;
 
 public class PostComu {
     Post post;

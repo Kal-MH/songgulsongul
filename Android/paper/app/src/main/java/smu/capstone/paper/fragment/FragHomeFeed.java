@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
-import com.google.gson.JsonObject;
-
 import java.util.List;
 
 import retrofit2.Call;
@@ -27,8 +25,8 @@ import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HomeFeedAdapter;
-import smu.capstone.paper.data.PostResponse;
-import smu.capstone.paper.item.PostComu;
+import smu.capstone.paper.responseData.PostResponse;
+import smu.capstone.paper.responseData.PostComu;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;

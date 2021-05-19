@@ -1,4 +1,4 @@
-package smu.capstone.paper.data;
+package smu.capstone.paper.responseData;
 
 public class User {
     public User(int user_id, String login_id, String img_profile) {

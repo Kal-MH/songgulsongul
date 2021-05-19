@@ -20,7 +20,7 @@ import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.data.LoginData;
-import smu.capstone.paper.data.LoginResponse;
+import smu.capstone.paper.responseData.LoginResponse;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;

@@ -1,10 +1,8 @@
-package smu.capstone.paper.data;
+package smu.capstone.paper.responseData;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-
-import smu.capstone.paper.item.PostComu;
 
 public class PostResponse {
 

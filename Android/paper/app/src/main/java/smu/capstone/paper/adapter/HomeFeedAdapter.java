@@ -21,7 +21,6 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonObject;
 
 import java.util.List;
 
@@ -32,10 +31,10 @@ import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.activity.ProfileActivity;
-import smu.capstone.paper.data.CodeResponse;
-import smu.capstone.paper.data.Post;
-import smu.capstone.paper.data.User;
-import smu.capstone.paper.item.PostComu;
+import smu.capstone.paper.responseData.CodeResponse;
+import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.User;
+import smu.capstone.paper.responseData.PostComu;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -134,6 +133,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                                 like = 1;
                                 item.setLikeNum(likeNum+1);
                             }
+                            item.setLikeOnset(like);
                             notifyItemChanged(position);
                         }
                         else if( resultCode == statusCode.RESULT_CLIENT_ERR){
@@ -191,8 +191,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         });
 
 
-
-
         View.OnClickListener goPostActivity = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -227,7 +225,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
-        int [] ImageId = {R.drawable.ic_favorite_border, R.drawable.ic_favorite};
         ImageView profile_image;
         TextView user_id;
         TextView timestamp;
