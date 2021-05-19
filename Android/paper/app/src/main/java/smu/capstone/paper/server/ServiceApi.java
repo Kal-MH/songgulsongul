@@ -3,6 +3,10 @@ package smu.capstone.paper.server;
 import com.google.gson.JsonObject;
 
 
+import java.util.Map;
+
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -111,7 +115,7 @@ public interface ServiceApi {
     // 프로필
     @POST("/user/profile")
     Call<ProfileResponse> Profile(@Body UserData data);
-  
+
     //프로필 수정
     @Multipart
     @POST("/user/profile-edit")
