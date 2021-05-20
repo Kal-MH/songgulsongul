@@ -129,7 +129,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent( ProfileActivity.this, FollowActivity.class);
 
                 // intro, picture 전달
-                intent.putExtra("userId", user_data.getUser_id());
+                intent.putExtra("userId", user_id );
                 intent.putExtra("intro", user_data.getIntro());
                 intent.putExtra("picture", user_data.getImg_profile());
 
