@@ -29,6 +29,7 @@ import smu.capstone.paper.data.JoinData;
 import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.LoginData;
 
+import smu.capstone.paper.responseData.KeepResponse;
 import smu.capstone.paper.responseData.Post;
 import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.responseData.PostFeedResponse;
@@ -90,7 +91,7 @@ public interface ServiceApi {
 
     // 보관함
     @POST("/user/keep")
-    Call<JsonObject> Keep(@Body KeepData data);
+    Call<KeepResponse> Keep(@Body KeepData data);
 
     //로그인
     @POST("/login")

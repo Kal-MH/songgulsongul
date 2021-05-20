@@ -36,7 +36,9 @@ import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.PostImageAdapter;
 import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.UserData;
+import smu.capstone.paper.responseData.KeepResponse;
 import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -44,12 +46,13 @@ import smu.capstone.paper.server.StatusCode;
 public class KeepActivity extends AppCompatActivity {
     // ServiceApi 객체 생성
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+    List<Post> keep_data;
 
     PostImageAdapter adapter;
     GridView gridView;
     TextView keep_count, keep_id;
     ImageView keep_imae;
-    JsonObject keep_data;
+
     String login_id;
 
     @Override
@@ -82,7 +85,7 @@ public class KeepActivity extends AppCompatActivity {
                 Intent intent = new Intent(KeepActivity.this, PostActivity.class);
 
                 // 게시글 id 전달
-                int postId = keep_data.getAsJsonArray("keepInfo").get(position).getAsJsonObject().get("postId").getAsInt();
+                int postId = keep_data.get(position).getId();
                 intent.putExtra("post_id", postId);
                 startActivity(intent);
 
@@ -92,41 +95,35 @@ public class KeepActivity extends AppCompatActivity {
 
     }
 
-    public void setKeepData(JsonObject data){
-        List<Post> keep_info = null;
-        JsonArray keep_info_arr = data.getAsJsonArray("keepInfo");
-        for( JsonElement i :keep_info_arr){
-            keep_info.add(new Post(i.getAsJsonObject().get("id").getAsInt() , i.getAsJsonObject().get("image").getAsString()));
-        }
+    public void setKeepData( KeepResponse data){
 
 
         // 로그인한 Id로 셋팅
         keep_id.setText(login_id);
 
         // 프로필 이미지 셋팅
-        String profile_image = RetrofitClient.getBaseUrl() + data.get("profileImg").getAsString();
+        String profile_image = RetrofitClient.getBaseUrl() + data.getProfileImg();
         Glide.with(this).load(profile_image).into(keep_imae);
 
         // 보관한 게시글 개수 셋팅
-        int keep_cnt = data.get("keepCnt").getAsInt();
+        int keep_cnt = data.getKeepcnt();
         keep_count.setText("보관한 게시글 " + keep_cnt);
 
         // 어뎁터 적용
-        adapter = new PostImageAdapter(this, R.layout.post_image_item, keep_info);
+        adapter = new PostImageAdapter(this, R.layout.post_image_item, data.getKeepinfo());
         gridView.setAdapter(adapter);
     }
 
     //server에서 data전달
     public void getKeepData(){
         KeepData data = new KeepData(login_id);
-        serviceApi.Keep(data).enqueue(new Callback<JsonObject>() {
+        serviceApi.Keep(data).enqueue(new Callback<KeepResponse>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject result = response.body();
-                int resultCode = result.get("code").getAsInt();
-
+            public void onResponse(Call<KeepResponse> call, Response<KeepResponse> response) {
+                KeepResponse result = response.body();
+                keep_data = result.getKeepinfo();
+                int resultCode = result.getCode();
                 if(resultCode == StatusCode.RESULT_OK){
-                    keep_data = result;
                     setKeepData(result);
                 }
                 else if(resultCode == StatusCode.RESULT_SERVER_ERR){
@@ -151,7 +148,7 @@ public class KeepActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<KeepResponse> call, Throwable t) {
                 Toast.makeText(KeepActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                 Log.e("보관함 데이터 불러오기 에러", t.getMessage());
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력

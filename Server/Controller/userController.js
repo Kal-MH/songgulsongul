@@ -328,13 +328,14 @@
            for(let i = 0; i < rows[0].length; i++){
              var kdata = {
                'image' : rows[0][i].image,
-               'postId': rows[0][i].id
+               'id': rows[0][i].post_id
              };
              keep_info.push(kdata);
            }
            keep_cnt = rows[0].length;
            profile_img = rows[1][0].img_profile;
-
+           console.log(keep_info);
+           console.log(keep_cnt);
            res.json({
              'code' : resultCode,
              'keepInfo' : keep_info,
