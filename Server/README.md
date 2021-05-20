@@ -276,7 +276,7 @@
      	'followerCnt',  //팔로워 수
      	'followCnt',  //팔로우 수
      	'postInfo', //게시글 정보 -> image, postId
-     	'profileInfo'  //프로필 정보 -> profile_image, intro, sns
+     	'profileInfo'  //프로필 정보 -> profile_image, intro, sns, userId
      }
 
      ```
@@ -334,13 +334,15 @@
    - api: /user/follow-list
    - method : POST
    - 전달받아야 하는 데이터
-     - userId(선택한 사용자의 id)
+     - user_id(선택한 사용자의 id)
+     - id(로그인한 사용자의 id)
    - 응답 데이터
 
      ```
      json = {
        'code',
-     	'userfollowinfo'  //팔로우 정보 -> image, userId
+       'loginFollowInfo', -> userId
+     	'userFollowInfo'  //팔로우 정보 -> image, userId
      }
 
      ```
@@ -351,12 +353,14 @@
    - method : POST
    - 전달받아야 하는 데이터
      - id
+     - status
    - 응답 데이터
 
      ```
      json = {
        'code',
-     	'followerinfo'  //팔로워 정보 -> image, userId
+       'followingInfo', -> userId
+     	 'followerInfo'  //팔로워 정보 -> image, userId
      }
 
      ```
@@ -366,22 +370,45 @@
    - api: /user/keep
    - method : POST
    - 전달받아야 하는 데이터
-     - id(로그인한 사용자)
+     - login_id(로그인한 사용자)
    - 응답 데이터
 
      ```
      json = {
        'code',
-     	'keepinfo', //보관정보 -> image, postId
-     	'keepcnt' //보관개수
+     	'keepInfo', //보관정보 -> image, postId
+     	'keepCnt', //보관개수
+      'profileImg'
      }
 
      ```
+     
 
-8. 프로필 수정 – 아이디 중복 확인
+8. 아이디 변경
 
-   - api: /user/profile-edit-idcheck
+   - api: /user/id-change
+   - method: POST
+   - 전달받아야 하는 데이터
+     - login_id
+     - new_id
+   - 응답 데이터
+   
+     ```
+     json = {
+     	'code'
+     }
 
+     ```
+     
+9. 비밀번호 변경
+
+   - api: /user/pw-change
+   - method: POST
+   - 전달받아야 하는 데이터
+     - login_id
+     - password
+   - 응답 데이터
+   
      ```
      json = {
      	'code'
@@ -389,16 +416,17 @@
 
      ```
 
-9. 프로필 수정
+10. 프로필 수정
 
    - api: /user/profile-edit
    - method : POST
    - 전달받아야 하는 데이터
-     - id(기존 아이디)
-     - newId(변경된 아이디)
-     - newIntro(변경된 소개글)
-     - newSNS(변경된 sns주소)
-     - profileImage
+     - sns_check_flag
+     - img_check_flag
+     - login_id
+     - new_intro
+     - new_SNS
+     - new_image
    - 응답 데이터
 
      ```
@@ -408,7 +436,7 @@
 
      ```
 
-10. 회원 탈퇴
+11. 회원 탈퇴
 
     - api: /user/data-delete
     - method : POST
