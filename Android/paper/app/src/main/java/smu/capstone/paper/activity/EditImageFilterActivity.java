@@ -12,15 +12,21 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
 import smu.capstone.paper.R;
 
 public class EditImageFilterActivity extends AppCompatActivity {
 
+    public enum editFilter{
+        None, Gray, Test
+    }
+
 
     long first_time = 0;
     long second_time = 0;
+
     ImageView editPreview;
 
     long paperImgAddress;
@@ -36,11 +42,19 @@ public class EditImageFilterActivity extends AppCompatActivity {
     Mat previewImage;
     Bitmap previewImageBitmap;
 
+    editFilter selectedFilter = editFilter.None;
 
-    public native void applyRGBMinGrey(long imgInputAddress, long imgOutputAddress);
+    public native void applyRGBMinGray(long imgInputAddress, long imgOutputAddress);
 
     public native void applyTestFilter(long imgInputAddress, long imgOutputAddress);
 
+    public void updatePreviewImageView(){
+        if(previewImageBitmap!=null)
+            previewImageBitmap.recycle();
+        previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(previewImage, previewImageBitmap);
+        editPreview.setImageBitmap(previewImageBitmap);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +66,64 @@ public class EditImageFilterActivity extends AppCompatActivity {
 
         editPreview = findViewById(R.id.editPreview);
 
+        filterNone = findViewById(R.id.image_edit_filter_none);
+        filterGrey = findViewById(R.id.image_edit_filter_gray);
+        filterTest = findViewById(R.id.image_edit_filter_test);
 
+        editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
+        try{
+
+            Mat locMat = new Mat(editingImageAddress);
+            //편집 취소해도 연동되지 않게 별도 객체로 분리
+            //previewImage.copyTo(previewImage);
+            previewImage = locMat.clone();
+            //previewImage = previewImage.clone();
+        }
+        catch (Exception e){
+
+        }
+        if(previewImage != null){
+            /*
+            Bitmap loc_bitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(previewImage, loc_bitmap);
+            editPreview.setImageBitmap(loc_bitmap);
+            */
+            updatePreviewImageView();
+        }
+
+
+
+        filterNone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedFilter = editFilter.None;
+                previewImage.release();
+                Mat loc = new Mat(editingImageAddress).clone();
+                previewImage = loc;
+                updatePreviewImageView();
+            }
+        });
+
+        filterGrey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedFilter = editFilter.Gray;
+                applyRGBMinGray(editingImageAddress,previewImage.getNativeObjAddr());
+                updatePreviewImageView();
+            }
+        });
+
+        filterTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO:필터 이미지 블랜딩 추가
+                selectedFilter = editFilter.None;
+                previewImage.release();
+                Mat loc = new Mat(editingImageAddress).clone();
+                previewImage = loc;
+                updatePreviewImageView();
+            }
+        });
 
 
 
@@ -61,8 +132,19 @@ public class EditImageFilterActivity extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //TODO: 프리뷰 Mat을 그대로 옮길지 아니면 프리뷰 연산 크기를 줄이고 별도로 둘지 선택할것
+                switch (selectedFilter){
+                    case None: //do nothing
+                        break;
+                    case Gray: applyRGBMinGray(editingImageAddress,editingImageAddress);
+                        break;
+                    case Test: //TODO
+                        break;
+                    default:
+                        break;
+                }
                 finish();
+
             }
         });
 

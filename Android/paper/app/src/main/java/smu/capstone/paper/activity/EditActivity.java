@@ -40,6 +40,7 @@ public class EditActivity extends AppCompatActivity {
     LinearLayout editRatio;
     LinearLayout editColors;
     LinearLayout editHistogram;
+    LinearLayout editDenoise;
     LinearLayout editFilter;
     LinearLayout editTransparency;
 
@@ -113,8 +114,9 @@ public class EditActivity extends AppCompatActivity {
 
         editRatio = findViewById(R.id.edit_image_ratio);
         editColors = findViewById(R.id.edit_image_colors);
-        //editFilter = findViewById(R.id.edit_image_filter);
-        editHistogram = findViewById(R.id.edit_image_filter);//TODO: 히스토그램 버튼 만들기 //지금은 없어서 필터 버튼 사용
+        editFilter = findViewById(R.id.edit_image_filter);
+        editHistogram = findViewById(R.id.edit_image_histogram);
+        editDenoise = findViewById(R.id.edit_image_denoise);
 
         filePath = getIntent().getStringExtra("path");
         edit_iv = findViewById(R.id.edit_pic);
@@ -128,10 +130,10 @@ public class EditActivity extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Bitmap edited = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
-                //Utils.matToBitmap(editingImage,edited);
-                //File temp = (File)saveBitmapToCache(edited,"edit_temp");
-                //String filePath= temp.getAbsolutePath();
+                Bitmap edited = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(editingImage,edited);
+                File temp = (File)saveBitmapToCache(edited,"edit_temp");
+                String filePath= temp.getAbsolutePath();
                 Intent intent = new Intent( EditActivity.this , EditDoneActivity.class);
                 intent.putExtra("path", filePath);
                 intent.putExtra("editedImageAddress",editingImage.getNativeObjAddr());
@@ -176,7 +178,7 @@ public class EditActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        /*
+
         editFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
@@ -186,7 +188,7 @@ public class EditActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        */
+
 
 
 
