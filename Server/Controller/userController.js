@@ -56,12 +56,12 @@
 
              for(let i = 0; i < results[2].length; i++){
                var pdata = {
-                 'image': results[2][i].image,
-                 'postId': results[2][i].id,
+                   'image': results[2][i].image,
+                   'id': results[2][i].id
                };
                post_info.push(pdata);
              }
-
+               console.log(post_info);
              var prodata = {
                'img_profile': results[3][0].img_profile,
                'intro': results[3][0].intro,
