@@ -14,7 +14,6 @@ const FIND_PASSWORD = "/find/password";
 const USER = "/user";
 const USER_PROFILE = "/profile";
 const USER_KEEP = "/keep";
-const USER_PROFILE_DATA = "/profile-data";
 const USER_ID_CHANGE = "/id-change"
 const USER_PW_CHANGE = "/pw-change"
 const USER_PROFILE_EDIT = "/profile-edit";
@@ -77,7 +76,6 @@ const routes = {
     user : USER,
     userProfile : USER_PROFILE,
     userKeep : USER_KEEP,
-    userProfileData : USER_PROFILE_DATA,
     userIdChange : USER_ID_CHANGE,
     userPwChange : USER_PW_CHANGE,
     userProfileEdit : USER_PROFILE_EDIT,

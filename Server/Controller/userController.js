@@ -345,36 +345,6 @@
        })
      },
 
-     // 기존 프로필 데이터 불러오기
-     profileData : function(req, res){
-       const id = req.body.id;
-       var param = [id];
-
-       var sql = 'SELECT * FROM user WHERE login_id = ?;';
-       connection.query(sql, param, function(err, rows){
-         var resultCode = statusCode.SERVER_ERROR;
-
-         if(err){
-           console.log(err);
-           res.json({
-             'code': resultCode
-           })
-         }
-         else{
-           resultCode = statusCode.OK;
-
-           res.json({
-             'code': resultCode,
-             'profileImg': rows[0].img_profile,
-             'intro': rows[0].intro == null ? "" : rows[0].intro,
-             'sns': rows[0].sns_url == null ? "" : rows[0].sns_url,
-             'snsCheck': rows[0].sns_check == null ? 0 : rows[0].sns_check
-           })
-           console.log(resultCode)
-         }
-       })
-     },
-
      // 아이디 변경
      userIdChange : function(req, res) {
        const id = req.body.login_id;

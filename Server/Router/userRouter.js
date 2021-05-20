@@ -19,7 +19,6 @@ userRouter.post(routes.userLFollowList, userController.userLFollowList);
 userRouter.post(routes.userFollowList, userController.userFollowList);
 userRouter.post(routes.userFollowerList, userController.userFollowerList);
 userRouter.post(routes.userKeep, userController.profileKeep);
-userRouter.post(routes.userProfileData, userController.profileData);
 userRouter.post(routes.userIdChange, userController.userIdChange);
 userRouter.post(routes.userPwChange, userController.userPwChange);
 userRouter.post(routes.userProfileEdit, middleWares.multerProfile, userController.profileEdit);
