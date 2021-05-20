@@ -128,7 +128,7 @@ public interface ServiceApi {
 
     //커뮤니트 게시글 가져오기
     @GET("/post/community")
-    Call<PostListResponse> GetCommunity(@Query("offset") int offset);
+    Call<PostListResponse> GetCommunity(@Query("offset") Integer offset);
 
     //세부 게시글 내용 가져오기
     @GET("/post/{id}")

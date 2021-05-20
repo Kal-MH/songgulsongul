@@ -109,7 +109,7 @@ public class FragHomeComu extends Fragment {
 
     //server에서 data전달
     public void GetCommunityData(){
-        serviceApi.GetCommunity(20).enqueue((new Callback<PostListResponse>() {
+        serviceApi.GetCommunity(null).enqueue((new Callback<PostListResponse>() {
             @Override
             public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
                 PostListResponse result = response.body();
