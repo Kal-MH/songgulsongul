@@ -67,7 +67,7 @@
                'intro': results[3][0].intro,
                'sns': results[3][0].sns_url,
                'userId': results[3][0].login_id,
-               'sns_check':results[3][0].sns
+               'sns_check':results[3][0].sns_check
              }
 
              if(status === 1){ // 로그인한 사용자의 프로필일 경우
