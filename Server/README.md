@@ -418,23 +418,23 @@
 
 10. 프로필 수정
 
-   - api: /user/profile-edit
-   - method : POST
-   - 전달받아야 하는 데이터
-     - sns_check_flag
-     - img_check_flag
-     - login_id
-     - new_intro
-     - new_SNS
-     - new_image
-   - 응답 데이터
+    - api: /user/profile-edit
+    - method : POST
+    - 전달받아야 하는 데이터
+      - sns_check_flag
+      - img_check_flag
+      - login_id
+      - new_intro
+      - new_SNS
+      - new_image
+    - 응답 데이터
 
-     ```
-     json = {
-     	'code'
-     }
+      ```
+      json = {
+     	 'code'
+      }
 
-     ```
+      ```
 
 11. 회원 탈퇴
 
