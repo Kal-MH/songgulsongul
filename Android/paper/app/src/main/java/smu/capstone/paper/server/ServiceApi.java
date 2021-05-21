@@ -3,6 +3,7 @@ package smu.capstone.paper.server;
 import com.google.gson.JsonObject;
 
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -141,5 +142,15 @@ public interface ServiceApi {
 
     @GET("/post/search/tag")
     Call<PostListResponse> SearchPostTag(@Query("keyword") String keyword , @Query("offset") int offset);
+
+    // 게시글 업로드
+    @Multipart
+    @POST("/post/upload")
+    Call<CodeResponse> PostUpload(
+            @Part("user_id") RequestBody id,
+            @Part("text") RequestBody text,
+            @Part List<MultipartBody.Part> hashTags,
+            @Part List<MultipartBody.Part> ccl,
+            @Part MultipartBody.Part postImg);
 
 }
