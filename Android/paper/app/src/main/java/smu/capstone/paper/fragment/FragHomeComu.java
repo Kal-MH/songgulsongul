@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -180,8 +181,17 @@ public class FragHomeComu extends Fragment {
                             // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
                         }
                         else if( resultCode == statusCode.RESULT_OK){
-                            adapter.addItem(result.getData());
-                            adapter.notifyDataSetChanged();
+
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    //업데이트
+                                    adapter.addItem(result.getData());
+                                    adapter.notifyDataSetChanged();
+
+                                }
+                            });
                         }
                         else {
                             adapter.addItem(result.getData());
@@ -234,7 +244,6 @@ public class FragHomeComu extends Fragment {
                 return 0;
             }
         });
-
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
