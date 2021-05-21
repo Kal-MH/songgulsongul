@@ -55,6 +55,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         System.loadLibrary("native-lib");
     }
     String filePath;
+    String sourceFilePath;
     FrameLayout zoomFrame , dots ;
     ZoomView zoomView;
     Toolbar toolbar;
@@ -79,6 +80,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     private Mat imgInput;
     private Mat imgOutput;
     private MatOfPoint paperPoints;
+    Bitmap imgInputBitmap;
 
     private boolean findPaperOnce = false;
 
@@ -93,6 +95,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
         //gets the file path
         filePath = getIntent().getStringExtra("path");
+        sourceFilePath = filePath;
         imgInput = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
         Imgproc.cvtColor(imgInput,imgInput, Imgproc.COLOR_BGR2RGB);//RGB BGR 채널 뒤밖임 수정
         paperPoints = new MatOfPoint();
@@ -112,7 +115,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         zoom_background = findViewById(R.id.zoom_background);
 
         //대상 이미지 동기 로딩
-        Bitmap imgInputBitmap = Bitmap.createBitmap(imgInput.cols(),imgInput.rows(), Bitmap.Config.ARGB_8888);
+        imgInputBitmap= Bitmap.createBitmap(imgInput.cols(),imgInput.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(imgInput,imgInputBitmap);
         zoom_background.setImageBitmap(imgInputBitmap);
         
@@ -161,6 +164,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 Intent intent = new Intent(DetectPaperActivity.this , DetectPicActivity.class);
                 // 이미지 편집 후 임시파일로 저장, 인텐트에는 url로 전달
                 intent.putExtra("path", filePath);
+                intent.putExtra("sourceFilePath", sourceFilePath);
                 imgOutput = new Mat();
                 PaperProcessing(imgInput.getNativeObjAddr(),imgOutput.getNativeObjAddr(),paperPoints.getNativeObjAddr(),pivotOffsetX,pivotOffsetY,scaleFactor,th1,th2);
                 //Log.w("DetectPaper", "paperImage Address: "+ String.valueOf(imgOutput.getNativeObjAddr()));
@@ -604,10 +608,11 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
                 Intent intent = new Intent(DetectPaperActivity.this , DetectPicActivity.class);
                 intent.putExtra("path", filePath);
-                intent.putExtra("imgInputAddress", imgInput.getNativeObjAddr());
+                intent.putExtra("sourceFilePath", sourceFilePath);
+                imgOutput = imgInput.clone();
+                intent.putExtra("imgInputAddress", imgOutput.getNativeObjAddr());
                 startActivity(intent);
                 finish();
-
                 return true;
 
         }
@@ -618,6 +623,8 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     public void finish() {
 
         imgInput.release();
+        imgInputBitmap.recycle();
+        paperPoints.release();
         super.finish();
     }
 }

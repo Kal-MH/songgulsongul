@@ -559,6 +559,7 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_PaperProcessing(JNIEnv *env
         resize(img_input, smallImg,Size(smallSizeX,smallSizeY),0,0);
 
         //img_output = getImageCannyBorders(img_input, th1, th2);
+        img_output.release();
         img_output = smallImg;
 
     }
@@ -674,6 +675,7 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env,
      //이상하게 include 쪽에서 오류남
     */
     img_output.release();
+    smallImg.release();
 }extern "C"
 JNIEXPORT jintArray JNICALL
 Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobject thiz,
@@ -802,6 +804,7 @@ Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogram(JN
 
     cvtColor(ycrcb,result,COLOR_YCrCb2RGB);
 
+    img_output.release();
     img_output = result;
     ycrcb.release();
 
@@ -833,6 +836,7 @@ Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogramCla
 
     cvtColor(ycrcb,result,COLOR_YCrCb2RGB);
 
+    img_output.release();
     img_output = result;
     ycrcb.release();
 }

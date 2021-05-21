@@ -49,6 +49,7 @@ public class DetectPicActivity extends AppCompatActivity {
     Mat croppedImage = new Mat();
     //MatOfPoint picPoints;
     int[] picRectFromOpencv = new int[]{400,400,800,500};
+    Bitmap imgInputBitmap;
 
     public native int[] DetectPic(long imgInput, int th1, int th2);
     //public native void ProcessPic();    @Override
@@ -76,9 +77,9 @@ public class DetectPicActivity extends AppCompatActivity {
 
                 // 가져온 이미지 세팅
         //cropImageView.setImageUriAsync(imageUri);
-        imgInputAddress = getIntent().getLongExtra("imgInputAddress", 0x00);
+        imgInputAddress = getIntent().getLongExtra("imgInputAddress", 0);
         paperImage = new Mat(imgInputAddress);
-        Bitmap imgInputBitmap = Bitmap.createBitmap(paperImage.cols(),paperImage.rows(), Bitmap.Config.ARGB_8888);
+        imgInputBitmap = Bitmap.createBitmap(paperImage.cols(),paperImage.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(paperImage,imgInputBitmap);
         cropImageView.setImageBitmap(imgInputBitmap);
         //paperImage = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
@@ -120,7 +121,9 @@ public class DetectPicActivity extends AppCompatActivity {
                 String filePath= temp.getAbsolutePath();
                 Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
                 intent.putExtra("path", filePath);
+                intent.putExtra("sourceFilePath", sourceFilePath);
                 intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
+                intent.putExtra("paperImageAddress", imgInputAddress);
                 startActivity(intent);
                 finish();
             }
@@ -171,18 +174,26 @@ public class DetectPicActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
-                // 알림팝업
+                // TODO:알림팝업
 
+                return true;
+            }
+
+            case R.id.toolbar_before:{
+                Intent intent = new Intent(DetectPicActivity.this, DetectPaperActivity.class);
+                intent.putExtra("path", sourceFilePath);
+                startActivity(intent);
+                finish();
                 return true;
             }
 
             case R.id.toolbar_skip://  바로 다음 화면으로 건너뛰기
                 Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
                 intent.putExtra("path", filePath);
-
+                intent.putExtra("sourceFilePath", sourceFilePath);
                 croppedImage = paperImage.clone();
                 intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
-
+                intent.putExtra("paperImageAddress", imgInputAddress);
                 startActivity(intent);
                 finish();
                 return true;
@@ -194,6 +205,7 @@ public class DetectPicActivity extends AppCompatActivity {
     @Override
     public void finish() {
         paperImage.release();
+        imgInputBitmap.recycle();
         super.finish();
     }
 }

@@ -119,6 +119,7 @@ public class EditActivity extends AppCompatActivity {
         editDenoise = findViewById(R.id.edit_image_denoise);
 
         filePath = getIntent().getStringExtra("path");
+        sourceFilePath = getIntent().getStringExtra("sourceFilePath");
         edit_iv = findViewById(R.id.edit_pic);
         Glide.with(this).load(filePath).into(edit_iv);
 
@@ -138,6 +139,26 @@ public class EditActivity extends AppCompatActivity {
                 intent.putExtra("path", filePath);
                 intent.putExtra("editedImageAddress",editingImage.getNativeObjAddr());
                 startActivity(intent);
+
+                //Edit Done 할시 되돌아 갈 수 없음! 이전 작업 정리해도 안전!
+                //메모리 정리하기
+                try{
+                    Mat loc = new Mat(croppedImageAddress);
+                    loc.release();
+                }
+                catch (Exception e){
+
+                }
+                try{
+                    Mat loc2 = new Mat(paperImageAddress);
+                    loc2.release();
+                }
+                catch (Exception e){
+
+                }
+
+
+
                 finish();
             }
         });
