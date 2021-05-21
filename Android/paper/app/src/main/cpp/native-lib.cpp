@@ -12,9 +12,52 @@ using namespace std;
 static const int smallSizeX = 500;
 static const int smallSizeY = 500;
 
-Mat RGB2MinGrey(Mat img){
+int smallestColor(int x, int y, int z) {
 
-    return img;
+    int smallest = 256;
+
+    if (x < smallest)
+        smallest=x;
+    if (y < smallest)
+        smallest=y;
+    if(z < smallest)
+        smallest=z;
+
+    return smallest;
+}
+char smallestColor(char x, char y, char z) {
+
+    char smallest = 256;
+
+    if (x < smallest)
+        smallest=x;
+    if (y < smallest)
+        smallest=y;
+    if(z < smallest)
+        smallest=z;
+
+    return smallest;
+}
+
+void RGB2MinGray(Mat img, Mat output){
+
+    //TODO: 포인터 사용 안하면 작동 안하나봄. 고칠것
+
+    int width = img.cols;
+    int height = img.rows;
+    int grayScale = 0;
+    Mat loc(height, width, CV_8UC3, Scalar(0, 0, 0));
+    for (int i = 0; i < height; i++){
+        for (int k = 0; k < width; k++){
+
+            grayScale = smallestColor(img.at<Vec3b>(i, k)[0],img.at<Vec3b>(i, k)[1],img.at<Vec3b>(i, k)[2]);
+
+            loc.at<Vec3b>(i, k)[0] = grayScale;
+            loc.at<Vec3b>(i, k)[1] = grayScale;
+            loc.at<Vec3b>(i, k)[2] = grayScale;
+        }
+    }
+    output = loc;
 }
 
 //water filling
@@ -870,6 +913,35 @@ Java_smu_capstone_paper_activity_EditImageColorActivity_setColors(JNIEnv *env, j
     //locMat = locMat * ((contrast_progress-50)*(255.0/50));
     locMat = locMat * progressToValue(contrast_progress,0.25,4,1);
 
-
+    img_output.release();
     img_output = locMat;
+}extern "C"
+JNIEXPORT void JNICALL
+Java_smu_capstone_paper_activity_EditImageFilterActivity_applyRGBMinGray(JNIEnv *env, jobject thiz,
+                                                                         jlong img_input_address,
+                                                                         jlong img_output_address) {
+    Mat &imgInput = *(Mat *) img_input_address;
+    Mat &img_output = *(Mat *) img_output_address;
+
+    Mat locMat =  imgInput.clone();
+    //RGB2MinGray(imgInput,locMat);
+
+
+    int width = imgInput.cols;
+    int height = imgInput.rows;
+    for (int i = 0; i < imgInput.rows; i++){
+        for (int k = 0; k < imgInput.cols; k++){
+
+            unsigned char grayScale = smallestColor(imgInput.at<Vec3b>(i, k)[0],imgInput.at<Vec3b>(i, k)[1],imgInput.at<Vec3b>(i, k)[2]);
+
+            locMat.at<Vec3b>(i, k)[0] = grayScale;
+            locMat.at<Vec3b>(i, k)[1] = grayScale;
+            locMat.at<Vec3b>(i, k)[2] = grayScale;
+        }
+    }
+
+
+    img_output.release();
+    img_output = locMat;
+
 }

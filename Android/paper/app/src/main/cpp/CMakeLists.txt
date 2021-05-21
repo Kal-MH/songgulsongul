@@ -6,7 +6,8 @@
 cmake_minimum_required(VERSION 3.4.1)
 
 #프로젝트 경로 하나만 설정할것.
-set(pathPROJECT D:/SMU_Capstone/Capstone2021/Android/paper) # 개인별 수정필요 #신희찬
+#set(pathPROJECT D:/SMU_Capstone/Capstone2021/Android/paper) # 개인별 수정필요 #신희찬
+set(pathPROJECT D:/SMU_Capstone2/Capstone2021/Android/paper) # 개인별 수정필요 #신희찬2
 #set(pathPROJECT D:/SMU_Capstone/Capstone2021/Android/paper) # 개인별 수정필요 #ㅇㅇㅇ
 #set(pathPROJECT D:/SMU_Capstone/Capstone2021/Android/paper) # 개인별 수정필요 #ㅇㅇㅇ
 #set(pathPROJECT D:/SMU_Capstone/Capstone2021/Android/paper) # 개인별 수정필요 #ㅇㅇㅇ
