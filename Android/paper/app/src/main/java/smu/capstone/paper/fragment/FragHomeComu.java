@@ -40,6 +40,8 @@ public class FragHomeComu extends Fragment {
     PostImageAdapter adapter;
     List<Post> postData;
 
+    int lastId;
+
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
 
@@ -138,6 +140,39 @@ public class FragHomeComu extends Fragment {
             }
         }));
     }
+
+    public void GetCommunityDataMore(){
+        serviceApi.GetCommunity(lastId).enqueue((new Callback<PostListResponse>() {
+            @Override
+            public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
+                PostListResponse result = response.body();
+
+                int resultCode = result.getCode();
+                if(resultCode == statusCode.RESULT_SERVER_ERR){
+                    Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
+                }
+                else if( resultCode == statusCode.RESULT_OK){
+                    postData.addAll(result.getData() );
+                    adapter.notifyDataSetChanged();
+                }
+                else {
+                    postData.addAll(result.getData());
+                    adapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<PostListResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                //  feeds = new JsonObject();
+                Log.d("feed" , "통신 실패");
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        }));
+    }
+
 
     public  void setData(){
         // 어뎁터 적용
