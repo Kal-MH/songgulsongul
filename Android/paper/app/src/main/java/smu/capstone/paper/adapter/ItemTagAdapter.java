@@ -1,5 +1,6 @@
 package smu.capstone.paper.adapter;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;

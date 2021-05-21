@@ -42,11 +42,6 @@ public class FragHomeFeed extends Fragment {
     int user_id;
     int lastId;
 
-    int totalCount = 0;
-    Boolean isNext = false;
-    int page = 0; //현재 페이 지
-    int offset = 10;// 한번에 가져올 양
-
 
     Boolean isLoading = false;
 
@@ -90,10 +85,6 @@ public class FragHomeFeed extends Fragment {
 
 
         return rootView;
-    }
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -194,9 +185,9 @@ public class FragHomeFeed extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                Log.d("scroll" , layoutManager.findLastVisibleItemPosition() +"");
+                Log.d("scroll" , layoutManager.findLastVisibleItemPosition() +" | " + ( adapter.getItemCount()  -1 ) );
                 if (!isLoading) {
-                    if (layoutManager != null && layoutManager.findLastVisibleItemPosition()== feeds.size() - 1) {
+                    if (layoutManager != null && layoutManager.findLastVisibleItemPosition()== adapter.getItemCount() - 1) {
                         //리스트 마지막
                         GetFeedDataMore();
                         isLoading = true;

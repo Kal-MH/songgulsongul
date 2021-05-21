@@ -65,7 +65,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return new ItemViewHolder(view);
         }
         else{
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.feed_progress_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
             return new LoadingViewHolder(view);
         }
     }
@@ -290,7 +290,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public LoadingViewHolder(@NonNull View itemView) {
             super(itemView);
-            progressBar = itemView.findViewById(R.id.feed_progressBar);
+            progressBar = itemView.findViewById(R.id.item_progressBar);
         }
     }
 

@@ -4,9 +4,8 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:id="@+id/feed_progressBar"
+        android:id="@+id/item_progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content" />
 </LinearLayout>
