@@ -151,6 +151,7 @@ public interface ServiceApi {
             @Part("text") RequestBody text,
             @Part List<MultipartBody.Part> hashTags,
             @Part List<MultipartBody.Part> ccl,
+            @Part List<MultipartBody.Part> itemTags,
             @Part MultipartBody.Part postImg);
 
 }

@@ -78,7 +78,7 @@ public class UploadDetailActivity extends AppCompatActivity {
     int ccl1, ccl2, ccl3, ccl4, ccl5;
 
     RequestBody requestFile, requestId, requestText;
-    MultipartBody.Part body;
+    MultipartBody.Part imageBody;
     ArrayList<MultipartBody.Part> hash_tags = new ArrayList<>();
     ArrayList<MultipartBody.Part> ccl_list = new ArrayList<>();
     ArrayList<MultipartBody.Part> item_tags = new ArrayList<>();
@@ -169,6 +169,16 @@ public class UploadDetailActivity extends AppCompatActivity {
         itemtag_rv = findViewById(R.id.upload_itemtag_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         itemtag_rv.setLayoutManager(layoutManager);
+
+        // 임시데이터
+        ItemTag item1 = new ItemTag(1, "item1", 3000, 1000, "https://search.shopping.naver.com/gate.nhn?id=82726822549",
+                "https://shopping-phinf.pstatic.net/main_8272682/82726822549.1.jpg", "brand1", "category1-1", "category2-1");
+        ItemTag item2 = new ItemTag(2, "item1", 3000, 1000, "https://search.shopping.naver.com/gate.nhn?id=82726822549",
+                "https://shopping-phinf.pstatic.net/main_8272682/82726822549.1.jpg", "brand2", "category1-2", "category2-2");
+        itemTagData.add(item1);
+        itemTagData.add(item2);
+
+
         itemTagData.add(new ItemTag(-1));
         adapter = new AddItemTagAdapter(itemtag_rv.getContext(), itemTagData); // 추가모드 어뎁터 세팅
 
@@ -186,12 +196,13 @@ public class UploadDetailActivity extends AppCompatActivity {
     public void makeUploadData(){
         hash_tags.clear();
         ccl_list.clear();
+        item_tags.clear();
         ccl1 = ccl2 = ccl3 = ccl4 = ccl5 = OFF;
 
         // 업로드 이미지
         File file = new File(filePath);
         requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
-        body = MultipartBody.Part.createFormData("img_post", file.getName(), requestFile);
+        imageBody = MultipartBody.Part.createFormData("img_post", file.getName(), requestFile);
 
         // 사용자 아이디
         requestId = RequestBody.create(MediaType.parse("text/plain"), login_id);
@@ -230,6 +241,18 @@ public class UploadDetailActivity extends AppCompatActivity {
         ccl_list.add(MultipartBody.Part.createFormData("ccl", String.valueOf(ccl5)));
 
         // 아이템 태그
+        List<ItemTag> items = adapter.getDataList();
+        Log.d("item_count", String.valueOf(items.size()));
+        for(int i = 0; i < items.size() - 1; i++){
+            item_tags.add(MultipartBody.Part.createFormData("item_name", items.get(i).getName()));
+            item_tags.add(MultipartBody.Part.createFormData("item_lowprice", String.valueOf(items.get(i).getL_price())));
+            item_tags.add(MultipartBody.Part.createFormData("item_highprice", String.valueOf(items.get(i).getH_price())));
+            item_tags.add(MultipartBody.Part.createFormData("item_link", items.get(i).getUrl()));
+            item_tags.add(MultipartBody.Part.createFormData("item_img", items.get(i).getPicture()));
+            item_tags.add(MultipartBody.Part.createFormData("item_brand", items.get(i).getBrand()));
+            item_tags.add(MultipartBody.Part.createFormData("item_category1", items.get(i).getCategory1()));
+            item_tags.add(MultipartBody.Part.createFormData("item_category2", items.get(i).getCategory2()));
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -288,7 +311,7 @@ public class UploadDetailActivity extends AppCompatActivity {
 
             case R.id.toolbar_done :
                 makeUploadData();
-                serviceApi.PostUpload(requestId, requestText, hash_tags, ccl_list, body).enqueue(new Callback<CodeResponse>() {
+                serviceApi.PostUpload(requestId, requestText, hash_tags, ccl_list, item_tags, imageBody).enqueue(new Callback<CodeResponse>() {
                     @Override
                     public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                         try {

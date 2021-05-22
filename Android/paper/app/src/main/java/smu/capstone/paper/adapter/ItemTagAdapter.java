@@ -3,6 +3,7 @@ package smu.capstone.paper.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,5 +79,9 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
             super(itemView);
             pic = (ImageView)itemView.findViewById(R.id.item_tag_img);
         }
+    }
+
+    public List<ItemTag> getDataList(){
+        return dataList;
     }
 }
