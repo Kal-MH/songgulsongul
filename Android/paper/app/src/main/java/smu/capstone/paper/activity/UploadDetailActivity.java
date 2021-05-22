@@ -173,11 +173,11 @@ public class UploadDetailActivity extends AppCompatActivity {
         // 임시데이터
         ItemTag item1 = new ItemTag(1, "item1", 3000, 1000, "https://search.shopping.naver.com/gate.nhn?id=82726822549",
                 "https://shopping-phinf.pstatic.net/main_8272682/82726822549.1.jpg", "brand1", "category1-1", "category2-1");
-        ItemTag item2 = new ItemTag(2, "item1", 3000, 1000, "https://search.shopping.naver.com/gate.nhn?id=82726822549",
+        ItemTag item2 = new ItemTag(2, "item1", 4000, 2000, "https://search.shopping.naver.com/gate.nhn?id=82726822549",
                 "https://shopping-phinf.pstatic.net/main_8272682/82726822549.1.jpg", "brand2", "category1-2", "category2-2");
         itemTagData.add(item1);
         itemTagData.add(item2);
-
+        //
 
         itemTagData.add(new ItemTag(-1));
         adapter = new AddItemTagAdapter(itemtag_rv.getContext(), itemTagData); // 추가모드 어뎁터 세팅
@@ -243,44 +243,28 @@ public class UploadDetailActivity extends AppCompatActivity {
         // 아이템 태그
         List<ItemTag> items = adapter.getDataList();
         Log.d("item_count", String.valueOf(items.size()));
-        for(int i = 0; i < items.size() - 1; i++){
-            item_tags.add(MultipartBody.Part.createFormData("item_name", items.get(i).getName()));
-            item_tags.add(MultipartBody.Part.createFormData("item_lowprice", String.valueOf(items.get(i).getL_price())));
-            item_tags.add(MultipartBody.Part.createFormData("item_highprice", String.valueOf(items.get(i).getH_price())));
-            item_tags.add(MultipartBody.Part.createFormData("item_link", items.get(i).getUrl()));
-            item_tags.add(MultipartBody.Part.createFormData("item_img", items.get(i).getPicture()));
-            item_tags.add(MultipartBody.Part.createFormData("item_brand", items.get(i).getBrand()));
-            item_tags.add(MultipartBody.Part.createFormData("item_category1", items.get(i).getCategory1()));
-            item_tags.add(MultipartBody.Part.createFormData("item_category2", items.get(i).getCategory2()));
-        }
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public JSONObject getItemtagData(){
-        JSONObject post_itemtag_item = new JSONObject();
-        JSONArray arr= new JSONArray();
-
-
-        //임시 데이터 저장
-        try{
-
-            JSONObject obj2 = new JSONObject();
-            obj2.put("Image", drawable2Bitmap( getDrawable(R.drawable.ic_baseline_add_24)) );
-            arr.put(obj2);
-
-
-            for(int i = 0; i < 5; i++){
-                JSONObject obj = new JSONObject();
-                obj.put("Image", drawable2Bitmap( getDrawable(R.drawable.sampleimg)) );
-                arr.put(obj);
+        if(items.size() > 1) {
+            for (int i = 0; i < items.size() - 1; i++) {
+                item_tags.add(MultipartBody.Part.createFormData("item_name",
+                        items.get(i).getName() == null ? "" : items.get(i).getName()));
+                item_tags.add(MultipartBody.Part.createFormData("item_lowprice",
+                        String.valueOf(items.get(i).getL_price())));
+                item_tags.add(MultipartBody.Part.createFormData("item_highprice",
+                        String.valueOf(items.get(i).getH_price())));
+                item_tags.add(MultipartBody.Part.createFormData("item_link",
+                        items.get(i).getUrl() == null ? "" : items.get(i).getUrl()));
+                item_tags.add(MultipartBody.Part.createFormData("item_img",
+                        items.get(i).getPicture() == null ? "" : items.get(i).getPicture()));
+                item_tags.add(MultipartBody.Part.createFormData("item_brand",
+                        items.get(i).getBrand() == null ? "" :  items.get(i).getBrand()));
+                item_tags.add(MultipartBody.Part.createFormData("item_category1",
+                        items.get(i).getCategory1() == null ? "" : items.get(i).getCategory1()));
+                item_tags.add(MultipartBody.Part.createFormData("item_category2",
+                        items.get(i).getCategory2() == null ? "" : items.get(i).getCategory2()));
             }
-            post_itemtag_item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
         }
-        return post_itemtag_item;
     }
-
 
     @Override
     public void onBackPressed() {
@@ -321,7 +305,7 @@ public class UploadDetailActivity extends AppCompatActivity {
                             if (resultCode == StatusCode.RESULT_OK) {
                                 Toast toast = Toast.makeText(UploadDetailActivity.this, "업로드 완료", Toast.LENGTH_SHORT);
                                 toast.show();
-                                //Intent intent = new Intent(UploadDetailActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동
+                                //Intent intent = new Intent(UploadDetailActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동 (게시글 id 넘기기)
                                 //startActivity(intent);
                             } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                 new AlertDialog.Builder(UploadDetailActivity.this)
