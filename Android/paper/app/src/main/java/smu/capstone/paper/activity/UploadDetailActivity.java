@@ -68,7 +68,8 @@ public class UploadDetailActivity extends AppCompatActivity {
     // ServiceApi 객체 생성
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
 
-    String filePath, login_id;
+    String filePath;
+    int user_id;
     RecyclerView itemtag_rv;
     AddItemTagAdapter adapter;
     List<ItemTag> itemTagData = new ArrayList<>();
@@ -96,7 +97,7 @@ public class UploadDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_upload_detail);
 
         uploadText = findViewById(R.id.upload_text);
-        login_id = LoginSharedPreference.getLoginId(this);
+        user_id = LoginSharedPreference.getUserId(this);
 
 
         //이미지 세팅
@@ -205,7 +206,7 @@ public class UploadDetailActivity extends AppCompatActivity {
         imageBody = MultipartBody.Part.createFormData("img_post", file.getName(), requestFile);
 
         // 사용자 아이디
-        requestId = RequestBody.create(MediaType.parse("text/plain"), login_id);
+        requestId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(user_id));
 
         // 텍스트
         String text = uploadText.getText().toString();
