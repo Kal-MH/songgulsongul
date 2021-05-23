@@ -154,4 +154,7 @@ public interface ServiceApi {
             @Part List<MultipartBody.Part> itemTags,
             @Part MultipartBody.Part postImg);
 
+    // 게시글 삭제
+    @GET("/post/delete")
+    Call<CodeResponse> PostDelete(@Query("userid") int user_id, @Query("postid") int post_id);
 }
