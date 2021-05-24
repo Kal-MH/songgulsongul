@@ -108,7 +108,10 @@ public class EditImageFilterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 selectedFilter = editFilter.Gray;
-                applyRGBMinGray(editingImageAddress,previewImage.getNativeObjAddr());
+                Mat locMat = new Mat();
+                previewImage.release();
+                applyRGBMinGray(editingImageAddress,locMat.getNativeObjAddr());
+                previewImage = locMat;
                 updatePreviewImageView();
             }
         });

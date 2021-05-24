@@ -105,4 +105,6 @@ public class FragUploadGal extends Fragment {
     public String getPicked_path(){
         return picked_path;
     }
+
+
 }

@@ -104,7 +104,10 @@ public class EditImageHistogramActivity extends AppCompatActivity {
             public void onClick(View v) {
                 selectedHistogramMod = editHistogramMod.Default;
                 Mat locMat = new  Mat(editingImageAddress).clone(); // TODO: 얕은복사(new Mat(address))에서 메모리 누수 나는지 체크 필요
-                equalizeHistogram(locMat.getNativeObjAddr(),previewImage.getNativeObjAddr());
+                Mat locMat2 = new Mat();
+                previewImage.release();
+                equalizeHistogram(locMat.getNativeObjAddr(),locMat2.getNativeObjAddr());
+                previewImage = locMat2;
                 if(previewImageBitmap!=null)
                     previewImageBitmap.recycle();
                 previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
@@ -119,7 +122,10 @@ public class EditImageHistogramActivity extends AppCompatActivity {
             public void onClick(View v) {
                 selectedHistogramMod = editHistogramMod.CLAHE;
                 Mat locMat = new  Mat(editingImageAddress).clone(); // TODO: 얕은복사(new Mat(address))에서 메모리 누수 나는지 체크 필요
-                equalizeHistogramClahe(locMat.getNativeObjAddr(),previewImage.getNativeObjAddr());
+                Mat locMat2 = new Mat();
+                previewImage.release();
+                equalizeHistogramClahe(locMat.getNativeObjAddr(),locMat2.getNativeObjAddr());
+                previewImage = locMat2;
                 if(previewImageBitmap!=null)
                     previewImageBitmap.recycle();
                 previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
@@ -134,7 +140,6 @@ public class EditImageHistogramActivity extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 //TODO: 프리뷰 Mat을 그대로 옮길지 아니면 프리뷰 연산 크기를 줄이고 별도로 둘지 선택할것
                 switch (selectedHistogramMod){
                     case None: //do nothing

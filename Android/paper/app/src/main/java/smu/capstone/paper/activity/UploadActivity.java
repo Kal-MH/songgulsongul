@@ -161,5 +161,9 @@ public class UploadActivity extends AppCompatActivity {
         return  true;
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+    }
 }
 

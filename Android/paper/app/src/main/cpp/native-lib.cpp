@@ -132,25 +132,54 @@ Mat RGB2YCbCr(Mat img){
     return img_copy;
 
 }
-Mat ResizeTo2048(Mat img){
+void ResizeToCustom(Mat &img, Mat &out, int targetPixelSize){
     int width = img.cols;
     int height = img.rows;
 
-    Mat outImg;
-    float sizeValue = 1.0f;
+
+
+    if(width>height){
+        if(width>targetPixelSize){
+            resize(img,out,Size(targetPixelSize,int(height*targetPixelSize/(float)width)),0, 0, INTER_LINEAR);
+            return;
+        }
+    }
+    if(height>targetPixelSize){
+        resize(img,out,Size(int(height*targetPixelSize/(float)height),targetPixelSize),0, 0, INTER_LINEAR);
+        return;
+    }
+
+    if(img.data != out.data){
+        out.release();
+        out = img.clone();
+    }
+
+    return;
+}
+
+void ResizeTo2048(Mat &img, Mat &out){
+    int width = img.cols;
+    int height = img.rows;
+
+
 
     if(width>height){
         if(width>2048){
-            resize(img,outImg,Size(2048,int(height*2048.0/width)),0, 0, INTER_LINEAR);
-            return outImg;
+            resize(img,out,Size(2048,int(height*2048.0/width)),0, 0, INTER_LINEAR);
+            return;
         }
     }
     if(height>2048){
-        resize(img,outImg,Size(int(height*2048.0/height),2048),0, 0, INTER_LINEAR);
-        return outImg;
+        resize(img,out,Size(int(height*2048.0/height),2048),0, 0, INTER_LINEAR);
+        return;
     }
 
-    return img;
+    if(img.data != out.data){
+        out.release();
+        out = img.clone();
+    }
+
+    return;
 }
 Size ResizeTo2048(Size originalSize){
     int width = originalSize.width;
@@ -559,7 +588,8 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_PaperProcessing(JNIEnv *env
         resize(img_input, smallImg,Size(smallSizeX,smallSizeY),0,0);
 
         //img_output = getImageCannyBorders(img_input, th1, th2);
-        img_output.release();
+
+        img_output.release();//TODO input이랑 output이 같을경우 위험
         img_output = smallImg;
 
     }
@@ -640,7 +670,7 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env,
 
     Mat &points = *(Mat *) output_point;
 
-    Mat img_output;
+    Mat imgCanny;
 
     Mat smallImg;
 
@@ -649,11 +679,11 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env,
     resize(img_input, smallImg,Size(smallSizeX,smallSizeY),0,0);
 
     //img_output = getImageCannyBorders(img_input, th1, th2);
-    img_output = getImageCannyBorders(smallImg, th1, th2);
+    imgCanny = getImageCannyBorders(smallImg, th1, th2);
 
     //img_output2 = getImageCannyBorders(smallImg, th1, th2);
 
-    vector<Point> borders = findBordersPoints(img_output);
+    vector<Point> borders = findBordersPoints(imgCanny);
 
     vector<Point> bordersResized = ResizePoints(borders,img_input.cols/smallSizeX, img_input.rows/smallSizeY);
 
@@ -674,7 +704,7 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env,
      //메모리 누수 위험
      //이상하게 include 쪽에서 오류남
     */
-    img_output.release();
+    imgCanny.release();
     smallImg.release();
 }extern "C"
 JNIEXPORT jintArray JNICALL
@@ -747,7 +777,6 @@ Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobjec
     env->ReleaseIntArrayElements(rectFromJava, ptrArray, 0);
 
 
-    imgInput.release();
     sizedImage.release();
     borders.release();
 
@@ -804,7 +833,7 @@ Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogram(JN
 
     cvtColor(ycrcb,result,COLOR_YCrCb2RGB);
 
-    img_output.release();
+    img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = result;
     ycrcb.release();
 
@@ -836,7 +865,7 @@ Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogramCla
 
     cvtColor(ycrcb,result,COLOR_YCrCb2RGB);
 
-    img_output.release();
+    img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = result;
     ycrcb.release();
 }
@@ -853,7 +882,7 @@ Java_smu_capstone_paper_activity_EditImageColorActivity_setColors(JNIEnv *env, j
     Mat &imgInput = *(Mat *) input_image_address;
     Mat &img_output = *(Mat *) output_image_address;
 
-    Mat locMat = imgInput.clone();
+    Mat locMat = Mat();
 
 
 
@@ -917,7 +946,7 @@ Java_smu_capstone_paper_activity_EditImageColorActivity_setColors(JNIEnv *env, j
     //locMat = locMat * ((contrast_progress-50)*(255.0/50));
     locMat = locMat * progressToValue(contrast_progress,0.25,4,1);
 
-    img_output.release();
+    img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = locMat;
 }extern "C"
 JNIEXPORT void JNICALL
@@ -927,7 +956,7 @@ Java_smu_capstone_paper_activity_EditImageFilterActivity_applyRGBMinGray(JNIEnv 
     Mat &imgInput = *(Mat *) img_input_address;
     Mat &img_output = *(Mat *) img_output_address;
 
-    Mat locMat =  imgInput.clone();
+    Mat locMat =  Mat();
     //RGB2MinGray(imgInput,locMat);
 
 
@@ -945,7 +974,43 @@ Java_smu_capstone_paper_activity_EditImageFilterActivity_applyRGBMinGray(JNIEnv 
     }
 
 
-    img_output.release();
+    img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = locMat;
 
+}extern "C"
+JNIEXPORT void JNICALL
+Java_smu_capstone_paper_activity_EditImageDenoiseActivity_denoiseColorImage(JNIEnv *env,
+                                                                            jobject thiz,
+                                                                            jlong input_image_address,
+                                                                            jlong output_image_address,
+                                                                            jint luminance_progress,
+                                                                            jint color_progress) {
+    Mat &imgInput = *(Mat *) input_image_address;
+    Mat &img_output = *(Mat *) output_image_address;
+
+    Mat locMat = Mat();
+
+    fastNlMeansDenoisingColored(imgInput,locMat,luminance_progress,color_progress,7,21);
+
+    img_output.release();//TODO input이랑 output이 같을경우 위험
+    img_output = locMat;
+}extern "C"
+JNIEXPORT void JNICALL
+Java_smu_capstone_paper_ImageUtil_maxSize2048(JNIEnv *env, jclass clazz, jlong input_image_address,
+                                              jlong output_image_address) {
+    Mat &imgInput = *(Mat *) input_image_address;
+    Mat &img_output = *(Mat *) output_image_address;
+
+
+
+    ResizeTo2048(imgInput,img_output);
+}extern "C"
+JNIEXPORT void JNICALL
+Java_smu_capstone_paper_ImageUtil_maxSizeCustom(JNIEnv *env, jclass clazz,
+                                                jlong input_image_address,
+                                                jlong output_image_address, jint max_pixel_size) {
+    Mat &imgInput = *(Mat *) input_image_address;
+    Mat &img_output = *(Mat *) output_image_address;
+
+    ResizeToCustom(imgInput,img_output,max_pixel_size);
 }

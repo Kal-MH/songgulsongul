@@ -6,6 +6,10 @@ import android.widget.ImageView;
 
 public class ImageUtil {
 
+    public static native void maxSize2048(long inputImageAddress, long outputImageAddress);
+
+    public static native void maxSizeCustom(long inputImageAddress, long outputImageAddress, int maxPixelSize);
+
     public static int[] getBitmapPositionInsideImageView(ImageView imageView) {
         int[] ret = new int[4];
 

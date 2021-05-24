@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import smu.capstone.paper.ImageUtil;
 import smu.capstone.paper.R;
 
 public class EditActivity extends AppCompatActivity {
@@ -66,6 +68,13 @@ public class EditActivity extends AppCompatActivity {
         if(editingImage != null){
             if(editingImageBitmap !=null)
                 editingImageBitmap.recycle();
+
+            //최대 픽셀 제한
+            ImageUtil.maxSize2048(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr());
+            ImageUtil.maxSizeCustom(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr(),1024);
+
+            Log.i("EditImageSize",String.valueOf(editingImage.rows())+", " + String.valueOf(editingImage.cols()));
+
             editingImageBitmap = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
             Utils.matToBitmap(editingImage,editingImageBitmap);
             edit_iv.setImageBitmap(editingImageBitmap);
@@ -121,7 +130,9 @@ public class EditActivity extends AppCompatActivity {
         filePath = getIntent().getStringExtra("path");
         sourceFilePath = getIntent().getStringExtra("sourceFilePath");
         edit_iv = findViewById(R.id.edit_pic);
-        Glide.with(this).load(filePath).into(edit_iv);
+        //Glide.with(this).load(filePath).into(edit_iv);
+
+
 
         croppedImageAddress = getIntent().getLongExtra("croppedImageAddress", 0x00);
 
@@ -204,6 +215,15 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 Intent intent = new Intent( EditActivity.this , EditImageFilterActivity.class);
+                intent.putExtra("path", filePath);
+                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                startActivity(intent);
+            }
+        });
+        editDenoise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent( EditActivity.this , EditImageDenoiseActivity.class);
                 intent.putExtra("path", filePath);
                 intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
                 startActivity(intent);

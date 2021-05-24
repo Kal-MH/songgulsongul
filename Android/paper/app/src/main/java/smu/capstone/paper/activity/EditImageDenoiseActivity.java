@@ -2,32 +2,29 @@ package smu.capstone.paper.activity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
+import smu.capstone.paper.ImageUtil;
 import smu.capstone.paper.R;
 
-public class EditImageColorActivity extends AppCompatActivity {
+public class EditImageDenoiseActivity extends AppCompatActivity {
 
     long first_time = 0;
     long second_time = 0;
 
     ImageView editPreview;
 
-    SeekBar seekBarHue;
-    SeekBar seekBarSaturation;
-    SeekBar seekBarBrightness;
-    SeekBar seekBarContrast;
+    SeekBar seekBarLuminance;
+    SeekBar seekBarColor;
 
     Button done;
 
@@ -37,25 +34,24 @@ public class EditImageColorActivity extends AppCompatActivity {
     //long editingImageColorAddress;
 
     Mat previewImage;
+    //Mat editingImageResized;
     Bitmap previewImageBitmap;
 
 
-    public native void setColors(long inputImageAddress, long outputImageAddress, int hueProgress, int saturationProgress, int brightnessProgress, int contrastProgress);
+    public native void denoiseColorImage(long inputImageAddress, long outputImageAddress, int luminanceProgress, int colorProgress);
 
-    public void updatePreviewColors(){
+
+    public void updatePreviewDenoise(){
         Mat locMat = new Mat();
         previewImage.release();
-        updateColors(editingImageAddress,locMat.getNativeObjAddr());
+        updateDenoise(editingImageAddress,locMat.getNativeObjAddr());
+        //updateDenoise(editingImageResized.getNativeObjAddr(),locMat.getNativeObjAddr());
         previewImage = locMat;
     }
 
-    public void updateColors(long inputImageAddress, long outputImageAddress){
-        setColors(inputImageAddress,outputImageAddress, seekBarHue.getProgress(),seekBarSaturation.getProgress(),seekBarBrightness.getProgress(),seekBarContrast.getProgress());
-
-
-
+    public void updateDenoise(long inputImageAddress, long outputImageAddress){
+        denoiseColorImage(inputImageAddress,outputImageAddress, seekBarLuminance.getProgress(),seekBarColor.getProgress());
     }
-
     public void updatePreviewImageView(){
         if(previewImageBitmap!=null)
             previewImageBitmap.recycle();
@@ -64,17 +60,15 @@ public class EditImageColorActivity extends AppCompatActivity {
         editPreview.setImageBitmap(previewImageBitmap);
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_edit_image_colors);
+        setContentView(R.layout.activity_edit_image_denoise);
 
-        seekBarHue = findViewById(R.id.seekBarHue);
-        seekBarSaturation = findViewById(R.id.seekBarSaturation);
-        seekBarBrightness = findViewById(R.id.seekBarBrightness);
-        seekBarContrast = findViewById(R.id.seekBarContrast);
+        seekBarLuminance = findViewById(R.id.seekBarLuminance);
+        seekBarColor = findViewById(R.id.seekBarColor);
+
 
         done = findViewById(R.id.edit_done);
 
@@ -87,6 +81,8 @@ public class EditImageColorActivity extends AppCompatActivity {
             //편집 취소해도 연동되지 않게 별도 객체로 분리
             //previewImage.copyTo(previewImage);
             previewImage = locMat.clone();
+            //editingImageResized = locMat.clone();
+            //ImageUtil.maxSizeCustom(editingImageResized.getNativeObjAddr(),editingImageResized.getNativeObjAddr(),512);
             //previewImage = previewImage.clone();
         }
         catch (Exception e){
@@ -98,12 +94,14 @@ public class EditImageColorActivity extends AppCompatActivity {
             Utils.matToBitmap(previewImage, loc_bitmap);
             editPreview.setImageBitmap(loc_bitmap);
             */
+
+            updatePreviewDenoise();
             updatePreviewImageView();
         }
 
 
 
-        seekBarHue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBarLuminance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 /*
@@ -111,7 +109,7 @@ public class EditImageColorActivity extends AppCompatActivity {
                 previewImage.release();
                 updateColors(editingImageAddress,locMat.getNativeObjAddr());
                 previewImage = locMat;*/
-                updatePreviewColors();
+                updatePreviewDenoise();
                 updatePreviewImageView();
             }
 
@@ -125,10 +123,10 @@ public class EditImageColorActivity extends AppCompatActivity {
 
             }
         });
-        seekBarSaturation.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBarColor.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updatePreviewColors();
+                updatePreviewDenoise();
                 updatePreviewImageView();
             }
 
@@ -142,51 +140,18 @@ public class EditImageColorActivity extends AppCompatActivity {
 
             }
         });
-        seekBarBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updatePreviewColors();
-                updatePreviewImageView();
-            }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-        seekBarContrast.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updatePreviewColors();
-                updatePreviewImageView();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
 
         //편집 적용
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            //Intent intent = new Intent( EditActivity.this , EditDoneActivity.class);
-            //startActivity(intent);
+                //Intent intent = new Intent( EditActivity.this , EditDoneActivity.class);
+                //startActivity(intent);
                 //TODO: 네이티브 어드레스로 접근한 Mat 객체도 double free 이슈가 발생하는가?
                 //Mat locMat = new Mat();
                 //Mat oldEditingMat = new Mat(editingImageAddress);
-                updateColors(editingImageAddress,editingImageAddress);
+                updateDenoise(editingImageAddress,editingImageAddress);
 
                 finish();
             }

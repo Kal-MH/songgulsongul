@@ -96,8 +96,14 @@ public class EditImageRatioActivity extends AppCompatActivity {
                 if(fromUser){
                     if(previewImage==null)
                         previewImage = preEditImage.clone();
-                    changeImageRatio(preEditImage.getNativeObjAddr(),previewImage.getNativeObjAddr(),progress);
+
+
+                    previewImage.release();
+                    Mat locMat = new Mat();
+                    changeImageRatio(preEditImage.getNativeObjAddr(),locMat.getNativeObjAddr(),progress);
+                    previewImage = locMat;
                     editPreviewBitmap.recycle();
+
                     editPreviewBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
                     Utils.matToBitmap(previewImage, editPreviewBitmap);
                     editPreview.setImageBitmap(editPreviewBitmap);
