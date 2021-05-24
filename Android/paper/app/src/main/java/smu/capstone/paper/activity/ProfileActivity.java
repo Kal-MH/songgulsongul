@@ -150,6 +150,7 @@ public class ProfileActivity extends AppCompatActivity {
                 intent.putExtra("post_id", postId);
 
                 startActivity(intent);
+                finish();
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
             }
         });
@@ -387,4 +388,5 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
 }

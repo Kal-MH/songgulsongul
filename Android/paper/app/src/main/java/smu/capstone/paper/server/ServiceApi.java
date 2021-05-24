@@ -1,5 +1,7 @@
 package smu.capstone.paper.server;
 
+import android.app.DownloadManager;
+
 import com.google.gson.JsonObject;
 
 
@@ -146,10 +148,10 @@ public interface ServiceApi {
     // 게시글 업로드
     @Multipart
     @POST("/post/upload")
-    Call<CodeResponse> PostUpload(
+    Call<JsonObject> PostUpload(
             @Part("user_id") RequestBody id,
             @Part("text") RequestBody text,
-            @Part List<MultipartBody.Part> hashTags,
+            @Part("hash_tag") RequestBody hashTags,
             @Part List<MultipartBody.Part> ccl,
             @Part List<MultipartBody.Part> itemTags,
             @Part MultipartBody.Part postImg);

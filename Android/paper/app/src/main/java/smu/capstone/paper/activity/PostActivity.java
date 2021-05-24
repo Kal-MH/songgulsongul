@@ -74,6 +74,7 @@ public class PostActivity extends AppCompatActivity {
 
 
     int user_id, post_id;
+    String login_id;
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
 
@@ -126,6 +127,7 @@ public class PostActivity extends AppCompatActivity {
         Intent intent = getIntent();
         user_id = LoginSharedPreference.getUserId(PostActivity.this);
         post_id = intent.getIntExtra("post_id",-1);
+        login_id = LoginSharedPreference.getLoginId(PostActivity.this);
 
 
         //서버통신
@@ -177,6 +179,7 @@ public class PostActivity extends AppCompatActivity {
                                                                 Toast.makeText(getApplicationContext(), "게시글 삭제 완료!", Toast.LENGTH_SHORT).show();
                                                                 // 일단 프로필로 이동
                                                                 Intent intent = new Intent(PostActivity.this, ProfileActivity.class);
+                                                                intent.putExtra("userId", login_id);
                                                                 startActivity(intent);
                                                                 finish();
                                                             } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {

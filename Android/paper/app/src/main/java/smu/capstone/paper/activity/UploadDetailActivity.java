@@ -35,21 +35,26 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okio.BufferedSink;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,7 +83,7 @@ public class UploadDetailActivity extends AppCompatActivity {
     ImageView upload_detail_img;
     int ccl1, ccl2, ccl3, ccl4, ccl5;
 
-    RequestBody requestFile, requestId, requestText;
+    RequestBody requestFile, requestId, requestText, requestHash;
     MultipartBody.Part imageBody;
     ArrayList<MultipartBody.Part> hash_tags = new ArrayList<>();
     ArrayList<MultipartBody.Part> ccl_list = new ArrayList<>();
@@ -209,19 +214,20 @@ public class UploadDetailActivity extends AppCompatActivity {
         requestId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(user_id));
 
         // 텍스트
-        String text = uploadText.getText().toString();
+        String text = uploadText.getText().toString().trim();
         requestText = RequestBody.create(MediaType.parse("text/plain"), text);
 
         // 해쉬태그
-        String hashTag = hashtagText.getText().toString() + " ";
-        Pattern pattern = Pattern.compile("[#](.*?)[ ]");
-        Matcher matcher = pattern.matcher(hashTag);
-        while(matcher.find()){
-            hash_tags.add(MultipartBody.Part.createFormData("hash_tag", matcher.group(1)));
-
-            if(matcher.group(1) == null)
-                break;
-        }
+        String hashTag = hashtagText.getText().toString();
+        requestHash = RequestBody.create(MediaType.parse("text/plain"), hashTag);
+//        Pattern pattern = Pattern.compile("[#](.*?)[ ]");
+//        Matcher matcher = pattern.matcher(hashTag);
+//        while(matcher.find()){
+//            hash_tags.add(MultipartBody.Part.createFormData("hash_tag", matcher.group(1)));
+//
+//            if(matcher.group(1) == null)
+//                break;
+//        }
 
         // ccl
         if(upload_detail_ccl_1.isChecked())
@@ -296,18 +302,21 @@ public class UploadDetailActivity extends AppCompatActivity {
 
             case R.id.toolbar_done :
                 makeUploadData();
-                serviceApi.PostUpload(requestId, requestText, hash_tags, ccl_list, item_tags, imageBody).enqueue(new Callback<CodeResponse>() {
+                serviceApi.PostUpload(requestId, requestText, requestHash, ccl_list, item_tags, imageBody).enqueue(new Callback<JsonObject>() {
                     @Override
-                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         try {
-                            CodeResponse result = response.body();
-                            int resultCode = result.getCode();
+                            JsonObject result = response.body();
+                            int resultCode = result.get("code").getAsInt();
+                            int post_id = result.get("post_id").getAsInt();
 
                             if (resultCode == StatusCode.RESULT_OK) {
                                 Toast toast = Toast.makeText(UploadDetailActivity.this, "업로드 완료", Toast.LENGTH_SHORT);
                                 toast.show();
-                                //Intent intent = new Intent(UploadDetailActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동 (게시글 id 넘기기)
-                                //startActivity(intent);
+                                Intent intent = new Intent(UploadDetailActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동 (게시글 id 넘기기)
+                                intent.putExtra("post_id", post_id);
+                                startActivity(intent);
+                                finish();
                             } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                 new AlertDialog.Builder(UploadDetailActivity.this)
                                         .setMessage("업로드에 실패했습니다." + "\n" + "다시 시도해주세요..")
@@ -333,7 +342,7 @@ public class UploadDetailActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
                         Toast.makeText(UploadDetailActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                         Log.e("게시글 업로드 에러", t.getMessage());
                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
