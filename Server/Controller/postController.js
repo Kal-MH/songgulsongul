@@ -241,80 +241,63 @@ const postController = {
                       '' ]
                 }                           
          */
-        var loggedUser = req.body.user_id;
+        var loggedUser = req.body.user_id * 1;
         var text = req.body.text;
-        var hashTagsAndItemTags = req.body.hash_tag;
+        var ccl = req.body.ccl;
+        var hashTags = req.body.hash_tag;
         var items = {
             name: req.body.item_name,
             lowprice: req.body.item_lowprice,
             highprice: req.body.item_highprice,
             itemLink: req.body.item_link,
-            itemImg: req.body.item_img
+            itemImg: req.body.item_img,
+            brand : req.body.item_brand,
+            category1 : req.body.item_category1,
+            category2 : req.body.item_category2
         }
 
         var postImages = req.file.path;
+        postImages = "/"+postImages.replace(/\\/g, '/');
 
-        var updatePointinsertPostSql = `insert into post (image, text, post_time, post_date, user_id, ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa) 
-        values (?, '${text}', curtime(), curdate(), ${loggedUser}, ?);`;
-        var insertPostParams = [postImages, req.body.ccl];
+        if (req.file == undefined || ccl.length != 5)
+        {
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        } else {
+            for(var i = 0; i < ccl.length; i++)
+                ccl[i] = ccl[i] * 1;
+    
+            var updatePointinsertPostSql = `insert into post (image, text, post_time, post_date, user_id, ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa) 
+            values (?, '${text}', curtime(), curdate(), ${loggedUser}, ?);`;
+            var insertPostParams = [postImages, req.body.ccl];
+    
+            //current date 계산
+            var date = new Date();
+            var yearMonthDate = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + "-" + date.getDate();
+            console.log(yearMonthDate);
+            updatePointinsertPostSql += `select post_time, post_date from post where post_date = '${yearMonthDate}' and user_id = ${loggedUser} limit ${db_config.limitation};`;
+    
+            connection.query(updatePointinsertPostSql, insertPostParams, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.json({
+                        'code': statusCode.SERVER_ERROR
+                    })
+                } else {
+                    var postId = result[0].insertId;
+    
+                    // 오늘 날짜의 게시글이 5개 이하이면 포인트 100을 추가로 반영한다.
+                    var updatePointinsertHashItemsSql = "";
+    
+                    if (result[1].length <= 5)
+                        updatePointinsertHashItemsSql += `update user set point = point + 100 where id = ${loggedUser};`
 
-        //current date 계산
-        var date = new Date();
-        var yearMonthDate = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + "-" + date.getDate();
-        console.log(yearMonthDate);
-        updatePointinsertPostSql += `select post_time, post_date from post where post_date = '${yearMonthDate}' and user_id = ${loggedUser} limit ${db_config.limitation};`;
-
-        connection.query(updatePointinsertPostSql, insertPostParams, function (err, result) {
-            if (err) {
-                console.log(err);
-                res.json({
-                    'code': statusCode.SERVER_ERROR
-                })
-            } else {
-                console.log(result[1]);
-                console.log(result[1].length);
-                var postId = result[0].insertId;
-
-                //update Point if post-count under 5 && insert hashTag 
-                var updatePointinsertHashSql = "";
-
-                // 오늘 날짜의 게시글이 5개 이하이면 포인트 100을 추가로 반영한다.
-                if (result[1].length <= 5)
-                    updatePointinsertHashSql += `update user set point = point + 100 where id = ${loggedUser};`
-
-                for (var i = 0; i < hashTagsAndItemTags.length; i++) {
-                    updatePointinsertHashSql += `insert into hash_tag (post_id, text) values (${postId}, ?);`
+                    postController_subFunc.updatePointInsertHashItem(res, postId, hashTags, items, updatePointinsertHashItemsSql);
                 }
-                //itemTag
-                //배열로 넘겨주기 위해 해시태그와 item태그를 한 배열로 넣는다.(해시태그 먼저, 아이템 태그는 그 뒤에)
-                var insertItemSql = "";
-                for (var i = 0; i < items.name.length; i++) {
-                    insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, url, picture) 
-                     values(${postId}, '${items.name[i]}', ${items.lowprice[i]}, ${items.highprice[i]}, ?, ?);`;
+            })
+        }
 
-                    hashTagsAndItemTags.push(items.itemLink[i]);
-                    if (items.itemImg[i]) {
-                        hashTagsAndItemTags.push(items.itemImg[i])
-                    } else {
-                        hashTagsAndItemTags.push(serverConfig.defaultImg);
-                    }
-
-                }
-                connection.query(updatePointinsertHashSql + insertItemSql, hashTagsAndItemTags, function (err, result) {
-                    if (err) {
-                        console.log(err);
-                        res.json({
-                            'code': statusCode.SERVER_ERROR
-                        })
-                    }
-                    else {
-                        res.json({
-                            'code': statusCode.OK
-                        })
-                    }
-                })
-            }
-        })
     },
     postUpdate: function (req, res) {
         var postId = req.body.post_id;
@@ -419,7 +402,7 @@ const postController = {
                                     })
                                 } else {
                                     res.json({
-                                        'code': statusCode.OK
+                                        'code': statusCode.OK,
                                     })
                                 }
                             })
