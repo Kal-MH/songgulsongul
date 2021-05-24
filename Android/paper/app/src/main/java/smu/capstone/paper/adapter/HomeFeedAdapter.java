@@ -9,6 +9,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -46,8 +50,14 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final int VIEW_TYPE_LOADING = 1;
 
     Context context;
+
+    Date today = new Date();
+    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar rightNow = Calendar.getInstance();
+
     List<PostFeed> items;
     int itemCnt;
+
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
 
@@ -226,7 +236,23 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         else{
             holder.text.setText(text); // 글 내용(15자 이하)
         }
-        holder.timestamp.setText( post.getPost_time() ); // 게시 시간
+
+        if( date.format(today).equals((post.getPost_date()))) {
+            int hour = Integer.parseInt(post.getPost_time().substring(0,2));
+            if( hour != rightNow.get(Calendar.HOUR_OF_DAY) ){
+                holder.timestamp.setText((rightNow.get(Calendar.HOUR_OF_DAY) - hour)+"시간 전");
+            }
+            else {
+                int min = Integer.parseInt(post.getPost_time().substring(3,5));
+                if( min == rightNow.get(Calendar.MINUTE) )
+                    holder.timestamp.setText("방금 게시됨");
+                else
+                    holder.timestamp.setText((rightNow.get(Calendar.MINUTE) - min) + "분 전");
+            }
+        }
+        else
+            holder.timestamp.setText( post.getPost_date()); //게시 날짜
+
         Glide.with(context).load(RetrofitClient.getBaseUrl() + post.getImage() ).into(holder.picture); // 게시물 사진
         holder.comment_counter.setText("댓글 " + items.get(position).getCommentsNum()); // 댓글 수
         holder.favorite_counter.setText("좋아요 " + items.get(position).getLikeNum()); // 좋아요 수
