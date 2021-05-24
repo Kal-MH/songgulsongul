@@ -30,7 +30,6 @@ import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.LoginData;
 
 import smu.capstone.paper.responseData.KeepResponse;
-import smu.capstone.paper.responseData.Post;
 import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.responseData.PostFeedResponse;
 
@@ -111,7 +110,7 @@ public interface ServiceApi {
 
     //피드 게시글 가져오기
     @GET("/post/feeds")
-    Call<PostFeedResponse> GetFeed(@Query("userid") int id, @Query("offset") int offset );
+    Call<PostFeedResponse> GetFeed(@Query("userid") int id, @Query("offset") Integer offset );
  
     // 프로필
     @POST("/user/profile")
@@ -129,7 +128,7 @@ public interface ServiceApi {
 
     //커뮤니트 게시글 가져오기
     @GET("/post/community")
-    Call<PostListResponse> GetCommunity(@Query("offset") int offset);
+    Call<PostListResponse> GetCommunity(@Query("offset") Integer offset);
 
     //세부 게시글 내용 가져오기
     @GET("/post/{id}")
