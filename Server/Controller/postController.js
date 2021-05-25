@@ -23,12 +23,12 @@ const postController = {
             // 게시글과 관련된 정보를 가져오는 쿼리문
             // 게시글, 작성자, 해시태그, 아이템 태그, 좋아요, 코멘트를 차례로 가져오고 있다.
             // 댓글은 댓글 레코드 id에 상관없이, 최신 댓글순으로 정렬한 후, 가져오고 있다.(20개씩 받아오도록 설정했으나, 추후 수정될 수 있음)
-            var selectPostDetailSql = `select p.id, p.image, p.text, p.post_time, p.post_date, p.user_id, p.ccl_cc, p.ccl_a, p.ccl_nc, p.ccl_nd, p.ccl_sa, u.login_id, u.img_profile 
+            var selectPostDetailSql = `select p.id, p.image, p.text, p.post_time, p.post_date, p.user_id, p.ccl_cc, p.ccl_a, p.ccl_nc, p.ccl_nd, p.ccl_sa, u.login_id, u.img_profile
             from post as p join user as u on p.id = ${postId} and p.user_id = u.id;`;
             selectPostDetailSql += `select text from hash_tag where post_id=${postId};`;
             selectPostDetailSql += `select * from item_tag where post_id=${postId};`;
             selectPostDetailSql += `select * from likes where post_id=${postId};`;
-            selectPostDetailSql += `select c.id, c.user_id, c.text, u.img_profile, u.login_id, c.c_date, c.c_time from comment as c 
+            selectPostDetailSql += `select c.id, c.user_id, c.text, u.img_profile, u.login_id, c.c_date, c.c_time from comment as c
             join user as u on c.post_id=${postId} and c.user_id=u.id order by c.c_date, c.c_time, c.id limit ${db_config.limitation};`;
             connection.query(selectPostDetailSql, function (err, result) {
                 if (err) {
@@ -126,7 +126,7 @@ const postController = {
                                 var selectPostFeedSql = "";
 
                                 for (var i = 0; i < result.length; i++) {
-                                    selectPostFeedSql += `select p.id, p.image, p.text, p.post_date, p.post_time, p.user_id, u.login_id, u.img_profile from post as p join user as u 
+                                    selectPostFeedSql += `select p.id, p.image, p.text, p.post_date, p.post_time, p.user_id, u.login_id, u.img_profile from post as p join user as u
                                     on p.id = ${result[i].id} and p.user_id = u.id;`;
                                     selectPostFeedSql += `select id from comment where post_id = ${result[i].id};`;
                                     selectPostFeedSql += `select * from likes where post_id = ${result[i].id};`;
@@ -229,17 +229,17 @@ const postController = {
          * 현재 넘겨받는 데이터의 임시 구조
          * 추후에 안드로이드와 연결하는 부분에서 수정사항 발생할 수 있다.
          * hashTags = [ 'hash1', 'hash2', 'hash3' ]
-           items = { 
+           items = {
                     name: [ 'item1', 'item2' ],
                     lowprice: [ '1000', '20000' ],
                     highprice: [ '2000', '30000' ],
                     itemLink:
                     [ 'https://search.shopping.naver.com/gate.nhn?id=82726822549',
                         'https://search.shopping.naver.com/gate.nhn?id=82726822549' ],
-                    itemImg: 
+                    itemImg:
                     [ 'https://shopping-phinf.pstatic.net/main_8272682/82726822549.1.jpg',
                       '' ]
-                }                           
+                }
          */
         var loggedUser = req.body.user_id * 1;
         var text = req.body.text;
@@ -267,17 +267,17 @@ const postController = {
         } else {
             for(var i = 0; i < ccl.length; i++)
                 ccl[i] = ccl[i] * 1;
-    
-            var updatePointinsertPostSql = `insert into post (image, text, post_time, post_date, user_id, ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa) 
+
+            var updatePointinsertPostSql = `insert into post (image, text, post_time, post_date, user_id, ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa)
             values (?, '${text}', curtime(), curdate(), ${loggedUser}, ?);`;
             var insertPostParams = [postImages, req.body.ccl];
-    
+
             //current date 계산
             var date = new Date();
             var yearMonthDate = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + "-" + date.getDate();
             console.log(yearMonthDate);
             updatePointinsertPostSql += `select post_time, post_date from post where post_date = '${yearMonthDate}' and user_id = ${loggedUser} limit ${db_config.limitation};`;
-    
+
             connection.query(updatePointinsertPostSql, insertPostParams, function (err, result) {
                 if (err) {
                     console.log(err);
@@ -286,10 +286,10 @@ const postController = {
                     })
                 } else {
                     var postId = result[0].insertId;
-    
+
                     // 오늘 날짜의 게시글이 5개 이하이면 포인트 100을 추가로 반영한다.
                     var updatePointinsertHashItemsSql = "";
-    
+
                     if (result[1].length <= 5)
                         updatePointinsertHashItemsSql += `update user set point = point + 100 where id = ${loggedUser};`
 
@@ -324,7 +324,7 @@ const postController = {
                 var insertHashSql = "";
                 var hashTags = req.body.hashTags;
                 for (var i = 0; i < hashTags.length; i++) {
-                    //현재는 input을 동적으로 조정할 수 없기 때문에 추가된 if문 
+                    //현재는 input을 동적으로 조정할 수 없기 때문에 추가된 if문
                     //이후에는 삭제되면 클라이언트에서 넘어온 배열을 기준으로 sql문을 작성하게 된다.
                     if (hashTags[i] != '')
                         insertHashSql += `insert into hash_tag (post_id, text) values (${postId}, ?);`
