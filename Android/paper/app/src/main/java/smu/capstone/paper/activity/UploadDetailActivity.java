@@ -83,7 +83,7 @@ public class UploadDetailActivity extends AppCompatActivity {
     ImageView upload_detail_img;
     int ccl1, ccl2, ccl3, ccl4, ccl5;
 
-    RequestBody requestFile, requestId, requestText, requestHash;
+    RequestBody requestFile, requestId, requestText;
     MultipartBody.Part imageBody;
     ArrayList<MultipartBody.Part> hash_tags = new ArrayList<>();
     ArrayList<MultipartBody.Part> ccl_list = new ArrayList<>();
@@ -218,16 +218,15 @@ public class UploadDetailActivity extends AppCompatActivity {
         requestText = RequestBody.create(MediaType.parse("text/plain"), text);
 
         // 해쉬태그
-        String hashTag = hashtagText.getText().toString();
-        requestHash = RequestBody.create(MediaType.parse("text/plain"), hashTag);
-//        Pattern pattern = Pattern.compile("[#](.*?)[ ]");
-//        Matcher matcher = pattern.matcher(hashTag);
-//        while(matcher.find()){
-//            hash_tags.add(MultipartBody.Part.createFormData("hash_tag", matcher.group(1)));
-//
-//            if(matcher.group(1) == null)
-//                break;
-//        }
+        String hashTag = hashtagText.getText().toString() + " ";
+        Pattern pattern = Pattern.compile("[#](.*?)[ ]");
+        Matcher matcher = pattern.matcher(hashTag);
+        while(matcher.find()){
+            hash_tags.add(MultipartBody.Part.createFormData("hash_tag", matcher.group(1)));
+
+            if(matcher.group(1) == null)
+                break;
+        }
 
         // ccl
         if(upload_detail_ccl_1.isChecked())
@@ -302,7 +301,7 @@ public class UploadDetailActivity extends AppCompatActivity {
 
             case R.id.toolbar_done :
                 makeUploadData();
-                serviceApi.PostUpload(requestId, requestText, requestHash, ccl_list, item_tags, imageBody).enqueue(new Callback<JsonObject>() {
+                serviceApi.PostUpload(requestId, requestText, hash_tags, ccl_list, item_tags, imageBody).enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         try {

@@ -150,7 +150,6 @@ public class ProfileActivity extends AppCompatActivity {
                 intent.putExtra("post_id", postId);
 
                 startActivity(intent);
-                finish();
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
             }
         });
@@ -348,8 +347,9 @@ public class ProfileActivity extends AppCompatActivity {
 
             case R.id.profile_edit :
                 Intent intent1 = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                //startActivity(intent1);
-                startActivityForResult(intent1, REQUEST_CODE);
+                startActivity(intent1);
+                finish();
+                //startActivityForResult(intent1, REQUEST_CODE);
                 break;
 
             case R.id.profile_keep:
@@ -373,20 +373,27 @@ public class ProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if(requestCode == REQUEST_CODE){
+//            if(resultCode != Activity.RESULT_OK){
+//                return;
+//            }
+//            String new_id = data.getStringExtra("userId");
+//            Intent intent = getIntent();
+//            intent.putExtra("userId", new_id);
+//            finish();
+//            startActivity(intent);
+//        }
+//    }
 
-        if(requestCode == REQUEST_CODE){
-            if(resultCode != Activity.RESULT_OK){
-                return;
-            }
-            String new_id = data.getStringExtra("userId");
-            Intent intent = getIntent();
-            intent.putExtra("userId", new_id);
-            finish();
-            startActivity(intent);
-        }
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
     }
 
 }

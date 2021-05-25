@@ -416,12 +416,12 @@ public class EditProfileActivity extends AppCompatActivity {
                             int resultCode = result.getCode();
 
                             if(resultCode == StatusCode.RESULT_OK){
-                                Intent intent = new Intent();
+                                Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
                                 if(id_modify_check == YES) {
                                     LoginSharedPreference.changeLoginId(EditProfileActivity.this, new_id);
                                 }
                                 intent.putExtra("userId", new_id);
-                                setResult(RESULT_OK, intent);
+                                startActivity(intent);
                                 finish();
                                 Toast.makeText(EditProfileActivity.this, "프로필 수정 완료!", Toast.LENGTH_SHORT).show();
                             }

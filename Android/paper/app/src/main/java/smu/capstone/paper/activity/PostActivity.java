@@ -177,10 +177,7 @@ public class PostActivity extends AppCompatActivity {
 
                                                             if (resultCode == StatusCode.RESULT_OK) {
                                                                 Toast.makeText(getApplicationContext(), "게시글 삭제 완료!", Toast.LENGTH_SHORT).show();
-                                                                // 일단 프로필로 이동
-                                                                Intent intent = new Intent(PostActivity.this, ProfileActivity.class);
-                                                                intent.putExtra("userId", login_id);
-                                                                startActivity(intent);
+                                                                onBackPressed();
                                                                 finish();
                                                             } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                                                 Toast.makeText(getApplicationContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
