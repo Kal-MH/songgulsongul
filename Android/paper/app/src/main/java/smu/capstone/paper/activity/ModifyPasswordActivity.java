@@ -23,7 +23,7 @@ public class ModifyPasswordActivity extends AppCompatActivity {
 
     TextView current_id;
     EditText current_pw, modify_pw, modify_pw_check;
-    Button modify_btn;
+    Button check_btn, modify_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,7 @@ public class ModifyPasswordActivity extends AppCompatActivity {
         current_pw = (EditText)findViewById(R.id.current_pw);
         modify_pw = (EditText)findViewById(R.id.mod_pw);
         modify_pw_check = (EditText)findViewById(R.id.mod_pw_check);
+        check_btn = (Button)findViewById(R.id.pw_check);
         modify_btn = (Button)findViewById(R.id.modify_btn);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.mod_pw_toolbar);
@@ -45,10 +46,17 @@ public class ModifyPasswordActivity extends AppCompatActivity {
 
         //LoginSharedPreference에서 가져온 현재 로그인 데이터
         String prf_id = LoginSharedPreference.getLoginId(this);
-        String prf_pw = "";
+        String prf_pw = ""; //서버 통신해서 현재 로그인 된 계정의 패스워드 가져오기
 
         //현재 로그인 된 아이디를 보여줌
         current_id.setText(prf_id);
+
+        check_btn.setOnClickListener(new View.OnClickListener(){ //패스워드 일치 확인
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
 
         modify_btn.setOnClickListener(new View.OnClickListener(){ //변경 버튼 클릭 시
             @Override
