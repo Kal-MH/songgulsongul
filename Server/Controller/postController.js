@@ -302,74 +302,81 @@ const postController = {
     postUpdate: function (req, res) {
         var postId = req.body.post_id;
         var loggedUser = req.body.user_id;
-        var file = req.file;
 
-        console.log(req.body);
+        if (postId == undefined){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        } else {
 
-        //안드로이드에서 넘어오는 값에 따라서 수정이 필요한 부분
-        var image = (file) ? req.file.path : req.body.img_post_link;
-
-        var updatePostSql = `update post set image=?, text=?, post_time=curtime(), post_date=curdate(), user_id=? where id=${postId};`;
-        var updatePostParams = [image, req.body.text, loggedUser];
-
-        connection.query(updatePostSql, updatePostParams, function (err, result) {
-            if (err) {
-                console.log(err);
-                res.json({
-                    'code': statusCode.SERVER_ERROR
-                })
-            } else {
-                //hashTag
-                var deleteHashTagsSql = `delete from hash_tag where post_id=${postId};`;
-                var insertHashSql = "";
-                var hashTags = req.body.hashTags;
-                for (var i = 0; i < hashTags.length; i++) {
-                    //현재는 input을 동적으로 조정할 수 없기 때문에 추가된 if문
-                    //이후에는 삭제되면 클라이언트에서 넘어온 배열을 기준으로 sql문을 작성하게 된다.
-                    if (hashTags[i] != '')
-                        insertHashSql += `insert into hash_tag (post_id, text) values (${postId}, ?);`
-                }
-                connection.query(deleteHashTagsSql + insertHashSql, hashTags, function (err, result) {
-                    if (err) {
-                        console.log(err);
-                        res.json({
-                            'code': statusCode.SERVER_ERROR
-                        })
-                    } else {
-                        var deleteItemTagSql = `delete from item_tag where post_id=${postId};`;
-                        var insertItemSql = "";
-                        var insertItemParams = [];
-                        for (var i = 0; i < req.body.itemName.length; i++) {
-                            var itemImg;
-                            if (req.body.itemImg[i] == '') {
-                                itemImg = "/public/default/to-do-list.png";
-                            } else {
-                                itemImg = req.body.itemImg[i];
-                            }
-
-                            insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, url, picture) values(${postId}, ?, ?, ?, ?, ?);`;
-                            insertItemParams.push(req.body.itemName[i]);
-                            insertItemParams.push(Number(req.body.itemLowprice[i]));
-                            insertItemParams.push(Number(req.body.itemHighprice[i]));
-                            insertItemParams.push(req.body.itemLink[i]);
-                            insertItemParams.push(itemImg);
+            console.log(req.body);
+    
+            var updatePostSql = `update post set text='${req.body.text}', post_time=curtime(), post_date=curdate(), ccl_cc=?, ccl_a=?, ccl_nc=?, ccl_nd=?, ccl_sa=? where id = ${postId};`;
+            connection.query(updatePostSql, req.body.ccl, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.json({
+                        'code': statusCode.SERVER_ERROR
+                    })
+                } else {
+                    //hashTag
+                    var deleteHashTagsSql = `delete from hash_tag where post_id=${postId};`;
+                    var insertHashSql = "";
+                    var hashTags = req.body.hash_tag;
+                    if (hashTags.length > 0) {
+                        for (var i = 0; i < hashTags.length; i++) {
+                            if (hashTags[i] != '')
+                                insertHashSql += `insert into hash_tag (post_id, text) values (${postId}, "${hashTags[i]}");`
                         }
-                        connection.query(deleteItemTagSql + insertItemSql, insertItemParams, function (err, result) {
-                            if (err) {
-                                console.log(err);
-                                res.json({
-                                    'code': statusCode.SERVER_ERROR
-                                })
-                            } else {
-                                res.json({
-                                    'code': statusCode.OK
-                                })
-                            }
-                        })
                     }
-                })
-            }
-        })
+                    connection.query(deleteHashTagsSql + insertHashSql, function (err, result) {
+                        if (err) {
+                            console.log(err);
+                            res.json({
+                                'code': statusCode.SERVER_ERROR
+                            })
+                        } else {
+                            var deleteItemTagSql = `delete from item_tag where post_id=${postId};`;
+                            var insertItemSql = "";
+                            var insertItemParams = [];
+
+                            if (req.body.item_tag.length > 0) {
+                                for (var i = 0; i < req.body.item_tag.length; i++) {
+                                    var itemImg;
+                                    if (req.body.item_tag[i].picture == '') {
+                                        itemImg = "/public/default/to-do-list.png";
+                                    } else {
+                                        itemImg = req.body.item_tag[i].picture;
+                                    }
+        
+                                    insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, url, picture, brand, category1, category2) values(${postId}, ?, ?, ?, ?, ?, ?, ?, ?);`;
+                                    insertItemParams.push(req.body.item_tag[i].name);
+                                    insertItemParams.push(Number(req.body.item_tag[i].l_price));
+                                    insertItemParams.push(Number(req.body.item_tag[i].h_price));
+                                    insertItemParams.push(req.body.item_tag[i].url);
+                                    insertItemParams.push(itemImg);
+                                    insertItemParams.push(req.body.item_tag[i].brand);
+                                    insertItemParams.push(req.body.item_tag[i].category1);
+                                    insertItemParams.push(req.body.item_tag[i].category2);
+                                }
+                            }
+                            connection.query(deleteItemTagSql + insertItemSql, insertItemParams, function (err, result) {
+                                if (err) {
+                                    console.log(err);
+                                    res.json({
+                                        'code': statusCode.SERVER_ERROR
+                                    })
+                                } else {
+                                    res.json({
+                                        'code': statusCode.OK
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        }
     },
     postDelete: function (req, res) {
         const postId = req.query.postid;
