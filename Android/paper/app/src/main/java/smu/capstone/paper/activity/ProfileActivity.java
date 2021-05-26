@@ -252,7 +252,7 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
                 break;
 
-            case R.id.profile_edit :
+            case R.id.profile_edit:
                 Intent intent1 = new Intent(ProfileActivity.this, EditProfileActivity.class);
                 startActivity(intent1);
                 break;
@@ -274,8 +274,12 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent4 = new Intent(ProfileActivity.this , SettingActivity.class);
                 startActivity(intent4);
                 break;
+
+            case R.id.profile_edit_pw:
+                Intent intent5 = new Intent(ProfileActivity.this, ModifyPasswordActivity.class);
+                startActivity(intent5);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
