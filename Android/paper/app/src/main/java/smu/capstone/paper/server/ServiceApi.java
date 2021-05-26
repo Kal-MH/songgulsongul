@@ -19,6 +19,8 @@ import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import smu.capstone.paper.data.PostEditData;
+import smu.capstone.paper.data.ProfileEditData;
 import smu.capstone.paper.responseData.CodeResponse;
 
 import smu.capstone.paper.data.CommentData;
@@ -155,6 +157,10 @@ public interface ServiceApi {
             @Part List<MultipartBody.Part> ccl,
             @Part List<MultipartBody.Part> itemTags,
             @Part MultipartBody.Part postImg);
+
+    // 게시글 수정
+    @POST("/post/update")
+    Call<CodeResponse> PostUpdate(@Body PostEditData data);
 
     // 게시글 삭제
     @GET("/post/delete")

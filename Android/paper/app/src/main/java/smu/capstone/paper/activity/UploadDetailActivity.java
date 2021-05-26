@@ -312,7 +312,7 @@ public class UploadDetailActivity extends AppCompatActivity {
                             if (resultCode == StatusCode.RESULT_OK) {
                                 Toast toast = Toast.makeText(UploadDetailActivity.this, "업로드 완료", Toast.LENGTH_SHORT);
                                 toast.show();
-                                Intent intent = new Intent(UploadDetailActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동 (게시글 id 넘기기)
+                                Intent intent = new Intent(UploadDetailActivity.this, PostActivity.class); // 업로드 된 게시물로 이동 (게시글 id 넘기기)
                                 intent.putExtra("post_id", post_id);
                                 startActivity(intent);
                                 finish();
