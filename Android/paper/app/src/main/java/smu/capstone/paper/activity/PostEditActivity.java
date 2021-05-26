@@ -184,10 +184,10 @@ public class PostEditActivity extends AppCompatActivity {
                             if (resultCode == StatusCode.RESULT_OK) {
                                 Toast toast = Toast.makeText(PostEditActivity.this, "게시물 수정 완료!", Toast.LENGTH_SHORT);
                                 toast.show();
-//                            Intent intent = new Intent(PostEditActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동 (게시글 id 넘기기)
-//                            intent.putExtra("post_id", post_id);
-//                            startActivity(intent);
-//                            finish();
+                            Intent intent = new Intent(PostEditActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동 (게시글 id 넘기기)
+                            intent.putExtra("post_id", post_id);
+                            startActivity(intent);
+                            finish();
                             } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                 new AlertDialog.Builder(PostEditActivity.this)
                                         .setMessage("게시물 수정에 실패했습니다." + "\n" + "다시 시도해주세요..")

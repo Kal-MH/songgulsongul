@@ -74,7 +74,7 @@ public class PostActivity extends AppCompatActivity {
 
 
     int user_id, post_id;
-    String login_id;
+    String login_id, p_user_id;
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
 
@@ -138,7 +138,11 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PopupMenu popup = new PopupMenu(getApplicationContext(),v);
-                popup.getMenuInflater().inflate(R.menu.post_setting_menu, popup.getMenu());
+                Log.d("p_user_id", p_user_id);
+                //if(login_id.equals(p_user_id))
+                    popup.getMenuInflater().inflate(R.menu.post_setting_menu, popup.getMenu());
+                //else
+                //    popup.getMenuInflater().inflate(R.menu.post_setting_menu_other, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
                     @Override
                     public boolean onMenuItemClick(MenuItem item){
@@ -454,6 +458,7 @@ public class PostActivity extends AppCompatActivity {
         ccl = postData.getCcl();
 
         //작성자 프로필
+        p_user_id = userData.getLogin_id();
         post_user_id.setText(userData.getLogin_id());
         Glide.with(this).load(RetrofitClient.getBaseUrl() + userData.getImg_profile()).into(post_profile);
 
