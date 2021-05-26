@@ -311,7 +311,7 @@ const postController = {
 
             console.log(req.body);
     
-            var updatePostSql = `update post set text='${req.body.text}', post_time=curtime(), post_date=curdate(), ccl_cc=?, ccl_a=?, ccl_nc=?, ccl_nd=?, ccl_sa=? where id = ${postId};`;
+            var updatePostSql = `update post set text='${req.body.text}', ccl_cc=?, ccl_a=?, ccl_nc=?, ccl_nd=?, ccl_sa=? where id = ${postId};`;
             connection.query(updatePostSql, req.body.ccl, function (err, result) {
                 if (err) {
                     console.log(err);
