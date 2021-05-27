@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,210 +24,262 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
-import java.util.ArrayList;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
-import smu.capstone.paper.item.HomeFeedItem;
-import smu.capstone.paper.item.HomeMarketItem;
+import smu.capstone.paper.activity.ProfileActivity;
+import smu.capstone.paper.responseData.CodeResponse;
+import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.PostFeed;
+import smu.capstone.paper.responseData.User;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
-public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHolder> {
+public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
+
     Context context;
-    ArrayList<HomeFeedItem> iconInfo = new ArrayList<HomeFeedItem>(); // 좋아요, 보관 상태에 따른 아이콘 변경 때문에 필요할듯 함,,
-    JSONObject obj = new JSONObject();
-    JSONArray dataList;
+
+    Date today = new Date();
+    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar rightNow = Calendar.getInstance();
+
+    List<PostFeed> items;
     int itemCnt;
 
-    public HomeFeedAdapter (Context context, JSONObject obj) throws JSONException{
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+    StatusCode statusCode;
+
+    public HomeFeedAdapter (Context context, List<PostFeed> items)  {
         this.context = context;
-        this.obj = obj;
-
-        dataList = obj.getJSONArray("data");
-        itemCnt = dataList.length();
-    }
-
-    public void setItem(@NonNull ViewHolder holder, JSONObject item, int position){
-        // 받아온 데이터로 게시글 내용 셋팅
-        try {
-            String text = item.getString("text");
-            if(text.length() > 15) {// text가 15자 이상일 때
-                text = text.substring(0, 15);
-                text += " ...더 보기";
-                SpannableString newText= new SpannableString(text);
-                newText.setSpan(new ForegroundColorSpan(Color.parseColor("#D3D3D3")), 15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                newText.setSpan(new StyleSpan(Typeface.ITALIC),15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                holder.text.setText(newText); // 글 내용(15자 이상)
-            }
-            else{
-                holder.text.setText(text); // 글 내용(15자 이하)
-            }
-            holder.timestamp.setText(item.getString("post_time")); // 게시 시간
-            holder.comment_counter.setText(item.getInt("commentsNum") + ""); // 댓글 수
-            holder.favorite_counter.setText(iconInfo.get(position).getFavoriteCounter() + ""); // 좋아요 수
-            holder.user_id.setText(item.getString("user_id")); // 게시자 id
-            Glide.with(context).load(item.getInt("img_profile")).into(holder.profile_image); // 게시자 프로필 사진
-            Glide.with(context).load(item.getInt("image")).into(holder.picture); // 게시물 사진
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
+        this.items = items;
+        itemCnt = items.size();
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView = inflater.inflate(R.layout.feed_item, parent, false);
-        return new ViewHolder(itemView);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if(viewType == VIEW_TYPE_ITEM){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.feed_item, parent, false);
+            return new ItemViewHolder(view);
+        }
+        else{
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
+            return new LoadingViewHolder(view);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-       try {
-           final JSONObject item = dataList.getJSONObject(position);
-           iconInfo.add(new HomeFeedItem(item.getInt("likeOnset"), item.getInt("likeNum"), item.getInt("keepOnset")));
-           final int postId = item.getInt("post_id");
-           setItem(holder, item, position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
 
-           if(iconInfo.get(position).getLike() == 0){
-               holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_border));
-           }
-           else{
-               holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite));
-           }
+        if (holder instanceof ItemViewHolder) {
 
+            //post 가져옴
+            final PostFeed item = items.get(position);
+            final int postId = item.getPost().getId();
 
-           if(iconInfo.get(position).getKeep() == 0){
-               holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_border_24));
-           }
-           else{
-               holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_24));
-           }
+            setItem((ItemViewHolder) holder, position);
+            // 좋아요 listener
+            ((ItemViewHolder) holder).favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    serviceApi.Like(LoginSharedPreference.getUserId(context),postId)
+                            .enqueue(new Callback<CodeResponse>() {
+                                @Override
+                                public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                                    int like = item.getLikeOnset();
+                                    int resultCode = response.body().getCode();
+                                    if( resultCode == statusCode.RESULT_OK){
 
-           holder.comment.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   Intent intent = new Intent(context, PostActivity.class);
+                                        int likeNum = item.getLikeNum();
+                                        if( like == 1){ //좋아요 취소하기
+                                            like = 0;
+                                            item.setLikeNum(likeNum-1);
+                                        }
+                                        else{
+                                            like = 1;
+                                            item.setLikeNum(likeNum+1);
+                                        }
+                                        item.setLikeOnset(like);
+                                        notifyItemChanged(position);
+                                    }
+                                    else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                                        Toast.makeText(context, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                                        Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
 
-                   // 게시글 id 넘겨주기
-                   intent.putExtra("post_id", postId);
-
-                   context.startActivity(intent);
-               }
-           });
-
-           holder.text.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   Intent intent = new Intent(context, PostActivity.class);
-
-                   // 게시글 id 넘겨주기
-                   intent.putExtra("post_id", postId);
-
-                   context.startActivity(intent);
-               }
-           });
-
-       } catch (JSONException e){
-           e.printStackTrace();
-
-       }
-
-        // 좋아요 listener
-        holder.favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int like = iconInfo.get(position).getLike();
-                if (like == 0) {
-                    // 서버에 like객체 전달 코드 작성 -> insert
-                    // --------------------------------------
-
-                    // if resultCode == 200
-                    iconInfo.get(position).setLike(1);
-                    iconInfo.get(position).setFavoriteCounter(iconInfo.get(position).getFavoriteCounter() + 1);
-                    notifyDataSetChanged();
-                } else {
-                    // 서버에 like객체 전달 코드 작성 -> delete
-                    // --------------------------------------
-
-                    // if resultCode == 200
-                    iconInfo.get(position).setLike(0);
-                    iconInfo.get(position).setFavoriteCounter(iconInfo.get(position).getFavoriteCounter() - 1);
-                    notifyDataSetChanged();
+                                @Override
+                                public void onFailure(Call<CodeResponse> call, Throwable t) {
+                                    Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                                }
+                            });
                 }
-                // if resultCode == 404
-                // Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+            });
 
-                Log.d("TAG", "눌렸음");
+            // 보관함 listener
+            ((ItemViewHolder) holder).keep.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    serviceApi.Keep(LoginSharedPreference.getUserId(context),postId)
+                            .enqueue(new Callback<CodeResponse>() {
+                                @Override
+                                public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                                    int keep = item.getKeepOnset();
+                                    int resultCode = response.body().getCode();
+                                    if( resultCode == statusCode.RESULT_OK){
+                                        keep = (keep==1)? 0 : 1;
 
-            }
-        });
+                                        item.setKeepOnset(keep);
+                                        notifyItemChanged(position);
+                                        if( keep == 1)
+                                            Toast.makeText(context, "보관함에 저장 되었습니다", Toast.LENGTH_SHORT).show();
+                                        else
+                                            Toast.makeText(context, "보관함에서 삭제 되었습니다", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                                        Toast.makeText(context, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                                        Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
 
-        // 보관함 listener
-        holder.keep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int keeping = iconInfo.get(position).getKeep();
-                if(keeping == 0){
-                    // 서버에 keep객체 전달 코드 작성 -> insert
-                    // ---------------------------
-
-                    // if resultCode == 200
-                    iconInfo.get(position).setKeep(1);
-                    Toast.makeText(context, "보관 성공", Toast.LENGTH_SHORT).show();
-                    notifyDataSetChanged();
+                                @Override
+                                public void onFailure(Call<CodeResponse> call, Throwable t) {
+                                    Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                                }
+                            });
                 }
-                else{
-                    // 서버에 keep객체 전달 코드 작성 -> delete
-                    // --------------------------------------
-
-                    // if resultCode == 200
-                    iconInfo.get(position).setKeep(0);
-                    Toast.makeText(context, "보관 취소", Toast.LENGTH_SHORT).show();
-                    notifyDataSetChanged();
-                }
-
-                // if resultCode == 404
-                // Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-
-                Log.d("TAG", "눌렸음");
-            }
-        });
+            });
 
 
-        View.OnClickListener goPostActivity = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, PostActivity.class);
-                // 게시글 id 전달
-                try {
-                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("post_id");
+            View.OnClickListener goPostActivity = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, PostActivity.class);
+                    // 게시글 id 전달
                     intent.putExtra("post_id", postId);
-                } catch (JSONException e){
-                    e.printStackTrace();
+                    context.startActivity(intent);
                 }
+            };
+            View.OnClickListener goProfile = new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    // 게시글 사용자 id 전달
+                    intent.putExtra("userId", item.getUser().getLogin_id());
+                    context.startActivity(intent);
+                }
+            };
 
-                context.startActivity(intent);
-            }
-        };
+            ((ItemViewHolder) holder).comment.setOnClickListener(goPostActivity);
+            ((ItemViewHolder) holder).picture.setOnClickListener(goPostActivity);
+            ((ItemViewHolder) holder).text.setOnClickListener(goPostActivity);
 
-       holder.comment.setOnClickListener(goPostActivity);
-       holder.picture.setOnClickListener(goPostActivity);
-       holder.text.setOnClickListener(goPostActivity);
+            ((ItemViewHolder) holder).user_id.setOnClickListener(goProfile);
+            ((ItemViewHolder) holder).profile_image.setOnClickListener(goProfile);
 
+
+        }
+        else if (holder instanceof LoadingViewHolder) {
+            showLoadingView((LoadingViewHolder) holder, position);
+        }
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return items.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
     @Override
     public int getItemCount() {
-        return itemCnt;
+        return items == null ? 0 : items.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
-        int [] ImageId = {R.drawable.ic_favorite_border, R.drawable.ic_favorite};
+
+    private void showLoadingView(LoadingViewHolder holder, int position) {
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void setItem(@NonNull ItemViewHolder holder, int position){
+
+        Post post = items.get(position).getPost();
+        User user = items.get(position).getUser();
+
+        // 받아온 데이터로 게시글 내용 셋팅
+        String text = post.getText();
+        if(text.length() > 15) {// text가 15자 이상일 때
+            text = text.substring(0, 15);
+            text += " ...더 보기";
+            SpannableString newText= new SpannableString(text);
+            newText.setSpan(new ForegroundColorSpan(Color.parseColor("#D3D3D3")), 15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            newText.setSpan(new StyleSpan(Typeface.ITALIC),15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.text.setText(newText); // 글 내용(15자 이상)
+        }
+        else{
+            holder.text.setText(text); // 글 내용(15자 이하)
+        }
+
+        if( date.format(today).equals((post.getPost_date()))) {
+            int hour = Integer.parseInt(post.getPost_time().substring(0,2));
+            if( hour != rightNow.get(Calendar.HOUR_OF_DAY) ){
+                holder.timestamp.setText((rightNow.get(Calendar.HOUR_OF_DAY) - hour)+"시간 전");
+            }
+            else {
+                int min = Integer.parseInt(post.getPost_time().substring(3,5));
+                if( min == rightNow.get(Calendar.MINUTE) )
+                    holder.timestamp.setText("방금 게시됨");
+                else
+                    holder.timestamp.setText((rightNow.get(Calendar.MINUTE) - min) + "분 전");
+            }
+        }
+        else
+            holder.timestamp.setText( post.getPost_date()); //게시 날짜
+
+        Glide.with(context).load(RetrofitClient.getBaseUrl() + post.getImage() ).into(holder.picture); // 게시물 사진
+        holder.comment_counter.setText("댓글 " + items.get(position).getCommentsNum()); // 댓글 수
+        holder.favorite_counter.setText("좋아요 " + items.get(position).getLikeNum()); // 좋아요 수
+
+        holder.user_id.setText(user.getLogin_id()); // 게시자 id
+        Glide.with(context).load(RetrofitClient.getBaseUrl() + user.getImg_profile()).into(holder.profile_image); // 게시자 프로필 사진
+
+
+        if(items.get(position).getLikeOnset()== 0)
+            holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_border));
+        else
+            holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite));
+
+
+        if(items.get(position).getKeepOnset() == 0)
+            holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_border_24));
+        else
+            holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_24));
+
+
+    }
+
+    public void addItem( List<PostFeed> posts){
+        items.addAll(posts);
+    }
+
+    private class ItemViewHolder extends RecyclerView.ViewHolder {
         ImageView profile_image;
         TextView user_id;
         TextView timestamp;
@@ -238,7 +291,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         ImageView keep;
         ImageView comment;
 
-        public ViewHolder(@NonNull View itemView){
+        public ItemViewHolder(@NonNull View itemView){
             super(itemView);
             profile_image=(ImageView)itemView.findViewById(R.id.feed_item_profile_img);
             user_id=(TextView)itemView.findViewById(R.id.feed_item_id);
@@ -252,5 +305,19 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             comment = (ImageView)itemView.findViewById(R.id.feed_item_com);
 
         }
+/*
+        public void setItem(String item) {
+            textView.setText(item);
+        }*/
     }
+
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        private ProgressBar progressBar;
+
+        public LoadingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            progressBar = itemView.findViewById(R.id.item_progressBar);
+        }
+    }
+
 }

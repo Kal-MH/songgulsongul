@@ -13,7 +13,6 @@ const routes = require('../routes');
 
  apiRouter.post(routes.apiDupIdCheck, apiController.dupIdCheck);
  apiRouter.post(routes.apiEmailAuth, apiController.sendEmail);
- apiRouter.post(routes.apiEmailAuthNumber, apiController.checkEmailAuthNumber);
 
  apiRouter.get(routes.apiPostLike, apiController.setPostLike);
  apiRouter.get(routes.apiPostKeep, apiController.setPostKeep);
@@ -21,9 +20,7 @@ const routes = require('../routes');
  apiRouter.post(routes.apiPostCommentInsert,apiController.insertPostComment);
  apiRouter.get(routes.apiPostCommentDelete, apiController.deletePostComment);
 
- apiRouter.get(routes.apiPointDaily, apiController.apiPointDaily);
-
- //임시
- apiRouter.get(routes.apiNaverItemtag, apiController.sendNaverAPI);
+//출석체크
+ apiRouter.post(routes.apiDailyAttendance, apiController.dailyAttendance);
 
  module.exports = apiRouter;

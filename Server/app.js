@@ -68,7 +68,7 @@ app.use(localMiddlewares);
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 //서버에서 저장한 이미지 불러오기 -> 이후, S3로 확장 가능성 있음
-app.use("/upload", express.static("upload"))
+app.use("/upload", express.static(path.join(__dirname, "upload/")))
 
 //라우팅
 app.use(routes.home, homeRouter);

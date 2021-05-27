@@ -13,6 +13,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.fragment.FragHomeComu;
 import smu.capstone.paper.fragment.FragHomeFeed;
@@ -38,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         //  actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
-        actionBar.setTitle("APP NAME");
+        actionBar.setTitle("송글손글");
 
 
         bottomNavigationView = findViewById(R.id.home_tap);
@@ -104,11 +106,8 @@ public class HomeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.home_profile:
-                // 서버에 user객체 전달 코드 작성
-                // ----------------------------
-
-                // if resultCode == 200
                 Intent intent= new Intent(HomeActivity.this, ProfileActivity.class);
+                intent.putExtra("userId", LoginSharedPreference.getLoginId(HomeActivity.this));
                 startActivity(intent);
                 return true;
 

@@ -1,5 +1,5 @@
 const db_config = {
-    limitation : 5
+    limitation : 10
 }
 
 module.exports = db_config;

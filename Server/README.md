@@ -7,27 +7,28 @@
   - 콘솔에 npm install 타이핑
 
   ```
-  npm install이란, 
+  npm install이란,
   - pakage.json에 지정한 모듈을 다운받는 명령어
   - 완료되면 node_modules 폴더 생성
+
   ```
 
 - 프로젝트 진행과정에서
 
-  - 서버를 동작하려면  : npm start or node app.js
+  - 서버를 동작하려면 : npm start or node app.js
 
   ```
   *) 현재 nodemon 모듈이 설치되어 있기때문에, 서버가 가동되어 있는 상태라면 저장할 때마다 다시 재실행이 된다.
   *) 혹은 crtl+c를 누르고 서버를 종료했다가 다시 npm start로 재실행한다.
+
   ```
 
 ### Structure
 
 - Controller(dic)
 
-  - 사용자 요청에 따라 실행되는 파일(함수)들을 모아놓은 폴더
-
-  - 컨트롤러 명명규칙(임의로 설정, 추후에 변경가능) : 분류 + 기능 + RESTful방식 ex) userJoinPost, userLoginPost
+  - 사용자 요청에 따라 실행되는 파일(함수)들을 모아놓은 폴더
+  - 컨트롤러 명명규칙(임의로 설정, 추후에 변경가능) : 분류 + 기능 + RESTful방식 ex) userJoinPost, userLoginPost
 
   ```
   현재 구현된 Controller
@@ -35,38 +36,30 @@
   *) userController.js : 사용자 기능 (ex) 프로필, 팔로우, ...)
   *) postController.js : 게시글 기능 (ex) 게시글 불러오기, 검색하기, ...)
   *) apiController.js : 위 컨트롤러 이외에 부수적인 기능들이 구현된 컨트롤러 (ex)아이디 중복체크, 좋아요, 보관하기,...)
+
   ```
 
 - db(dic)
 
-  - 데이터베이스 설정 및 sql문을 모아놓은 폴더
+  - 데이터베이스 설정 및 sql문을 모아놓은 폴더
 
   ```
   *) db.js : db설정
   *) db_config.js : 컨트롤러에서 쿼리문에 공통적으로 들어가는 설정 기록
+
   ```
 
 - Router(dic)
-
-  - 라우터 폴더
-
-  - 각각의 경로에 따른 컨트롤러를 매칭해서 라우터에 달아줌.
-
-  - 라우터는 모듈로써 export되어 app.js에서 사용 (userRouter참고)
-
+  - 라우터 폴더
+  - 각각의 경로에 따른 컨트롤러를 매칭해서 라우터에 달아줌.
+  - 라우터는 모듈로써 export되어 app.js에서 사용 (userRouter참고)
 - routes.js
-
-  - 모든 경로 기록하는 파일
-
-  - 객체 형태로 export함
-
+  - 모든 경로 기록하는 파일
+  - 객체 형태로 export함
 - app.js
-
-  - 프로그램 실행의 시작점
-
-  - 필요한 모듈, 미들웨어, 라우터설정등이 이뤄짐.
-
-  - 마지막에 서버 가동
+  - 프로그램 실행의 시작점
+  - 필요한 모듈, 미들웨어, 라우터설정등이 이뤄짐.
+  - 마지막에 서버 가동
 
 ## Api Controller
 
@@ -78,10 +71,11 @@
      - login_id
    - 응답 데이터
 
-     ```java
+     ```
      json = {
-     	'code' // 200 or 204(중복 존재) or 500(database connection error)
+     	'code' // 200, 400(중복, client error), 500(server error)
      }
+
      ```
 
 2. 인증 이메일 보내기
@@ -92,11 +86,12 @@
      - email
    - 응답 데이터
 
-     ```java
+     ```
      json = {
-     	'code' //200 or 500(서버 에러)
+     	'code' // 200, 400(client error), 500(server error)
      	'authNumber' // 이메일 인증 번호
      }
+
      ```
 
 3. 좋아요
@@ -110,10 +105,11 @@
        - post id (url query)
      - 응답데이터
 
-       ```java
+       ```
        json = {
-       	'code' //200 or 204, 500(좋아요 처리 실패)
+       	'code' //200, 400(client error),  500(server error)
        }
+
        ```
 
    - 고려사항
@@ -131,10 +127,11 @@
      - post id (url query)
    - 응답데이터
 
-     ```java
+     ```
      json = {
-     	'code' //200 or 204, 500(보관하기 처리 실패)
+     	'code' //200, 400(client error),  500(server error)
      }
+
      ```
 
    - 고려사항
@@ -144,17 +141,18 @@
 
 5. 댓글쓰기
 
-   - api : "/api/comment?userid=?&postid=?"
-   - method : GET
+   - api : "/api/comment"
+   - method : POST
    - 전달받아야 하는 데이터
-     - user id (url query)
-     - post id (url query)
+     - user id (url body)
+     - post id (url body)
    - 응답데이터
 
-     ```java
+     ```
      json = {
-     	'code' //200, 204(댓글 저장 실패)
+     	'code' //200, 400(client error),  500(server error)
      }
+
      ```
 
    - 고려사항
@@ -168,10 +166,11 @@
      - post id(url query), comment id(url query)
    - 응답데이터
 
-     ```java
+     ```
      json = {
-     	'code' //200, 204(댓글 지우기 실패)
+     	'code' //200, 204(댓글 지우기 실패) -> 수정 예정
      }
+
      ```
 
 7. 출석 포인트 반영하기
@@ -182,10 +181,11 @@
      - user id(url query)
    - 응답데이터
 
-     ```java
+     ```
      json = {
-     	'code' //200, 204, 500
+     	'code' //200, 204, 500 -> 수정 예정
      }
+
      ```
 
 ## Home Controller
@@ -198,15 +198,14 @@
      - email
      - password
      - login_id
-     - **sns_url // 데이터베이스에 적혀져 있는 명명에 따라 일관성을 위해 바꿈.**
-     - img_profile
+     - sns_url
    - 응답 데이터
 
-     ```java
+     ```
      json = {
-     	'code' : 200(ok) or 204(client error)
-     	// 에러 메세지를 좀 더 세부적으로 나눌 필요가 있다면 204(client error), 500(server error)로 나눌 수 있음.**
+     	'code' : 200(ok), 400(client error), 500(server error)
      }
+
      ```
 
 2. 로그인
@@ -218,16 +217,18 @@
      - password
    - 응답 데이터
 
-     ```java
+     ```
      json = {
-     	'code' : 200 or 204(error),
+     	'code' : 200, 201(첫출석 아님), 400(client error), 500(server error)
        'id' : userid
      }
-     ```
-  - 고려사항
-    - id의 경우, 로그인 성공(200) 시에만 값이 반환된다.
 
-3. 아이디 찾기
+     ```
+
+    - 고려사항
+      - id의 경우, 로그인 성공(200, 201) 시에만 값이 반환된다.
+
+1. 아이디 찾기
 
    - api : /find/id
    - method : POST
@@ -235,13 +236,14 @@
      - email
    - 응답 데이터
 
-     ```java
+     ```
      json = {
-     	'code' : 200 or 204(일치하는 이메일 없음) or 500(서버에러),
+     	'code' : 200 or 400(빈 값, 일치하는 이메일 x) or 500(서버에러)
      }
+
      ```
 
-4. 비밀번호 찾기
+2. 비밀번호 찾기
 
    - api : /find/password
    - method : POST
@@ -250,10 +252,11 @@
      - login_id
    - 응답 데이터
 
-     ```java
+     ```
      json = {
-     	'code' : 200 or 204(일치하는 이메일, login_id 없음) or 500(서버에러),
+     	'code' : 200 or 400(일치하는 이메일, login_id 없음) or 500(서버에러)
      }
+
      ```
 
 ## User Router
@@ -267,7 +270,7 @@
      - status
    - 응답 데이터
 
-     ```java
+     ```
      json = {
      	'code', //응답코드
      	'followerCnt',  //팔로워 수
@@ -275,6 +278,7 @@
      	'postInfo', //게시글 정보 -> image, postId
      	'profileInfo'  //프로필 정보 -> profile_image, intro, sns
      }
+
      ```
 
 2. 팔로우 하기
@@ -286,10 +290,11 @@
      - userId(팔로우 대상자)
    - 응답 데이터
 
-     ```java
+     ```
      json = {
      	'code'
      }
+
      ```
 
 3. 언팔로우 하기
@@ -301,10 +306,11 @@
      - userId
    - 응답 데이터
 
-     ```java
+     ```
      json = {
      	'code'
      }
+
      ```
 
 4. 로그인한 사용자의 팔로우 리스트 받아오기
@@ -315,11 +321,12 @@
      - id(로그인한 사용자의 id)
    - 응답 데이터
 
-     ```java
+     ```
      json = {
        'code',
      	'followinfo' //팔로우 정보 -> image, userId
      }
+
      ```
 
 5. 선택한 사용자의 팔로우 리스트 받아오기
@@ -330,11 +337,12 @@
      - userId(선택한 사용자의 id)
    - 응답 데이터
 
-     ```java
+     ```
      json = {
        'code',
      	'userfollowinfo'  //팔로우 정보 -> image, userId
      }
+
      ```
 
 6. 팔로워 리스트 받아오기
@@ -345,11 +353,12 @@
      - id
    - 응답 데이터
 
-     ```java
+     ```
      json = {
        'code',
      	'followerinfo'  //팔로워 정보 -> image, userId
      }
+
      ```
 
 7. 보관함 기능
@@ -360,22 +369,24 @@
      - id(로그인한 사용자)
    - 응답 데이터
 
-     ```java
+     ```
      json = {
        'code',
      	'keepinfo', //보관정보 -> image, postId
      	'keepcnt' //보관개수
      }
+
      ```
 
 8. 프로필 수정 – 아이디 중복 확인
 
    - api: /user/profile-edit-idcheck
 
-     ```java
+     ```
      json = {
      	'code'
      }
+
      ```
 
 9. 프로필 수정
@@ -390,10 +401,11 @@
      - profileImage
    - 응답 데이터
 
-     ```java
+     ```
      json = {
      	'code'
      }
+
      ```
 
 10. 회원 탈퇴
@@ -404,10 +416,11 @@
       - id(로그인한 사용자)
     - 응답 데이터
 
-      ```java
+      ```
       json = {
       	'code'
       }
+
       ```
 
 ## Post Router
@@ -427,7 +440,7 @@
      - 쿼리 offset값
    - 응답데이터
 
-     ```java
+     ```
      json = {
      	'code', //상태코드
      				  // 상태코드는 ok(200), server error(500)으로 나뉜다.
@@ -437,15 +450,21 @@
      		'text',
      		'post_time',
      		'post_data',
-     		'user_id'
+     		'user_id',
+             'ccl_cc',
+             'ccl_a',
+             'ccl_nc',
+             'ccl_nd',
+             'ccl_sa'
      	}
      }
-     **//data의 경우, 오류가 발생했을 때는 빈배열 혹은 undefined(null)로 넘어올 수 있다.**
+     **//data의 경우, 오류가 발생했을 때, undefined(null)로 넘어온다.**
+
      ```
 
    - 예시
 
-     ![postCommunity](https://user-images.githubusercontent.com/59648372/112145078-41c06480-8c1d-11eb-8303-68bbcdc80f26.png)
+     ![https://user-images.githubusercontent.com/59648372/117537009-545df400-b039-11eb-9fb6-e8857bf6b306.png](https://user-images.githubusercontent.com/59648372/117537009-545df400-b039-11eb-9fb6-e8857bf6b306.png)
 
 2. 팔로우 게시글 불러오기
 
@@ -462,10 +481,10 @@
      - 쿼리 offset값
    - 응답 데이터
 
-     ```java
+     ```
      json = {
      	'code', //상태코드
-     				  // 상태코드는 ok(200), server error(500)으로 나뉜다.
+     			// 상태코드는 ok(200), client error(400), server error(500)으로 나뉜다.
      	'data'  = {
      		'post' : {
      			'id',  //post id
@@ -486,17 +505,18 @@
      	}
      }
      **//data의 경우, 오류가 발생했을 때는 null(혹은 undefined)로 넘어올 수 있다.**
+
      ```
 
    - 예시
 
-     ![postfeeds](https://user-images.githubusercontent.com/59648372/112144953-1a699780-8c1d-11eb-8463-b9ef1bbc9191.png)
+     ![https://user-images.githubusercontent.com/59648372/112144953-1a699780-8c1d-11eb-8463-b9ef1bbc9191.png](https://user-images.githubusercontent.com/59648372/112144953-1a699780-8c1d-11eb-8463-b9ef1bbc9191.png)
 
 3. 검색하기
 
    - api : “/post/search?method=?&keyword=?&offset=?"
-     - 총 3가지의 쿼리문을 받는다.
-       - method : 검색 종류를 지정한다.
+     - 총 3가지의 데이터를 받는다.
+       - method : 검색 방법을 지정한다.
          - method=tag //태그 검색
          - method=id // 계정 검색
        - keyword : 검색할 키워드
@@ -509,15 +529,16 @@
            - 이후에 계속해서 검색결과를 불러오는 경우 : /post/search?method=id&keyword=aaa&offset=10
    - method : GET
    - 전달받아야 하는 데이터
-     - 쿼리 method, keyword, offset값
+     - method, keyword, offset값 (query)
    - 응답데이터
 
-     ```java
+     ```
      json = {
      	'code', //상태코드
-     					// 상태코드는 ok(200), server error(500)으로 나뉜다.
+     					// 상태코드는 ok(200), client error(400), server error(500)으로 나뉜다.
      	'data'  = { … }
      }
+
      ```
 
    - 고려사항
@@ -531,9 +552,9 @@
      - keyword%
    - 예시
 
-     - <search tag>
+     - search tag
 
-       ```java
+       ```
        data : [
        	{
        		'post_id', // 게시글 id
@@ -543,13 +564,14 @@
        		'post_date'
        	}
        ]
+
        ```
 
-       ![postSearchTag](https://user-images.githubusercontent.com/59648372/112144995-281f1d00-8c1d-11eb-8b30-d5bad38f3e5f.png)
+       ![https://user-images.githubusercontent.com/59648372/117537120-f67ddc00-b039-11eb-8985-ddd03f762996.png](https://user-images.githubusercontent.com/59648372/117537120-f67ddc00-b039-11eb-8985-ddd03f762996.png)
 
-     - <search Id>
+     - search Id
 
-       ```java
+       ```
        data : [
        	{
        		'id', // user id
@@ -557,9 +579,14 @@
        		'img_profile' // user profile
        	}
        ]
+
        ```
 
-       ![postSearchId](https://user-images.githubusercontent.com/59648372/112145026-340adf00-8c1d-11eb-8af4-70810bc376aa.png)
+       ![https://user-images.githubusercontent.com/59648372/117537188-68562580-b03a-11eb-9356-495a8b75879e.png](https://user-images.githubusercontent.com/59648372/117537188-68562580-b03a-11eb-9356-495a8b75879e.png)
+
+     - search error
+
+       ![https://user-images.githubusercontent.com/59648372/117537122-f978cc80-b039-11eb-85cd-195696cded0e.png](https://user-images.githubusercontent.com/59648372/117537122-f978cc80-b039-11eb-85cd-195696cded0e.png)
 
 4. **특정 게시글 불러오기**
 
@@ -570,21 +597,21 @@
      - user id (url query)
    - 응답데이터
 
-     ```java
+     ```
      json = {
-     	'code', //상태코드
-     					// 상태코드는 ok(200), server error(500)으로 나뉜다.
+     	'code', // 200, 400(client error), 500(server error)
      	'data' : {
      		'post', //게시글 정보,
      		'user', //게시글 작성자 정보,
-     		'hashTags',
-     		'itemTags',
+     		'hashTags', //배열
+     		'itemTags', //배열
      		'likeNum', //좋아요 갯수,
-     		'comments', //해당 게시글에 달린 댓글,
+     		'comments', // 배열, 해당 게시글에 달린 댓글,
      		'likeOnset',
      		'keepOnset'
      	}
      }
+
      ```
 
    - 고려사항
@@ -597,20 +624,20 @@
 
    //자세한 객체 구조는 예시 참조
 
-   **// 하나의 게시글만 가져오도록 변경할 예정,**
-
-   **// data는 배열이 아니라 객체로 넘어올 가능성 있음**
-
 - 예시
 
-  ![postDetail](https://user-images.githubusercontent.com/59648372/112144589-c5c61c80-8c1c-11eb-8dbc-2e50f8b86b2d.png)
+  ![postDetail](https://user-images.githubusercontent.com/59648372/117741315-234e1100-b23d-11eb-9277-e777e27f9216.png)
 
-5. 게시글 업로드
+- 에러 발생
 
-   - api : “/post/upload?userid=?”
+  ![https://user-images.githubusercontent.com/59648372/117537320-03e79600-b03b-11eb-9dd4-abbf1e880703.png](https://user-images.githubusercontent.com/59648372/117537320-03e79600-b03b-11eb-9dd4-abbf1e880703.png)
+
+1. 게시글 업로드
+
+   - api : “/post/upload”
    - method : POST
    - 전달받아야 하는 데이터
-     - user id (url query)
+     - user_id
      - 게시글 정보
        - image
        - text
@@ -631,20 +658,20 @@
          현재는 int형 5개짜리 ccl 배열이 넘어오는 것을 가정해서 구현되어 있다. 추후에 넘어오는 데이터 구조에 따라 수정 가능.
    - 응답데이터
 
-     ```java
+     ```
      json = {
-     	'code', //상태코드
-     					// 상태코드는 ok(200), client error(500)으로 나뉜다.
+     	'code', //200, 400, 500
      }
+
      ```
 
-6. 게시글 업데이트
+2. 게시글 업데이트
 
-   - api : “/post/update?userid=?&postid=?”
+   - api : “/post/update”
    - method : POST
    - 전달받아야 하는 데이터
-     - user id (url query)
-     - post id (url query)
+     - user_id
+     - post_id
      - 게시글 정보
        - image
        - text
@@ -658,14 +685,14 @@
        - picture
    - 응답데이터
 
-     ```java
+     ```
      json = {
-     	'code', //상태코드
-     					// 상태코드는 ok(200), client error(204)으로 나뉜다.
+     	'code', //200, 400, 500
      }
+
      ```
 
-7. 게시글 삭제
+3. 게시글 삭제
 
    - api : “/post/delete?userid=?&postid=?”
    - method : GET
@@ -674,27 +701,29 @@
      - post id (url query)
    - 응답데이터
 
-     ```java
+     ```
      json = {
-     	'code', //상태코드
-     					// 상태코드는 ok(200), server error(500)으로 나뉜다.
+     	'code', //200, 400, 500
      }
+
      ```
 
-8. 게시글 다운로드
+4. 게시글 다운로드
 
    - api : "/post/download?postid=?"
    - method : GET
    - 전달받아야 하는 데이터
      - post id (url query)
    - 응답데이터
-     ```java
+
+     ```
      json = {
      'code', //상태코드
      					// 상태코드는 ok(200), server error(500)으로 나뉜다.
      	'data' : {
      		'img_path' : file
      	}
+
      ```
 
 ## Market Router
@@ -704,11 +733,12 @@
    - api : “/market/main”
    - 응답데이터
 
-     ```java
+     ```
      json = {
      	'code',
       'marketItem' // 마켓 sticker 정보 --> id, image, name, price
      }
+
      ```
 
 2. 마켓 스티커 상세보기
@@ -720,13 +750,14 @@
      - userId(로그인한 사용자 id -- 보유 포인트 전송에 필요)
    - 응답데이터
 
-     ```java
+     ```
      json = {
      	'code',
       'stickerDetail', // sticker 상세 정보 --> image, name, price, text
       'sellerInfo', // 판매자 정보 --> profileImage, userId
       'userPoint' // 사용자 포인트
      }
+
      ```
 
 3. 마켓 스티커 구매
@@ -738,10 +769,11 @@
      - userId(로그인한 사용자 id -- 구매자 포인트 차감)
    - 응답데이터
 
-     ```java
+     ```
      json = {
      	'code'
      }
+
      ```
 
 4. 마켓 스티커 검색시(기본)
@@ -752,11 +784,12 @@
      - searchWord(검색어)
    - 응답데이터
 
-     ```java
+     ```
      json = {
      	'code',
       'marketItem' // 검색한 sticker --> id, image, name, price
      }
+
      ```
 
 5. 마켓 스티커 검색(낮은 가격순)
@@ -767,11 +800,12 @@
      - searchWord(검색어)
    - 응답데이터
 
-     ```java
+     ```
      json = {
      	'code',
       'marketItem' // 검색한 sticker --> id, image, name, price
      }
+
      ```
 
 6. 마켓 스티커 검색(최신순)
@@ -782,9 +816,10 @@
      - searchWord(검색어)
    - 응답데이터
 
-     ```java
+     ```
      json = {
      	'code',
       'marketItem' // 검색한 sticker --> id, image, name, price
      }
+
      ```

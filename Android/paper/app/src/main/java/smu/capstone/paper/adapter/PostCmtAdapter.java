@@ -1,67 +1,42 @@
 package smu.capstone.paper.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
-import com.bumptech.glide.Glide;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import java.util.List;
 
 import smu.capstone.paper.R;
-import smu.capstone.paper.item.HashtagItem;
-import smu.capstone.paper.item.PostCmtItem;
+import smu.capstone.paper.activity.PostActivity;
+import smu.capstone.paper.activity.ProfileActivity;
+import smu.capstone.paper.responseData.Comment;
 
 public class PostCmtAdapter extends BaseAdapter {
+
     ViewHolder holder;
     Context context;
-    JSONObject obj = new JSONObject();
-    JSONArray dataList;
-    LayoutInflater inf;
+    List<Comment> dataList;
     int cmtCnt;
-    int layout;
 
 
-    public PostCmtAdapter (Context context, JSONObject obj) throws JSONException {
+    public PostCmtAdapter (Context context, List<Comment>  obj)  {
         this.context = context;
-        //this.items = items;
-        this.obj = obj;
-
-        dataList = obj.getJSONArray("data");
-        cmtCnt = dataList.length();
+        dataList = obj;
+        cmtCnt = dataList.size();
     }
-
-
-    public void setItem(@NonNull PostCmtAdapter.ViewHolder holder,JSONObject item, int position){
-        // 받아온 데이터로 셋팅
-        try {
-            holder.userId.setText(item.getString("login_id"));
-            holder.cmt.setText(item.getString("text"));
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-    }
-
     @Override public int getCount() {
-        return dataList.length();
+        return dataList.size();
     }
-
     @Override public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
 
-        final int pos = position;
+        int pos = position;
         final Context context = parent.getContext(); // "listview_item" Layout을 inflate하여 convertView 참조 획득.
 
         if (convertView == null) {
@@ -78,23 +53,28 @@ public class PostCmtAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        try {
-            final JSONObject item = dataList.getJSONObject(position);
-            holder.userId.setText(item.getString("login_id"));
-            holder.cmt.setText(item.getString("text"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        final Comment item = dataList.get(position);
+        holder.userId.setText(item.getLogin_id());
+        holder.cmt.setText(item.getText());
+
+        holder.userId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ProfileActivity.class);
+                // 게시글 사용자 id 전달
+                intent.putExtra("userId",item.getLogin_id());
+                context.startActivity(intent);
+            }
+        });
 
         return convertView;
     }
-
     @Override public long getItemId(int position) {
-        return position;
+        return dataList.get(position).getId();
     }
 
     @Override public Object getItem(int position) {
-        return null;
+        return dataList.get(position);
     }
 
     static class ViewHolder{

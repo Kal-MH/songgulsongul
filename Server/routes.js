@@ -14,8 +14,8 @@ const FIND_PASSWORD = "/find/password";
 const USER = "/user";
 const USER_PROFILE = "/profile";
 const USER_KEEP = "/keep";
+const USER_PROFILE_DATA = "/profile-data";
 const USER_PROFILE_EDIT = "/profile-edit";
-const USER_PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
 const USER_FOLLOW = "/follow";
 const USER_UNFOLLOW = "/unfollow";
 const USER_FOLLOW_LIST = "/follow-list";
@@ -38,6 +38,8 @@ const POST_COMMUNITY = "/community";
 const POST_FEEDS = "/feeds";
 const POST_DETAIL = "/:id";
 const POST_SEARCH = "/search";
+const POST_SEARCH_TAG = "/search/tag";
+const POST_SEARCH_ID = "/search/id";
 const POST_UPLOAD = "/upload";
 const POST_UPDATE = "/update";
 const POST_DELETE = "/delete";
@@ -54,7 +56,7 @@ const API_POST_KEEP = "/keep";
 const API_POST_COMMENT_INSERT = "/comment";
 const API_POST_COMMENT_DELETE = "/comment/delete";
 
-const API_POINT_DAILY = "/point/daily";
+const API_DAILY_ATTENDANCE = "/point/attendance";
 
 //img tag api temporary
 const API_NAVER_ITEM_TAG = "/naver/item-tag";
@@ -70,12 +72,12 @@ const routes = {
     join : JOIN,
     login : LOGIN,
     findId : FIND_ID,
-    findPassword : FIND_PASSWORD,
+    findPassword: FIND_PASSWORD,
 
     user : USER,
     userProfile : USER_PROFILE,
     userKeep : USER_KEEP,
-    userProfileEditIdcheck : USER_PROFILE_EDIT_IDCHECK,
+    userProfileData : USER_PROFILE_DATA,
     userProfileEdit : USER_PROFILE_EDIT,
     userFollow : USER_FOLLOW,
     userUnfollow : USER_UNFOLLOW,
@@ -96,7 +98,9 @@ const routes = {
     postCommunity : POST_COMMUNITY,
     postFeeds : POST_FEEDS,
     postUpload : POST_UPLOAD,
-    postSearch : POST_SEARCH,
+    postSearch: POST_SEARCH,
+    postSearchTag : POST_SEARCH_TAG,
+    postSearchId :POST_SEARCH_ID,
     postDetail : POST_DETAIL,
     postUpdate : POST_UPDATE,
     postDelete : POST_DELETE,
@@ -110,7 +114,7 @@ const routes = {
     apiPostKeep : API_POST_KEEP,
     apiPostCommentInsert : API_POST_COMMENT_INSERT,
     apiPostCommentDelete : API_POST_COMMENT_DELETE,
-    apiPointDaily : API_POINT_DAILY,
+    apiDailyAttendance: API_DAILY_ATTENDANCE,
     apiNaverItemtag : API_NAVER_ITEM_TAG,
     apiNaverItemtagCallback : API_NAVER_ITEM_TAG_CALLBACK,
     me : ME,

@@ -8,6 +8,7 @@
 const express = require('express');
 const userController = require('../Controller/userController');
 const routes = require('../routes');
+const middleWares = require('../middlewares');
 
  var userRouter = express.Router();
 
@@ -18,8 +19,8 @@ userRouter.post(routes.userLFollowList, userController.userLFollowList);
 userRouter.post(routes.userFollowList, userController.userFollowList);
 userRouter.post(routes.userFollowerList, userController.userFollowerList);
 userRouter.post(routes.userKeep, userController.profileKeep);
-userRouter.post(routes.userProfileEditIdcheck, userController.profileEditIdCheck);
-userRouter.post(routes.userProfileEdit, userController.profileEdit);
+userRouter.post(routes.userProfileData, userController.profileData);
+userRouter.post(routes.userProfileEdit, middleWares.multerProfile, userController.profileEdit);
 userRouter.post(routes.userDataDelete, userController.userDataDelete);
 
  module.exports = userRouter;
