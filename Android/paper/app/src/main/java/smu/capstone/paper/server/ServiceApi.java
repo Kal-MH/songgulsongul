@@ -1,8 +1,11 @@
 package smu.capstone.paper.server;
 
+import android.app.DownloadManager;
+
 import com.google.gson.JsonObject;
 
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -16,6 +19,8 @@ import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import smu.capstone.paper.data.PostEditData;
+import smu.capstone.paper.data.ProfileEditData;
 import smu.capstone.paper.responseData.CodeResponse;
 
 import smu.capstone.paper.data.CommentData;
@@ -141,4 +146,22 @@ public interface ServiceApi {
     @GET("/post/search/tag")
     Call<PostListResponse> SearchPostTag(@Query("keyword") String keyword , @Query("offset") int offset);
 
+    // 게시글 업로드
+    @Multipart
+    @POST("/post/upload")
+    Call<JsonObject> PostUpload(
+            @Part("user_id") RequestBody id,
+            @Part("text") RequestBody text,
+            @Part List<MultipartBody.Part> hashTags,
+            @Part List<MultipartBody.Part> ccl,
+            @Part List<MultipartBody.Part> itemTags,
+            @Part MultipartBody.Part postImg);
+
+    // 게시글 수정
+    @POST("/post/update")
+    Call<CodeResponse> PostUpdate(@Body PostEditData data);
+
+    // 게시글 삭제
+    @GET("/post/delete")
+    Call<CodeResponse> PostDelete(@Query("userid") int user_id, @Query("postid") int post_id);
 }

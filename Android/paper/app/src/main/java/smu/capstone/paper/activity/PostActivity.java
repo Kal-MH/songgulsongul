@@ -74,6 +74,7 @@ public class PostActivity extends AppCompatActivity {
 
 
     int user_id, post_id;
+    String login_id, p_user_id;
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
 
@@ -126,6 +127,7 @@ public class PostActivity extends AppCompatActivity {
         Intent intent = getIntent();
         user_id = LoginSharedPreference.getUserId(PostActivity.this);
         post_id = intent.getIntExtra("post_id",-1);
+        login_id = LoginSharedPreference.getLoginId(PostActivity.this);
 
 
         //서버통신
@@ -136,7 +138,11 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PopupMenu popup = new PopupMenu(getApplicationContext(),v);
-                popup.getMenuInflater().inflate(R.menu.post_setting_menu, popup.getMenu());
+                Log.d("p_user_id", p_user_id);
+                //if(login_id.equals(p_user_id))
+                    popup.getMenuInflater().inflate(R.menu.post_setting_menu, popup.getMenu());
+                //else
+                //    popup.getMenuInflater().inflate(R.menu.post_setting_menu_other, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
                     @Override
                     public boolean onMenuItemClick(MenuItem item){
@@ -155,7 +161,53 @@ public class PostActivity extends AppCompatActivity {
                                 startActivity(intent2);*/
                                 break;
                             case R.id.post_delete:
-                                Toast.makeText(getApplicationContext(),"게시글 삭제",Toast.LENGTH_SHORT).show();
+                                new AlertDialog.Builder(PostActivity.this)
+                                        .setMessage("게시물을 삭제 하시겠습니까?")
+                                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                serviceApi.PostDelete(user_id, post_id).enqueue(new Callback<CodeResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                                                        try {
+                                                            CodeResponse result = response.body();
+                                                            int resultCode = result.getCode();
+
+                                                            if (resultCode == StatusCode.RESULT_OK) {
+                                                                Toast.makeText(getApplicationContext(), "게시글 삭제 완료!", Toast.LENGTH_SHORT).show();
+                                                                onBackPressed();
+                                                                finish();
+                                                            } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
+                                                                Toast.makeText(getApplicationContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        } catch (NullPointerException e){
+                                                            new AlertDialog.Builder(PostActivity.this)
+                                                                    .setMessage("에러발생!")
+                                                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                                        @Override
+                                                                        public void onClick(DialogInterface dialog, int which) {
+
+                                                                        }
+                                                                    })
+                                                                    .show();
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                                                        Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                                                    }
+                                                });
+                                            }
+                                        })
+                                        .show();
                                 break;
                             default:
                                 break;
@@ -406,6 +458,7 @@ public class PostActivity extends AppCompatActivity {
         ccl = postData.getCcl();
 
         //작성자 프로필
+        p_user_id = userData.getLogin_id();
         post_user_id.setText(userData.getLogin_id());
         Glide.with(this).load(RetrofitClient.getBaseUrl() + userData.getImg_profile()).into(post_profile);
 
