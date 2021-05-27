@@ -4,8 +4,11 @@
     <item
         android:id="@+id/profile_edit"
         android:title="프로필 수정"
-        app:showAsAction="never">
-    </item>
+        app:showAsAction="never"></item>
+    <item
+        android:id="@+id/profile_edit_pw"
+        android:title="비밀번호 변경"
+        app:showAsAction="never"></item>
     <item
         android:id="@+id/profile_keep"
         android:title="보관함"
