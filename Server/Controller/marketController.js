@@ -1,12 +1,21 @@
- var connection = require("../db/db");
- var statusCode = require("../config/serverStatusCode");
+const connection = require("../db/db");
+const statusCode = require("../config/serverStatusCode");
+const db_config = require("../db/db_config");
 
- const marketController = {
+const marketController = {
    // 마켓 메인
    marketMain : function(req, res){
+     const offset = req.query.offset;
      var market_item = [];
+     var sql;
 
-     var sql = 'SELECT * FROM market ORDER BY id ASC;'; // 저장순으로 전송
+     if(offset === undefined || offset === 0){
+       sql += `SELECT * FROM market ORDER BY id ASC limit ${db_config.limitation};`; // 저장순으로 전송
+     }
+     else{
+       sql +=  `SELECT * FROM market WHERE id > ${offset} ORDER BY id ASC limit limit ${db_config.limitation};`;
+     }
+
      connection.query(sql, function(err, rows){
       var resultCode = statusCode.SERVER_ERROR;
        if(err){
@@ -38,8 +47,8 @@
    // 마켓 아이템 상세보기
    // 사용자의 현재 보유 포인트도 함께 전송한다. --> front에서 스티커 가격과 비교 후 buy버튼 클릭 시 반영
    getStickerDetail : function(req, res){
-     const sticker_id = req.params.stickerId;
-     const user_id = req.params.userId;
+     const sticker_id = req.query.sticker_id;
+     const user_id = req.query.user_id;
 
      var sticker_detail = [];
      var seller_info = [];
@@ -47,9 +56,9 @@
      var params = [sticker_id, user_id];
 
      var sql1 = 'SELECT * FROM market JOIN user ON market.user_id = user.id WHERE market.id = ?;';
-     var sql2 = 'SELECT point FROM user WHERE login_id = ?;';
+     var sql2 = 'SELECT point FROM user WHERE id = ?;';
      connection.query(sql1 + sql2, params, function(err, rows){
-       var resultCode = statusCode.CLIENT_ERROR;
+       var resultCode = statusCode.SERVER_ERROR;
        if(err){
          console.log(err);
          res.json({
@@ -59,24 +68,24 @@
        else{
          resultCode = statusCode.OK;
 
-         // 마켓 스티커 data
+         // 스티커 data
          var data = {
-           'image': rows[0].image,
-           'name': rows[0].name,
-           'price': rows[0].price,
-           'text': rows[0].text
+           'image': rows[0][0].image,
+           'name': rows[0][0].name,
+           'price': rows[0][0].price,
+           'text': rows[0][0].text
          };
          sticker_detail.push(data);
 
          // 판매자 data
          var seller = {
-           'profileImage': rows[0].img_profile,
-           'userId': rows[0].login_id
+           'profileImage': rows[0][0].img_profile,
+           'userId': rows[0][0].login_id
          };
          seller_info.push(seller);
 
          // 사용자의 보유 point
-         user_point = rows[1];
+         user_point = rows[1][0].point;
 
          res.json({
            'code': resultCode,
@@ -90,13 +99,13 @@
 
   // 마켓 스티커 구매
   stickerBuy : function(req, res){
-    const sticker_id = req.params.stickerId;
-    const user_id = req.params.userId;
+    const sticker_id = req.query.sticker_id;
+    const user_id = req.query.user_id;
     var params = [sticker_id, user_id];
 
-    var sql = 'UPDATE user SET point = point - (SELECT price FROM market WHERE id = ?) WHERE login_id = ?;'; // 구매자의 포인트 차감
+    var sql = 'UPDATE user SET point = point - (SELECT price FROM market WHERE id = ?) WHERE id = ?;'; // 구매자의 포인트 차감
     connection.query(sql, params, function(err, rows){
-      var resultCode = statusCode.CLIENT_ERROR;
+      var resultCode = statusCode.SERVER_ERROR;
       if(err){
         console.log(err);
       }
@@ -112,12 +121,20 @@
 
   // 마켓 스티커 검색(기본)
   getStickerSearch : function(req, res){
-    const search_word = req.query.searchWord;
+    const search_word = req.query.search_word;
+    const offset = req.query.offset;
     var market_item = [];
+    var sql;
 
-    var sql = `SELECT * FROM market WHERE name like '%${search_word}%';`;
+    if(offset === undefined || offeset === 0){
+      sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY id ASC limit ${db_config.limitation};`;
+    }
+    else{
+      sql += `SELECT * FROM market WHERE name like '%${search_word}%' and id > ${offset} ORDER BY id ASC limit ${db_config.limitation};`;
+    }
+
     connection.query(sql, function(err, rows){
-      var resultCode = statusCode.CLIENT_ERROR;
+      var resultCode = statusCode.SERVER_ERROR;
       if(err){
         console.log(err);
         res.json({
@@ -147,12 +164,18 @@
 
   // 마켓 스티커 검색(낮은 가격순)
   getSearchPrice : function(req, res){
-    const search_word = req.query.searchWord;
+    const search_word = req.query.search_word;
+    const offset = req.query.offset;
     var market_item = [];
+    var sql;
 
-    var sql = `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY price ASC;`;
+    if(offset === undefined || offset === 0)
+      sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY price ASC limit ${db_config.limitation};`;
+    else // offset적용 미정상태 NOT IN(SELECT TOP 10 FROM market)
+      sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY price ASC limit ${db_config.limitation};`;
+
     connection.query(sql, function(err, rows){
-      var resultCode = statusCode.CLIENT_ERROR;
+      var resultCode = statusCode.SERVER_ERROR;
       if(err){
         console.log(err);
         res.json({
@@ -182,12 +205,17 @@
 
   // 마켓 스티커 검색(최신순)
   getSearchDate : function(req, res){
-    const search_word = req.query.searchWord;
+    const search_word = req.query.search_word;
+    const offset = req.query.offset;
     var market_item = [];
+    var sql;
 
-    var sql = `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY id DESC;`;
+    if(offset === undefined || offset === 0)
+      sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY id DESC limit ${db_config.limitation};`;
+    else
+      sql += `SELECT * FROM market WHERE name like '%${search_word}%' and id < ${offset} ORDER BY id DESC limit ${db_config.limitation};`;
     connection.query(sql, function(err, rows){
-      var resultCode = statusCode.CLIENT_ERROR;
+      var resultCode = statusCode.SERVER_ERROR;
       if(err){
         console.log(err);
         res.json({
