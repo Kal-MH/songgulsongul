@@ -119,7 +119,7 @@ const marketController = {
     })
   },
 
-  // 마켓 스티커 검색(기본)
+  // 마켓 스티커 검색(기본-저장순)
   getStickerSearch : function(req, res){
     const search_word = req.query.search_word;
     const offset = req.query.offset;
@@ -130,7 +130,7 @@ const marketController = {
       sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY id ASC limit ${db_config.limitation};`;
     }
     else{
-      sql += `SELECT * FROM market WHERE name like '%${search_word}%' and id > ${offset} ORDER BY id ASC limit ${db_config.limitation};`;
+      sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY id ASC limit ${offset}, ${db_config.limitation};`;
     }
 
     connection.query(sql, function(err, rows){
@@ -171,9 +171,8 @@ const marketController = {
 
     if(offset === undefined || offset === 0)
       sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY price ASC limit ${db_config.limitation};`;
-    else // offset적용 미정상태 NOT IN(SELECT TOP 10 FROM market)
-      sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY price ASC limit ${db_config.limitation};`;
-
+    else
+      sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY price ASC limit ${offset}, ${db_config.limitation};`;
     connection.query(sql, function(err, rows){
       var resultCode = statusCode.SERVER_ERROR;
       if(err){
@@ -213,7 +212,7 @@ const marketController = {
     if(offset === undefined || offset === 0)
       sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY id DESC limit ${db_config.limitation};`;
     else
-      sql += `SELECT * FROM market WHERE name like '%${search_word}%' and id < ${offset} ORDER BY id DESC limit ${db_config.limitation};`;
+      sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY id DESC limit ${offset}, ${db_config.limitation};`;
     connection.query(sql, function(err, rows){
       var resultCode = statusCode.SERVER_ERROR;
       if(err){
