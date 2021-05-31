@@ -15,13 +15,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.item.HomeMarketItem;
+import smu.capstone.paper.responseData.Sticker;
+import smu.capstone.paper.server.RetrofitClient;
 
 public class HomeMarketAdapter extends BaseAdapter {
-    JSONObject obj = new JSONObject();
-    JSONArray dataList;
+    List<Sticker> items;
     private Context mContext;
     LayoutInflater inf;
     int layout;
@@ -30,24 +32,19 @@ public class HomeMarketAdapter extends BaseAdapter {
     public HomeMarketAdapter(Context mContext) {
         this.mContext = mContext;
     }
-    public HomeMarketAdapter(Context mContext, int layout, JSONObject obj) throws JSONException {
+    public HomeMarketAdapter(Context mContext, int layout, List<Sticker> items) {
         this.mContext = mContext;
         inf =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.layout = layout;
-        this.obj = obj;
-        dataList = obj.getJSONArray("data");
-        itemCnt = dataList.length();
+        this.items = items;
+        itemCnt = items.size();
     }
 
     // 받아온 데이터로 마켓 아이템 내용 셋팅
-    public void setItem(JSONObject item, ImageView imageView, TextView nameText, TextView costText){
-        try {
-            Glide.with(mContext).load(item.getInt("image")).into(imageView); // 사진
-            nameText.setText(item.getString("name")); // 상품명
-            costText.setText(item.getInt("price") + "p"); // 가격
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
+    public void setItem(Sticker sticker, ImageView imageView, TextView nameText, TextView costText){
+        Glide.with(mContext).load(RetrofitClient.getBaseUrl() + sticker.getImage()).into(imageView); // 사진
+        nameText.setText(sticker.getName()); // 상품명
+        costText.setText(sticker.getPrice() + "p"); // 가격
     }
 
     @Override
@@ -57,13 +54,7 @@ public class HomeMarketAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        JSONObject item = new JSONObject();
-        try {
-            item = dataList.getJSONObject(position);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        return item;
+        return items.get(position);
     }
 
     @Override
@@ -73,12 +64,7 @@ public class HomeMarketAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        JSONObject item = new JSONObject();
-        try{
-            item = dataList.getJSONObject(position);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+        Sticker sticker = (Sticker)items.get(position);
 
         if (convertView==null)
             convertView = inf.inflate(layout, null);
@@ -87,7 +73,7 @@ public class HomeMarketAdapter extends BaseAdapter {
         TextView nameText = convertView.findViewById(R.id.market_item_name);
         TextView costText = convertView.findViewById(R.id.market_item_cost);
 
-        setItem(item, imageView, nameText, costText);
+        setItem(sticker, imageView, nameText, costText);
 
         return convertView;
     }

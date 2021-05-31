@@ -20,33 +20,30 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.StickerDetailActivity;
 import smu.capstone.paper.item.StickerItem;
+import smu.capstone.paper.responseData.Sticker;
+import smu.capstone.paper.server.RetrofitClient;
 
 public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdapter.ViewHolder> {
     private Context context;
-    JSONObject obj = new JSONObject();
-    JSONArray dataList;
+    List<Sticker> items;
     int itemCnt;
 
-    public StickerSearchAdapter(Context context, JSONObject obj) throws JSONException {
+    public StickerSearchAdapter(Context context, List<Sticker> items) {
         this.context = context;
-        this.obj = obj;
-        dataList = obj.getJSONArray("data");
-        itemCnt = dataList.length();
+        this.items = items;
+        itemCnt = items.size();
     }
 
     // 받아온 데이터로 스티커 내용 셋팅
-    public void setItem(@NonNull StickerSearchAdapter.ViewHolder holder, JSONObject item){
-        try {
-            holder.sticker_price.setText(item.getInt("price") + "p");
-            holder.sticker_name.setText(item.getString("name"));
-            Glide.with(context).load(item.getInt("image")).into(holder.sticker_image);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
+    public void setItem(@NonNull StickerSearchAdapter.ViewHolder holder, Sticker sticker){
+        holder.sticker_price.setText(sticker.getPrice() + "p");
+        holder.sticker_name.setText(sticker.getName());
+        Glide.with(context).load(RetrofitClient.getBaseUrl() + sticker.getImage()).into(holder.sticker_image);
     }
 
     @NonNull
@@ -60,12 +57,8 @@ public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdap
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull StickerSearchAdapter.ViewHolder holder, final int position) {
-        try{
-            JSONObject item = dataList.getJSONObject(position);
-            setItem(holder, item);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+        Sticker sticker = items.get(position);
+        setItem(holder, sticker);
     }
 
     @Override
@@ -89,21 +82,13 @@ public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdap
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
-                    try {
-                        JSONObject item = dataList.getJSONObject(pos);
-                        if (pos != RecyclerView.NO_POSITION) {
-                            // 임시로 내용 전달 --> 실제로는 stickerId만 전달
-                            Intent intent = new Intent(context, StickerDetailActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("stickerId", item.getInt("id"));
-                            intent.putExtra("image", item.getInt("image"));
-                            intent.putExtra("name", item.getString("name"));
-                            intent.putExtra("price", item.getInt("price"));
-                            intent.putExtra("comment", item.getString("text"));
+                    Sticker sticker = items.get(pos);
+                    if (pos != RecyclerView.NO_POSITION) {
+                        // stickerId 전달
+                        Intent intent = new Intent(context, StickerDetailActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("sticker_id", sticker.getId());
 
-                            context.startActivity(intent);
-                        }
-                    } catch (JSONException e){
-                        e.printStackTrace();
+                        context.startActivity(intent);
                     }
                 }
             });

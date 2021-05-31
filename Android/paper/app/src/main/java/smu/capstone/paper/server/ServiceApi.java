@@ -173,7 +173,7 @@ public interface ServiceApi {
 
     // 마켓 메인
     @GET("/market/main")
-    Call<MarketResponse> GetMarket(@Query("offset") int offset);
+    Call<MarketResponse> MarketMain(@Query("offset") Integer offset);
 
     // 마켓 스티커 디테일
     @GET("/market/detail")
