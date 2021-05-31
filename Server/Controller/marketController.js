@@ -101,21 +101,25 @@ const marketController = {
   stickerBuy : function(req, res){
     const sticker_id = req.query.sticker_id;
     const user_id = req.query.user_id;
-    var params = [sticker_id, user_id];
+    var params = [sticker_id, user_id, sticker_id];
 
     var sql = 'UPDATE user SET point = point - (SELECT price FROM market WHERE id = ?) WHERE id = ?;'; // 구매자의 포인트 차감
+    var sql2 = 'SELECT image FROM market WHERE id = ?;'
     connection.query(sql, params, function(err, rows){
       var resultCode = statusCode.SERVER_ERROR;
       if(err){
         console.log(err);
+        res.json({
+          'code': resultCode
+        })
       }
       else{
         resultCode = statusCode.OK;
+        res.json({
+          'code': resultCode
+          'image': rows[0].image;
+        })
       }
-
-      res.json({
-        'code': resultCode
-      })
     })
   },
 

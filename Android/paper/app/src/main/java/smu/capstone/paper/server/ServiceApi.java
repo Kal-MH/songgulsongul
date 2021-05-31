@@ -35,6 +35,8 @@ import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.LoginData;
 
 import smu.capstone.paper.responseData.KeepResponse;
+import smu.capstone.paper.responseData.MarketDetailResponse;
+import smu.capstone.paper.responseData.MarketResponse;
 import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.responseData.PostFeedResponse;
 
@@ -164,4 +166,32 @@ public interface ServiceApi {
     // 게시글 삭제
     @GET("/post/delete")
     Call<CodeResponse> PostDelete(@Query("userid") int user_id, @Query("postid") int post_id);
+
+    // 이미지 다운로드
+    @GET("/post/download")
+    Call<JsonObject> PostImageDownload(@Query("postid") int post_id);
+
+    // 마켓 메인
+    @GET("/market/main")
+    Call<MarketResponse> GetMarket(@Query("offset") int offset);
+
+    // 마켓 스티커 디테일
+    @GET("/market/detail")
+    Call<MarketDetailResponse> StickerDetail(@Query("sticker_id") int sticker_id, @Query("user_id") int user_id);
+
+    // 마켓 스티커 구매
+    @GET("/market/buy")
+    Call<JsonObject> StickerBuy(@Query("sticker_id") int sticker_id, @Query("user_id") int user_id);
+
+    // 스티커 검색
+    @GET("/market/sticker-search")
+    Call<MarketResponse> StickerSearch(@Query("search_word") String search_word, @Query("offset") int offset);
+
+    // 스티커 검색 - 낮은 가격순
+    @GET("/market/search-price")
+    Call<MarketResponse> SearchPrice(@Query("search_word") String search_word, @Query("offset") int offset);
+
+    // 스티커 검색 - 최신순
+    @GET("/market/search-date")
+    Call<MarketResponse> SearchDate(@Query("search_word") String search_word, @Query("offset") int offset);
 }
