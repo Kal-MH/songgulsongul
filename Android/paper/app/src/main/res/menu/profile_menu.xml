@@ -21,4 +21,9 @@
         android:title="설정"
         app:showAsAction="never">
     </item>
+    <item
+        android:id="@+id/profile_account_edit"
+        android:title="계정 관리"
+        app:showAsAction="never">
+    </item>
 </menu>
