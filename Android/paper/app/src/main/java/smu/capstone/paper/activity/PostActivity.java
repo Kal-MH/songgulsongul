@@ -80,7 +80,7 @@ public class PostActivity extends AppCompatActivity {
 
 
     int user_id, post_id;
-    String login_id, p_user_id;
+    String login_id, p_user_id, img_path;
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
 
@@ -161,10 +161,11 @@ public class PostActivity extends AppCompatActivity {
 
                                 break;
                             case R.id.post_save:
-                               /* Intent intent2 = new Intent(PostActivity.this, SaveImageActivity.class);
-                                intent2.putExtra("postImg", post_obj.getInt("image"));
+                                Intent intent2 = new Intent(PostActivity.this, SaveImageActivity.class);
+                                intent2.putExtra("post_id", post_id);
+                                intent2.putExtra("img_path", img_path);
 
-                                startActivity(intent2);*/
+                                startActivity(intent2);
                                 break;
                             case R.id.post_delete:
                                 new AlertDialog.Builder(PostActivity.this)
@@ -601,7 +602,8 @@ public class PostActivity extends AppCompatActivity {
         //작성자 프로필
         p_user_id = userData.getLogin_id();
         post_user_id.setText(userData.getLogin_id());
-        Glide.with(this).load(RetrofitClient.getBaseUrl() + userData.getImg_profile()).into(post_profile);
+        img_path = userData.getImg_profile();
+        Glide.with(this).load(RetrofitClient.getBaseUrl() + img_path).into(post_profile);
 
         // 게시글 정보 세팅
         post_date.setText(postData.getPost_date() + "\n" + postData.getPost_time());
