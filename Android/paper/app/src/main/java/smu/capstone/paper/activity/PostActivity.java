@@ -1,9 +1,11 @@
 package smu.capstone.paper.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -24,10 +26,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.skydoves.balloon.ArrowOrientation;
+import com.skydoves.balloon.Balloon;
+import com.skydoves.balloon.BalloonAnimation;
 
 import java.util.List;
 
@@ -396,6 +402,141 @@ public class PostActivity extends AppCompatActivity {
                             .show();
                 }
                 return false;
+            }
+        });
+
+        final Balloon balloon = new Balloon.Builder(getApplicationContext())
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPosition(0.5f)
+                .setWidthRatio(0.2f)
+                .setHeight(65)
+                .setTextSize(15f)
+                .setCornerRadius(4f)
+                .setAlpha(0.9f)
+                .setText("공유 허용")
+                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.design_default_color_on_secondary))
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build();
+
+        post_ccl_cc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balloon.showAlignBottom(post_ccl_cc);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        balloon.dismiss();
+                    }
+                }, 2000);
+            }
+        });
+
+        final Balloon balloon2 = new Balloon.Builder(getApplicationContext())
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPosition(0.5f)
+                .setWidthRatio(0.2f)
+                .setHeight(65)
+                .setTextSize(15f)
+                .setCornerRadius(4f)
+                .setAlpha(0.9f)
+                .setText("동일 조건 변경 허용")
+                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.design_default_color_on_secondary))
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build();
+
+        post_ccl_a.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balloon2.showAlignBottom(post_ccl_a);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        balloon2.dismiss();
+                    }
+                }, 2000);
+            }
+        });
+
+        final Balloon balloon3 = new Balloon.Builder(getApplicationContext())
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPosition(0.5f)
+                .setWidthRatio(0.2f)
+                .setHeight(65)
+                .setTextSize(15f)
+                .setCornerRadius(4f)
+                .setAlpha(0.9f)
+                .setText("상업적 이용 비허용")
+                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.design_default_color_on_secondary))
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build();
+
+        post_ccl_nc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balloon3.showAlignBottom(post_ccl_nc);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        balloon3.dismiss();
+                    }
+                }, 2000);
+            }
+        });
+
+        final Balloon balloon4 = new Balloon.Builder(getApplicationContext())
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPosition(0.5f)
+                .setWidthRatio(0.2f)
+                .setHeight(65)
+                .setTextSize(15f)
+                .setCornerRadius(4f)
+                .setAlpha(0.9f)
+                .setText("2차 변경 비허용")
+                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.design_default_color_on_secondary))
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build();
+
+        post_ccl_nd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balloon4.showAlignBottom(post_ccl_nd);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        balloon4.dismiss();
+                    }
+                }, 2000);
+            }
+        });
+
+        final Balloon balloon5 = new Balloon.Builder(getApplicationContext())
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPosition(0.5f)
+                .setWidthRatio(0.2f)
+                .setHeight(65)
+                .setTextSize(15f)
+                .setCornerRadius(4f)
+                .setAlpha(0.9f)
+                .setText("출처 표기")
+                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.design_default_color_on_secondary))
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build();
+
+        post_ccl_sa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balloon5.showAlignBottom(post_ccl_sa);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        balloon5.dismiss();
+                    }
+                }, 2000);
             }
         });
     }
