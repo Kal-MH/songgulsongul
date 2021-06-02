@@ -3,22 +3,21 @@ package smu.capstone.paper.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -26,7 +25,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.R;
-import smu.capstone.paper.activity.ProfileActivity;
 import smu.capstone.paper.activity.StickerDetailActivity;
 import smu.capstone.paper.activity.StickerSearchActivity;
 import smu.capstone.paper.adapter.HomeMarketAdapter;
@@ -41,9 +39,13 @@ public  class FragHomeMarket extends Fragment {
     private View view;
     private SearchView searchView;
     HomeMarketAdapter adapter;
-    GridView gridView;
+    RecyclerView recyclerView;
 
-    List<Sticker> stickers;
+    List<Sticker> stickerData;
+
+    int lastId;
+    boolean isLoading = false;
+    LinearLayout loadlayout;
 
     @Nullable
     @Override
@@ -51,9 +53,26 @@ public  class FragHomeMarket extends Fragment {
         view = inflater.inflate(R.layout.frag_home_market, container, false);
 
         searchView = view.findViewById(R.id.market_search);
-        gridView = view.findViewById(R.id.market_grid);
+        recyclerView = view.findViewById(R.id.market_grid);
+        loadlayout = view.findViewById(R.id.market_load_layout);
+        loadlayout.setVisibility(View.GONE);
+        loadlayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //리스트 마지막
+                getMarketDataMore();
+                isLoading = true;
+                loadlayout.setVisibility(View.GONE);
+            }
+        });
 
+
+
+
+        initScroll();
         getMarketData();
+
+
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,26 +95,16 @@ public  class FragHomeMarket extends Fragment {
             }
         });
 
-        //Click Listener
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                Intent intent = new Intent(getContext(), StickerDetailActivity.class);
 
-                // sticker_id 전달
-                intent.putExtra("sticker_id", stickers.get(position).getId());
-                Log.d("TAG", position + "is Clicked");      // Can not getting this method.
-                startActivity(intent);
-            }
-        });
+
+
+
+
+        getMarketData();
+
 
         return view;
-    }
-
-    public void setMarketData(){
-        adapter = new HomeMarketAdapter(this.getContext(), R.layout.market_item, stickers);
-        gridView.setAdapter(adapter);
     }
 
     //server에서 data전달
@@ -106,8 +115,14 @@ public  class FragHomeMarket extends Fragment {
                MarketResponse result = response.body();
                int resultCode = result.getCode();
                if(resultCode == StatusCode.RESULT_OK){
-                   stickers = result.getMarketItem();
-                   setMarketData();
+                   stickerData = result.getMarketItem();
+                   adapter = new HomeMarketAdapter(getContext(), stickerData);
+                   GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+                   recyclerView.setLayoutManager(layoutManager);
+                   recyclerView.setAdapter(adapter);
+
+                   initScroll();
+
                }
                else if(resultCode == StatusCode.RESULT_SERVER_ERR){
                    Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
@@ -123,4 +138,79 @@ public  class FragHomeMarket extends Fragment {
        });
     }
 
+
+    public void getMarketDataMore(){
+
+        lastId = stickerData.get(stickerData.size()-1).getId();
+        stickerData.add(null);
+        adapter.notifyItemInserted(stickerData.size() - 1);
+
+        loadlayout.setVisibility(View.GONE);
+
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                serviceApi.MarketMain(lastId).enqueue(new Callback<MarketResponse>() {
+                    @Override
+                    public void onResponse(Call<MarketResponse> call, Response<MarketResponse> response) {
+                        stickerData.remove(stickerData.size()-1);
+                        adapter.notifyItemRemoved(stickerData.size());
+                        MarketResponse result = response.body();
+                        int resultCode = result.getCode();
+                        if(resultCode == StatusCode.RESULT_OK){
+                            adapter.addItem( result.getMarketItem());
+                            adapter.notifyDataSetChanged();
+
+                        }
+                        else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                            Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        isLoading = false;
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<MarketResponse> call, Throwable t) {
+                        Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Log.e("마켓 불러오기 에러", t.getMessage());
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
+            }
+        };
+
+        handler.postDelayed(runnable, 1000);
+    }
+
+    public void initScroll(){
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                Log.d("scroll" , layoutManager.findLastCompletelyVisibleItemPosition() +" | " + ( adapter.getItemCount()  -1 ) );
+                if (!isLoading) {
+                    if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition()== adapter.getItemCount() - 1) {
+                        loadlayout.setVisibility(View.VISIBLE);
+                    }
+                    else
+                        loadlayout.setVisibility(View.GONE);
+                }
+                else{
+                    loadlayout.setVisibility(View.GONE);
+                }
+            }
+        });
+
+    }
 }
