@@ -139,6 +139,14 @@ public class PostActivity extends AppCompatActivity {
         //서버통신
         getData();
 
+        post_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent goZoom = new Intent(PostActivity.this , ZoomActivity.class);
+                goZoom.putExtra("path", RetrofitClient.getBaseUrl() + postData.getImage() );
+                startActivity(goZoom);
+            }
+        });
 
         post_setting_btn.setOnClickListener(new View.OnClickListener() {
             @Override
