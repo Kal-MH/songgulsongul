@@ -79,6 +79,7 @@ public class StickerSearchActivity extends AppCompatActivity {
                         int resultCode = result.getCode();
 
                         if(resultCode == StatusCode.RESULT_OK){
+                            stickers = result.getMarketItem();
                             adapter = new StickerSearchAdapter(StickerSearchActivity.this, stickers);
                             recyclerView.setAdapter(adapter);
                         }
@@ -109,6 +110,7 @@ public class StickerSearchActivity extends AppCompatActivity {
                         int resultCode = result.getCode();
 
                         if(resultCode == StatusCode.RESULT_OK){
+                            stickers = result.getMarketItem();
                             adapter = new StickerSearchAdapter(StickerSearchActivity.this, stickers);
                             recyclerView.setAdapter(adapter);
                         }
@@ -142,6 +144,7 @@ public class StickerSearchActivity extends AppCompatActivity {
                 int resultCode = result.getCode();
 
                 if(resultCode == StatusCode.RESULT_OK){
+                    stickers = result.getMarketItem();
                     adapter = new StickerSearchAdapter(StickerSearchActivity.this, stickers);
                     recyclerView.setAdapter(adapter);
                 }

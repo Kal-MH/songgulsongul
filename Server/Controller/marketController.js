@@ -7,13 +7,13 @@ const marketController = {
    marketMain : function(req, res){
      const offset = req.query.offset;
      var market_item = [];
-     var sql;
+     var sql = [];
 
-     if(offset === undefined || offset === 0){
+     if(offset == undefined || offset == 0){
        sql += `SELECT * FROM market ORDER BY id ASC limit ${db_config.limitation};`; // 저장순으로 전송
      }
      else{
-       sql +=  `SELECT * FROM market WHERE id > ${offset} ORDER BY id ASC limit limit ${db_config.limitation};`;
+       sql +=  `SELECT * FROM market WHERE id > ${offset} ORDER BY id ASC limit ${db_config.limitation};`;
      }
 
      connection.query(sql, function(err, rows){
@@ -79,11 +79,11 @@ const marketController = {
 
          // 판매자 data
          var seller = {
-           'profileImage': rows[0][0].img_profile,
-           'userId': rows[0][0].login_id
+           'img_profile': rows[0][0].img_profile,
+           'login_id': rows[0][0].login_id
          };
          seller_info.push(seller);
-
+         console.log(seller_info);
          // 사용자의 보유 point
          user_point = rows[1][0].point;
 
@@ -104,8 +104,9 @@ const marketController = {
     var params = [sticker_id, user_id, sticker_id];
 
     var sql = 'UPDATE user SET point = point - (SELECT price FROM market WHERE id = ?) WHERE id = ?;'; // 구매자의 포인트 차감
-    var sql2 = 'SELECT image FROM market WHERE id = ?;'
-    connection.query(sql, params, function(err, rows){
+    var sql2 = 'SELECT image FROM market WHERE id = ?;';
+    connection.query(sql + sql2, params, function(err, rows){
+      console.log(rows);
       var resultCode = statusCode.SERVER_ERROR;
       if(err){
         console.log(err);
@@ -116,8 +117,8 @@ const marketController = {
       else{
         resultCode = statusCode.OK;
         res.json({
-          'code': resultCode
-          'image': rows[0].image;
+          'code': resultCode,
+          'image': rows[1][0].image
         })
       }
     })
@@ -128,9 +129,9 @@ const marketController = {
     const search_word = req.query.search_word;
     const offset = req.query.offset;
     var market_item = [];
-    var sql;
+    var sql =[];
 
-    if(offset === undefined || offeset === 0){
+    if(offset === undefined || offset === 0){
       sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY id ASC limit ${db_config.limitation};`;
     }
     else{
@@ -157,7 +158,7 @@ const marketController = {
           };
           market_item.push(data);
         }
-
+        console.log(market_item);
         res.json({
           'code': resultCode,
           'marketItem': market_item
@@ -171,7 +172,7 @@ const marketController = {
     const search_word = req.query.search_word;
     const offset = req.query.offset;
     var market_item = [];
-    var sql;
+    var sql = [];
 
     if(offset === undefined || offset === 0)
       sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY price ASC limit ${db_config.limitation};`;
@@ -211,7 +212,7 @@ const marketController = {
     const search_word = req.query.search_word;
     const offset = req.query.offset;
     var market_item = [];
-    var sql;
+    var sql = [];
 
     if(offset === undefined || offset === 0)
       sql += `SELECT * FROM market WHERE name like '%${search_word}%' ORDER BY id DESC limit ${db_config.limitation};`;

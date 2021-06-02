@@ -86,7 +86,7 @@ public  class FragHomeMarket extends Fragment {
                 // sticker_id 전달
                 intent.putExtra("sticker_id", stickers.get(position).getId());
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
-
+                startActivity(intent);
             }
         });
 

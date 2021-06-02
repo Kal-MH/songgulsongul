@@ -9,10 +9,10 @@ public class MarketDetailResponse {
     int code;
 
     @SerializedName("stickerDetail")
-    Sticker stickerDetail;
+    List<Sticker> stickerDetail;
 
     @SerializedName("sellerInfo")
-    User sellerInfo;
+    List<User> sellerInfo;
 
     @SerializedName("userPoint")
     int userPoint;
@@ -21,11 +21,11 @@ public class MarketDetailResponse {
         return code;
     }
 
-    public Sticker getStickerDetail() {
+    public List<Sticker> getStickerDetail() {
         return stickerDetail;
     }
 
-    public User getSellerInfo() {
+    public List<User> getSellerInfo() {
         return sellerInfo;
     }
 
