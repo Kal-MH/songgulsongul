@@ -8,15 +8,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-	    android:largeHeap="true"
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".activity.AddItemtagActivity"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".activity.ZoomActivity"></activity>
+        <activity
+            android:name=".activity.AddItemtagActivity"
             android:theme="@android:style/Theme.DeviceDefault.Dialog" />
         <activity android:name=".activity.EditDoneActivity" />
         <activity android:name=".activity.EditActivity" />
@@ -24,15 +26,19 @@
             android:name=".activity.DetectPaperHelpActivity"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
         <activity android:name=".activity.DetectPicActivity" />
-		<activity android:name=".activity.EditImageRatioActivity" />
-        <activity android:name=".activity.EditImageColorActivity"
-            android:parentActivityName=".activity.EditActivity"/>
-        <activity android:name=".activity.EditImageHistogramActivity"
-            android:parentActivityName=".activity.EditActivity"/>
-        <activity android:name=".activity.EditImageFilterActivity"
-            android:parentActivityName=".activity.EditActivity"/>
-        <activity android:name=".activity.EditImageDenoiseActivity"
-            android:parentActivityName=".activity.EditActivity"/>
+        <activity android:name=".activity.EditImageRatioActivity" />
+        <activity
+            android:name=".activity.EditImageColorActivity"
+            android:parentActivityName=".activity.EditActivity" />
+        <activity
+            android:name=".activity.EditImageHistogramActivity"
+            android:parentActivityName=".activity.EditActivity" />
+        <activity
+            android:name=".activity.EditImageFilterActivity"
+            android:parentActivityName=".activity.EditActivity" />
+        <activity
+            android:name=".activity.EditImageDenoiseActivity"
+            android:parentActivityName=".activity.EditActivity" />
         <activity android:name=".activity.FirstAuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
