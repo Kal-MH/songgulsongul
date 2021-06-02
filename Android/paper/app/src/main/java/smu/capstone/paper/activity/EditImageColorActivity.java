@@ -57,11 +57,25 @@ public class EditImageColorActivity extends AppCompatActivity {
     }
 
     public void updatePreviewImageView(){
+        /**/
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(previewImageBitmap!=null)
+                    previewImageBitmap.recycle();
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(previewImage, previewImageBitmap);
+                editPreview.setImageBitmap(previewImageBitmap);
+            }
+        });
+
+        /*
         if(previewImageBitmap!=null)
             previewImageBitmap.recycle();
         previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(previewImage, previewImageBitmap);
         editPreview.setImageBitmap(previewImageBitmap);
+         */
     }
 
 

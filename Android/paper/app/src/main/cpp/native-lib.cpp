@@ -453,7 +453,6 @@ vector<Point> orderPoints(vector<Point> points)
             bl = points[i];
         if (x + y >= br.x + br.y)
             br = points[i];
-
     }
     order.push_back(tl);
     order.push_back(tr);
@@ -685,6 +684,8 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env,
 
     vector<Point> borders = findBordersPoints(imgCanny);
 
+    borders = orderPoints(borders);
+
     vector<Point> bordersResized = ResizePoints(borders,img_input.cols/smallSizeX, img_input.rows/smallSizeY);
 
     points = Mat(bordersResized, true); //points 출력
@@ -882,7 +883,7 @@ Java_smu_capstone_paper_activity_EditImageColorActivity_setColors(JNIEnv *env, j
     Mat &imgInput = *(Mat *) input_image_address;
     Mat &img_output = *(Mat *) output_image_address;
 
-    Mat locMat = Mat();
+    Mat locMat = imgInput.clone();
 
 
 
