@@ -17,11 +17,22 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import smu.capstone.paper.R;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class SaveImageActivity extends Activity {
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     boolean size_check;
+    String img_path;
+    int post_id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +46,9 @@ public class SaveImageActivity extends Activity {
         Spinner save_img_size = (Spinner)findViewById(R.id.save_img_size);
 
         Intent intent = getIntent();
-        Glide.with(SaveImageActivity.this).load(intent.getIntExtra("postImg", 1)).into(image);
+        img_path = intent.getStringExtra("img_path");
+        post_id = intent.getIntExtra("post_id", -1);
+        Glide.with(SaveImageActivity.this).load(RetrofitClient.getBaseUrl() + img_path).into(image);
         final int[] image_size= {400, 600, 700, 900, 1000, 1200};
 
         save_img_size.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -77,9 +90,30 @@ public class SaveImageActivity extends Activity {
                     // 버튼 추가 (확인 버튼과 취소 버튼 )
                     myAlertBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+                            serviceApi.PostImageDownload(post_id).enqueue(new Callback<JsonObject>() {
+                                @Override
+                                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                                    JsonObject result = response.body();
+                                    int resultCode = result.get("code").getAsInt();
+
+                                    if(resultCode == StatusCode.RESULT_OK){
+
+                                    }
+                                    else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                                }
+                            });
+
+
+
                             // 확인 버튼을 눌렸을 경우
-                            Toast.makeText(getApplicationContext(), "저장 성공",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "저장 성공", Toast.LENGTH_SHORT).show();
                         }
                     });
                     myAlertBuilder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
