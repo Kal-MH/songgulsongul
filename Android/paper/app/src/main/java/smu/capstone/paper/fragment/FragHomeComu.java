@@ -4,14 +4,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -31,13 +27,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.R;
-import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.activity.PostSearchActivity;
 import smu.capstone.paper.adapter.HomeComuAdapter;
-import smu.capstone.paper.adapter.HomeFeedAdapter;
-import smu.capstone.paper.adapter.PostImageAdapter;
 import smu.capstone.paper.responseData.Post;
-import smu.capstone.paper.responseData.PostFeedResponse;
 import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
@@ -222,11 +214,7 @@ public class FragHomeComu extends Fragment {
             recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
         }
         adapter = new HomeComuAdapter(getContext(), postData);
-        recyclerView.setAdapter(adapter);
 
- /*       GridLayoutManager manager = new GridLayoutManager(getContext(), 3);
-        recyclerView.setLayoutManager(manager);
-*/
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 6);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
