@@ -62,6 +62,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
@@ -70,37 +71,41 @@
             android:layout_marginBottom="10dp"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/detect_pic_btn"
+            app:layout_constraintBottom_toTopOf="@+id/detect_pic_btns"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/detect_pic_help"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginRight="20dp"
-                android:src="#7F639C">
-
-            </ImageView>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="필요한 글과 그림이 담기게 해주세요!"></TextView>
+
         </LinearLayout>
 
-        <Button
-            android:id="@+id/detect_pic_btn"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="확인"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"></Button>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:id="@+id/detect_pic_btns"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+            tools:layout_editor_absoluteX="233dp">
+
+            <Button
+                android:id="@+id/rotate_btn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="회전" />
+
+            <Button
+                android:id="@+id/detect_pic_btn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="확인"></Button>
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

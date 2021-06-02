@@ -38,7 +38,7 @@ public class DetectPicActivity extends AppCompatActivity {
     ImageView detect_pic_imageView;
     Toolbar toolbar;
     CropImageView cropImageView;
-    Button okbtn;
+    Button okbtn,rotateBtn;
 
     long first_time = 0;
     long second_time = 0;
@@ -110,7 +110,6 @@ public class DetectPicActivity extends AppCompatActivity {
         cropImageView.setCropRect(cropRect);
 
 
-
         okbtn = findViewById(R.id.detect_pic_btn);
         okbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +126,17 @@ public class DetectPicActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        });    }
+        });
+
+        rotateBtn = findViewById(R.id.rotate_btn);
+        rotateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cropImageView.rotateImage(90);
+            }
+        });
+
+    }
 
     private Object saveBitmapToCache(Bitmap bitmap, String name) {
 
