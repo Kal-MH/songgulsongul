@@ -13,6 +13,7 @@
         android:id="@+id/home_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_size"
+        android:theme="@style/ToolbarTheme"
         android:background="@color/backgroundGrey">
 
     </androidx.appcompat.widget.Toolbar>
@@ -38,6 +39,7 @@
         android:background="@color/backgroundGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/home_bottom_menu"
+        style="@style/Text.textStyle"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="201dp" />
 

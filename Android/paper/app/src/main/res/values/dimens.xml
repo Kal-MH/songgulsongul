@@ -6,9 +6,14 @@
     <dimen name="common_margin">20dp</dimen>
     <dimen name="narrow_margin">10dp</dimen>
 
-    <dimen name ="usernameSize">20sp</dimen>
-    <dimen name="littleFont" >14sp</dimen>
+
+    <dimen name="text_size_24"> 24sp</dimen>
+    <dimen name ="text_size_20">20sp</dimen>
+    <dimen name="text_size_16"> 16sp</dimen>
+    <dimen name="text_size_14" >14sp</dimen>
+
     <dimen name="tab_size">60dp</dimen>
     <dimen name = "profile_pic">50dp</dimen>
     <dimen name="icon_size">40dp</dimen>
+
 </resources>

@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/narrow_margin"
         android:text="제품명"
-        android:textSize="@dimen/usernameSize" />
+        style="@style/Text.medium" />
 
     <TextView
         android:id="@+id/market_item_cost"
@@ -33,5 +33,5 @@
         android:layout_marginLeft="@dimen/narrow_margin"
         android:layout_marginBottom="@dimen/narrow_margin"
         android:text="가격"
-        android:textSize="@dimen/littleFont" />
+        style="@style/Text.textStyle"/>
 </LinearLayout>
