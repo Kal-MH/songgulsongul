@@ -83,7 +83,7 @@ const marketController = {
            'login_id': rows[0][0].login_id
          };
          seller_info.push(seller);
-         console.log(seller_info);
+
          // 사용자의 보유 point
          user_point = rows[1][0].point;
 
@@ -106,7 +106,6 @@ const marketController = {
     var sql = 'UPDATE user SET point = point - (SELECT price FROM market WHERE id = ?) WHERE id = ?;'; // 구매자의 포인트 차감
     var sql2 = 'SELECT image FROM market WHERE id = ?;';
     connection.query(sql + sql2, params, function(err, rows){
-      console.log(rows);
       var resultCode = statusCode.SERVER_ERROR;
       if(err){
         console.log(err);
