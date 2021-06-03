@@ -1,95 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.EditAccountActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activity.EditAccountActivity">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/edit_account_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cardview_shadow_start_color"> </androidx.appcompat.widget.Toolbar>
+        android:background="@color/cardview_shadow_start_color">
 
-    <LinearLayout
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/borderline"
-        android:layout_margin="30dp"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:id="@+id/edit_account_idtext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="아이디"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="20dp">
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp">
 
-        </TextView>
+        <FrameLayout
+            android:id="@+id/edit_account_frame"
+            android:background="@drawable/borderline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/edit_account_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linear">
+
+        </FrameLayout>
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/linear"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="20dp"
-            >
-
-            <EditText
-                android:id="@+id/account_newid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:hint="userid">
-
-            </EditText>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints">
 
             <Button
-                android:id="@+id/account_id_check"
-                android:layout_width="wrap_content"
+                android:id="@+id/edit_id_btn"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:text="중복확인">
+                android:text="@string/prompt_id" />
 
-            </Button>
-
+            <Button
+                android:id="@+id/edit_pw_btn"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="@string/prompt_password" />
         </LinearLayout>
-        <TextView
-            android:id="@+id/edit_account_pwtext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="비밀번호"
-            android:layout_margin="20dp"></TextView>
-        <EditText
-            android:id="@+id/account_newpw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:hint="password">
-        </EditText>
-        <TextView
-            android:id="@+id/edit_account_pwcheck_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="비밀번호 확인"
-            android:layout_margin="20dp"></TextView>
-        <EditText
-            android:id="@+id/account_newpw_check"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:hint="password"></EditText>
-        <TextView
-            android:id="@+id/edit_account_pw_correct"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="비밀번호가 일치합니다"
-            android:textColor="#EE530909"
-            android:layout_margin="20dp"></TextView>
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/edit_account_btn"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="150dp"
+            android:gravity="center"
+            android:text="@string/ok"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </LinearLayout>
