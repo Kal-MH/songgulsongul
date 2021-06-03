@@ -80,7 +80,7 @@ public class PostActivity extends AppCompatActivity {
 
 
     int user_id, post_id;
-    String login_id, p_user_id, img_path;
+    String login_id, p_user_id, img_path, post_image;
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
 
@@ -171,7 +171,7 @@ public class PostActivity extends AppCompatActivity {
                             case R.id.post_save:
                                 Intent intent2 = new Intent(PostActivity.this, SaveImageActivity.class);
                                 intent2.putExtra("post_id", post_id);
-                                intent2.putExtra("img_path", img_path);
+                                intent2.putExtra("post_image", post_image);
 
                                 startActivity(intent2);
                                 break;
@@ -616,7 +616,8 @@ public class PostActivity extends AppCompatActivity {
         // 게시글 정보 세팅
         post_date.setText(postData.getPost_date() + "\n" + postData.getPost_time());
         post_text.setText(postData.getText());
-        Glide.with(this).load(RetrofitClient.getBaseUrl() + postData.getImage()).into(post_pic);
+        post_image = postData.getImage();
+        Glide.with(this).load(RetrofitClient.getBaseUrl() + post_image).into(post_pic);
 
 
         // data 세팅

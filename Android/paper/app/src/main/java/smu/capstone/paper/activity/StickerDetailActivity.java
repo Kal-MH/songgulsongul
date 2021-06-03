@@ -1,8 +1,12 @@
 package smu.capstone.paper.activity;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +48,7 @@ public class StickerDetailActivity extends AppCompatActivity {
     List<User> user;
     ImageView sticker_img, sticker_profile;
     TextView sticker_name, sticker_price, sticker_com, sticker_seller;
+    String file_name, img_path, seller_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,16 @@ public class StickerDetailActivity extends AppCompatActivity {
 
         getStickerDtData();
 
+        // 구매자 프로필 click listener
+        sticker_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(StickerDetailActivity.this, ProfileActivity.class);
+                intent1.putExtra("userId", seller_id);
+                startActivity(intent1);
+            }
+        });
+
         // 구매 버튼 click listener
         sticker_buy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +105,7 @@ public class StickerDetailActivity extends AppCompatActivity {
                             .show();
                 } else {
                     new AlertDialog.Builder(StickerDetailActivity.this)
-                            .setMessage("스티커를 구매 할까요?")
+                            .setMessage("이미지를 구매 할까요?")
                             .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -105,7 +120,19 @@ public class StickerDetailActivity extends AppCompatActivity {
                                                 Log.d("image_path", image);
 
                                                 // 이미지 저장
-                                                Toast.makeText(StickerDetailActivity.this, "구매 성공!", Toast.LENGTH_SHORT).show();
+                                                file_name = img_path.substring(img_path.lastIndexOf('/') + 1, img_path.length());
+                                                DownloadManager mgr = (DownloadManager)StickerDetailActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
+
+                                                Uri uri = Uri.parse(img_path);
+                                                DownloadManager.Request request = new DownloadManager.Request(uri);
+                                                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                                                        .setAllowedOverRoaming(false)
+                                                        .setTitle("MARKET IMAGE")
+                                                        .setDescription("market image download..")
+                                                        .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, file_name);
+                                                mgr.enqueue(request);
+
+                                                Toast.makeText(StickerDetailActivity.this, "구매 완료!", Toast.LENGTH_SHORT).show();
 
                                                 // 포인트가 차감 되었으므로 새로고침
                                                 Intent intent = getIntent();
@@ -113,7 +140,15 @@ public class StickerDetailActivity extends AppCompatActivity {
                                                 startActivity(intent);
                                             }
                                             else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                                                Toast.makeText(StickerDetailActivity.this, "구매 실패!", Toast.LENGTH_SHORT).show();
+                                                new AlertDialog.Builder(StickerDetailActivity.this)
+                                                        .setTitle("경고")
+                                                        .setMessage("구매에 실패했습니다!"+"\n"+"다시 시도해주세요..")
+                                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                            }
+                                                        })
+                                                        .show();
                                             }
                                         }
 
@@ -144,11 +179,17 @@ public class StickerDetailActivity extends AppCompatActivity {
         sticker_name.setText(sticker.get(0).getName());
         price = sticker.get(0).getPrice();
         sticker_price.setText(price + "p");
-        Glide.with(this).load(RetrofitClient.getBaseUrl() + sticker.get(0).getImage()).into(sticker_img);
+
+        img_path = RetrofitClient.getBaseUrl() + sticker.get(0).getImage();
+        Glide.with(this).load(img_path).into(sticker_img);
+
         sticker_com.append("\n");
         sticker_com.append(sticker.get(0).getText());
+
         Glide.with(this).load(RetrofitClient.getBaseUrl() + user.get(0).getImg_profile()).into(sticker_profile);
-        sticker_seller.setText(user.get(0).getLogin_id());
+
+        seller_id = user.get(0).getLogin_id();
+        sticker_seller.setText(seller_id);
     }
 
     //server에서 data전달
