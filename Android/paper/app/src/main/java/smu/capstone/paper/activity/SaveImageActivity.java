@@ -138,8 +138,8 @@ public class SaveImageActivity extends Activity {
         DownloadManager.Request request = new DownloadManager.Request(uri);
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
                 .setAllowedOverRoaming(false)
-                .setTitle("Sample")
-                .setDescription("Something useful. No Really")
+                .setTitle("POST IMAGE")
+                .setDescription("post image download")
                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, fileName);
         mgr.enqueue(request);
 
