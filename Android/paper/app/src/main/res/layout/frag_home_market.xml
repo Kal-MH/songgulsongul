@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:queryHint="검색"
+        android:background="@drawable/border"
+        android:layout_margin="@dimen/narrow_margin"
         tools:layout_editor_absoluteY="68dp">
 
     </SearchView>
@@ -24,7 +26,7 @@
         android:id="@+id/market_load_layout"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="#A6A4A8"
+        android:background="@color/purpleGray"
         android:orientation="vertical">
 
         <TextView
