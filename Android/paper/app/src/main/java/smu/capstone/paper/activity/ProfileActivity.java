@@ -368,6 +368,10 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent4 = new Intent(ProfileActivity.this , SettingActivity.class);
                 startActivity(intent4);
                 break;
+            case R.id.profile_account_edit:
+                Intent intent5 = new Intent(ProfileActivity.this , EditAccountActivity.class);
+                startActivity(intent5);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
