@@ -25,25 +25,39 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import smu.capstone.paper.R;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.imgcodecs.Imgcodecs;
+import smu.capstone.paper.ImageUtil;import smu.capstone.paper.R;
 
 public class DetectPicActivity extends AppCompatActivity {
 
     String filePath;
+    String sourceFilePath;
     ImageView detect_pic_imageView;
     Toolbar toolbar;
     CropImageView cropImageView;
-    Button okbtn;
+    Button okbtn,rotateBtn;
 
     long first_time = 0;
     long second_time = 0;
+    public long imgInputAddress;
+    int th1 = 15;
+    int th2 = 150;
+    Mat paperImage;
+    Mat croppedImage = new Mat();
+    //MatOfPoint picPoints;
+    int[] picRectFromOpencv = new int[]{400,400,800,500};
+    Bitmap imgInputBitmap;
 
-    @Override
+    public native int[] DetectPic(long imgInput, int th1, int th2);
+    //public native void ProcessPic();    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detect_pic);
 
-       // detect_pic_imageView = findViewById(R.id.detect_pic_iv);
+        //detect_pic_imageView = findViewById(R.id.detect_pic_iv);
         filePath = getIntent().getStringExtra("path");
         Uri imageUri = Uri.fromFile(new File(filePath));
 
@@ -59,15 +73,41 @@ public class DetectPicActivity extends AppCompatActivity {
 
         cropImageView = (CropImageView) findViewById(R.id.cropImageView);
 
-        // 가져온 이미지 세팅
-        cropImageView.setImageUriAsync(imageUri);
+        Rect cropRect = new Rect(400, 400, 800, 500);
+
+                // 가져온 이미지 세팅
+        //cropImageView.setImageUriAsync(imageUri);
+        imgInputAddress = getIntent().getLongExtra("imgInputAddress", 0);
+        paperImage = new Mat(imgInputAddress);
+        imgInputBitmap = Bitmap.createBitmap(paperImage.cols(),paperImage.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(paperImage,imgInputBitmap);
+        cropImageView.setImageBitmap(imgInputBitmap);
+        //paperImage = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
+
+        picRectFromOpencv = DetectPic(paperImage.getNativeObjAddr(), th1, th2);
+        detect_pic_imageView = findViewById(R.id.ImageView_image);
+        int[] loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[0],picRectFromOpencv[1]);
+
+        picRectFromOpencv[0] = loc[0];
+        picRectFromOpencv[1] = loc[1];
+        loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[2],picRectFromOpencv[3]);
+        picRectFromOpencv[2] = loc[0];
+        picRectFromOpencv[3] = loc[1];
+
+        cropRect.left = picRectFromOpencv[0];
+        cropRect.top = picRectFromOpencv[1];
+        cropRect.right = picRectFromOpencv[2];
+        cropRect.bottom = picRectFromOpencv[3];
+        Log.i("DetectPic",String.valueOf(cropRect.left));
+        Log.i("DetectPic",String.valueOf(cropRect.top));
+        Log.i("DetectPic",String.valueOf(cropRect.right));
+        Log.i("DetectPic",String.valueOf(cropRect.bottom));
 
         //세부내용 세팅
         cropImageView.setGuidelines(CropImageView.Guidelines.ON);
         cropImageView.setScaleType(CropImageView.ScaleType.FIT_CENTER);
         cropImageView.setAutoZoomEnabled(true);
-        cropImageView.setCropRect(new Rect(400, 400, 800, 500));
-
+        cropImageView.setCropRect(cropRect);
 
 
         okbtn = findViewById(R.id.detect_pic_btn);
@@ -75,14 +115,27 @@ public class DetectPicActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Bitmap cropped = cropImageView.getCroppedImage();
+                Utils.bitmapToMat(cropped,croppedImage);
                 File temp = (File)saveBitmapToCache(cropped,"crop_temp");
                 String filePath= temp.getAbsolutePath();
                 Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
                 intent.putExtra("path", filePath);
+                intent.putExtra("sourceFilePath", sourceFilePath);
+                intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
+                intent.putExtra("paperImageAddress", imgInputAddress);
                 startActivity(intent);
                 finish();
             }
         });
+
+        rotateBtn = findViewById(R.id.rotate_btn);
+        rotateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cropImageView.rotateImage(90);
+            }
+        });
+
     }
 
     private Object saveBitmapToCache(Bitmap bitmap, String name) {
@@ -130,14 +183,26 @@ public class DetectPicActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
-                // 알림팝업
+                // TODO:알림팝업
 
+                return true;
+            }
+
+            case R.id.toolbar_before:{
+                Intent intent = new Intent(DetectPicActivity.this, DetectPaperActivity.class);
+                intent.putExtra("path", sourceFilePath);
+                startActivity(intent);
+                finish();
                 return true;
             }
 
             case R.id.toolbar_skip://  바로 다음 화면으로 건너뛰기
                 Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
                 intent.putExtra("path", filePath);
+                intent.putExtra("sourceFilePath", sourceFilePath);
+                croppedImage = paperImage.clone();
+                intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
+                intent.putExtra("paperImageAddress", imgInputAddress);
                 startActivity(intent);
                 finish();
                 return true;
@@ -146,6 +211,10 @@ public class DetectPicActivity extends AppCompatActivity {
         return  true;
     }
 
-
-
+    @Override
+    public void finish() {
+        paperImage.release();
+        imgInputBitmap.recycle();
+        super.finish();
+    }
 }

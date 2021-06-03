@@ -1,19 +1,24 @@
 package smu.capstone.paper.fragment;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
@@ -22,9 +27,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.R;
-import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.activity.PostSearchActivity;
-import smu.capstone.paper.adapter.PostImageAdapter;
+import smu.capstone.paper.adapter.HomeComuAdapter;
 import smu.capstone.paper.responseData.Post;
 import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.server.RetrofitClient;
@@ -34,14 +38,19 @@ import smu.capstone.paper.server.StatusCode;
 public class FragHomeComu extends Fragment {
     private View view;
     private SearchView searchView;
-    GridView gridView;
+    RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
 
-    PostImageAdapter adapter;
+    HomeComuAdapter adapter;
     List<Post> postData;
+
+    int lastId;
+    boolean isLoading = false;
 
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
+
+    LinearLayout loadlayout;
 
     @Nullable
     @Override
@@ -49,9 +58,22 @@ public class FragHomeComu extends Fragment {
         view = inflater.inflate(R.layout.frag_home_comu, container, false);
 
         // id 세팅
-        gridView = view.findViewById(R.id.comu_grid);
+        recyclerView = view.findViewById(R.id.comu_rv);
         searchView = view.findViewById(R.id.comu_search);
         swipeRefreshLayout = view.findViewById(R.id.comu_refresh_layout);
+        loadlayout = view.findViewById(R.id.load_layout);
+        loadlayout.setVisibility(View.GONE);
+        loadlayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //리스트 마지막
+                GetCommunityDataMore();
+                isLoading = true;
+                Log.d("home" ,"마지막!");
+                loadlayout.setVisibility(View.GONE);
+            }
+        });
+
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +98,6 @@ public class FragHomeComu extends Fragment {
 
         GetCommunityData();
 
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -86,30 +107,17 @@ public class FragHomeComu extends Fragment {
                 GetCommunityData();
             }
         });
-        //Click Listener
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                Intent intent = new Intent(getContext(), PostActivity.class);
-
-                // 게시글 id 전달
-                int postId = postData.get(position).getId();
-                intent.putExtra("post_id", postId);
-
-                startActivity(intent);
-                Log.d("TAG", position + "is Clicked");
-            }
-        });
-
-
+        initScroll();
+        GetCommunityData();
 
         return view;
     }
 
     //server에서 data전달
     public void GetCommunityData(){
-        serviceApi.GetCommunity(20).enqueue((new Callback<PostListResponse>() {
+        serviceApi.GetCommunity(null).enqueue((new Callback<PostListResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
                 PostListResponse result = response.body();
@@ -127,6 +135,7 @@ public class FragHomeComu extends Fragment {
                 }
 
                 setData();
+                initScroll();
             }
 
             @Override
@@ -139,10 +148,123 @@ public class FragHomeComu extends Fragment {
         }));
     }
 
-    public  void setData(){
-        // 어뎁터 적용
-        adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, postData);
-        gridView.setAdapter(adapter);
+    public void GetCommunityDataMore(){
+
+        lastId = postData.get(postData.size()-1).getId();
+        postData.add(null);
+        adapter.notifyItemInserted(postData.size() - 1);
+
+        loadlayout.setVisibility(View.GONE);
+
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                serviceApi.GetCommunity(lastId).enqueue((new Callback<PostListResponse>() {
+                    @Override
+                    public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
+                        postData.remove(postData.size()-1);
+                        adapter.notifyItemRemoved(postData.size());
+
+                        final PostListResponse result = response.body();
+                        int resultCode = result.getCode();
+                        if(resultCode == statusCode.RESULT_SERVER_ERR){
+                            Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
+                        }
+                        else if( resultCode == statusCode.RESULT_OK){
+
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    //업데이트
+                                    adapter.addItem(result.getData());
+                                    adapter.notifyDataSetChanged();
+
+                                }
+                            });
+                        }
+                        else {
+                            adapter.addItem(result.getData());
+                            adapter.notifyDataSetChanged();
+                        }
+                        isLoading = false;
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostListResponse> call, Throwable t) {
+                        Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        //  feeds = new JsonObject();
+                        Log.d("feed" , "통신 실패");
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                }));
+            }
+        };
+
+        handler.postDelayed(runnable, 1000);
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public  void setData(){
+
+        if(postData.size() == 0){
+            recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
+        }
+        adapter = new HomeComuAdapter(getContext(), postData);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 6);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                int gridPosition = position % 5;
+                switch (gridPosition) {
+                    case 0:
+                    case 1:
+                    case 2:
+                        return 2;
+                    case 3:
+                    case 4:
+                        return 3;
+                }
+                return 0;
+            }
+        });
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
+
+    }
+
+    public void initScroll(){
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                Log.d("scroll" , layoutManager.findLastCompletelyVisibleItemPosition() +" | " + ( adapter.getItemCount()  -1 ) );
+                if (!isLoading) {
+                    if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition()== adapter.getItemCount() - 1) {
+                        loadlayout.setVisibility(View.VISIBLE);
+                    }
+                    else
+                        loadlayout.setVisibility(View.GONE);
+                }
+                else{
+                    loadlayout.setVisibility(View.GONE);
+                }
+            }
+        });
+
+    }
 }

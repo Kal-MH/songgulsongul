@@ -1,6 +1,7 @@
 package smu.capstone.paper.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,14 +38,6 @@ public class PostImageAdapter extends BaseAdapter {
         itemCnt = dataList.size();
     }
 
-    // 받아온 데이터로 게시글 내용 셋팅
-
-    public void setItem(ImageView imageView, Post item){
-            Glide.with(mContext).load(RetrofitClient.getBaseUrl()+item.getImage())
-                    .into(imageView); // 게시물 사진
-
-    }
-
     @Override
     public int getCount() {
         return itemCnt;
@@ -70,7 +63,11 @@ public class PostImageAdapter extends BaseAdapter {
         ImageView imageView = convertView.findViewById(R.id.post_image_iv);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setLayoutParams(new GridView.LayoutParams(350, 350));
-        setItem(imageView, post);
+
+
+        Glide.with(mContext).load(RetrofitClient.getBaseUrl()+post.getImage())
+                .into(imageView); // 게시물 사진
+
         return imageView;
     }
 

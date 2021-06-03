@@ -1,94 +1,129 @@
 package smu.capstone.paper.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
-import java.util.ArrayList;
+import javax.annotation.Syntax;
 
 import smu.capstone.paper.R;
-import smu.capstone.paper.item.HomeMarketItem;
+import smu.capstone.paper.activity.PostActivity;
+import smu.capstone.paper.activity.StickerDetailActivity;
+import smu.capstone.paper.responseData.Sticker;
+import smu.capstone.paper.server.RetrofitClient;
 
-public class HomeMarketAdapter extends BaseAdapter {
-    JSONObject obj = new JSONObject();
-    JSONArray dataList;
-    private Context mContext;
-    LayoutInflater inf;
-    int layout;
-    int itemCnt;
+public class HomeMarketAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public HomeMarketAdapter(Context mContext) {
-        this.mContext = mContext;
-    }
-    public HomeMarketAdapter(Context mContext, int layout, JSONObject obj) throws JSONException {
-        this.mContext = mContext;
-        inf =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.layout = layout;
-        this.obj = obj;
-        dataList = obj.getJSONArray("data");
-        itemCnt = dataList.length();
+
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
+
+
+    List<Sticker> items;
+    private Context context;
+
+    public void addItem(List<Sticker> stickers){
+        items.addAll(stickers);
     }
 
-    // 받아온 데이터로 마켓 아이템 내용 셋팅
-    public void setItem(JSONObject item, ImageView imageView, TextView nameText, TextView costText){
-        try {
-            Glide.with(mContext).load(item.getInt("image")).into(imageView); // 사진
-            nameText.setText(item.getString("name")); // 상품명
-            costText.setText(item.getInt("price") + "p"); // 가격
-        } catch (JSONException e){
-            e.printStackTrace();
+
+    public HomeMarketAdapter(Context context, List<Sticker> items) {
+        this.context = context;
+        this.items = items;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if(viewType == VIEW_TYPE_ITEM){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.market_item, parent, false);
+            return new HomeMarketAdapter.ItemViewHolder(view);
+        }
+        else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
+            return new HomeMarketAdapter.LoadingViewHolder(view);
+        }
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return items.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof HomeMarketAdapter.ItemViewHolder) {
+
+            Glide.with(context).load(RetrofitClient.getBaseUrl()+ items.get(position).getImage())
+                    .into(((HomeMarketAdapter.ItemViewHolder) holder).img);
+            ((ItemViewHolder) holder).name.setText(items.get(position).getName());
+            ((ItemViewHolder) holder).cost.setText(items.get(position).getPrice() + "p") ;
+
+
+        }
+        else {//가독성을 위해 적어놓음?..
+            showLoadingView((HomeMarketAdapter.LoadingViewHolder) holder, position);
         }
     }
 
-    @Override
-    public int getCount() {
-        return itemCnt;
+    private void showLoadingView(HomeMarketAdapter.LoadingViewHolder holder, int position) {
+
     }
 
     @Override
-    public Object getItem(int position) {
-        JSONObject item = new JSONObject();
-        try {
-            item = dataList.getJSONObject(position);
-        } catch (JSONException e){
-            e.printStackTrace();
+    public int getItemCount() {
+        return items.size();
+    }
+
+
+    // Item Holders
+
+
+    private class ItemViewHolder extends RecyclerView.ViewHolder {
+        ImageView img;
+        TextView name, cost;
+        public ItemViewHolder(@NonNull View itemView){
+            super(itemView);
+            img= itemView.findViewById(R.id.market_item_img);
+            name = itemView.findViewById(R.id.market_item_name);
+            cost = itemView.findViewById(R.id.market_item_cost);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION){
+                        Intent intent = new Intent(context, StickerDetailActivity.class);
+                        intent.putExtra("sticker_id", items.get(position).getId());
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
-        return item;
+
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        private ProgressBar progressBar;
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        JSONObject item = new JSONObject();
-        try{
-            item = dataList.getJSONObject(position);
-        }catch (JSONException e){
-            e.printStackTrace();
+        public LoadingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            progressBar = itemView.findViewById(R.id.item_progressBar);
         }
-
-        if (convertView==null)
-            convertView = inf.inflate(layout, null);
-
-        ImageView imageView = convertView.findViewById(R.id.market_item_img);
-        TextView nameText = convertView.findViewById(R.id.market_item_name);
-        TextView costText = convertView.findViewById(R.id.market_item_cost);
-
-        setItem(item, imageView, nameText, costText);
-
-        return convertView;
     }
+
+
 }

@@ -1,8 +1,11 @@
 package smu.capstone.paper.server;
 
+import android.app.DownloadManager;
+
 import com.google.gson.JsonObject;
 
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -16,6 +19,8 @@ import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import smu.capstone.paper.data.PostEditData;
+import smu.capstone.paper.data.ProfileEditData;
 import smu.capstone.paper.responseData.CodeResponse;
 
 import smu.capstone.paper.data.CommentData;
@@ -30,7 +35,8 @@ import smu.capstone.paper.data.KeepData;
 import smu.capstone.paper.data.LoginData;
 
 import smu.capstone.paper.responseData.KeepResponse;
-import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.MarketDetailResponse;
+import smu.capstone.paper.responseData.MarketResponse;
 import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.responseData.PostFeedResponse;
 
@@ -111,7 +117,7 @@ public interface ServiceApi {
 
     //피드 게시글 가져오기
     @GET("/post/feeds")
-    Call<PostFeedResponse> GetFeed(@Query("userid") int id, @Query("offset") int offset );
+    Call<PostFeedResponse> GetFeed(@Query("userid") int id, @Query("offset") Integer offset );
  
     // 프로필
     @POST("/user/profile")
@@ -129,7 +135,7 @@ public interface ServiceApi {
 
     //커뮤니트 게시글 가져오기
     @GET("/post/community")
-    Call<PostListResponse> GetCommunity(@Query("offset") int offset);
+    Call<PostListResponse> GetCommunity(@Query("offset") Integer offset);
 
     //세부 게시글 내용 가져오기
     @GET("/post/{id}")
@@ -142,4 +148,50 @@ public interface ServiceApi {
     @GET("/post/search/tag")
     Call<PostListResponse> SearchPostTag(@Query("keyword") String keyword , @Query("offset") int offset);
 
+    // 게시글 업로드
+    @Multipart
+    @POST("/post/upload")
+    Call<JsonObject> PostUpload(
+            @Part("user_id") RequestBody id,
+            @Part("text") RequestBody text,
+            @Part List<MultipartBody.Part> hashTags,
+            @Part List<MultipartBody.Part> ccl,
+            @Part List<MultipartBody.Part> itemTags,
+            @Part MultipartBody.Part postImg);
+
+    // 게시글 수정
+    @POST("/post/update")
+    Call<CodeResponse> PostUpdate(@Body PostEditData data);
+
+    // 게시글 삭제
+    @GET("/post/delete")
+    Call<CodeResponse> PostDelete(@Query("userid") int user_id, @Query("postid") int post_id);
+
+    // 이미지 다운로드
+    @GET("/post/download")
+    Call<JsonObject> PostImageDownload(@Query("postid") int post_id);
+
+    // 마켓 메인
+    @GET("/market/main")
+    Call<MarketResponse> MarketMain(@Query("offset") Integer offset);
+
+    // 마켓 스티커 디테일
+    @GET("/market/detail")
+    Call<MarketDetailResponse> StickerDetail(@Query("sticker_id") int sticker_id, @Query("user_id") int user_id);
+
+    // 마켓 스티커 구매
+    @GET("/market/buy")
+    Call<JsonObject> StickerBuy(@Query("sticker_id") int sticker_id, @Query("user_id") int user_id);
+
+    // 스티커 검색
+    @GET("/market/sticker-search")
+    Call<MarketResponse> StickerSearch(@Query("search_word") String search_word, @Query("offset") int offset);
+
+    // 스티커 검색 - 낮은 가격순
+    @GET("/market/search-price")
+    Call<MarketResponse> SearchPrice(@Query("search_word") String search_word, @Query("offset") int offset);
+
+    // 스티커 검색 - 최신순
+    @GET("/market/search-date")
+    Call<MarketResponse> SearchDate(@Query("search_word") String search_word, @Query("offset") int offset);
 }

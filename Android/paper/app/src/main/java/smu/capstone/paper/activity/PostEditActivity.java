@@ -3,11 +3,13 @@ package smu.capstone.paper.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,15 +30,23 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.AddItemTagAdapter;
+import smu.capstone.paper.data.PostEditData;
 import smu.capstone.paper.responseData.Ccl;
+import smu.capstone.paper.responseData.CodeResponse;
 import smu.capstone.paper.responseData.Comment;
 import smu.capstone.paper.responseData.HashTag;
 import smu.capstone.paper.responseData.ItemTag;
@@ -69,7 +80,8 @@ public class PostEditActivity extends AppCompatActivity {
     List<ItemTag> itemTagData;
     List<Comment> CommentsData;
 
-
+    final int ON = 1;
+    final int OFF = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -111,8 +123,40 @@ public class PostEditActivity extends AppCompatActivity {
 
 
 
+
     }
 
+    public PostEditData makeEditData() {
+        // 텍스트
+        String text = post_edit_text.getText().toString().trim();
+
+        // 해쉬태그
+        String hashTag = hashtagText.getText().toString() + " ";
+        Pattern pattern = Pattern.compile("[#](.*?)[ ]");
+        Matcher matcher = pattern.matcher(hashTag);
+        ArrayList<String> hash_tags = new ArrayList<>();
+        while(matcher.find()){
+            hash_tags.add(matcher.group(1));
+        }
+
+        // ccl
+        int[] ccl_arr;
+        ccl_arr = new int[5];
+
+        ccl_arr[0] = post_edit_ccl_1.isChecked() ? ON : OFF;
+        ccl_arr[1] = post_edit_ccl_2.isChecked() ? ON : OFF;
+        ccl_arr[2] = post_edit_ccl_3.isChecked() ? ON : OFF;
+        ccl_arr[3] = post_edit_ccl_4.isChecked() ? ON : OFF;
+        ccl_arr[4] = post_edit_ccl_5.isChecked() ? ON : OFF;
+
+        // 아이템 태그
+        List<ItemTag> items = adapter.getDataList();
+        items.remove(items.size() - 1); // 마지막 값(추가 버튼) 제거
+
+        PostEditData data = new PostEditData(user_id, post_id, text, hash_tags, ccl_arr, items);
+
+        return data;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -129,16 +173,53 @@ public class PostEditActivity extends AppCompatActivity {
                 break;
 
             case R.id.toolbar_done : // 확인 버튼 눌렀을 때
+                PostEditData data = makeEditData();
+                serviceApi.PostUpdate(data).enqueue(new Callback<CodeResponse>() {
+                    @Override
+                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                        try {
+                            CodeResponse result = response.body();
+                            int resultCode = result.getCode();
 
-                Toast toast = Toast.makeText(PostEditActivity.this, "수정완료", Toast.LENGTH_SHORT);
-                toast.show();
+                            if (resultCode == StatusCode.RESULT_OK) {
+                                Toast toast = Toast.makeText(PostEditActivity.this, "게시물 수정 완료!", Toast.LENGTH_SHORT);
+                                toast.show();
+                            Intent intent = new Intent(PostEditActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동 (게시글 id 넘기기)
+                            intent.putExtra("post_id", post_id);
+                            startActivity(intent);
+                            finish();
+                            } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
+                                new AlertDialog.Builder(PostEditActivity.this)
+                                        .setMessage("게시물 수정에 실패했습니다." + "\n" + "다시 시도해주세요..")
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
 
-                //서버에 변경내용 전송
+                                            }
+                                        })
+                                        .show();
+                            }
+                        } catch (NullPointerException e){
+                            new AlertDialog.Builder(PostEditActivity.this)
+                                    .setMessage("에러발생!")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                Intent intent = new Intent(PostEditActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동
-                intent.putExtra("post_id", post_id);
-                startActivity(intent);
-                finish();
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                        Toast.makeText(PostEditActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Log.e("게시글 업로드 에러", t.getMessage());
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
+
                 break;
 
         }

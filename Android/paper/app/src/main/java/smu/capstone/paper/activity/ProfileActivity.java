@@ -345,10 +345,11 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
                 break;
 
-            case R.id.profile_edit :
+            case R.id.profile_edit:
                 Intent intent1 = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                //startActivity(intent1);
-                startActivityForResult(intent1, REQUEST_CODE);
+                startActivity(intent1);
+                finish();
+                //startActivityForResult(intent1, REQUEST_CODE);
                 break;
 
             case R.id.profile_keep:
@@ -368,27 +369,38 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent4 = new Intent(ProfileActivity.this , SettingActivity.class);
                 startActivity(intent4);
                 break;
+
             case R.id.profile_account_edit:
                 Intent intent5 = new Intent(ProfileActivity.this , EditAccountActivity.class);
+
                 startActivity(intent5);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_CODE){
-            if(resultCode != Activity.RESULT_OK){
-                return;
-            }
-            String new_id = data.getStringExtra("userId");
-            Intent intent = getIntent();
-            intent.putExtra("userId", new_id);
-            finish();
-            startActivity(intent);
-        }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if(requestCode == REQUEST_CODE){
+//            if(resultCode != Activity.RESULT_OK){
+//                return;
+//            }
+//            String new_id = data.getStringExtra("userId");
+//            Intent intent = getIntent();
+//            intent.putExtra("userId", new_id);
+//            finish();
+//            startActivity(intent);
+//        }
+//    }
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
     }
+
 }

@@ -1,8 +1,10 @@
 package smu.capstone.paper.adapter;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +50,9 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
         final ItemTag item = dataList.get(position);
-        Glide.with(context).load(RetrofitClient.getBaseUrl() + item.getPicture() ).into(holder.pic); // 게시물 사진
+        //Glide.with(context).load(RetrofitClient.getBaseUrl() + item.getPicture() ).into(holder.pic); // 게시물 사진
+        // item tag 추가의 경우 naver api 이용한 http 이미지 링크 받아오므로 baseUrl 제거 --> 실제 이 코드 사용
+        Glide.with(context).load(item.getPicture() ).into(holder.pic); // 게시물 사진
 
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,5 +82,9 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
             super(itemView);
             pic = (ImageView)itemView.findViewById(R.id.item_tag_img);
         }
+    }
+
+    public List<ItemTag> getDataList(){
+        return dataList;
     }
 }
