@@ -1,5 +1,6 @@
 package smu.capstone.paper.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -217,6 +218,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setItem(@NonNull ItemViewHolder holder, int position){
 
@@ -229,7 +231,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             text = text.substring(0, 15);
             text += " ...더 보기";
             SpannableString newText= new SpannableString(text);
-            newText.setSpan(new ForegroundColorSpan(Color.parseColor("#D3D3D3")), 15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            newText.setSpan(new ForegroundColorSpan(R.color.inkLightGrey), 15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             newText.setSpan(new StyleSpan(Typeface.ITALIC),15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.text.setText(newText); // 글 내용(15자 이상)
         }

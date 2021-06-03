@@ -9,6 +9,7 @@
     <color name = "backgroundGrey" >#EAEAE9</color>
     <color name="backgroundLightGrey">#EDEBE7</color>
     <color name = "inkGrey">#39383A</color>
+    <color name="inkLightGrey">#7C7880</color>
 
 
 </resources>
