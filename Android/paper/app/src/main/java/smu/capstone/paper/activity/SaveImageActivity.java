@@ -100,21 +100,6 @@ public class SaveImageActivity extends Activity {
                         public void onClick(DialogInterface dialog, int which) {
                             // 확인 버튼을 눌렸을 경우
                             DownloadImage();
-
-//                            fileName = post_image.substring(post_image.lastIndexOf('/') + 1, post_image.length());
-//                            DownloadManager mgr = (DownloadManager)SaveImageActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
-//
-//                            Uri uri = Uri.parse(post_image);
-//                            DownloadManager.Request request = new DownloadManager.Request(uri);
-//                            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-//                                    .setAllowedOverRoaming(false)
-//                                    .setTitle("Sample")
-//                                    .setDescription("Something useful. No Really")
-//                                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, fileName);
-//                            mgr.enqueue(request);
-//
-//                            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
-
                             Toast.makeText(getApplicationContext(), "저장 성공!", Toast.LENGTH_SHORT).show();
                             finish();
                         }
@@ -159,5 +144,6 @@ public class SaveImageActivity extends Activity {
         mgr.enqueue(request);
 
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+        //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + "mnt/sdcard/Pictures" + fileName + ".jpg")));
     }
 }
