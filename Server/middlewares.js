@@ -2,7 +2,10 @@ const multer = require("multer");
 
 /*
  ** 
- ** 이미지 프로필을 저장할 때도 확장자를 지정해야 하는 지는 아직 정해지지 않았다. 
+ ** 이미지 프로필을 저장할 때 사용되는 multer.
+ ** 현재는 profile, post 이미지를 저장하는 2개의 multer함수가 존재한다.
+ ** 
+ ** 이후, S3로 확장될 예정 
  */
 
 var profileStorage = multer.diskStorage({
@@ -67,31 +70,6 @@ const multerPost = multer({storage : postStorage});
 var middleWares = {
     multerProfile : multerProfile.single("img_profile"),
     multerPost : multerPost.single("img_post"),
-    localMiddlewares : function (req, res, next) {
-        res.locals.appName = "Calligraphy";
-        res.locals.loggedUser = req.user || null ;
-        next();
-    },
-    onlyPrivate : function (req, res, next) {
-        if (req.user){
-            next();
-        } else {
-            res.json({
-                'code' : 204,
-                'message' : 'login please'
-            })
-        }
-    },
-    onlyPublic : function (req, res, next) {
-        if (req.user){
-            res.json({
-                'code' : 204,
-                'message' : 'only public'
-            })
-        } else {
-            next();
-        }
-    }
 }
 
 module.exports = middleWares;

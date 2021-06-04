@@ -12,7 +12,8 @@ var connection = mysql.createConnection({
     port: process.env.DB_PORT || 3306,
     dateStrings : true,
     multipleStatements: true, // 다중쿼리 사용
-    timezone : "Asia/Seoul"
+    timezone : "Asia/Seoul",
+    charset : 'utf8mb4'
 });
 
 //DB connection export
