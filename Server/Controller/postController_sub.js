@@ -150,14 +150,16 @@ const postController_subFunc = {
     updatePointInsertHashItem : function (res, postId, hashTags, items, sql) {
         var hashTagsSplitItemParams = [];
         var insertItemSql = "";
-        if (hashTags.length > 0) {
-            // hashTagsSplitItemParams = hashTags.split('#');
-            // console.log(hashTagsSplitItemParams);
+
+        if (typeof hashTags == 'string'){
+            hashTagsSplitItemParams.push(hashTags);
+        } else {
             hashTagsSplitItemParams = hashTags;
-            for (var i = 0; i < hashTagsSplitItemParams.length; i++) {
-                sql += `insert into hash_tag (post_id, text) values (${postId}, ?);`
-            }
         }
+        for (var i = 0; i < hashTagsSplitItemParams.length; i++) {
+            sql += `insert into hash_tag (post_id, text) values (${postId}, ?);`
+        }
+
         if (items.name.length > 0) {
             for (var i = 0; i < items.name.length; i++) {
                 insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, brand, category1, category2, url, picture)
