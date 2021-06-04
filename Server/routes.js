@@ -59,7 +59,7 @@ const API_POST_COMMENT_DELETE = "/comment/delete";
 
 const API_DAILY_ATTENDANCE = "/point/attendance";
 
-const API_CHECK_PASSWORD = "/check/password/:userid"
+const API_CHECK_PASSWORD = "/check/password"
 
 const routes = {
     home : HOME,

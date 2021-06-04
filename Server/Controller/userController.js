@@ -349,9 +349,11 @@
 
      // 아이디 변경
      userIdChange : function(req, res) {
-       const id = req.body.login_id;
-       const new_id = req.body.new_id;
+       const id = req.query.login_id;
+       const new_id = req.query.new_id;
        var params = [new_id, id];
+
+       console.log(id, new_id);
 
        var sql = 'UPDATE user SET login_id = ? WHERE login_id = ?;';
        connection.query(sql, params, function(err, rows){
@@ -372,7 +374,7 @@
 
      // 비밀번호 변경
      userPwChange : function(req, res){
-       const id = req.body.login_id;
+       const id = req.body.userid;
        const pw = req.body.password;
        var resultCode = statusCode.SERVER_ERROR;
 
@@ -393,7 +395,7 @@
            var hashedPassword = key.toString('base64');
            var salt = buf.toString('base64');
 
-           var sql = 'UPDATE user SET password = ?, salt = ? WHERE login_id = ?;';
+           var sql = 'UPDATE user SET password = ?, salt = ? WHERE id = ?;';
            var params = [hashedPassword, salt, id];
            connection.query(sql, params, function(err, rows){
              if(err){
