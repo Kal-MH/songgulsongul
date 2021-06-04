@@ -63,6 +63,23 @@ public class FragEditPw extends Fragment {
         user_id = LoginSharedPreference.getUserId(getContext());
         pw_check_text.setVisibility(View.INVISIBLE);
 
+        account_pw.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                pw_check = NO;
+            }
+        });
+
         // 비밀번호 일치 확인
         account_newpw.addTextChangedListener(new TextWatcher() {
             @Override

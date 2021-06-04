@@ -2,6 +2,8 @@ package smu.capstone.paper.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +53,24 @@ public class FragEditId extends Fragment {
         Button account_id_check= (Button) rootView.findViewById(R.id.account_id_check);
         account_newid = (EditText)rootView.findViewById(R.id.account_newid);
         login_id = LoginSharedPreference.getLoginId(getContext());
+
+        account_newid.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                id_check = NO;
+                id_modify_check = NO;
+            }
+        });
 
         account_id_check.setOnClickListener(new View.OnClickListener() {
             @Override

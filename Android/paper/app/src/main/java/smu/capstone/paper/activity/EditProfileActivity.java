@@ -68,13 +68,13 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private RadioGroup sns_radio;
     private RadioButton profile_sns_radio_yes, profile_sns_radio_no;
-    private EditText profile_new_sns, profile_newid, profile_new_intro;
-    private Button profile_img_chnage, profile_check, profile_delete_account;
+    private EditText profile_new_sns, profile_new_intro;
+    private Button profile_img_change, profile_delete_account;
     private ImageView profile_set_img;
     private static final int REQUEST_CODE = 0;
     private int profile_sns_check;
-    private String login_id, new_id, profile_img_old, profile_img_path;
-    private int id_check, id_modify_check, profile_modify_check;
+    private String login_id, profile_img_old, profile_img_path;
+    private int profile_modify_check;
     private int NO = 0;
     private int YES = 1;
 
@@ -91,159 +91,25 @@ public class EditProfileActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
         login_id = LoginSharedPreference.getLoginId(EditProfileActivity.this);
-        id_check = NO;
-        id_modify_check = NO;
 
         profile_new_intro = (EditText)findViewById(R.id.profile_new_intro);
         profile_new_sns = (EditText)findViewById(R.id.profile_new_sns);
-        profile_img_chnage = findViewById(R.id.profile_img_chnage);
+        profile_img_change = findViewById(R.id.profile_img_chnage);
         profile_set_img = findViewById(R.id.profile_set_img);
         sns_radio = findViewById(R.id.profile_edit_sns_radio);
-        profile_newid = findViewById(R.id.profile_newid);
         profile_sns_radio_yes = findViewById(R.id.profile_sns_radio_yes);
         profile_sns_radio_no = findViewById(R.id.profile_sns_radio_no);
-        profile_check = findViewById(R.id.profile_check);
         profile_delete_account = findViewById(R.id.profile_delete_account);
 
         getProfileData();
 
-        profile_img_chnage.setOnClickListener(new View.OnClickListener() {
+        profile_img_change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent, 1);
-            }
-        });
-
-        profile_newid.setText(LoginSharedPreference.getLoginId(this));
-
-        profile_newid.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                id_check = NO;
-                id_modify_check = NO;
-            }
-        });
-
-        profile_check.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new_id = profile_newid.getText().toString();
-                new_id.trim();
-
-                // 입력값이 공백일 경우 --> 서버 통신x
-                if(new_id.getBytes().length <= 0){
-                    id_check = NO;
-                    id_modify_check = NO;
-                    new AlertDialog.Builder(EditProfileActivity.this)
-                            .setTitle("경고")
-                            .setMessage("변경할 아이디를 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .show();
-                }
-
-                // 현재 사용중인 id와 동일한 id 입력시 --> 서버 통신x
-                else if (login_id.equals(new_id)){
-                    new AlertDialog.Builder(EditProfileActivity.this)
-                            .setMessage("기존 아이디를 사용하시겠습니까?")
-                            .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    profile_newid.setText(null);
-                                    id_check = NO;
-                                    id_modify_check = NO;
-                                }
-                            })
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    id_check = YES;
-                                    id_modify_check = NO;
-                                }
-                            })
-                            .show();
-                }
-
-                // new_id로 server와 통신
-                else {
-                    IdCheckData data = new IdCheckData(new_id);
-                    serviceApi.IdCheck(data).enqueue(new Callback<CodeResponse>() {
-                        @Override
-                        public void onResponse(Call<CodeResponse>call, Response<CodeResponse> response) {
-                            CodeResponse result = response.body();
-                            int resultCode = result.getCode();
-
-                            if(resultCode == StatusCode.RESULT_OK){
-                                new AlertDialog.Builder(EditProfileActivity.this)
-                                        .setMessage("사용할 수 있는 아이디입니다.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-
-                                            }
-                                        })
-                                        .show();
-                                id_check = YES;
-                                id_modify_check = YES;
-                            }
-
-                            else if (resultCode == StatusCode.RESULT_CLIENT_ERR){
-                                id_check = NO;
-                                id_modify_check = NO;
-                                new AlertDialog.Builder(EditProfileActivity.this)
-                                        .setTitle("경고")
-                                        .setMessage("이미 사용중인 아이디입니다."+"\n"+"다시 입력해 주세요.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                profile_newid.setText(null);
-                                            }
-                                        })
-                                        .show();
-                            }
-
-                            else if (resultCode == StatusCode.RESULT_SERVER_ERR){
-                                id_check = NO;
-                                id_modify_check = NO;
-                                new AlertDialog.Builder(EditProfileActivity.this)
-                                        .setTitle("경고")
-                                        .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                            }
-                                        })
-                                        .show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<CodeResponse> call, Throwable t) {
-                            id_check = NO;
-                            id_modify_check = NO;
-                            Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                            Log.e("아이디 중복확인 에러", t.getMessage());
-                            t.printStackTrace(); // 에러 발생 원인 단계별로 출력
-                        }
-                    });
-                }
             }
         });
 
@@ -331,27 +197,6 @@ public class EditProfileActivity extends AppCompatActivity {
         finish();
     }
 
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                try {
-                    // 선택한 이미지에서 비트맵 생성
-                    InputStream in = getContentResolver().openInputStream(data.getData());
-                    Bitmap img = BitmapFactory.decodeStream(in);
-                    in.close();
-                    // 이미지 표시
-                    profile_set_img.setImageBitmap(img);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }*/
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -388,20 +233,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 String new_sns = profile_new_sns.getText().toString().trim();
 
-                HashMap<String, RequestBody> requestMap = getMapData(id_modify_check, profile_sns_check, profile_modify_check, login_id, new_intro, new_sns);
+                HashMap<String, RequestBody> requestMap = getMapData(profile_sns_check, profile_modify_check, login_id, new_intro, new_sns);
 
-                if(id_check == NO){
-                    new AlertDialog.Builder(EditProfileActivity.this)
-                            .setMessage("아이디 중복확인을 완료해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .show();
-                }
-                else if(profile_sns_check == YES && new_sns.getBytes().length <= 0){
+                if(profile_sns_check == YES && new_sns.getBytes().length <= 0){
                         new AlertDialog.Builder(EditProfileActivity.this)
                                 .setMessage("SNS계정을 입력해주세요.")
                                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -412,11 +246,8 @@ public class EditProfileActivity extends AppCompatActivity {
                                 })
                                 .show();
                 }
-                else if(id_check == YES){
-                    if(id_modify_check == YES) {
-                        RequestBody new_id_body = RequestBody.create(MediaType.parse("text/plain"), new_id);
-                        requestMap.put("new_id", new_id_body);
-                    }
+
+                else{
                     serviceApi.EditProfile(requestMap, body).enqueue(new Callback<CodeResponse>() {
                         @Override
                         public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
@@ -425,10 +256,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                             if(resultCode == StatusCode.RESULT_OK){
                                 Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-                                if(id_modify_check == YES) {
-                                    LoginSharedPreference.changeLoginId(EditProfileActivity.this, new_id);
-                                }
-                                intent.putExtra("userId", new_id);
+                                intent.putExtra("userId", login_id);
                                 startActivity(intent);
                                 finish();
                                 Toast.makeText(EditProfileActivity.this, "프로필 수정 완료!", Toast.LENGTH_SHORT).show();
@@ -475,17 +303,15 @@ public class EditProfileActivity extends AppCompatActivity {
         return  true;
     }
 
-    public HashMap<String, RequestBody> getMapData(int id_modify_check, int profile_sns_check, int profile_modify_check, String login_id, String new_intro, String new_SNS){
+    public HashMap<String, RequestBody> getMapData(int profile_sns_check, int profile_modify_check, String login_id, String new_intro, String new_SNS){
         HashMap<String, RequestBody> requestMap = new HashMap<>();
 
-        RequestBody id_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(id_modify_check));
         RequestBody sns_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(profile_sns_check));
         RequestBody profile_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(profile_modify_check));
         RequestBody login_id_body = RequestBody.create(MediaType.parse("text/plain"), login_id);
         RequestBody new_intro_body = RequestBody.create(MediaType.parse("text/plain"), new_intro);
         RequestBody new_sns_body = RequestBody.create(MediaType.parse("text/plain"), new_SNS);
 
-        requestMap.put("id_check_flag", id_flag_body);
         requestMap.put("sns_check_flag", sns_flag_body);
         requestMap.put("img_check_flag", profile_flag_body);
         requestMap.put("login_id", login_id_body);
@@ -535,7 +361,6 @@ public class EditProfileActivity extends AppCompatActivity {
     public void setProfileData(ProfileResponse data){
         User user = data.getProfileInfo();
 
-
         profile_new_intro.setText(user.getIntro());
         profile_new_sns.setText(user.getSns());
 
@@ -547,6 +372,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         Glide.with(this).load(base_url + img_addr).into(profile_set_img);
         int sns_check = user.getSnsCheck();
+        Log.d("sns_check", String.valueOf(sns_check));
 
         if(sns_check == NO){
                 profile_sns_radio_no.setChecked(true);

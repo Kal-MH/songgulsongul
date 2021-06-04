@@ -39,7 +39,7 @@ import smu.capstone.paper.server.StatusCode;
 public class EditAccountActivity extends AppCompatActivity {
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     //private EditText account_newid, account_pw, account_newpw, account_newpw_check;
-    private Button edit_id_btn, edit_pw_btn, edit_account_btn, account_id_check;
+    private Button edit_id_btn, edit_pw_btn, edit_account_btn;
     private EditText account_newid, account_pw, account_newpw;
 
     int flag = 1;
@@ -68,8 +68,6 @@ public class EditAccountActivity extends AppCompatActivity {
         edit_id_btn = findViewById(R.id.edit_id_btn);
         edit_pw_btn = findViewById(R.id.edit_pw_btn);
         edit_account_btn = findViewById(R.id.edit_account_btn);
-
-        //account_id_check= findViewById(R.id.account_id_check);
 
         login_id = LoginSharedPreference.getLoginId(EditAccountActivity.this);
         user_id = LoginSharedPreference.getUserId(EditAccountActivity.this);
@@ -114,8 +112,6 @@ public class EditAccountActivity extends AppCompatActivity {
                                         }
                                     })
                                     .show();
-                            id_check = NO;
-                            id_modify_check = NO;
                         }
 
                         else if(id_check == NO){
