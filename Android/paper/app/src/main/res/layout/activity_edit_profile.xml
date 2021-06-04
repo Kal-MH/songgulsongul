@@ -37,8 +37,8 @@
 
                 <smu.capstone.paper.layout.RoundImageView
                     android:id="@+id/profile_set_img"
-                    android:layout_width="@dimen/itemTag_size"
-                    android:layout_height="@dimen/itemTag_size"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
                     android:layout_margin="@dimen/common_margin"
                     android:src="@drawable/ic_baseline_emoji_emotions_24"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -256,7 +256,7 @@
                     android:id="@+id/profile_delete_account"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/follow_margin"
+                    android:layout_marginTop="@dimen/tab_size_large"
                     android:layout_marginBottom="@dimen/common_margin"
                     android:text="회원 탈퇴"
                     style="@style/Text.textBoldStyle"

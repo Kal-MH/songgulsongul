@@ -16,14 +16,13 @@
 
     <dimen name="tab_size">50dp</dimen>
     <dimen name="tab_size_small">30dp</dimen>
+    <!-- itemTag 사이즈 + common_margin + narrow_margin -->
+    <dimen name="tab_size_large">105dp</dimen>
+
 
     <dimen name = "profile_pic">50dp</dimen>
     <dimen name="icon_size">40dp</dimen>
     <dimen name="small_icon_size">25dp</dimen>
-
-   <!-- itemTag 사이즈 + common_margin + narrow_margin -->
-    <dimen name="follow_margin">105dp</dimen>
-
-    <dimen name="itemTag_size">80dp</dimen>
+    <dimen name="icon_size_large">80dp</dimen>
 
 </resources>
