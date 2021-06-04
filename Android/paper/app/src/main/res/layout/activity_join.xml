@@ -3,7 +3,7 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/backgroundLightGrey"
     >
 
@@ -44,7 +44,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/narrow_margin"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -65,7 +64,7 @@
                     android:layout_weight="1"
                     android:theme="@style/EditTextTheme"
                     android:background="@null"
-                    android:layout_marginLeft="@dimen/narrow_margin"
+                    android:layout_marginLeft="@dimen/common_margin"
                     android:padding="@dimen/narrow_margin"
                     style="@style/Text.textStyle"
                     android:hint="ID" >
