@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 style="@style/Text.textBoldStyle"
-                android:text="@string/prompt_id" />
+                android:text="ID 찾기"/>
 
             <Button
                 android:id="@+id/find_pw_btn"
@@ -60,7 +60,7 @@
                 android:background="@null"
                 android:layout_height="wrap_content"
                 style="@style/Text.textBoldStyle"
-                android:text="@string/prompt_password" />
+                android:text="비밀번호 찾기" />
         </LinearLayout>
 
         <Button
