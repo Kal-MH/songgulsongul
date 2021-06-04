@@ -74,20 +74,19 @@
                 android:id="@+id/sticker_d_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
+                android:layout_marginLeft="@dimen/narrow_margin"
                 android:layout_marginTop="@dimen/common_margin"
 
                 android:text="ItemName"
                 style="@style/Text.medium"/>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
 
             <TextView
                 android:id="@+id/sticker_d_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/narrow_margin"
+                android:layout_marginTop="@dimen/common_margin"
                 android:text="price"
                 style="@style/Text.medium"
                 />
