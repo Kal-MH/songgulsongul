@@ -14,8 +14,6 @@ postRouter.get(routes.postSearchTag, postController.getSearchTag);
 postRouter.get(routes.postSearchId, postController.getSearchId);
 postRouter.get(routes.postDetail, postController.getPostDetail);
 
-//사용자 로그인상태 확인
-postRouter.get(routes.postDownload, postController.postDownload);
 postRouter.post(routes.postUpload, middleWares.multerPost, postController.postUpload);
 postRouter.post(routes.postUpdate, middleWares.multerPost, postController.postUpdate);
 module.exports = postRouter;
