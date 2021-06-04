@@ -13,6 +13,7 @@
         android:layout_margin="@dimen/narrow_margin"
         android:background="@drawable/border"
         android:queryHint="검색"
+        android:theme="@style/EditTextTheme"
         style="@style/Text.medium">
 
     </SearchView>
