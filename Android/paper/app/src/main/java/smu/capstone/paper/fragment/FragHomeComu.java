@@ -31,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostSearchActivity;
-import smu.capstone.paper.adapter.HomeComuAdapter;
+import smu.capstone.paper.adapter.PostImageRVAdapter;
 import smu.capstone.paper.responseData.Post;
 import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.server.RetrofitClient;
@@ -44,7 +44,7 @@ public class FragHomeComu extends Fragment {
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
 
-    HomeComuAdapter adapter;
+    PostImageRVAdapter adapter;
     List<Post> postData;
 
     int lastId;
@@ -224,7 +224,7 @@ public class FragHomeComu extends Fragment {
         if(postData.size() == 0){
             recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
         }
-        adapter = new HomeComuAdapter(getContext(), postData);
+        adapter = new PostImageRVAdapter(getContext(), postData);
 
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 6);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
