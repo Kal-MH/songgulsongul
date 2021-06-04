@@ -278,6 +278,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/common_margin"
+                android:background="@drawable/border"
                 android:orientation="horizontal">
 
                 <EditText
@@ -285,8 +287,10 @@
                     style="@style/Text.textStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/common_margin"
+                    android:layout_marginLeft="@dimen/narrow_margin"
                     android:hint="\t댓글입력..."
+                    android:background="@null"
+                    android:theme="@style/EditTextTheme"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/post_write"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -296,15 +300,17 @@
                 <Button
                     android:id="@+id/post_write"
                     android:layout_marginLeft="@dimen/narrow_margin"
-                    android:layout_marginRight="@dimen/common_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="확인"
+                    android:text="게시"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0"
-                    style="@style/Text.textStyle"/>
+                    style="@style/Text.textStyleTransparent"
+                    android:background="@null"
+                    />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>

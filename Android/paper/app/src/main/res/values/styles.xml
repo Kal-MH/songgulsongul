@@ -8,6 +8,9 @@
         <item name="colorAccent">@color/inkGrey</item>
     </style>
 
+    <style name="EditTextTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/selected</item>
+    </style>
 
     <style name="Text.textSmallStyle" parent="android:TextAppearance">
         <item name="android:textStyle">normal</item>
@@ -34,6 +37,13 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="Text.textStyleTransparent" parent="android:TextAppearance">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textColor">@color/inkGreyTransparent</item>
+        <item name="android:fontFamily">@font/ibm_plex_sans_light</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
     <style name="Text.textBoldStyle" parent="android:TextAppearance">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_size_14</item>

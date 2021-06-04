@@ -1,5 +1,6 @@
 package smu.capstone.paper.activity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -7,7 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -344,11 +347,26 @@ public class PostActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
 
+            @SuppressLint("ResourceAsColor")
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.length() > 0) {
                     post_write.setClickable(true);
-                    post_write.setBackgroundColor(0x9A93C8B4);
+                    post_write.setTextColor(R.color.inkGrey);
+                    post_write.setTextSize(16);
+                    SpannableString spanString = new SpannableString("게시");
+                    spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+                    post_write.setText(spanString);
+
+                }
+                else{
+                    post_write.setClickable(false);
+                    post_write.setTextColor(R.color.inkGreyTransparent);
+                    post_write.setTextSize(14);
+                    SpannableString spanString = new SpannableString("게시");
+                    spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
+                    post_write.setText(spanString);
+
                 }
             }
         });
@@ -743,7 +761,6 @@ public class PostActivity extends AppCompatActivity {
         }
         return true;
     }
-
     public void deleteComment(int id){
         serviceApi.DeleteComment(post_id,id).enqueue(new Callback<CodeResponse>() {
             @Override
