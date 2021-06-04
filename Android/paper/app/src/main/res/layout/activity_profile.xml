@@ -20,78 +20,98 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/narrow_margin">
 
         <smu.capstone.paper.layout.RoundImageView
             android:id="@+id/profile_userimage"
-            android:layout_width= "@dimen/itemTag_size"
+            android:layout_width="@dimen/itemTag_size"
             android:layout_height="@dimen/itemTag_size"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart= "@dimen/common_margin"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/ic_launcher" />
+
+            android:layout_marginStart="@dimen/common_margin"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
+            android:id="@+id/profile_pointview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/common_margin"
+            android:layout_marginBottom="@dimen/common_margin"
             android:layout_toRightOf="@id/profile_userimage"
-            android:gravity="center">
+            android:layout_marginLeft="@dimen/follow_margin"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/profile_followFeeds"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <LinearLayout
-                android:id="@+id/profile_pointview"
-                android:layout_width="0dp"
+            <TextView
+                style="@style/Text.textStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:text="내 포인트" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Text.textStyle"
-                    android:text="내 포인트" />
-
-                <TextView
-                    android:id="@+id/profile_point"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/narrow_margin"
-                    style="@style/Text.textBoldStyle"
-                    android:text="0p" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/profile_point"
+                style="@style/Text.textBoldStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/narrow_margin"
+                android:text="0p" />
         </LinearLayout>
 
         <Button
             android:id="@+id/profile_follow_btn"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_size_small"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/profile_userimage"
+
+            android:background="@color/purpleGray"
             android:text="팔로우"
-            android:background="@color/inkGreyTransparent"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            style="@style/Text.textBoldStyle"
+
+
+            android:layout_marginLeft="@dimen/follow_margin"
+            android:layout_marginBottom="@dimen/common_margin"
+            android:layout_marginRight="@dimen/narrow_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            />
 
         <Button
             android:id="@+id/profile_unfollow_btn"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_size_small"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/profile_userimage"
+
+            android:background="@color/purpleGray"
             android:text="언팔로우"
-            android:background="@color/inkGreyTransparent"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            style="@style/Text.textBoldStyle"
+
+            android:layout_marginLeft="@dimen/follow_margin"
+            android:layout_marginRight="@dimen/narrow_margin"
+            android:layout_marginBottom="@dimen/common_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/profile_follow_btn"
+            android:id="@+id/profile_followFeeds"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@id/profile_userimage"
-            android:gravity="center">
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/profile_userimage"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -102,15 +122,15 @@
 
                 <TextView
                     android:id="@+id/profile_feed_cnt"
+                    style="@style/Text.textBoldStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Text.textBoldStyle"
                     android:text="0" />
 
                 <TextView
+                    style="@style/Text.textStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Text.textStyle"
                     android:text="피드" />
             </LinearLayout>
 
@@ -131,15 +151,15 @@
 
                     <TextView
                         android:id="@+id/profile_follow_cnt"
+                        style="@style/Text.textBoldStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Text.textBoldStyle"
                         android:text="0" />
 
                     <TextView
+                        style="@style/Text.textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Text.textStyle"
                         android:text="팔로우" />
                 </LinearLayout>
 
@@ -152,27 +172,27 @@
 
                     <TextView
                         android:id="@+id/profile_follower_cnt"
+                        style="@style/Text.textBoldStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Text.textBoldStyle"
                         android:text="0" />
 
                     <TextView
+                        style="@style/Text.textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Text.textStyle"
                         android:text="팔로워" />
                 </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/narrow_margin"
-        android:layout_marginTop="@dimen/narrow_margin"
+        android:layout_marginTop="@dimen/common_margin"
         android:gravity="center_vertical">
 
         <TextView
