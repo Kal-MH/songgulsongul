@@ -23,4 +23,7 @@ const routes = require('../routes');
 //출석체크
  apiRouter.post(routes.apiDailyAttendance, apiController.dailyAttendance);
 
+ // password
+ apiRouter.post(routes.apiCheckPassword, apiController.postCheckPassword);
+
  module.exports = apiRouter;

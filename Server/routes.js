@@ -59,14 +59,7 @@ const API_POST_COMMENT_DELETE = "/comment/delete";
 
 const API_DAILY_ATTENDANCE = "/point/attendance";
 
-//img tag api temporary
-const API_NAVER_ITEM_TAG = "/naver/item-tag";
-const API_NAVER_ITEM_TAG_CALLBACK = "/naver/item-tag/callback";
-
-//웹상에서 보기위한 임시 라우터
-//로그인한 후, 내 프로필 보기
-const ME = "/me";
-const LOGOUT = "/logout";
+const API_CHECK_PASSWORD = "/check/password/:userid"
 
 const routes = {
     home : HOME,
@@ -117,10 +110,7 @@ const routes = {
     apiPostCommentInsert : API_POST_COMMENT_INSERT,
     apiPostCommentDelete : API_POST_COMMENT_DELETE,
     apiDailyAttendance: API_DAILY_ATTENDANCE,
-    apiNaverItemtag : API_NAVER_ITEM_TAG,
-    apiNaverItemtagCallback : API_NAVER_ITEM_TAG_CALLBACK,
-    me : ME,
-    logout : LOGOUT
+    apiCheckPassword : API_CHECK_PASSWORD
 }
 
 module.exports = routes;
