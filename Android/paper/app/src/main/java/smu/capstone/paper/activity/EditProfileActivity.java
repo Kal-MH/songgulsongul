@@ -323,6 +323,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
+        intent.putExtra("userId", login_id);
+        startActivity(intent);
+        finish();
+    }
+
     /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
@@ -461,7 +469,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 return true;
 
             case android.R.id.home: // 뒤로가기 버튼 눌렀을 때
-                finish();
+                onBackPressed();
                 break;
         }
         return  true;
