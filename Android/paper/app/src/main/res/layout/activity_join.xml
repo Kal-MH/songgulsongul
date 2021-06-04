@@ -79,6 +79,7 @@
                     android:background="@color/purpleGray"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_margin="@dimen/narrow_margin"
                     android:text="중복확인" />
             </LinearLayout>
 
@@ -205,7 +206,7 @@
                         android:id="@+id/join_send_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/narrow_margin"
+                        android:layout_margin="@dimen/narrow_margin"
                         style="@style/Text.textStyle"
                         android:background="@color/purpleGray"
                         android:text="인증" />
@@ -249,6 +250,7 @@
                         android:layout_height="match_parent"
                         android:text="확인"
                         android:background="@color/purpleGray"
+                        android:layout_margin="@dimen/narrow_margin"
                         style="@style/Text.textStyle"
                         />
                 </LinearLayout>
