@@ -10,6 +10,7 @@
  const fs = require("fs");
  const path = require("path");
  const mime = require("mime");
+ const crypto = require('crypto');
 
  var userController = {
      // 프로필
@@ -346,43 +347,77 @@
        })
      },
 
-     // 기존 프로필 데이터 불러오기
-     profileData : function(req, res){
-       const id = req.body.id;
-       var param = [id];
+     // 아이디 변경
+     userIdChange : function(req, res) {
+       const id = req.body.login_id;
+       const new_id = req.body.new_id;
+       var params = [new_id, id];
 
-       var sql = 'SELECT * FROM user WHERE login_id = ?;';
-       connection.query(sql, param, function(err, rows){
+       var sql = 'UPDATE user SET login_id = ? WHERE login_id = ?;';
+       connection.query(sql, params, function(err, rows){
          var resultCode = statusCode.SERVER_ERROR;
 
          if(err){
            console.log(err);
-           res.json({
-             'code': resultCode
-           })
          }
          else{
            resultCode = statusCode.OK;
-
-           res.json({
-             'code': resultCode,
-             'profileImg': rows[0].img_profile,
-             'intro': rows[0].intro == null ? "" : rows[0].intro,
-             'sns': rows[0].sns_url == null ? "" : rows[0].sns_url,
-             'snsCheck': rows[0].sns_check == null ? 0 : rows[0].sns_check
-           })
-           console.log(resultCode)
          }
+
+         res.json({
+           'code': resultCode
+         })
+       })
+     },
+
+     // 비밀번호 변경
+     userPwChange : function(req, res){
+       const id = req.body.login_id;
+       const pw = req.body.password;
+       var resultCode = statusCode.SERVER_ERROR;
+
+       crypto.randomBytes(64, function(err, buf){
+         if(err){
+           console.log(err);
+           res.json({
+             'code' : resultCode
+           })
+         }
+         crypto.pbkdf2(pw, buf.toString('base64'), 100, 64, 'sha512', function(err, key){
+           if(err){
+             console.log(err);
+             res.json({
+               'code' : resultCode
+             })
+           }
+           var hashedPassword = key.toString('base64');
+           var salt = buf.toString('base64');
+
+           var sql = 'UPDATE user SET password = ?, salt = ? WHERE login_id = ?;';
+           var params = [hashedPassword, salt, id];
+           connection.query(sql, params, function(err, rows){
+             if(err){
+               console.log(err);
+             }
+             else{
+               resultCode = statusCode.OK;
+             }
+
+             res.json({
+               'code': resultCode
+             })
+           })
+         })
        })
      },
 
      // 프로필수정
      profileEdit : function(req, res) {
-       const is_id_check = req.body.id_check_flag;
+       // const is_id_check = req.body.id_check_flag;
        const is_sns_check = Number(req.body.sns_check_flag);
        const is_img_check = Number(req.body.img_check_flag);
-       const id = req.body.login_id; // 기존 아이디
-       const new_id = req.body.new_id; // 변경된 아이디
+       const id = req.body.login_id;
+       // const new_id = req.body.new_id; // 변경된 아이디
        const new_intro = req.body.new_intro;
        const new_sns = req.body.new_SNS;
        var new_image;
@@ -456,11 +491,11 @@
            }
 
            // 기존 아이디와 비교 후 db갱신
-           if(Number(is_id_check) === 1){
-               sql += 'UPDATE user SET login_id = ? WHERE login_id = ?;';
-               param.push(new_id, id)
-               check_cnt += 1;
-           }
+           // if(Number(is_id_check) === 1){
+           //     sql += 'UPDATE user SET login_id = ? WHERE login_id = ?;';
+           //     param.push(new_id, id)
+           //     check_cnt += 1;
+           // }
 
            if(check_cnt > 0){
             connection.query(sql, param, function(err, rows){
