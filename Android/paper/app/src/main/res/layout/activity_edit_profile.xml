@@ -208,6 +208,7 @@
                                 android:id="@+id/profile_sns_radio_yes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                style="@style/Text.textBoldStyle"
                                 android:text="유">
 
                             </RadioButton>
@@ -217,6 +218,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/common_margin"
+                                style="@style/Text.textBoldStyle"
                                 android:text="무">
 
                             </RadioButton>
