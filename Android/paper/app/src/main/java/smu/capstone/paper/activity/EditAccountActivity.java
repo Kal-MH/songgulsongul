@@ -1,6 +1,8 @@
 package smu.capstone.paper.activity;
 
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -46,11 +48,19 @@ public class EditAccountActivity extends AppCompatActivity {
         edit_account_btn = findViewById(R.id.edit_account_btn);
 
         FragmentView(Frag_editid);
+        SpannableString content = new SpannableString("ID 변경하기");
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0); edit_id_btn.setText(content);
+        edit_pw_btn.setText("PW 변경하기");
 
         edit_id_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentView(Frag_editid);
+
+                SpannableString content = new SpannableString("ID 변경하기");
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0); edit_id_btn.setText(content);
+                edit_pw_btn.setText("PW 변경하기");
+
             }
         });
 
@@ -58,6 +68,10 @@ public class EditAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FragmentView(Frag_editpw);
+
+                SpannableString content = new SpannableString("PW 변경하기");
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0); edit_pw_btn.setText(content);
+                edit_id_btn.setText("ID 변경하기");
             }
         });
 
