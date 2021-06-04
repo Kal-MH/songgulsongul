@@ -37,6 +37,7 @@
                 android:gravity="center"
                 android:text="회원 정보 입력"
                 android:layout_marginBottom="@dimen/tab_size"
+                android:background="@drawable/border"
                 style="@style/Text.medium" />
 
 
@@ -45,11 +46,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:background="@drawable/border"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/join_id"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/tab_size"
                     android:layout_height="wrap_content"
                     android:text="아이디"
                     style="@style/Text.textBoldStyle"
@@ -83,92 +85,104 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/border"
                 android:layout_marginTop="@dimen/common_margin"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/join_pw"
-                    android:layout_width="@dimen/tab_size_large"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/common_margin"
-                    android:text="비밀번호"
-                    style="@style/Text.textBoldStyle"
-                    />
-
-               <EditText
-                   android:id="@+id/join_pw_text"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:inputType="textPassword"
-                   android:background="@null"
-                   android:layout_weight="1"
-                   android:padding="@dimen/narrow_margin"
-                   style="@style/Text.textStyle"
-                   android:layout_marginLeft="@dimen/narrow_margin"
-                   android:hint="PassWord" >
-                </EditText>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/common_margin"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/join_pw_check"
-                    android:layout_width="@dimen/tab_size_large"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/common_margin"
-                    android:text="비밀번호 확인"
-                    style="@style/Text.textBoldStyle"
-                    />
-
-                <EditText
-                    android:id="@+id/join_pw_check_text"
+                android:orientation="vertical"
+                >
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:background="@null"
+                    android:layout_marginTop="@dimen/common_margin"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/join_pw"
+                        android:layout_width="@dimen/tab_size_large"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:text="비밀번호"
+                        style="@style/Text.textBoldStyle"
+                        />
+
+                    <EditText
+                        android:id="@+id/join_pw_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:background="@null"
+                        android:layout_weight="1"
+                        android:padding="@dimen/narrow_margin"
+                        style="@style/Text.textStyle"
+                        android:layout_marginLeft="@dimen/narrow_margin"
+                        android:hint="PassWord" >
+                    </EditText>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/common_margin"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/join_pw_check"
+                        android:layout_width="@dimen/tab_size_large"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:text="비밀번호 확인"
+                        style="@style/Text.textBoldStyle"
+                        />
+
+                    <EditText
+                        android:id="@+id/join_pw_check_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:background="@null"
+                        android:layout_weight="1"
+                        android:padding="@dimen/narrow_margin"
+                        style="@style/Text.textStyle"
+                        android:layout_marginLeft="@dimen/narrow_margin"
+                        android:hint="PassWord" >
+                    </EditText>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/join_pw_correct_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="@dimen/narrow_margin"
-                    style="@style/Text.textStyle"
-                    android:layout_marginLeft="@dimen/narrow_margin"
-                    android:hint="PassWord" >
-                </EditText>
+                    android:paddingTop="10dp"
+                    android:text="비밀번호가 일치합니다"
+                    android:layout_marginLeft="@dimen/common_margin"
+                    style="@style/Text.textBoldRedStyle"
+                    />
+
+
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/join_pw_correct_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingTop="10dp"
-                android:text="비밀번호가 일치합니다"
-                android:layout_marginLeft="@dimen/common_margin"
-                style="@style/Text.textBoldRedStyle"
-                />
-
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/common_margin"
+                android:background="@drawable/border"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/common_margin"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/join_email"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/tab_size"
                         android:layout_height="wrap_content"
                         android:text="이메일"
                         style="@style/Text.textBoldStyle"
@@ -208,11 +222,11 @@
 
                     <TextView
                         android:id="@+id/join_timer"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/tab_size"
                         android:layout_height="wrap_content"
                         android:text="3 : 00"
                         android:layout_marginLeft="@dimen/common_margin"
-                        android:layout_marginRight="@dimen/common_margin"
+                        android:layout_marginRight="@dimen/narrow_margin"
                         style="@style/Text.textBoldStyle"/>
 
                     <EditText
@@ -244,50 +258,63 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:background="@drawable/border"
+                android:layout_marginTop="@dimen/common_margin"
+                >
 
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SNS계정"
-                    android:layout_marginLeft="@dimen/common_margin"
-                    style="@style/Text.textBoldStyle"/>
 
-                <RadioGroup
-                    android:id="@+id/join_sns_radio"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/common_margin"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/narrow_margin"
                     android:orientation="horizontal">
 
-                    <RadioButton
-                        android:id="@+id/join_sns_p"
+                    <TextView
+                        android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="유" />
-
-                    <RadioButton
-                        android:id="@+id/join_sns_n"
+                        android:text="SNS계정"
                         android:layout_marginLeft="@dimen/common_margin"
-                        android:layout_width="wrap_content"
+                        style="@style/Text.textBoldStyle"/>
+
+                    <RadioGroup
+                        android:id="@+id/join_sns_radio"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="무" />
-                </RadioGroup>
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/join_sns_p"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="유" />
+
+                        <RadioButton
+                            android:id="@+id/join_sns_n"
+                            android:layout_marginLeft="@dimen/common_margin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="무" />
+                    </RadioGroup>
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/join_sns_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:theme="@style/EditTextTheme"
+                    style="@style/Text.textStyle"
+                    android:layout_marginLeft="@dimen/common_margin"
+                    android:layout_marginRight="@dimen/common_margin"
+                    android:layout_marginBottom="@dimen/common_margin"
+                    android:hint="SNS주소를 입력해주세요" />
+
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/join_sns_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:theme="@style/EditTextTheme"
-                style="@style/Text.textStyle"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginRight="@dimen/common_margin"
-
-                android:hint="SNS주소를 입력해주세요" />
 
             <Button
                 android:id="@+id/join_btn"
