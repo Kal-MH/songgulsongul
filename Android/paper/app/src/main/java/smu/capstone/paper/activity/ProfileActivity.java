@@ -370,8 +370,9 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent4);
                 break;
 
-            case R.id.profile_edit_pw:
-                Intent intent5 = new Intent(ProfileActivity.this, ModifyPasswordActivity.class);
+            case R.id.profile_account_edit:
+                Intent intent5 = new Intent(ProfileActivity.this , EditAccountActivity.class);
+
                 startActivity(intent5);
                 break;
         }

@@ -1,5 +1,6 @@
 const http = require("http");
-const axios = require('axios');
+
+const crypto = require('crypto');
 
 const smtpTransport = require("../config/email");
 const statusCode = require("../config/serverStatusCode");
@@ -320,6 +321,46 @@ const apiController = {
             }
         })
     },
+    postCheckPassword : function (req, res) {
+        const userId = req.params.userid;
+        const password = req.body.password;
+
+        if (userId == undefined || password == undefined || password == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR, //no data
+            })
+        } else {
+            var postSql = `select * from user where id = ${userId};`;
+            connection.query(postSql, function (err, result) {
+                if (err){
+                    console.log(err);
+                    res.json({
+                        'code' : statusCode.SERVER_ERROR,
+                    })
+                } else {
+                    if (result.length == 0){
+                        res.json({
+                            'code' : statusCode.CLIENT_ERROR, //no user
+                        })
+                    } else {
+                        crypto.pbkdf2(password, result[0].salt, 100, 64, 'sha512', function (err, key) {
+                            if (key.toString('base64') !== result[0].password) {
+                                res.json({
+                                    'code': statusCode.CLIENT_ERROR, //incorrect message
+                                })
+                            } else {
+                                res.json({
+                                    'code': statusCode.OK,
+                                })
+                            }
+                        })
+                    }
+                }
+            })
+        }
+
+
+    }
 }
 
 module.exports = apiController;
