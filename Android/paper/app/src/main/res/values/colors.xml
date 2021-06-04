@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#7C7880</color>
+    <color name="colorPrimaryDark">#3BA1A1A1</color>
+    <color name="colorAccent">#DCDBE1</color>
 
     <color name="purpleGray">#DCDBE1</color>
+    <color name="purpleGrayDark">#AAA9AE</color>
     <color name="warning">#9E1010</color>
 
     <color name = "backgroundGrey" >#EAEAE9</color>

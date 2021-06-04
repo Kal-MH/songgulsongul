@@ -8,10 +8,18 @@
         <item name="colorAccent">@color/inkGrey</item>
     </style>
 
+    <!-- Custom Theme -->
     <style name="EditTextTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/selected</item>
+        <item name="colorPrimary">@color/purpleGray</item>
     </style>
 
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:fontFamily">@font/ibm_plex_sans_midium</item>
+    </style>
+
+
+    <!-- Text Style -->
     <style name="Text.textSmallStyle" parent="android:TextAppearance">
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">@dimen/text_size_10</item>
@@ -66,10 +74,6 @@
         <item name="android:textColor">@color/inkGrey</item>
         <item name="android:fontFamily">@font/ibm_plex_sans_light</item>
         <item name="android:includeFontPadding">false</item>
-    </style>
-
-    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:fontFamily">@font/ibm_plex_sans_midium</item>
     </style>
 
 
