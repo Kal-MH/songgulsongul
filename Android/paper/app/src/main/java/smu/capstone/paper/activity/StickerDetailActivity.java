@@ -145,7 +145,7 @@ public class StickerDetailActivity extends AppCompatActivity {
         price = sticker.get(0).getPrice();
         sticker_price.setText(price + "p");
         Glide.with(this).load(RetrofitClient.getBaseUrl() + sticker.get(0).getImage()).into(sticker_img);
-        sticker_com.append("\n");
+        sticker_com.append("\n\n\n");
         sticker_com.append(sticker.get(0).getText());
         Glide.with(this).load(RetrofitClient.getBaseUrl() + user.get(0).getImg_profile()).into(sticker_profile);
         sticker_seller.setText(user.get(0).getLogin_id());
