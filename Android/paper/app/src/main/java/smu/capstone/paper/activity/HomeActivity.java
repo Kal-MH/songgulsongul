@@ -43,7 +43,7 @@ public class HomeActivity extends AppCompatActivity {
         actionBar.setTitle("송글손글");
 
 
-        bottomNavigationView = findViewById(R.id.home_tap);
+        bottomNavigationView = findViewById(R.id.home_tab);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

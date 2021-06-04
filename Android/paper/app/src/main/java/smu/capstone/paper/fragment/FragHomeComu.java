@@ -1,6 +1,7 @@
 package smu.capstone.paper.fragment;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostSearchActivity;
-import smu.capstone.paper.adapter.HomeComuAdapter;
+import smu.capstone.paper.adapter.PostImageRVAdapter;
 import smu.capstone.paper.responseData.Post;
 import smu.capstone.paper.responseData.PostListResponse;
 import smu.capstone.paper.server.RetrofitClient;
@@ -41,7 +44,7 @@ public class FragHomeComu extends Fragment {
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
 
-    HomeComuAdapter adapter;
+    PostImageRVAdapter adapter;
     List<Post> postData;
 
     int lastId;
@@ -95,6 +98,14 @@ public class FragHomeComu extends Fragment {
                 return false;
             }
         });
+
+
+        int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        TextView searchText = (TextView) searchView.findViewById(id);
+        Typeface tf = ResourcesCompat.getFont(getContext(), R.font.ibm_plex_sans_light);
+        searchText.setTypeface(tf);
+
+
 
         GetCommunityData();
 
@@ -213,7 +224,7 @@ public class FragHomeComu extends Fragment {
         if(postData.size() == 0){
             recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
         }
-        adapter = new HomeComuAdapter(getContext(), postData);
+        adapter = new PostImageRVAdapter(getContext(), postData);
 
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 6);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

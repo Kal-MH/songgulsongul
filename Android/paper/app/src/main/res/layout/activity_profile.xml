@@ -6,86 +6,110 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundLightGrey"
     >
 
 
     <androidx.appcompat.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/profile_toolbar"
-        android:background="@color/cardview_shadow_start_color"
-        >
-
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_size"
+        android:theme="@style/ToolbarTheme"
+        android:background="@color/backgroundGrey">
     </androidx.appcompat.widget.Toolbar>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/narrow_margin">
 
         <smu.capstone.paper.layout.RoundImageView
             android:id="@+id/profile_userimage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="20dp"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_width="@dimen/itemTag_size"
+            android:layout_height="@dimen/itemTag_size"
+
+            android:layout_marginStart="@dimen/common_margin"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
+            android:id="@+id/profile_pointview"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_margin"
+            android:layout_marginBottom="@dimen/common_margin"
             android:layout_toRightOf="@id/profile_userimage"
-            android:gravity="center">
+            android:layout_marginLeft="@dimen/follow_margin"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/profile_followFeeds"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <LinearLayout
-                android:id="@+id/profile_pointview"
-                android:layout_width="0dp"
+            <TextView
+                style="@style/Text.textStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:text="내 포인트" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="내 포인트" />
-
-                <TextView
-                    android:id="@+id/profile_point"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="0p" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/profile_point"
+                style="@style/Text.textBoldStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/narrow_margin"
+                android:text="0p" />
         </LinearLayout>
 
         <Button
             android:id="@+id/profile_follow_btn"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/profile_userimage"
+            android:layout_height="@dimen/tab_size_small"
+
+            android:background="@color/purpleGray"
             android:text="팔로우"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            style="@style/Text.textBoldStyle"
+
+
+            android:layout_marginLeft="@dimen/follow_margin"
+            android:layout_marginBottom="@dimen/common_margin"
+            android:layout_marginRight="@dimen/narrow_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            />
 
         <Button
             android:id="@+id/profile_unfollow_btn"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/profile_userimage"
+            android:layout_height="@dimen/tab_size_small"
+
+            android:background="@color/purpleGray"
             android:text="언팔로우"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            style="@style/Text.textBoldStyle"
+
+            android:layout_marginLeft="@dimen/follow_margin"
+            android:layout_marginRight="@dimen/narrow_margin"
+            android:layout_marginBottom="@dimen/common_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/profile_follow_btn"
+            android:id="@+id/profile_followFeeds"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@id/profile_userimage"
-            android:gravity="center">
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/profile_userimage"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -96,11 +120,13 @@
 
                 <TextView
                     android:id="@+id/profile_feed_cnt"
+                    style="@style/Text.textBoldStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0" />
 
                 <TextView
+                    style="@style/Text.textStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="피드" />
@@ -123,11 +149,13 @@
 
                     <TextView
                         android:id="@+id/profile_follow_cnt"
+                        style="@style/Text.textBoldStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0" />
 
                     <TextView
+                        style="@style/Text.textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="팔로우" />
@@ -142,11 +170,13 @@
 
                     <TextView
                         android:id="@+id/profile_follower_cnt"
+                        style="@style/Text.textBoldStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0" />
 
                     <TextView
+                        style="@style/Text.textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="팔로워" />
@@ -154,63 +184,61 @@
 
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/narrow_margin"
+        android:layout_marginTop="@dimen/common_margin"
         android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/profile_intro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="@dimen/common_margin"
+            style="@style/Text.textStyle"
             android:text="소개글" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/narrow_margin"
         android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/profile_snsurl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="@dimen/common_margin"
+            style="@style/Text.textStyle"
             android:text="sns url" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="34dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:layout_margin="@dimen/narrow_margin"
         android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/Text.textBoldStyle"
             android:text="게시글" />
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/profile_grid"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profile_rv"
+        android:layout_margin="@dimen/narrow_margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="90dp"
-        android:fadeScrollbars="false"
-        android:gravity="center"
-        android:horizontalSpacing="5dp"
-        android:numColumns="3"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="5dp"
-        android:visibility="visible"
-        tools:layout_editor_absoluteY="108dp"
-        tools:listitem="@layout/post_image_item" />
+        tools:item="@layout/post_image_item"  >
 
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

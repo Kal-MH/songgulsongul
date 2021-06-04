@@ -180,10 +180,10 @@ public class StickerDetailActivity extends AppCompatActivity {
         price = sticker.get(0).getPrice();
         sticker_price.setText(price + "p");
 
+
         img_path = RetrofitClient.getBaseUrl() + sticker.get(0).getImage();
         Glide.with(this).load(img_path).into(sticker_img);
-
-        sticker_com.append("\n");
+        sticker_com.append("\n\n\n");
         sticker_com.append(sticker.get(0).getText());
 
         Glide.with(this).load(RetrofitClient.getBaseUrl() + user.get(0).getImg_profile()).into(sticker_profile);

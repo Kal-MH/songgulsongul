@@ -2,7 +2,6 @@ package smu.capstone.paper.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +18,9 @@ import java.util.List;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.responseData.Post;
-import smu.capstone.paper.responseData.PostFeed;
 import smu.capstone.paper.server.RetrofitClient;
 
-public class HomeComuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PostImageRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     private final int VIEW_TYPE_ITEM = 0;
@@ -31,7 +29,7 @@ public class HomeComuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     Context context;
     List<Post> items;
 
-    public HomeComuAdapter(Context context, List<Post> items){
+    public PostImageRVAdapter(Context context, List<Post> items){
         this.context = context;
         this.items = items;
     }
@@ -45,11 +43,11 @@ public class HomeComuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType == VIEW_TYPE_ITEM){
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_image_item, parent, false);
-            return new HomeComuAdapter.ItemViewHolder(view);
+            return new PostImageRVAdapter.ItemViewHolder(view);
         }
         else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
-            return new HomeComuAdapter.LoadingViewHolder(view);
+            return new PostImageRVAdapter.LoadingViewHolder(view);
         }
 
     }
@@ -61,7 +59,7 @@ public class HomeComuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        if (holder instanceof HomeComuAdapter.ItemViewHolder) {
+        if (holder instanceof PostImageRVAdapter.ItemViewHolder) {
             Glide.with(context).load(RetrofitClient.getBaseUrl()+ items.get(position).getImage())
                     .into(((ItemViewHolder) holder).img); // 게시물 사진 세팅
 
@@ -77,11 +75,11 @@ public class HomeComuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
         }
         else {//가독성을 위해 적어놓음?..
-            showLoadingView((HomeComuAdapter.LoadingViewHolder) holder, position);
+            showLoadingView((PostImageRVAdapter.LoadingViewHolder) holder, position);
         }
     }
 
-    private void showLoadingView(HomeComuAdapter.LoadingViewHolder holder, int position) {
+    private void showLoadingView(PostImageRVAdapter.LoadingViewHolder holder, int position) {
 
     }
 

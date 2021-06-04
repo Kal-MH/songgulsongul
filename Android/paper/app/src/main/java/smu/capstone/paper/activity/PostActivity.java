@@ -1,13 +1,16 @@
 package smu.capstone.paper.activity;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +30,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +39,9 @@ import com.skydoves.balloon.ArrowOrientation;
 import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -61,8 +68,8 @@ import smu.capstone.paper.server.StatusCode;
 
 public class PostActivity extends AppCompatActivity {
     ImageButton post_setting_btn, post_like_btn, post_keep_btn;
-    ListView post_cmt_list;
-    RecyclerView post_hashtag_rv, post_itemtag_rv;
+    RecyclerView post_hashtag_rv, post_itemtag_rv,post_cmt_list;
+
 
     EditText post_input;
     Button post_write;
@@ -73,6 +80,11 @@ public class PostActivity extends AppCompatActivity {
 
     TextView post_user_id, post_like_cnt, post_cmt_cnt, post_text, post_date;
     ImageView post_pic, post_profile, post_ccl_cc, post_ccl_a, post_ccl_nc, post_ccl_nd, post_ccl_sa;
+
+
+    Date today = new Date();
+    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar rightNow = Calendar.getInstance();
 
     int status;
     final int MY = 1;
@@ -92,6 +104,10 @@ public class PostActivity extends AppCompatActivity {
     List<Comment> CommentsData;
     Ccl ccl;
 
+
+    Typeface typeface;
+    Balloon  balloon, balloon2, balloon3, balloon4, balloon5;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +115,7 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
 
         {
+            typeface = ResourcesCompat.getFont(this, R.font.ibm_plex_sans_light);
             post_write = (Button) findViewById(R.id.post_write);
             post_keep_btn=(ImageButton)findViewById(R.id.post_keep_btn);
             post_like_btn = (ImageButton) findViewById(R.id.post_like_btn);
@@ -117,9 +134,12 @@ public class PostActivity extends AppCompatActivity {
             post_ccl_nd = findViewById(R.id.post_ccl_nd);
             post_ccl_sa = findViewById(R.id.post_ccl_sa);
             post_itemtag_rv = findViewById(R.id.post_itemtag_rv);
-            post_cmt_list = (ListView) findViewById(R.id.post_cmt_list);
+            post_cmt_list =  findViewById(R.id.post_cmt_list);
             post_hashtag_rv = findViewById(R.id.post_hashtag_rv);
-            post_cmt_list = findViewById(R.id.post_cmt_list);
+
+            Typeface tf = ResourcesCompat.getFont(this, R.font.ibm_plex_sans_light);
+            post_input.setTypeface(tf);
+
         }
 
         //툴바 세팅
@@ -127,6 +147,7 @@ public class PostActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
+        actionBar.setTitle("세부 게시글");
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
 
@@ -326,11 +347,26 @@ public class PostActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
 
+            @SuppressLint("ResourceAsColor")
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.length() > 0) {
                     post_write.setClickable(true);
-                    post_write.setBackgroundColor(0x9A93C8B4);
+                    post_write.setTextColor(R.color.inkGrey);
+                    post_write.setTextSize(16);
+                    SpannableString spanString = new SpannableString("게시");
+                    spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+                    post_write.setText(spanString);
+
+                }
+                else{
+                    post_write.setClickable(false);
+                    post_write.setTextColor(R.color.inkGreyTransparent);
+                    post_write.setTextSize(14);
+                    SpannableString spanString = new SpannableString("게시");
+                    spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
+                    post_write.setText(spanString);
+
                 }
             }
         });
@@ -384,170 +420,8 @@ public class PostActivity extends AppCompatActivity {
         post_user_id.setOnClickListener(goProfile);
         post_profile.setOnClickListener(goProfile);
 
-        post_cmt_list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                Log.d("comment", "long click!" +  CommentsData.get(i).getUser_id() + " : "
-                     + LoginSharedPreference.getUserId(PostActivity.this) );
-                if( CommentsData.get(i).getUser_id() == LoginSharedPreference.getUserId(PostActivity.this) ){
-                    //댓글 삭제 알림 팝업
-                    Log.d("comment", "삭제해보자요");
-                    new AlertDialog.Builder(PostActivity.this)
-                            .setTitle("경고")
-                            .setMessage("댓글을 삭제하시겠습니까?")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    deleteComment(CommentsData.get(i).getId());
-                                }
-                            })
-                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                }
-                            }
-                            )
-                            .show();
-                }
-                return false;
-            }
-        });
-
-        final Balloon balloon = new Balloon.Builder(getApplicationContext())
-                .setArrowSize(10)
-                .setArrowOrientation(ArrowOrientation.TOP)
-                .setArrowPosition(0.5f)
-                .setWidthRatio(0.2f)
-                .setHeight(65)
-                .setTextSize(15f)
-                .setCornerRadius(4f)
-                .setAlpha(0.9f)
-                .setText("공유 허용")
-                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.design_default_color_on_secondary))
-                .setBalloonAnimation(BalloonAnimation.FADE)
-                .build();
-
-        post_ccl_cc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                balloon.showAlignBottom(post_ccl_cc);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        balloon.dismiss();
-                    }
-                }, 2000);
-            }
-        });
-
-        final Balloon balloon2 = new Balloon.Builder(getApplicationContext())
-                .setArrowSize(10)
-                .setArrowOrientation(ArrowOrientation.TOP)
-                .setArrowPosition(0.5f)
-                .setWidthRatio(0.2f)
-                .setHeight(65)
-                .setTextSize(15f)
-                .setCornerRadius(4f)
-                .setAlpha(0.9f)
-                .setText("동일 조건 변경 허용")
-                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.design_default_color_on_secondary))
-                .setBalloonAnimation(BalloonAnimation.FADE)
-                .build();
-
-        post_ccl_a.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                balloon2.showAlignBottom(post_ccl_a);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        balloon2.dismiss();
-                    }
-                }, 2000);
-            }
-        });
-
-        final Balloon balloon3 = new Balloon.Builder(getApplicationContext())
-                .setArrowSize(10)
-                .setArrowOrientation(ArrowOrientation.TOP)
-                .setArrowPosition(0.5f)
-                .setWidthRatio(0.2f)
-                .setHeight(65)
-                .setTextSize(15f)
-                .setCornerRadius(4f)
-                .setAlpha(0.9f)
-                .setText("상업적 이용 비허용")
-                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.design_default_color_on_secondary))
-                .setBalloonAnimation(BalloonAnimation.FADE)
-                .build();
-
-        post_ccl_nc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                balloon3.showAlignBottom(post_ccl_nc);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        balloon3.dismiss();
-                    }
-                }, 2000);
-            }
-        });
-
-        final Balloon balloon4 = new Balloon.Builder(getApplicationContext())
-                .setArrowSize(10)
-                .setArrowOrientation(ArrowOrientation.TOP)
-                .setArrowPosition(0.5f)
-                .setWidthRatio(0.2f)
-                .setHeight(65)
-                .setTextSize(15f)
-                .setCornerRadius(4f)
-                .setAlpha(0.9f)
-                .setText("2차 변경 비허용")
-                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.design_default_color_on_secondary))
-                .setBalloonAnimation(BalloonAnimation.FADE)
-                .build();
-
-        post_ccl_nd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                balloon4.showAlignBottom(post_ccl_nd);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        balloon4.dismiss();
-                    }
-                }, 2000);
-            }
-        });
-
-        final Balloon balloon5 = new Balloon.Builder(getApplicationContext())
-                .setArrowSize(10)
-                .setArrowOrientation(ArrowOrientation.TOP)
-                .setArrowPosition(0.5f)
-                .setWidthRatio(0.2f)
-                .setHeight(65)
-                .setTextSize(15f)
-                .setCornerRadius(4f)
-                .setAlpha(0.9f)
-                .setText("출처 표기")
-                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.design_default_color_on_secondary))
-                .setBalloonAnimation(BalloonAnimation.FADE)
-                .build();
-
-        post_ccl_sa.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                balloon5.showAlignBottom(post_ccl_sa);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        balloon5.dismiss();
-                    }
-                }, 2000);
-            }
-        });
+        // ccl 설명 Ballon 세팅
+        setCCL_Ballons();
     }
 
 
@@ -601,7 +475,142 @@ public class PostActivity extends AppCompatActivity {
 
 
     }
+    public void setCCL_Ballons(){
+        balloon = new Balloon.Builder(getApplicationContext())
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPosition(0.5f)
+                .setWidthRatio(0.2f)
+                .setTextSize(10f)
+                .setCornerRadius(4f)
+                .setAlpha(0.9f)
+                .setText("공유 허용")
+                .setTextTypeface(typeface)
+                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.inkGrey))
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build();
 
+        post_ccl_cc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balloon.showAlignBottom(post_ccl_cc);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        balloon.dismiss();
+                    }
+                }, 2000);
+            }
+        });
+
+        balloon2 = new Balloon.Builder(getApplicationContext())
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPosition(0.5f)
+                .setWidthRatio(0.2f)
+                .setTextSize(10f)
+                .setCornerRadius(4f)
+                .setAlpha(0.9f)
+                .setText("동일 조건 변경 허용")
+                .setTextTypeface(typeface)
+                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.inkGrey))
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build();
+
+        post_ccl_a.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balloon2.showAlignBottom(post_ccl_a);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        balloon2.dismiss();
+                    }
+                }, 2000);
+            }
+        });
+
+        balloon3 = new Balloon.Builder(getApplicationContext())
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPosition(0.5f)
+                .setWidthRatio(0.2f)
+                .setTextSize(10f)
+                .setCornerRadius(4f)
+                .setAlpha(0.9f)
+                .setText("상업적 이용 비허용")
+                .setTextTypeface(typeface)
+                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.inkGrey))
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build();
+
+        post_ccl_nc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balloon3.showAlignBottom(post_ccl_nc);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        balloon3.dismiss();
+                    }
+                }, 2000);
+            }
+        });
+
+        balloon4 = new Balloon.Builder(getApplicationContext())
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPosition(0.5f)
+                .setWidthRatio(0.2f)
+                .setTextSize(10f)
+                .setCornerRadius(4f)
+                .setAlpha(0.9f)
+                .setText("2차 변경 비허용")
+                .setTextTypeface(typeface)
+                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.inkGrey))
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build();
+
+        post_ccl_nd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balloon4.showAlignBottom(post_ccl_nd);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        balloon4.dismiss();
+                    }
+                }, 2000);
+            }
+        });
+
+        balloon5 = new Balloon.Builder(getApplicationContext())
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPosition(0.5f)
+                .setWidthRatio(0.2f)
+                .setTextSize(10f)
+                .setCornerRadius(4f)
+                .setAlpha(0.9f)
+                .setText("출처 표기")
+                .setTextTypeface(typeface)
+                .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.inkGrey))
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .build();
+
+        post_ccl_sa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                balloon5.showAlignBottom(post_ccl_sa);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        balloon5.dismiss();
+                    }
+                }, 2000);
+            }
+        });
+    }
     public boolean setPostData(){
         postData = data.getPost();
         userData = data.getUser();
@@ -614,7 +623,22 @@ public class PostActivity extends AppCompatActivity {
         Glide.with(this).load(RetrofitClient.getBaseUrl() + img_path).into(post_profile);
 
         // 게시글 정보 세팅
-        post_date.setText(postData.getPost_date() + "\n" + postData.getPost_time());
+        if( date.format(today).equals((postData.getPost_date()))) {
+            int hour = Integer.parseInt(postData.getPost_time().substring(0,2));
+            if( hour != rightNow.get(Calendar.HOUR_OF_DAY) ){
+                post_date.setText((rightNow.get(Calendar.HOUR_OF_DAY) - hour)+"시간 전");
+            }
+            else {
+                int min = Integer.parseInt(postData.getPost_time().substring(3,5));
+                if( min == rightNow.get(Calendar.MINUTE) )
+                    post_date.setText("방금 게시됨");
+                else
+                    post_date.setText((rightNow.get(Calendar.MINUTE) - min) + "분 전");
+            }
+        }
+        else
+            post_date.setText( postData.getPost_date()); //게시 날짜
+
         post_text.setText(postData.getText());
         post_image = postData.getImage();
         Glide.with(this).load(RetrofitClient.getBaseUrl() + post_image).into(post_pic);
@@ -675,8 +699,43 @@ public class PostActivity extends AppCompatActivity {
         CommentsData = data.getComments();
         post_cmt_cnt.setText("댓글 " +CommentsData.size()+"");
         //코멘트 어뎁터 설정
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        post_cmt_list.setLayoutManager(layoutManager);
+
         cmt_adapter = new PostCmtAdapter(post_cmt_list.getContext(), CommentsData );
+        cmt_adapter.setOnItemLongClickListener(new PostCmtAdapter.OnItemLongClickEventListener() {
+            @Override
+            public void onItemLongClick(View a_view, final int a_position) {
+                Log.d("comment", "long click!" +  CommentsData.get(a_position).getUser_id() + " : "
+                        + LoginSharedPreference.getUserId(PostActivity.this) );
+                if( CommentsData.get(a_position).getUser_id() == LoginSharedPreference.getUserId(PostActivity.this) ){
+                    //댓글 삭제 알림 팝업
+                    Log.d("comment", "삭제해보자요");
+                    new AlertDialog.Builder(PostActivity.this)
+                            .setTitle("경고")
+                            .setMessage("댓글을 삭제하시겠습니까?")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    deleteComment(CommentsData.get(a_position).getId());
+                                }
+                            })
+                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        }
+                                    }
+                            )
+                            .show();
+                }
+            }
+        });
+
+
         post_cmt_list.setAdapter(cmt_adapter);
+
         return true;
     }
     public boolean setStatusData(){
@@ -703,7 +762,6 @@ public class PostActivity extends AppCompatActivity {
         }
         return true;
     }
-
     public void deleteComment(int id){
         serviceApi.DeleteComment(post_id,id).enqueue(new Callback<CodeResponse>() {
             @Override
