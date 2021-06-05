@@ -81,7 +81,7 @@ public class AddItemtagActivity extends Activity {
 
 
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        int width = (int)(display.getWidth()* 0.9);
+        int width = (int)(display.getWidth()* 0.98);
         int height = (int)(display.getHeight() * 0.9);
         getWindow().getAttributes().width = width;
         getWindow().getAttributes().height = height;
