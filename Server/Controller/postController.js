@@ -423,55 +423,6 @@ const postController = {
             }
         })
     },
-    postDownload: function (req, res) {
-        var postId = req.query.postid;
-
-        var sql = `select image from post where id = ${postId};`;
-        connection.query(sql, function (err, result) {
-            if (err) {
-                console.log(err);
-                res.json({
-                    'code': statusCode.SERVER_ERROR
-                })
-            } else {
-                //s3로 확장하게 되면 경로설정 수정할 필요성 있음
-                var file = `${result[0].image}`;
-                console.log(file);
-
-                res.json({
-                    'code': statusCode.OK,
-                    'data': {
-                        'imgPath': file
-                    }
-                })
-            }
-
-            //이미지 확장자를 체크하기 위한 다운로드 코드
-            // try{
-            //     if (fs.existsSync(file)){
-            //         var fileName = path.basename(file);
-            //         var mimeType = mime.getType(file);
-
-            //         console.log(fileName);
-            //         console.log(mimeType);
-
-            //         console.log(fileName);
-            //         res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
-            //         res.setHeader('Content-type', mimeType);
-
-            //         var fileStream = fs.createReadStream(file);
-            //         fileStream.pipe(res);
-            //     } else {
-            //         res.send('no file exists');
-            //         return ;
-            //     }
-            // } catch(e){
-            //     console.log(e);
-            //     res.send('error occurs');
-            //     return ;
-            // }
-        })
-    }
 }
 
 module.exports = postController;

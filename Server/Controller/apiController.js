@@ -139,7 +139,7 @@ const apiController = {
                 var apiLikeSql = "";
                 if (result.length == 0){
                     //사용자가 좋아요를 누른 상황
-                    apiLikeSql = `insert into likes (post_id, user_id) values (${postId}, ${loggedUser});`;    
+                    apiLikeSql = `insert into likes (post_id, user_id) values (${postId}, ${loggedUser});`;
                 } else {
                     //사용자가 좋아요 취소를 누른 상황
                     apiLikeSql = `delete from likes where post_id=${postId} and user_id=${loggedUser};`;
@@ -156,7 +156,7 @@ const apiController = {
                 })
             }
         })
-        
+
     },
     setPostKeep : function (req, res) {
         const postId = req.query.postid;
@@ -195,7 +195,7 @@ const apiController = {
                 })
             }
         })
-        
+
     },
     insertPostComment : function (req, res) {
         var postId = req.body.postid;
@@ -263,12 +263,12 @@ const apiController = {
             }
             const lastYearMonthDate = generateCurrentDate();
             if (result[0].last_login != lastYearMonthDate) {
-                if (attendanceCheck(req, res, userId) == false) { // 업데이트 실패함 
+                if (attendanceCheck(req, res, userId) == false) { // 업데이트 실패함
                     res.json({
                         'code': statusCode.SERVER_ERROR
                     })
                 }
-                else { //출석체크 성공         
+                else { //출석체크 성공
                     res.json({
                         'code': statusCode.OK,
                         'id': userId
@@ -300,13 +300,13 @@ const apiController = {
 
             const lastYearMonthDate = generateCurrentDate();
             if (result[0].last_login != lastYearMonthDate) {
-                if (attendanceCheck(req, res, userId) == false) { //업데이트 실패함 
+                if (attendanceCheck(req, res, userId) == false) { //업데이트 실패함
                     res.json({
                         'code': statusCode.SERVER_ERROR
                     })
                     return;
                 }
-                else { //출석체크 성공         
+                else { //출석체크 성공
                     res.json({
                         'code': statusCode.OK,
                         'id': userId
@@ -322,7 +322,7 @@ const apiController = {
         })
     },
     postCheckPassword : function (req, res) {
-        const userId = req.params.userid;
+        const userId = req.body.userid;
         const password = req.body.password;
 
         if (userId == undefined || password == undefined || password == ""){

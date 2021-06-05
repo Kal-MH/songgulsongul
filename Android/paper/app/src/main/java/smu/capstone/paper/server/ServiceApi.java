@@ -21,6 +21,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import smu.capstone.paper.data.PostEditData;
 import smu.capstone.paper.data.ProfileEditData;
+import smu.capstone.paper.data.PwEditData;
 import smu.capstone.paper.responseData.CodeResponse;
 
 import smu.capstone.paper.data.CommentData;
@@ -54,6 +55,18 @@ public interface ServiceApi {
     // 인증 이메일 보내기
     @POST("/api/email-auth")
     Call<JsonObject> EmailAuth(@Body EmailData data);
+
+    // 아이디 변경
+    @GET("/user/id-change")
+    Call<CodeResponse> IdChange(@Query("login_id") String login_id, @Query("new_id") String new_id);
+
+    // 비밀번호 확인
+    @POST("/api/check/password")
+    Call<CodeResponse> PwCheck(@Body PwEditData data);
+
+    // 비밀번호 변경
+    @POST("/user/pw-change")
+    Call<CodeResponse> PwChange(@Body PwEditData data);
 
     //좋아요
     @GET("/api/like")
@@ -166,10 +179,6 @@ public interface ServiceApi {
     // 게시글 삭제
     @GET("/post/delete")
     Call<CodeResponse> PostDelete(@Query("userid") int user_id, @Query("postid") int post_id);
-
-    // 이미지 다운로드
-    @GET("/post/download")
-    Call<JsonObject> PostImageDownload(@Query("postid") int post_id);
 
     // 마켓 메인
     @GET("/market/main")
