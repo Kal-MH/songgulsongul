@@ -6,22 +6,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/edit_account_pwtext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="현재 비밀번호"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="20dp"></TextView>
-        <EditText
-            android:id="@+id/account_pw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:hint="password">
+            android:text="현재 비밀번호"></TextView>
 
-        </EditText>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/account_pw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:inputType="textPassword"
+                android:hint="password">
+
+            </EditText>
+
+            <Button
+                android:id="@+id/account_pw_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:text="확인" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/edit_account_newpw"
             android:layout_width="match_parent"
@@ -35,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
+            android:inputType="textPassword"
             android:hint="new password">
 
         </EditText>
@@ -51,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
+            android:inputType="textPassword"
             android:hint="new password">
 
         </EditText>

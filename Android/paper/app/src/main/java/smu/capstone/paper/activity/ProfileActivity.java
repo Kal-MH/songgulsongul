@@ -374,6 +374,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent5 = new Intent(ProfileActivity.this , EditAccountActivity.class);
 
                 startActivity(intent5);
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -79,6 +79,7 @@
              }
 
              profile_info.push(prodata);
+             console.log(profile_info);
              res.json({
                'code': resultCode,
                'followerCnt': follower_cnt,
@@ -349,9 +350,11 @@
 
      // 아이디 변경
      userIdChange : function(req, res) {
-       const id = req.body.login_id;
-       const new_id = req.body.new_id;
+       const id = req.query.login_id;
+       const new_id = req.query.new_id;
        var params = [new_id, id];
+
+       console.log(id, new_id);
 
        var sql = 'UPDATE user SET login_id = ? WHERE login_id = ?;';
        connection.query(sql, params, function(err, rows){
@@ -372,7 +375,7 @@
 
      // 비밀번호 변경
      userPwChange : function(req, res){
-       const id = req.body.login_id;
+       const id = req.body.userid;
        const pw = req.body.password;
        var resultCode = statusCode.SERVER_ERROR;
 
@@ -393,7 +396,7 @@
            var hashedPassword = key.toString('base64');
            var salt = buf.toString('base64');
 
-           var sql = 'UPDATE user SET password = ?, salt = ? WHERE login_id = ?;';
+           var sql = 'UPDATE user SET password = ?, salt = ? WHERE id = ?;';
            var params = [hashedPassword, salt, id];
            connection.query(sql, params, function(err, rows){
              if(err){
@@ -413,11 +416,9 @@
 
      // 프로필수정
      profileEdit : function(req, res) {
-       // const is_id_check = req.body.id_check_flag;
        const is_sns_check = Number(req.body.sns_check_flag);
        const is_img_check = Number(req.body.img_check_flag);
        const id = req.body.login_id;
-       // const new_id = req.body.new_id; // 변경된 아이디
        const new_intro = req.body.new_intro;
        const new_sns = req.body.new_SNS;
        var new_image;
@@ -489,13 +490,6 @@
              param.push(new_image, id)
              check_cnt += 1;
            }
-
-           // 기존 아이디와 비교 후 db갱신
-           // if(Number(is_id_check) === 1){
-           //     sql += 'UPDATE user SET login_id = ? WHERE login_id = ?;';
-           //     param.push(new_id, id)
-           //     check_cnt += 1;
-           // }
 
            if(check_cnt > 0){
             connection.query(sql, param, function(err, rows){

@@ -70,62 +70,7 @@
                 android:layout_margin="@dimen/common_margin"
                 android:orientation="vertical"
                 >
-
-                <LinearLayout
-                    android:layout_margin="@dimen/common_margin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/border"
-                    >
-
-                    <TextView
-                        android:id="@+id/edit_profile_idtext"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="아이디 변경"
-                        android:layout_marginLeft="@dimen/common_margin"
-                        android:layout_marginTop="@dimen/common_margin"
-                        style="@style/Text.textBoldStyle">
-
-                    </TextView>
-
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginRight="@dimen/common_margin"
-                        android:layout_marginLeft="@dimen/common_margin"
-                        android:layout_marginBottom="@dimen/common_margin"
-                        >
-
-                        <EditText
-                            android:id="@+id/profile_newid"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:theme="@style/EditTextTheme"
-                            style="@style/Text.textBoldStyle"
-                            android:background="@null"
-                            android:hint="userid">
-
-                        </EditText>
-
-                        <Button
-                            android:id="@+id/profile_check"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/common_margin"
-                            android:background="@color/purpleGray"
-                            style="@style/Text.textStyle"
-                            android:text="중복확인">
-
-                        </Button>
-
-                    </LinearLayout>
-
+                
                 </LinearLayout>
 
                <LinearLayout
