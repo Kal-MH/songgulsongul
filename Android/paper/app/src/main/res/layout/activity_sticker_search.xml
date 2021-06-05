@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/backgroundLightGrey"
     tools:context=".activity.StickerSearchActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/tab_size"
         android:id="@+id/sticker_search_toolbar"
-        android:background="@color/cardview_shadow_start_color"
+        android:theme="@style/ToolbarTheme"
+        android:background="@color/backgroundGrey"
         >
 
     </androidx.appcompat.widget.Toolbar>
@@ -24,9 +26,9 @@
             android:id="@+id/sticker_sort_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="@dimen/common_margin"
             android:text="최신순"
-            android:textSize="15dp"
+            style="@style/Text.textBoldStyle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,19 +37,18 @@
             android:id="@+id/sticker_sort_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="261dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginEnd="@dimen/common_margin"
             android:text="낮은가격순"
-            android:textSize="15dp"
+            style="@style/Text.textBoldStyle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sticker_sort_date"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_margin = "@dimen/common_margin"
         android:id="@+id/sticker_search_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

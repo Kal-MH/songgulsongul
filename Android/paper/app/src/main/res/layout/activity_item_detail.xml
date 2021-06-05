@@ -1,35 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".activity.ItemDetailActivity">
+    tools:context=".activity.ItemDetailActivity"
+    android:background="@drawable/border"
+    android:padding="@dimen/common_margin"
+    android:layout_margin="@dimen/common_margin"
+    >
 
     <TextView
         android:id="@+id/item_detail_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="@dimen/tab_size"
         android:text="제품명"
-        android:textSize="25dp" />
+        style="@style/Text.medium"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="@dimen/tab_size">
 
         <ImageView
             android:id="@+id/item_detail_pic"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/icon_size_large"
+            android:layout_height="@dimen/icon_size_large"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="@dimen/common_margin"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,31 +45,32 @@
             android:id="@+id/linearLayout5"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/common_margin"
             android:orientation="horizontal"
             android:gravity="center"
             app:layout_constraintStart_toEndOf="@+id/item_detail_pic"
-            tools:layout_editor_absoluteY="68dp">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="가격"
-                android:textSize="17dp" />
+                style="@style/Text.textStyle"/>
 
             <TextView
                 android:id="@+id/item_detail_lprice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/common_margin"
                 android:text="TextView"
-                android:textSize="14dp" />
+                style="@style/Text.textBoldStyle"/>
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                style="@style/Text.textStyle"
                 android:text=" ~ " />
 
             <TextView
@@ -72,6 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                style="@style/Text.textBoldStyle"
                 android:text="TextView" />
         </LinearLayout>
 
@@ -80,7 +87,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="@dimen/common_margin"
         android:orientation="vertical">
 
         <TextView
@@ -88,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="최저가 구매링크"
-            android:textSize="17dp" />
+            style="@style/Text.textBoldStyle" />
 
         <TextView
             android:id="@+id/item_detail_link"
@@ -97,7 +104,7 @@
             android:text="TextView"
             android:linksClickable="true"
             android:autoLink="web"
-            android:textSize="15dp"
+            style="@style/Text.textStyle"
             />
     </LinearLayout>
 
@@ -108,6 +115,9 @@
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:text="CLOSE"
-        android:textSize="22dp" />
+        style="@style/Text.medium"
+        android:padding="@dimen/narrow_margin"
+        android:layout_marginBottom="@dimen/tab_size"
+        android:background="@drawable/border"/>
 
 </LinearLayout>

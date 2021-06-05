@@ -1,5 +1,6 @@
 package smu.capstone.paper.activity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -195,11 +196,16 @@ public class LoginActivity extends AppCompatActivity {
 
             }
 
+            @SuppressLint("ResourceAsColor")
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.length() > 0) {
                     login_btn.setClickable(true);
-                    login_btn.setBackgroundColor(0x9A93C8B4);
+                    login_btn.setBackgroundResource(R.color.purpleGrayDark);
+                }
+                else{
+                    login_btn.setClickable(false);
+                    login_btn.setBackgroundResource(R.color.purpleGray);
                 }
             }
         });

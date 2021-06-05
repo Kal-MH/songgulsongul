@@ -2,6 +2,8 @@ package smu.capstone.paper.activity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
@@ -54,6 +56,11 @@ public class FindAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 flag = 1; // 아이디 찾기 mode
+
+                SpannableString content = new SpannableString("ID 찾기");
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0); find_id_btn.setText(content);
+                find_pw_btn.setText("비밀번호 찾기");
+
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 FragFindId fragFindId = new FragFindId();
                 transaction.replace(R.id.find_frame, fragFindId);
@@ -65,6 +72,12 @@ public class FindAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 flag = 2; // 비밀번호 찾기 mode
+
+
+                SpannableString content = new SpannableString("비밀번호 찾기");
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0); find_pw_btn.setText(content);
+                find_id_btn.setText("ID 찾기");
+
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 FragFindPw fragFindPw = new FragFindPw();
                 transaction.replace(R.id.find_frame, fragFindPw);
@@ -85,6 +98,11 @@ public class FindAccountActivity extends AppCompatActivity {
         FragFindId fragFindId = new FragFindId();
         transaction.replace(R.id.find_frame, fragFindId);
         transaction.commit();
+
+        SpannableString content = new SpannableString("ID 찾기");
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0); find_id_btn.setText(content);
+        find_pw_btn.setText("비밀번호 찾기");
+
 
         // 확인 버튼
         find_account_btn.setOnClickListener(new View.OnClickListener() {

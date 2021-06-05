@@ -6,74 +6,75 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/backgroundLightGrey"
     tools:context=".activity.EditAccountActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/edit_account_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/cardview_shadow_start_color">
+        android:layout_height="@dimen/tab_size"
+        android:theme="@style/ToolbarTheme"
+        android:background="@color/backgroundGrey"
+        >
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp">
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:background="@drawable/border"
+        android:layout_margin="@dimen/common_margin"
+        android:layout_marginTop="@dimen/wide_margin">
 
-        <FrameLayout
-            android:id="@+id/edit_account_frame"
-            android:background="@drawable/borderline"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="30dp"
-            app:layout_constraintBottom_toTopOf="@+id/edit_account_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linear">
-
-        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/linear"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints">
+            android:layout_margin = "@dimen/common_margin"
+
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/edit_id_btn"
-                android:layout_width="150dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/prompt_id" />
+                android:layout_weight="1"
+                style="@style/Text.textBoldStyle"
+                android:background="@null"
+                android:text="id 변경하기" />
 
             <Button
                 android:id="@+id/edit_pw_btn"
-                android:layout_width="150dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/prompt_password" />
+                android:layout_weight="1"
+                android:background="@null"
+                style="@style/Text.textBoldStyle"
+                android:text="PW 변경하기" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/edit_account_btn"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="150dp"
-            android:gravity="center"
-            android:text="@string/ok"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+        <FrameLayout
+            android:id="@+id/edit_account_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/common_margin">
+
+        </FrameLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+    <Button
+        android:id="@+id/edit_account_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_margin"
+        android:gravity="center"
+        android:text="@string/ok"
+        style="@style/Text.textBoldStyle"
+        android:background="@color/purpleGray"
+        />
 
 </LinearLayout>

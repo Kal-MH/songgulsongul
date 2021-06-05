@@ -2,6 +2,7 @@ package smu.capstone.paper.activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
@@ -15,7 +16,7 @@ import smu.capstone.paper.SettingSharedPreference;
 import smu.capstone.paper.R;
 
 public class SettingActivity extends AppCompatActivity {
-    Switch setting_ccl_1, setting_ccl_2, setting_ccl_3, setting_ccl_4, setting_ccl_5
+    SwitchCompat setting_ccl_1, setting_ccl_2, setting_ccl_3, setting_ccl_4, setting_ccl_5
             , setting_alert_1, setting_alert_2, setting_alert_3, setting_alert_4;
     boolean ccl1, ccl2, ccl3, ccl4, ccl5
             , alert1, alert2, alert3, alert4;
