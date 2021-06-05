@@ -1,112 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#00FFFFFF"
+    android:layout_height="wrap_content"
+    android:background= "@color/backgroundLightGrey"
     android:orientation="vertical"
     tools:context=".activity.DetectPaperHelpActivity">
 
-    <TextView
-        android:id="@+id/dp_help_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="좀 멀어도 좋으니, \n그림자가 적은게 좋아요!"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+   <androidx.constraintlayout.widget.ConstraintLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:background="@drawable/border"
+       android:layout_margin="@dimen/narrow_margin"
+       >
+       <TextView
+           android:id="@+id/dp_help_text"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_margin="10dp"
+           android:layout_marginTop="10dp"
+           android:gravity="center"
+           android:text="좀 멀어도 좋으니, \n그림자가 적은게 좋아요!"
+           style="@style/Text.textBoldStyle"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintHorizontal_bias="0.5"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/dp_help_pictures"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dp_help_text">
+       <LinearLayout
+           android:id="@+id/dp_help_pictures"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginStart="10dp"
+           android:layout_marginTop="20dp"
+           android:layout_marginEnd="10dp"
+           android:gravity="center"
+           android:orientation="horizontal"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/dp_help_text">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+           <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:background="#88FFA3A3"></ImageView>
+               <ImageView
+                   android:layout_width="100dp"
+                   android:layout_height="100dp"
+                   android:background="#88FFA3A3"></ImageView>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="  BAD  "
-                android:textSize="20dp"></TextView>
-
-
-        </LinearLayout>
-
-        <Space
-            android:layout_width="10dp"
-            android:layout_height="10dp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:background="#88EFC4C4"></ImageView>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="GOOD!"
-                android:textSize="20dp">
-
-            </TextView>
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="  BAD  "
+                   style="@style/Text.medium"></TextView>
 
 
-        </LinearLayout>
-    </LinearLayout>
+           </LinearLayout>
 
-    <Button
-        android:id="@+id/dp_help_again"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        android:background="@null"
-        android:text="다시 가져오기"
-        app:layout_constraintEnd_toStartOf="@+id/dp_help_ok"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dp_help_pictures"></Button>
+           <Space
+               android:layout_width="10dp"
+               android:layout_height="10dp" />
 
-    <Button
-        android:id="@+id/dp_help_ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        android:background="@null"
-        android:text="확인"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/dp_help_again"
-        app:layout_constraintTop_toBottomOf="@+id/dp_help_pictures"></Button>
+           <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:orientation="vertical">
+
+               <ImageView
+                   android:layout_width="100dp"
+                   android:layout_height="100dp"
+                   android:background="#88EFC4C4"></ImageView>
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="GOOD!"
+                   style="@style/Text.medium">
+
+               </TextView>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+           </LinearLayout>
+       </LinearLayout>
+
+       <Button
+           android:id="@+id/dp_help_again"
+           style="@style/Text.textStyle"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_margin="@dimen/common_margin"
+           android:layout_weight="1"
+           android:background="@drawable/border"
+           android:text="다시 가져오기"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintEnd_toStartOf="@+id/dp_help_ok"
+           app:layout_constraintHorizontal_bias="0.5"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/dp_help_pictures">
+
+       </Button>
+
+       <Button
+           android:id="@+id/dp_help_ok"
+           style="@style/Text.textStyle"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_margin="@dimen/common_margin"
+           android:layout_weight="1"
+           android:background="@drawable/border"
+           android:text="확인"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintHorizontal_bias="0.5"
+           app:layout_constraintStart_toEndOf="@+id/dp_help_again"
+           app:layout_constraintTop_toBottomOf="@+id/dp_help_pictures">
+
+       </Button>
+
+
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>
