@@ -5,22 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/backgroundLightGrey"
     tools:context=".activity.SettingActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/setting_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/cardview_shadow_start_color"></androidx.appcompat.widget.Toolbar>
+        android:layout_height="@dimen/tab_size"
+        android:theme="@style/ToolbarTheme"
+        android:background="@color/backgroundGrey"
+        >
+
+    </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
 
@@ -29,7 +35,7 @@
                 android:id="@+id/setting_ccl_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_margin="@dimen/common_margin"
                 android:background="@drawable/borderline"
                 android:orientation="vertical">
 
@@ -37,137 +43,148 @@
                     android:id="@+id/setting_ccl_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_margin="@dimen/narrow_margin"
                     android:text="CCL 기본값 설정"
-                    android:textSize="18sp" />
+                    style="@style/Text.textBoldStyle" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:id="@+id/setting_ccl_t1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="공유 허용"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/setting_ccl_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="50dp"
+                        android:layout_marginEnd="@dimen/wide_margin"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:theme="@style/EditTextTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:id="@+id/setting_ccl_t2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="출처 표기"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/setting_ccl_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="50dp"
+                        android:layout_marginEnd="@dimen/wide_margin"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:theme="@style/EditTextTheme"
+                        />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:id="@+id/setting_ccl_t3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="상업적 이용 비허용"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/setting_ccl_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="50dp"
+                        android:layout_marginEnd="@dimen/wide_margin"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:theme="@style/EditTextTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:id="@+id/setting_ccl_t4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="2차 변경 비허용"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/setting_ccl_4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="50dp"
+                        android:layout_marginEnd="@dimen/wide_margin"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:theme="@style/EditTextTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:id="@+id/setting_ccl_t5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="동일 조건 변경 허용"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/setting_ccl_5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="50dp"
+                        android:layout_marginEnd="@dimen/wide_margin"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:theme="@style/EditTextTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -179,7 +196,7 @@
                 android:id="@+id/setting_wm_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="20dp"
+                android:layout_margin="@dimen/common_margin"
                 android:background="@drawable/borderline"
                 android:orientation="vertical">
 
@@ -187,20 +204,22 @@
                     android:id="@+id/setting_wm_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_margin="@dimen/narrow_margin"
                     android:text="워터마크 기본값 설정"
-                    android:textSize="18sp" />
+                    style="@style/Text.textBoldStyle"
+                   />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="위치"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -215,6 +234,7 @@
                         android:gravity="center"
                         android:textAlignment="gravity"
                         android:visibility="visible"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -223,13 +243,14 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="반복"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -242,6 +263,7 @@
                         android:layout_height="wrap_content"
                         android:entries="@array/wm_repeat"
                         android:gravity="center"
+                        style="@style/Text.textStyle"
                         android:textAlignment="gravity"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -251,13 +273,14 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="워터마크 형태"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -271,6 +294,7 @@
                         android:entries="@array/wm_type"
                         android:gravity="center"
                         android:textAlignment="gravity"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -281,14 +305,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:layout_margin="10dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_margin="@dimen/narrow_margin"
+                    android:layout_marginTop="@dimen/narrow_margin"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
+                        android:layout_marginLeft="@dimen/narrow_margin"
+                        style="@style/Text.textBoldStyle"
                         android:text="워터마크 문구">
 
                     </TextView>
@@ -296,28 +321,32 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_margin = "@dimen/narrow_margin"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <EditText
                             android:id="@+id/setting_wm_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginLeft="@dimen/common_margin"
+                            android:layout_marginRight="@dimen/narrow_margin"
                             android:layout_weight="1"
+                            android:theme="@style/EditTextTheme"
+                            style="@style/Text.textStyle"
                             android:hint="워터마크 문구를 입력하세요"
+
                             android:textSize="12sp">
 
                         </EditText>
 
                         <Button
                             android:id="@+id/setting_wn_tbtn"
-                            android:layout_width="50dp"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/tab_size"
+                            android:layout_height="@dimen/tab_size_small"
+                            android:layout_margin="@dimen/narrow_margin"
+                            android:background="@color/purpleGray"
+                            style="@style/Text.textStyle"
                             android:text="수정">
 
                         </Button>
@@ -332,26 +361,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_margin="20dp"
+                    android:layout_margin="@dimen/common_margin"
                     >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="이미지 워터마크 설정">
+                        android:layout_margin="@dimen/narrow_margin"
+                        android:text="이미지 워터마크 설정"
+                        style="@style/Text.textBoldStyle">
 
                     </TextView>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp">
+                        android:layout_margin="@dimen/narrow_margin">
 
                         <ImageView
                             android:id="@+id/setting_wm_img"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="@dimen/icon_size_large"
+                            android:layout_height="@dimen/icon_size_large"
                             android:src="@drawable/ic_baseline_emoji_emotions_24"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -360,7 +390,7 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="60dp"
+                            android:layout_marginStart="@dimen/tab_size"
                             android:orientation="vertical"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/setting_wm_img"
@@ -369,7 +399,10 @@
                             <Button
                                 android:id="@+id/setting_wm_load"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/tab_size_small"
+                                style="@style/Text.textStyle"
+                                android:layout_margin="@dimen/narrow_margin"
+                                android:background="@color/purpleGray"
                                 android:text="불러오기">
 
                             </Button>
@@ -377,7 +410,10 @@
                             <Button
                                 android:id="@+id/setting_wn_ibtn"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/tab_size_small"
+                                android:layout_margin="@dimen/narrow_margin"
+                                style="@style/Text.textStyle"
+                                android:background="@color/purpleGray"
                                 android:text="수정">
 
                             </Button>
@@ -397,7 +433,7 @@
                 android:id="@+id/setting_alert_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_margin="@dimen/common_margin"
                 android:background="@drawable/borderline"
                 android:orientation="vertical">
 
@@ -405,56 +441,61 @@
                     android:id="@+id/setting_alert_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_margin="@dimen/narrow_margin"
                     android:text="알림 설정"
-                    android:textSize="18sp" />
+                    style="@style/Text.textBoldStyle"
+                    />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:id="@+id/setting_alert_t1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="알림 받기"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/setting_alert_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="50dp"
+                        android:layout_marginEnd="@dimen/tab_size"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:theme="@style/EditTextTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:id="@+id/setting_alert_t2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="팔로우 알림"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/setting_alert_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="50dp"
+                        android:layout_marginEnd="@dimen/tab_size"
+                        android:theme="@style/EditTextTheme"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -464,52 +505,56 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:id="@+id/setting_alert_t3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="좋아요 알림"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/setting_alert_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="50dp"
+                        android:layout_marginEnd="@dimen/tab_size"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:theme="@style/EditTextTheme"
+                        />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:layout_margin="@dimen/narrow_margin">
 
                     <TextView
                         android:id="@+id/setting_alert_t4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="@dimen/common_margin"
                         android:text="댓글 알림"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/setting_alert_4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="50dp"
+                        android:layout_marginEnd="@dimen/tab_size"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:theme="@style/EditTextTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
@@ -521,7 +566,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_margin="@dimen/common_margin"
                 android:background="@drawable/borderline"
 
 
@@ -529,13 +574,11 @@
 
                 <TextView
                     android:id="@+id/setting_then_text"
+                    style="@style/Text.textBoldStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_margin="@dimen/narrow_margin"
                     android:text="테마 설정"
-                    android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -543,17 +586,20 @@
 
                 <ToggleButton
                     android:id="@+id/setting_them"
-                    android:layout_width="200dp"
+                    android:layout_width="@dimen/tab_size_large"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_marginStart="10dp"
 
-                    android:layout_marginTop="30dp"
-                    android:layout_marginBottom="10dp"
-                    android:textOff="Light"
-                    android:textOn="Dark"
+                    android:layout_marginTop="@dimen/common_margin"
+                    android:layout_marginBottom="@dimen/narrow_margin"
+
+                    android:textOff="Dark"
+                    android:textOn="Light"
+
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:theme="@style/EditTextTheme"
                     app:layout_constraintTop_toBottomOf="@+id/setting_then_text">
 
                 </ToggleButton>
