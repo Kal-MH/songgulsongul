@@ -6,8 +6,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -17,26 +18,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import org.json.JSONObject;
+
 import java.util.List;
-import java.lang.ref.ReferenceQueue;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
-import smu.capstone.paper.adapter.PostImageAdapter;
+import smu.capstone.paper.adapter.PostImageRVAdapter;
 import smu.capstone.paper.responseData.CodeResponse;
 import smu.capstone.paper.data.FollowData;
 import smu.capstone.paper.data.UserData;
@@ -62,8 +58,9 @@ public class ProfileActivity extends AppCompatActivity {
     String login_id;
     String user_id;
 
-    private GridView gridView;
-    private PostImageAdapter adapter;
+    private RecyclerView recyclerview;
+    private PostImageRVAdapter adapter;
+
     private TextView feed_count_tv, follow_count_tv, follower_count_tv, points_tv, intro_tv, sns_tv;
     private Button follow_btn, unfollow_btn;
     private LinearLayout profile_follows;
@@ -91,7 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
         follow_btn = findViewById(R.id.profile_follow_btn);
         unfollow_btn = findViewById(R.id.profile_unfollow_btn);
         pointview = findViewById(R.id.profile_pointview);
-        gridView = findViewById(R.id.profile_grid);
+        recyclerview = findViewById(R.id.profile_rv);
         profile_userimage = findViewById(R.id.profile_userimage);
 
         Intent intent = getIntent();
@@ -137,9 +134,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
+/*
         //Click Listener
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        recyclerview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
@@ -152,7 +149,7 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
             }
-        });
+        });*/
 
         // 팔로우 버튼 Click Listener
         follow_btn.setOnClickListener(new View.OnClickListener() {
@@ -303,8 +300,11 @@ public class ProfileActivity extends AppCompatActivity {
         Glide.with(this).load( img_addr).into(profile_userimage);
         feed_count_tv.setText(post_data.size()+"");
 
-        adapter = new PostImageAdapter(this, R.layout.post_image_item, post_data);
-        gridView.setAdapter(adapter);
+
+        adapter = new PostImageRVAdapter(this, post_data);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        recyclerview.setLayoutManager(layoutManager);
+        recyclerview.setAdapter(adapter);
 
 
         if(Status == MY) { // 내 프로필

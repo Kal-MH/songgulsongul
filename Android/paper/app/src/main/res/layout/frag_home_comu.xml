@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,23 +10,25 @@
         android:id="@+id/comu_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/narrow_margin"
+        android:background="@drawable/border"
         android:queryHint="검색"
-        tools:layout_editor_absoluteY="68dp">
+        android:theme="@style/EditTextTheme"
+        style="@style/Text.medium">
 
     </SearchView>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/comu_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/comu_refresh_layout"
-        android:layout_weight="1"
-        >
+        android:layout_margin="@dimen/narrow_margin"
+        android:layout_weight="1">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/comu_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -35,7 +36,7 @@
         android:id="@+id/load_layout"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="#A6A4A8"
+        android:background="@color/purpleGray"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -43,7 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="More..">
+            android:text="More.."
+            style="@style/Text.textStyle">
 
         </TextView>
 

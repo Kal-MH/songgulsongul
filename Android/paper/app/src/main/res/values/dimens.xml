@@ -3,4 +3,27 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+
+    <dimen name="common_margin">15dp</dimen>
+    <dimen name="narrow_margin">5dp</dimen>
+    <dimen name="wide_margin">30dp</dimen>
+
+    <dimen name="text_size_24"> 24sp</dimen>
+    <dimen name ="text_size_20">20sp</dimen>
+    <dimen name="text_size_16"> 16sp</dimen>
+    <dimen name="text_size_14" >14sp</dimen>
+    <dimen name="text_size_10" >10sp</dimen>
+
+    <dimen name="tab_size">50dp</dimen>
+    <dimen name="tab_size_small">30dp</dimen>
+
+    <dimen name = "profile_pic">50dp</dimen>
+    <dimen name="icon_size">40dp</dimen>
+    <dimen name="small_icon_size">25dp</dimen>
+
+   <!-- itemTag 사이즈 + common_margin + narrow_margin -->
+    <dimen name="follow_margin">105dp</dimen>
+
+    <dimen name="itemTag_size">80dp</dimen>
+
 </resources>

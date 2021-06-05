@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <SearchView
@@ -10,7 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:queryHint="검색"
-        tools:layout_editor_absoluteY="68dp">
+        android:background="@drawable/border"
+        android:layout_margin="@dimen/narrow_margin"
+        android:theme="@style/EditTextTheme"
+        style="@style/Text.medium">
 
     </SearchView>
 
@@ -24,14 +26,15 @@
         android:id="@+id/market_load_layout"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="#A6A4A8"
+        android:background="@color/purpleGray"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="More..">
+            android:text="More.."
+            style="@style/Text.textStyle">
 
         </TextView>
 
