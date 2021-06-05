@@ -10,6 +10,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/edit_toolbar"
         android:layout_width="match_parent"
+        android:theme="@style/ToolbarTheme"
         android:layout_height="@dimen/tab_size"
         android:background="@color/purpleGray"/>
     <LinearLayout

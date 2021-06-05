@@ -60,7 +60,7 @@
         </activity>
         <activity
             android:name=".activity.SaveImageActivity"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog" />
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
         <activity android:name=".activity.UploadDetailActivity" />
         <activity android:name=".activity.EditProfileActivity" />
         <activity android:name=".activity.StickerDetailActivity" />

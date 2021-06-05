@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -79,7 +80,7 @@ public class UploadDetailActivity extends AppCompatActivity {
     AddItemTagAdapter adapter;
     List<ItemTag> itemTagData = new ArrayList<>();
     EditText hashtagText, uploadText;
-    Switch upload_detail_ccl_1, upload_detail_ccl_2, upload_detail_ccl_3 , upload_detail_ccl_4, upload_detail_ccl_5;
+    SwitchCompat upload_detail_ccl_1, upload_detail_ccl_2, upload_detail_ccl_3 , upload_detail_ccl_4, upload_detail_ccl_5;
     ImageView upload_detail_img;
     int ccl1, ccl2, ccl3, ccl4, ccl5;
 
