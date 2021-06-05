@@ -18,7 +18,6 @@
         <item name="android:fontFamily">@font/ibm_plex_sans_midium</item>
     </style>
 
-
     <!-- Text Style -->
     <style name="Text.textSmallStyle" parent="android:TextAppearance">
         <item name="android:textStyle">normal</item>

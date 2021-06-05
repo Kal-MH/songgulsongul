@@ -12,7 +12,8 @@
     <color name="backgroundLightGrey">#EDEBE7</color>
 
     <color name = "inkGrey">#39383A</color>
-    <color name = "inkGreyTransparent">#3BA1A1A1</color>
+    <color name = "inkGreyTransparent">#17A1A1A1</color>
+    <color name = "Transparent">#52CDADFA</color>
     <color name="inkLightGrey">#7C7880</color>
 
     <color name="selected">#9885AA</color>

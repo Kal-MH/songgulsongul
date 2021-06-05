@@ -16,10 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.ZoomActivity"></activity>
+
+        <activity android:name=".activity.ZoomActivity">
+        </activity>
         <activity
             android:name=".activity.AddItemtagActivity"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog" />
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"/>
         <activity android:name=".activity.EditDoneActivity" />
         <activity android:name=".activity.EditActivity" />
         <activity
@@ -54,7 +56,8 @@
         <activity android:name=".activity.PostEditActivity" />
         <activity
             android:name=".activity.ItemDetailActivity"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog" />
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog">
+        </activity>
         <activity
             android:name=".activity.SaveImageActivity"
             android:theme="@android:style/Theme.DeviceDefault.Dialog" />
