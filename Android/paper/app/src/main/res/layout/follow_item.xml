@@ -8,20 +8,22 @@
 
     <smu.capstone.paper.layout.RoundImageView
         android:id="@+id/follow_item_img"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="20dp"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:layout_marginStart="@dimen/common_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/follow_item_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="@dimen/common_margin"
         android:text="TextView"
+        style="@style/Text.textStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/follow_item_img"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,9 +32,9 @@
         android:id="@+id/follow_item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="@dimen/common_margin"
         android:text="following"
-        android:textColor="#700D0D"
+        style="@style/Text.textBoldRedStyle"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/follow_item_btn"
@@ -41,9 +43,11 @@
     <Button
         android:id="@+id/follow_item_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
+        android:layout_height="@dimen/tab_size_small"
+        android:layout_marginEnd="@dimen/narrow_margin"
         android:text="follow"
+        style="@style/Text.textStyle"
+        android:background="@color/purpleGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
