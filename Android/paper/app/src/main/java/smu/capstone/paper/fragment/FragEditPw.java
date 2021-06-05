@@ -55,7 +55,6 @@ public class FragEditPw extends Fragment {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.frag_edit_pw, container, false);
 
         account_pw = (EditText)rootView.findViewById(R.id.account_pw);
-        account_pw_check = (Button)rootView.findViewById(R.id.account_pw_check);
         account_newpw = (EditText)rootView.findViewById(R.id.account_newpw);
         account_newpw_check = (EditText)rootView.findViewById(R.id.account_newpw_check);
         pw_check_text = (TextView)rootView.findViewById(R.id.edit_account_pw_correct);

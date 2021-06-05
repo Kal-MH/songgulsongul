@@ -7,9 +7,9 @@
         app:showAsAction="never"></item>
 
     <item
-        android:id="@+id/profile_keep"
-        android:title="보관함"
-        app:showAsAction="never">
+    android:id="@+id/profile_account_edit"
+    android:title="계정 관리"
+    app:showAsAction="never">
     </item>
 
     <item
@@ -17,6 +17,7 @@
         android:title="보관함"
         app:showAsAction="never">
     </item>
+
 
     <item
         android:id="@+id/profile_setting"
