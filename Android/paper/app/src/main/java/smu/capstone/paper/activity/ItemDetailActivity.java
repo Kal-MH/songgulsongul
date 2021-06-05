@@ -1,8 +1,10 @@
 package smu.capstone.paper.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 
 import smu.capstone.paper.R;
@@ -18,6 +22,7 @@ import smu.capstone.paper.server.RetrofitClient;
 
 public class ItemDetailActivity extends Activity {
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +43,19 @@ public class ItemDetailActivity extends Activity {
             }
         });
 
+        //높이 세팅
         Display display = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         int width = (int)(display.getWidth() * 0.98);
-        getWindow().getAttributes().width=width;
+
+        //배경 블러처리
+        WindowManager.LayoutParams  layoutParams = new WindowManager.LayoutParams();
+        layoutParams.flags  = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        layoutParams.dimAmount  = 0.5f;
+        layoutParams.width = width;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        getWindow().setAttributes(layoutParams);
+
 
         // 넘겨받은 item tag정보로 내용 변경
         Intent intent = getIntent();
