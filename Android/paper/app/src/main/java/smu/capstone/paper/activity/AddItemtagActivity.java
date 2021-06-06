@@ -37,10 +37,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import smu.capstone.paper.R;
-import smu.capstone.paper.adapter.HomeMarketAdapter;
 import smu.capstone.paper.adapter.ItemSearchAdapter;
 import smu.capstone.paper.item.ItemSearchItem;
-import smu.capstone.paper.item.ItemtagItem;
 
 
 public class AddItemtagActivity extends Activity {

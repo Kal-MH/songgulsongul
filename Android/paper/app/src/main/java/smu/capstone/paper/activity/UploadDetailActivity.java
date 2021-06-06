@@ -40,18 +40,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.Nullable;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -181,11 +176,8 @@ public class UploadDetailActivity extends AppCompatActivity {
         itemtag_rv.setLayoutManager(layoutManager);
 
 
-        try {
-            adapter = new AddItemTagAdapter(itemtag_rv.getContext(),itemtag_obj ); // 추가모드 어뎁터 세팅
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
+        adapter = new AddItemTagAdapter(itemtag_rv.getContext(),itemTagData ); // 추가모드 어뎁터 세팅
 
         // 적용
         itemtag_rv.setAdapter(adapter);
@@ -217,7 +209,6 @@ public class UploadDetailActivity extends AppCompatActivity {
 
 
 
-    }
 
     // 서버에 전송할 데이터 묶기
     public void makeUploadData(){

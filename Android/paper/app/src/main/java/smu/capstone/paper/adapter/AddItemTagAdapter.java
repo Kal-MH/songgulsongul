@@ -11,18 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import java.util.List;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.AddItemtagActivity;
-import smu.capstone.paper.activity.ItemDetailActivity;
-import smu.capstone.paper.activity.PostEditActivity;
-import smu.capstone.paper.activity.UploadDetailActivity;
-import smu.capstone.paper.item.ItemtagItem;
-
+import smu.capstone.paper.responseData.ItemTag;
 
 
 public class AddItemTagAdapter extends ItemTagAdapter {
