@@ -1,5 +1,6 @@
 package smu.capstone.paper.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -85,9 +87,12 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ItemDetailActivity.class);
+                /*Intent intent = new Intent(context, ItemDetailActivity.class);
 
-                context.startActivity(intent);
+                ((Activity)context).startActivityForResult(intent,1234);*/
+                if(mListener != null){
+                    mListener.onItemClick(v);
+                }
             }
         });
 
@@ -103,7 +108,7 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
     }*/
 
     static class ViewHolder extends RecyclerView.ViewHolder{
-
+        int pos = getAdapterPosition();
         ImageView pic;
 
 
@@ -113,5 +118,15 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
 
         }
 
+    }
+    //item 클릭 리스너 인터페이스
+    public interface OnItemClickListener{
+        void onItemClick(View v);
+    }
+
+    private ItemTagAdapter.OnItemClickListener mListener = null;
+
+    public void setOnItemClickListener(ItemTagAdapter.OnItemClickListener listener){
+        this.mListener = listener;
     }
 }

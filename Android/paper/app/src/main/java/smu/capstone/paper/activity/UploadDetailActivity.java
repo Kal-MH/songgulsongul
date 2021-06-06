@@ -1,6 +1,7 @@
 package smu.capstone.paper.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -41,6 +43,8 @@ import java.io.File;
 import smu.capstone.paper.SettingSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.AddItemTagAdapter;
+import smu.capstone.paper.adapter.ItemSearchAdapter;
+import smu.capstone.paper.adapter.ItemTagAdapter;
 
 public class UploadDetailActivity extends AppCompatActivity {
 
@@ -139,6 +143,29 @@ public class UploadDetailActivity extends AppCompatActivity {
         }
         // 적용
         itemtag_rv.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new ItemTagAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v) {
+                Intent intent = new Intent(UploadDetailActivity.this, AddItemtagActivity.class);
+
+                intent.putExtra("key","value");
+                startActivityForResult(intent,123);
+            }
+        });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println(requestCode + " " + resultCode);
+        if(requestCode == 123 && resultCode == RESULT_OK){
+            String myData = data.getStringExtra("key");
+
+            System.out.println(myData);
+        }
+        else{
+            System.out.println("there is no data");
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

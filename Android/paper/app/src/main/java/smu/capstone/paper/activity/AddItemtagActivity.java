@@ -40,6 +40,7 @@ import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HomeMarketAdapter;
 import smu.capstone.paper.adapter.ItemSearchAdapter;
 import smu.capstone.paper.item.ItemSearchItem;
+import smu.capstone.paper.item.ItemtagItem;
 
 
 public class AddItemtagActivity extends Activity {
@@ -132,14 +133,30 @@ public class AddItemtagActivity extends Activity {
             public void onItemClick(View v, int pos) {
                 position = pos;
 
+                Intent intent = getIntent();
+                String mdata = intent.getStringExtra("key");
+
+                System.out.println(mdata); //null 나옴
+
+                resultData();
             }
         });
 
+        //윈도우 크기 설정
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         int width = (int)(display.getWidth()* 0.98);
         int height = (int)(display.getHeight() * 0.9);
         getWindow().getAttributes().width = width;
         getWindow().getAttributes().height = height;
+    }
+
+    private void resultData(){
+        Intent intent = new Intent();
+
+        intent.putExtra("key", mlist.get(position).toString()); //맞는 position의 주소값이 제대로 나오긴 함
+
+        setResult(RESULT_OK,intent);
+        finish();
     }
 
     // server에서 data전달

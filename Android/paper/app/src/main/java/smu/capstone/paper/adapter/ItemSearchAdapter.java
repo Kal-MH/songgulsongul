@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.PostActivity;
 import smu.capstone.paper.item.ItemSearchItem;
+import smu.capstone.paper.item.ItemtagItem;
 
 public class ItemSearchAdapter extends RecyclerView.Adapter<ItemSearchAdapter.ViewHolder> {
     private ArrayList<ItemSearchItem> mlist;
