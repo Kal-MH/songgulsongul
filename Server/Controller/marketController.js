@@ -262,7 +262,7 @@ const marketController = {
     var params = [image, name, text, price, user_id];
     var sql = 'INSERT INTO market(image, name, text, price, user_id) values(?, ?, ?, ?, ?);';
     connection.query(sql, function(err, rows){
-      var resultCode = statusCode.SERVER_ERROR);
+      var resultCode = statusCode.SERVER_ERROR;
       if(err)
         console.log(err);
       else
