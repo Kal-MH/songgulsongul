@@ -126,8 +126,6 @@ public class UploadDetailActivity extends AppCompatActivity {
             }
         });
 
-
-
         // 아이템 태그 어뎁터 설정
         itemtag_rv = findViewById(R.id.upload_itemtag_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -139,14 +137,9 @@ public class UploadDetailActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         // 적용
         itemtag_rv.setAdapter(adapter);
-
-
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public JSONObject getItemtagData(){

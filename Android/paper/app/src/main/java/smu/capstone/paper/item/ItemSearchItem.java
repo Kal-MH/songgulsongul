@@ -1,18 +1,15 @@
 package smu.capstone.paper.item;
 
 public class ItemSearchItem {
+    String picurl;
     int id;
     int post_id;
     String name;
-    int hprice;
-    int lprice;
+    String hprice;
+    String lprice;
 
-    public ItemSearchItem(int id, int post_id, String name, int hprice, int lprice){
-        this.id = id;
-        this.post_id = post_id;
-        this.name = name;
-        this.hprice = hprice;
-        this.lprice = lprice;
+    public void setPic(String picurl) {
+        this.picurl = picurl;
     }
 
     public void setId(int id){
@@ -27,12 +24,16 @@ public class ItemSearchItem {
         this.name = name;
     }
 
-    public void setHprice(int hprice){
+    public void setHprice(String hprice){
         this.hprice = hprice;
     }
 
-    public void setLprice(int lprice){
+    public void setLprice(String lprice){
         this.lprice = lprice;
+    }
+
+    public String getPic(){
+        return picurl;
     }
 
     public int getId(){
@@ -47,11 +48,11 @@ public class ItemSearchItem {
         return name;
     }
 
-    public int getHprice(){
+    public String getHprice(){
         return hprice;
     }
 
-    public int getLprice(){
+    public String getLprice(){
         return lprice;
     }
 }

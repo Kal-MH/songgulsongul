@@ -1,5 +1,6 @@
 package smu.capstone.paper.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 import smu.capstone.paper.activity.AddItemtagActivity;
 import smu.capstone.paper.activity.ItemDetailActivity;
 import smu.capstone.paper.activity.PostEditActivity;
+import smu.capstone.paper.activity.UploadDetailActivity;
 import smu.capstone.paper.item.ItemtagItem;
 
 
@@ -41,12 +43,9 @@ public class AddItemTagAdapter extends ItemTagAdapter {
                 if(position == 0){
                     Log.d("TAG","add action");
                     Intent intent = new Intent(context, AddItemtagActivity.class);
-                    context.startActivity(intent);
+                    ((Activity) context).startActivityForResult(intent,100);
                 }
             }
         });
-
-
     }
-
 }
