@@ -30,6 +30,14 @@ public class LoginSharedPreference {
         editor.commit();
     }
 
+    public static void changeLoginId(Context ctx , String login_id){
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.remove(PREF_LOGIN_ID);
+        editor.putString(PREF_LOGIN_ID,login_id);
+
+        editor.commit();
+    }
+
     // 저장된 정보 가져오기
     public static String getLoginId(Context ctx) {
         return getSharedPreferences(ctx).getString(PREF_LOGIN_ID, "");

@@ -10,7 +10,8 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/edit_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/tab_size"
+        android:theme="@style/ToolbarTheme"
         android:background="@color/purpleGray"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,59 +34,57 @@
             android:id="@+id/edit_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_margin = "@dimen/common_margin"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/edit_image_histograms">
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="@dimen/Dot"
+                android:layout_height="@dimen/Dot"
+                app:tint="@color/inkLightGrey"
                 app:srcCompat="@drawable/ic_baseline_dot"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="@dimen/Dot"
+                android:layout_height="@dimen/Dot"
+                app:tint="@color/inkLightGrey"
                 app:srcCompat="@drawable/ic_baseline_dot"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="@dimen/Dot"
+                android:layout_height="@dimen/Dot"
+                app:tint="@color/inkLightGrey"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/ic_baseline_dot"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="@dimen/selectedDot"
+                android:layout_height="@dimen/selectedDot"
                 app:srcCompat="@drawable/ic_baseline_dot"
-                app:tint="#FD5340F8"
+                app:tint="@color/selected"
                 tools:ignore="VectorDrawableCompat" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/edit_done"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:id="@+id/edit_image_histograms"
+            android:layout_margin = "@dimen/common_margin"
+            app:layout_constraintTop_toBottomOf="@+id/edit_progress"
+            app:layout_constraintBottom_toTopOf="@id/edit_done"
+            >
 
 
-            <LinearLayout
+
+        <LinearLayout
                 android:id="@+id/histogramNone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,14 +93,15 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
                     app:srcCompat="@drawable/ic_baseline_face_24"
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    style="@style/Text.textStyle"
                     android:text="없음" />
             </LinearLayout>
 
@@ -119,14 +119,15 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
                     app:srcCompat="@drawable/ic_baseline_face_24"
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    style="@style/Text.textStyle"
                     android:text="기본 보정" />
             </LinearLayout>
 
@@ -144,17 +145,17 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
                     app:srcCompat="@drawable/ic_baseline_face_24"
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    style="@style/Text.textStyle"
                     android:text="적응형 보정" />
             </LinearLayout>
-
 
         </LinearLayout>
 
@@ -164,6 +165,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="적용"
+            android:background="@drawable/border"
+            style="@style/Text.medium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

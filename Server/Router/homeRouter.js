@@ -17,8 +17,4 @@ homeRouter.post(routes.login, homeController.homeLoginPost);
 homeRouter.post(routes.findId, homeController.findId)
 homeRouter.post(routes.findPassword, homeController.findPassword);
 
-//임시 라우터
-homeRouter.get(routes.me, homeController.tmpgetMeProfile)
-homeRouter.get(routes.logout, homeController.logout)
-
 module.exports = homeRouter;

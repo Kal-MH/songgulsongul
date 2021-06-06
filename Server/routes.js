@@ -14,8 +14,9 @@ const FIND_PASSWORD = "/find/password";
 const USER = "/user";
 const USER_PROFILE = "/profile";
 const USER_KEEP = "/keep";
+const USER_ID_CHANGE = "/id-change"
+const USER_PW_CHANGE = "/pw-change"
 const USER_PROFILE_EDIT = "/profile-edit";
-const USER_PROFILE_EDIT_IDCHECK = "/profile-edit-idcheck";
 const USER_FOLLOW = "/follow";
 const USER_UNFOLLOW = "/unfollow";
 const USER_FOLLOW_LIST = "/follow-list";
@@ -26,11 +27,12 @@ const USER_LFOLLOW_LIST = "/lfollow-list";
 //market Router
 const MARKET = "/market";
 const MARKET_MAIN = "/main";
-const MARKET_DETAIL = "/detail/:stickerId/:userId";
-const MARKET_BUY = "/buy/:stickerId/:userId";
+const MARKET_DETAIL = "/detail";
+const MARKET_BUY = "/buy";
 const MARKET_STICKER_SEARCH = "/sticker-search";
 const MARKET_SEARCH_PRICE = "/search-price";
 const MARKET_SEARCH_DATE = "/search-date";
+const MARKET_UPLOAD = "/upload";
 
 //post Router
 const POST = "/post";
@@ -38,6 +40,8 @@ const POST_COMMUNITY = "/community";
 const POST_FEEDS = "/feeds";
 const POST_DETAIL = "/:id";
 const POST_SEARCH = "/search";
+const POST_SEARCH_TAG = "/search/tag";
+const POST_SEARCH_ID = "/search/id";
 const POST_UPLOAD = "/upload";
 const POST_UPDATE = "/update";
 const POST_DELETE = "/delete";
@@ -56,14 +60,7 @@ const API_POST_COMMENT_DELETE = "/comment/delete";
 
 const API_DAILY_ATTENDANCE = "/point/attendance";
 
-//img tag api temporary
-const API_NAVER_ITEM_TAG = "/naver/item-tag";
-const API_NAVER_ITEM_TAG_CALLBACK = "/naver/item-tag/callback";
-
-//웹상에서 보기위한 임시 라우터
-//로그인한 후, 내 프로필 보기
-const ME = "/me";
-const LOGOUT = "/logout";
+const API_CHECK_PASSWORD = "/check/password"
 
 const routes = {
     home : HOME,
@@ -75,7 +72,8 @@ const routes = {
     user : USER,
     userProfile : USER_PROFILE,
     userKeep : USER_KEEP,
-    userProfileEditIdcheck : USER_PROFILE_EDIT_IDCHECK,
+    userIdChange : USER_ID_CHANGE,
+    userPwChange : USER_PW_CHANGE,
     userProfileEdit : USER_PROFILE_EDIT,
     userFollow : USER_FOLLOW,
     userUnfollow : USER_UNFOLLOW,
@@ -91,12 +89,15 @@ const routes = {
     marketStickerSearch : MARKET_STICKER_SEARCH,
     marketSearchPrice : MARKET_SEARCH_PRICE,
     marketSearchDate : MARKET_SEARCH_DATE,
+    marketUpload : MARKET_UPLOAD,
 
     post : POST,
     postCommunity : POST_COMMUNITY,
     postFeeds : POST_FEEDS,
     postUpload : POST_UPLOAD,
-    postSearch : POST_SEARCH,
+    postSearch: POST_SEARCH,
+    postSearchTag : POST_SEARCH_TAG,
+    postSearchId :POST_SEARCH_ID,
     postDetail : POST_DETAIL,
     postUpdate : POST_UPDATE,
     postDelete : POST_DELETE,
@@ -111,10 +112,7 @@ const routes = {
     apiPostCommentInsert : API_POST_COMMENT_INSERT,
     apiPostCommentDelete : API_POST_COMMENT_DELETE,
     apiDailyAttendance: API_DAILY_ATTENDANCE,
-    apiNaverItemtag : API_NAVER_ITEM_TAG,
-    apiNaverItemtagCallback : API_NAVER_ITEM_TAG_CALLBACK,
-    me : ME,
-    logout : LOGOUT
+    apiCheckPassword : API_CHECK_PASSWORD
 }
 
 module.exports = routes;

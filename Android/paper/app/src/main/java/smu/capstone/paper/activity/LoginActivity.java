@@ -1,5 +1,6 @@
 package smu.capstone.paper.activity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.data.LoginData;
-import smu.capstone.paper.data.LoginResponse;
+import smu.capstone.paper.responseData.LoginResponse;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -179,90 +180,6 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(intent);
                 finish();
-                /*
-
-                // 입력한 아이디가 공백값일 경우 --> 서버 통신 x
-                if (login_id.getBytes().length <= 0) {
-                    new AlertDialog.Builder(LoginActivity.this)
-                            .setTitle("경고")
-                            .setMessage("아이디를 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            });
-
-                }
-
-                // 입력한 비밀번호가 공백값일 경우 --> 서버 통신 x
-                else if (passsword.getBytes().length <= 0) {
-                    new AlertDialog.Builder(LoginActivity.this)
-                            .setTitle("경고")
-                            .setMessage("비밀번호를 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .show();
-                }
-
-                // login_id, password 로 서버와 통신
-                else {
-                    LoginData data = new LoginData(login_id, passsword);
-                    serviceApi.Login(data).enqueue(new Callback<LoginResponse>() {
-                        @Override
-                        public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                            LoginResponse result = response.body();
-                            int resultCode = result.getCode();
-
-                            // 로그인 성공시 --> 로그인 기록 저장, home으로 전환
-                            if (resultCode == statusCode.RESULT_OK ) { // 로그인성공, 오늘의 첫로그인
-
-                                int user_id = result.getId();
-                                LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
-
-                                Toast.makeText(LoginActivity.this, "출석체크 되었습니다!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                            else if( resultCode == statusCode.RESULT_NO){ // 로그인 성공, 오늘의 첫로그인 아님
-                                int user_id = result.getId();
-                                LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
-                                Toast.makeText(LoginActivity.this, "반갑습니다!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                            else if (resultCode == statusCode.RESULT_CLIENT_ERR) {
-                                new AlertDialog.Builder(LoginActivity.this)
-                                        .setMessage("아이디, 또는 패스워드가 잘못 입력되었습니다.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-
-                                            }
-                                        })
-                                        .show();
-                                login_username.setText(null);
-                                login_pw.setText(null);
-                            }
-                            else {
-                                Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<LoginResponse> call, Throwable t) {
-                            Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                            Log.e("로그인 에러", t.getMessage());
-                            t.printStackTrace(); // 에러 발생 원인 단계별로 출력
-                        }
-                    });
-                }*/
             }
         });
 
@@ -279,11 +196,16 @@ public class LoginActivity extends AppCompatActivity {
 
             }
 
+            @SuppressLint("ResourceAsColor")
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.length() > 0) {
                     login_btn.setClickable(true);
-                    login_btn.setBackgroundColor(0x9A93C8B4);
+                    login_btn.setBackgroundResource(R.color.purpleGrayDark);
+                }
+                else{
+                    login_btn.setClickable(false);
+                    login_btn.setBackgroundResource(R.color.purpleGray);
                 }
             }
         });

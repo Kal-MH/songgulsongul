@@ -42,7 +42,12 @@ var homeController = {
                     var hashedPassword = key.toString('base64');
                     var salt = buf.toString('base64');
                     // 삽입을 수행하는 sql문.
-                    var sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, last_login, point) VALUES (?, ?, ?, ?, ?, ?, NOW() ,1000)';
+                    var sql = "";
+                    if (snsUrl == undefined || snsUrl == ""){
+                        sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, last_login, point, sns_check) VALUES (?, ?, ?, ?, ?, ?, NOW() ,1000, 0)';
+                    } else {
+                        sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, last_login, point, sns_check) VALUES (?, ?, ?, ?, ?, ?, NOW() ,1000, 1)';
+                    }
                     var params = [email, loginId, hashedPassword, salt, snsUrl, imgProfile];
 
                     connection.query(sql, params, function (err, result) {
@@ -74,154 +79,153 @@ var homeController = {
             res.json({
                 'code': statusCode.CLIENT_ERROR
             })
-        }
-
-        connection.query(sql, loginId, function (err, result) {
-            console.log('login')
-            if (err) {
-                console.log(err);
-                res.json({
-                    'code': statusCode.SERVER_ERROR,
-                })
-            } else {
-                if (result.length === 0) {
+        } else {
+            connection.query(sql, loginId, function (err, result) {
+                console.log('login')
+                if (err) {
+                    console.log(err);
                     res.json({
-                        'code': statusCode.CLIENT_ERROR,
+                        'code': statusCode.SERVER_ERROR,
                     })
                 } else {
-                    crypto.pbkdf2(password, result[0].salt, 100, 64, 'sha512', function (err, key) {
-                        if (key.toString('base64') !== result[0].password) {
-                            res.json({
-                                'code': statusCode.CLIENT_ERROR,
-                            })
-                        } else {
-                            console.log(loginId + " is logged in");
-                            dailyAttendance_id(req, res, result[0].id)
-                        }
-                    })
+                    if (result.length === 0) {
+                        res.json({
+                            'code': statusCode.CLIENT_ERROR,
+                        })
+                    } else {
+                        crypto.pbkdf2(password, result[0].salt, 100, 64, 'sha512', function (err, key) {
+                            if (key.toString('base64') !== result[0].password) {
+                                res.json({
+                                    'code': statusCode.CLIENT_ERROR,
+                                })
+                            } else {
+                                console.log(loginId + " is logged in");
+                                dailyAttendance_id(req, res, result[0].id)
+                            }
+                        })
+                    }
                 }
-            }
-        })
+            })
+        }
+
     },
     //아이디찾기
     findId: function (req, res) {
         const email = req.body.email;
         console.log(email);
 
-
-        var sql = "select * from user where email = ?";
-        connection.query(sql, email, async function (err, result) {
-            if (err) {
-                res.json({
-                    'code': statusCode.SERVER_ERROR,
-                })
-            } else if (result.length === 0) {
-                res.json({
-                    'code': statusCode.CLIENT_ERROR,
-                })
-            } else {
-                var loginIds = "";
-                for (var i = 0; i < result.length; i++)
-                    loginIds += "아이디 : " + result[i].login_id + "\n";
-                const mailOptions = {
-                    from: "paper.pen.smu@gmail.com",
-                    to: email,
-                    subject: "아이디 찾기.",
-                    text: loginIds
-                }
-
-                await smtpTransport.sendMail(mailOptions, function (err, response) {
-                    var resultCode;
-                    if (err) {
-                        console.log(err);
-                        resultCode = statusCode.SERVER_ERROR;
-                    } else {
-                        resultCode = statusCode.OK;
-                    }
+        if (email == undefined || email == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
+        } else {
+            var sql = "select * from user where email = ?";
+            connection.query(sql, email, async function (err, result) {
+                if (err) {
                     res.json({
-                        'code': resultCode,
+                        'code': statusCode.SERVER_ERROR,
                     })
-                    smtpTransport.close();
-                })
-            }
-        })
+                } else if (result.length === 0) {
+                    res.json({
+                        'code': statusCode.CLIENT_ERROR,
+                    })
+                } else {
+                    var loginIds = "";
+                    for (var i = 0; i < result.length; i++)
+                        loginIds += "아이디 : " + result[i].login_id + "\n";
+                    const mailOptions = {
+                        from: "paper.pen.smu@gmail.com",
+                        to: email,
+                        subject: "아이디 찾기.",
+                        text: loginIds
+                    }
+    
+                    await smtpTransport.sendMail(mailOptions, function (err, response) {
+                        var resultCode;
+                        if (err) {
+                            console.log(err);
+                            resultCode = statusCode.SERVER_ERROR;
+                        } else {
+                            resultCode = statusCode.OK;
+                        }
+                        res.json({
+                            'code': resultCode,
+                        })
+                        smtpTransport.close();
+                    })
+                }
+            })
+        }
+
     },
     //비밀번호 찾기
     findPassword: function (req, res) {
         const email = req.body.email;
         const loginId = req.body.login_id;
 
-        var sql = "select * from user where email = ? and login_id = ?";
-        var params = [email, loginId];
-        connection.query(sql, params, function (err, result) {
-            if (err) {
-                res.json({
-                    'code': statusCode.SERVER_ERROR,
-                })
-            } else if (result.length === 0) {
-                res.json({
-                    'code': statusCode.CLIENT_ERROR,
-                })
-            } else {
-                //임시 비밀번호 생성
-                var tmpPassword = Math.random().toString(20).slice(2);
-                //비밀번호 암호화
-                crypto.randomBytes(64, function (err, buf) {
-                    crypto.pbkdf2(tmpPassword, buf.toString('base64'), 100, 64, 'sha512', function (err, key) {
-                        var hashedPassword = key.toString('base64');
-                        var salt = buf.toString('base64');
-                        // 삽입을 수행하는 sql문.
-                        var passwordSql = "update user set password = ?, salt = ? where email = ? and login_id = ?"
-                        var passwordParams = [hashedPassword, salt, email, loginId];
-
-                        connection.query(passwordSql, passwordParams, async function (err, result) {
-                            if (err) {
-                                res.json({
-                                    'code': statusCode.SERVER_ERROR,
-                                })
-                            } else {
-                                const mailOptions = {
-                                    from: "paper.pen.smu@gmail.com",
-                                    to: email,
-                                    subject: "임시비밀번호 발급.",
-                                    text: "임시비밀번호 : " + tmpPassword
-                                }
-
-                                await smtpTransport.sendMail(mailOptions, function (err, response) {
-                                    if (err) {
-                                        console.log(err);
-                                        resultCode = statusCode.SERVER_ERROR;
-                                    } else {
-                                        resultCode = statusCode.OK;
-                                    }
-                                    res.json({
-                                        'code': resultCode,
-                                    })
-                                    smtpTransport.close();
-                                })
-                            }
-                        })
-
-                    })
-                })
-            }
-        })
-    },
-    //임시 컨트롤러 - 유저 프로필 보기(img업로드 확인을 위해)
-    tmpgetMeProfile: function (req, res) {
-        const me = req.user;
-
-        if (!me) {
-            res.redirect("/public/login.html");
+        if (email == undefined || email == "" || loginId == undefined || loginId == ""){
+            res.json({
+                'code' : statusCode.CLIENT_ERROR
+            })
         } else {
-            res.render("profile.ejs", { user: me });
+            var sql = "select * from user where email = ? and login_id = ?";
+            var params = [email, loginId];
+            connection.query(sql, params, function (err, result) {
+                if (err) {
+                    res.json({
+                        'code': statusCode.SERVER_ERROR,
+                    })
+                } else if (result.length === 0) {
+                    res.json({
+                        'code': statusCode.CLIENT_ERROR,
+                    })
+                } else {
+                    //임시 비밀번호 생성
+                    var tmpPassword = Math.random().toString(20).slice(2);
+                    //비밀번호 암호화
+                    crypto.randomBytes(64, function (err, buf) {
+                        crypto.pbkdf2(tmpPassword, buf.toString('base64'), 100, 64, 'sha512', function (err, key) {
+                            var hashedPassword = key.toString('base64');
+                            var salt = buf.toString('base64');
+                            // 삽입을 수행하는 sql문.
+                            var passwordSql = "update user set password = ?, salt = ? where email = ? and login_id = ?"
+                            var passwordParams = [hashedPassword, salt, email, loginId];
+    
+                            connection.query(passwordSql, passwordParams, async function (err, result) {
+                                if (err) {
+                                    res.json({
+                                        'code': statusCode.SERVER_ERROR,
+                                    })
+                                } else {
+                                    const mailOptions = {
+                                        from: "paper.pen.smu@gmail.com",
+                                        to: email,
+                                        subject: "임시비밀번호 발급.",
+                                        text: "임시비밀번호 : " + tmpPassword
+                                    }
+    
+                                    await smtpTransport.sendMail(mailOptions, function (err, response) {
+                                        if (err) {
+                                            console.log(err);
+                                            resultCode = statusCode.SERVER_ERROR;
+                                        } else {
+                                            resultCode = statusCode.OK;
+                                        }
+                                        res.json({
+                                            'code': resultCode,
+                                        })
+                                        smtpTransport.close();
+                                    })
+                                }
+                            })
+    
+                        })
+                    })
+                }
+            })
         }
 
     },
-    logout: function (req, res) {
-        req.logout();
-        res.redirect("/public/login.html");
-    }
 }
 
 module.exports = homeController; 

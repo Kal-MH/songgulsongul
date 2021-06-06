@@ -10,11 +10,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Window;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -22,9 +20,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
-import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.responseData.CodeResponse;
 import smu.capstone.paper.data.IdData;
-import smu.capstone.paper.data.LoginResponse;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;

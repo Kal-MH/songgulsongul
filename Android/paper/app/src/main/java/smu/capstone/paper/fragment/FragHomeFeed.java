@@ -1,6 +1,8 @@
 package smu.capstone.paper.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +11,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
-import com.google.gson.JsonObject;
+import java.util.List;
 
-import org.json.JSONException;
+import javax.net.ssl.HandshakeCompletedEvent;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,6 +28,8 @@ import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HomeFeedAdapter;
+import smu.capstone.paper.responseData.PostFeedResponse;
+import smu.capstone.paper.responseData.PostFeed;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -35,12 +40,16 @@ public class FragHomeFeed extends Fragment {
     HomeFeedAdapter adapter;
 
     int user_id;
+    int lastId;
+
+
+    Boolean isLoading = false;
 
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
 
     StatusCode statusCode;
 
-    JsonObject feeds;
+    List<PostFeed> feeds;
 
     @Nullable
     @Override
@@ -71,49 +80,120 @@ public class FragHomeFeed extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
+        initScrollListener();
         GetFeedData();
-
 
 
         return rootView;
     }
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setData(){
+       if(feeds.size() == 0){
+           recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
+       }
        adapter = new HomeFeedAdapter(getContext(), feeds);
-        recyclerView.setAdapter(adapter);
+       recyclerView.setAdapter(adapter);
     }
 
     // server 에서 data 전달
     public void GetFeedData(){
-        serviceApi.GetFeed(user_id,20).enqueue(new Callback<JsonObject>() {
+        serviceApi.GetFeed(user_id,null ).enqueue(new Callback<PostFeedResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject result = response.body();
+            public void onResponse(Call<PostFeedResponse> call, Response<PostFeedResponse> response) {
+                PostFeedResponse result = response.body();
 
-                int resultCode = result.get("code").getAsInt();
+                int resultCode = result.getCode();
                 if(resultCode == statusCode.RESULT_SERVER_ERR){
                     Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                     // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
                 }
                 else if( resultCode == statusCode.RESULT_OK){
-                    feeds = result;
+                    feeds = result.getData();
                 }
                 else {
-                    feeds=result;
+                    feeds=result.getData();
                 }
                 setData();
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<PostFeedResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                feeds = new JsonObject();
+                feeds = null;
                 Log.d("feed" , "통신 실패");
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
+    }
+
+
+    public void GetFeedDataMore() {
+        lastId = feeds.get(feeds.size()-1).getPost().getId();
+        feeds.add(null);
+        adapter.notifyItemInserted(feeds.size() - 1);
+
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                serviceApi.GetFeed(user_id, lastId).enqueue(new Callback<PostFeedResponse>() {
+                    @Override
+                    public void onResponse(Call<PostFeedResponse> call, Response<PostFeedResponse> response) {
+                        feeds.remove(feeds.size()-1);
+                        adapter.notifyItemRemoved(feeds.size());
+
+                        PostFeedResponse result = response.body();
+                        int resultCode = result.getCode();
+                        if (resultCode == statusCode.RESULT_SERVER_ERR) {
+                            Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
+                        } else if (resultCode == statusCode.RESULT_OK) {
+                            adapter.addItem(result.getData());
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            adapter.addItem(result.getData());
+                            adapter.notifyDataSetChanged();
+                        }
+                        isLoading = false;
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostFeedResponse> call, Throwable t) {
+                        Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        feeds = null;
+                        Log.d("feed", "통신 실패");
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
+            }
+        };
+
+        handler.postDelayed(runnable, 1000);
+    }
+
+    private void initScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                Log.d("scroll" , layoutManager.findLastVisibleItemPosition() +" | " + ( adapter.getItemCount()  -1 ) );
+                if (!isLoading) {
+                    if (layoutManager != null && layoutManager.findLastVisibleItemPosition()== adapter.getItemCount() - 1) {
+                        //리스트 마지막
+                        GetFeedDataMore();
+                        isLoading = true;
+                        Log.d("home" ,"마지막!");
+                    }
+                }
             }
         });
     }

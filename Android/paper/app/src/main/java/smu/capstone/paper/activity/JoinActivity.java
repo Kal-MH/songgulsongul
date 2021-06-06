@@ -25,16 +25,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.gson.JsonObject;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.R;
-import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.responseData.CodeResponse;
 import smu.capstone.paper.data.EmailData;
 import smu.capstone.paper.data.IdCheckData;
 import smu.capstone.paper.data.JoinData;

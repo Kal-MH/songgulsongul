@@ -6,6 +6,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,34 +18,27 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
-import smu.capstone.paper.adapter.PostImageAdapter;
-import smu.capstone.paper.data.CodeResponse;
+import smu.capstone.paper.adapter.PostImageRVAdapter;
+import smu.capstone.paper.responseData.CodeResponse;
 import smu.capstone.paper.data.FollowData;
-import smu.capstone.paper.data.ProfileData;
 import smu.capstone.paper.data.UserData;
+import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.ProfileResponse;
+import smu.capstone.paper.responseData.User;
 import smu.capstone.paper.server.RetrofitClient;
 import smu.capstone.paper.server.ServiceApi;
 import smu.capstone.paper.server.StatusCode;
@@ -58,18 +53,21 @@ public class ProfileActivity extends AppCompatActivity {
     final int OTHER = 0;
 
     public int Status;
+    public static final int REQUEST_CODE = 100;
 
     String login_id;
     String user_id;
 
-    private GridView gridView;
-    private PostImageAdapter adapter;
+    private RecyclerView recyclerview;
+    private PostImageRVAdapter adapter;
+
     private TextView feed_count_tv, follow_count_tv, follower_count_tv, points_tv, intro_tv, sns_tv;
     private Button follow_btn, unfollow_btn;
     private LinearLayout profile_follows;
     private LinearLayout pointview;
-    private JSONObject post_item;
-    private JsonObject obj, profile_item;
+
+    private List<Post> post_data;
+    private User user_data;
     private ImageView profile_userimage;
 
 
@@ -90,7 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
         follow_btn = findViewById(R.id.profile_follow_btn);
         unfollow_btn = findViewById(R.id.profile_unfollow_btn);
         pointview = findViewById(R.id.profile_pointview);
-        gridView = findViewById(R.id.profile_grid);
+        recyclerview = findViewById(R.id.profile_rv);
         profile_userimage = findViewById(R.id.profile_userimage);
 
         Intent intent = getIntent();
@@ -128,33 +126,30 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent( ProfileActivity.this, FollowActivity.class);
 
                 // intro, picture 전달
-                JsonArray profile_info = profile_item.getAsJsonArray("profileInfo");
-                intent.putExtra("userId", profile_info.get(0).getAsJsonObject().get("userId").getAsString());
-                intent.putExtra("intro", profile_info.get(0).getAsJsonObject().get("intro").isJsonNull() ?
-                        "" :  profile_info.get(0).getAsJsonObject().get("intro").getAsString());
-                intent.putExtra("picture", profile_info.get(0).getAsJsonObject().get("profile_image").getAsString());
-
+                intent.putExtra("userId", user_id );
+                intent.putExtra("intro", user_data.getIntro());
+                intent.putExtra("picture", user_data.getImg_profile());
 
                startActivity(intent);
             }
         });
 
-
+/*
         //Click Listener
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        recyclerview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 Intent intent = new Intent(ProfileActivity.this, PostActivity.class);
 
                 // 게시글 id 전달
-                int postId = profile_item.getAsJsonArray("postInfo").get(position).getAsJsonObject().get("postId").getAsInt();
+                int postId = post_data.get(position).getId();
                 intent.putExtra("post_id", postId);
 
                 startActivity(intent);
                 Log.d("TAG", position + "is Clicked");      // Can not getting this method.
             }
-        });
+        });*/
 
         // 팔로우 버튼 Click Listener
         follow_btn.setOnClickListener(new View.OnClickListener() {
@@ -253,14 +248,13 @@ public class ProfileActivity extends AppCompatActivity {
         if(Status == OTHER) // 타인의 프로필일 경우
             data.SetUserId(user_id);
 
-        serviceApi.Profile(data).enqueue(new Callback<JsonObject>() {
+        serviceApi.Profile(data).enqueue(new Callback<ProfileResponse>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject result = response.body();
-                int resultCode = result.get("code").getAsInt();
+            public void onResponse(Call<ProfileResponse> call, Response<ProfileResponse> response) {
+                ProfileResponse result = response.body();
+                int resultCode = result.getCode();
 
                 if(resultCode == statusCode.RESULT_OK){
-                    profile_item = result;
                     setProfileData(result);
                 }
                 else if(resultCode == statusCode.RESULT_CLIENT_ERR){
@@ -281,7 +275,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<ProfileResponse> call, Throwable t) {
                 Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                 Log.e("프로필 데이터 불러오기 에러", t.getMessage());
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
@@ -289,40 +283,38 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void setProfileData(JsonObject obj){
-        JsonObject post_data = new JsonObject();
+    public void setProfileData(ProfileResponse obj){
+        post_data = obj.getPostInfo();
+        user_data = obj.getProfileInfo();
 
-            JsonArray arr = obj.getAsJsonArray("postInfo");
-            post_data.add("data", arr);
 
-            follow_count_tv.setText(obj.get("followCnt").getAsInt() + "");
-            follower_count_tv.setText(obj.get("followerCnt").getAsInt() + "");
+        follow_count_tv.setText(obj.getFollowCnt()+"");
+        follower_count_tv.setText(obj.getFollowerCnt()+"");
 
-            intro_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("intro").isJsonNull() ?
-                   "" : obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("intro").getAsString());
+        intro_tv.setText(user_data.getIntro());
+        sns_tv.setText(user_data.getSns());
 
-            sns_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").isJsonNull() ?
-                    "" : obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("sns").getAsString());
 
-            String img_addr = RetrofitClient.getBaseUrl()+ obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("profile_image").getAsString();
-            Log.d("profile", img_addr);
-            Glide.with(this).load( img_addr).into(profile_userimage);
+        String img_addr = RetrofitClient.getBaseUrl()+ user_data.getImg_profile();
+        Log.d("profile", img_addr);
+        Glide.with(this).load( img_addr).into(profile_userimage);
+        feed_count_tv.setText(post_data.size()+"");
 
-            feed_count_tv.setText(obj.getAsJsonArray("postInfo").isJsonNull() ?
-                    0 + "" : obj.getAsJsonArray("postInfo").size() + "");
 
-            adapter = new PostImageAdapter(this, R.layout.post_image_item, post_data);
-            gridView.setAdapter(adapter);
+        adapter = new PostImageRVAdapter(this, post_data);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        recyclerview.setLayoutManager(layoutManager);
+        recyclerview.setAdapter(adapter);
 
 
         if(Status == MY) { // 내 프로필
             follow_btn.setEnabled(false);
             follow_btn.setVisibility(View.INVISIBLE);
             pointview.setVisibility(View.VISIBLE);
-            points_tv.setText(obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("point").getAsInt() + "p");
+            points_tv.setText(user_data.getPoint()+ "p");
         }
         else if( Status == OTHER ){ // 타인 프로필
-            int isFollowing = obj.getAsJsonArray("profileInfo").get(0).getAsJsonObject().get("flag").getAsInt();
+            int isFollowing = user_data.getFlag();
 
             if(isFollowing == 0) { // 팔로우 x
                 follow_btn.setEnabled(true);
@@ -353,9 +345,11 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
                 break;
 
-            case R.id.profile_edit :
+            case R.id.profile_edit:
                 Intent intent1 = new Intent(ProfileActivity.this, EditProfileActivity.class);
                 startActivity(intent1);
+                finish();
+                //startActivityForResult(intent1, REQUEST_CODE);
                 break;
 
             case R.id.profile_keep:
@@ -375,8 +369,39 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent4 = new Intent(ProfileActivity.this , SettingActivity.class);
                 startActivity(intent4);
                 break;
+
+            case R.id.profile_account_edit:
+                Intent intent5 = new Intent(ProfileActivity.this , EditAccountActivity.class);
+
+                startActivity(intent5);
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if(requestCode == REQUEST_CODE){
+//            if(resultCode != Activity.RESULT_OK){
+//                return;
+//            }
+//            String new_id = data.getStringExtra("userId");
+//            Intent intent = getIntent();
+//            intent.putExtra("userId", new_id);
+//            finish();
+//            startActivity(intent);
+//        }
+//    }
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
     }
 
 }

@@ -63,8 +63,8 @@ public class EditActivity extends AppCompatActivity {
                 editingImageBitmap.recycle();
 
             //최대 픽셀 제한
-            ImageUtil.maxSize2048(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr());
-            //ImageUtil.maxSizeCustom(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr(),1024);
+            //ImageUtil.maxSize2048(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr());
+            ImageUtil.maxSizeCustom(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr(),512);
 
             Log.i("EditImageSize",String.valueOf(editingImage.rows())+", " + String.valueOf(editingImage.cols()));
             runOnUiThread(new Runnable() {
@@ -153,20 +153,8 @@ public class EditActivity extends AppCompatActivity {
 
                 //Edit Done 할시 되돌아 갈 수 없음! 이전 작업 정리해도 안전!
                 //메모리 정리하기
-                try{
-                    Mat loc = new Mat(croppedImageAddress);
-                    loc.release();
-                }
-                catch (Exception e){
-
-                }
-                try{
-                    Mat loc2 = new Mat(paperImageAddress);
-                    loc2.release();
-                }
-                catch (Exception e){
-
-                }
+                new Mat(croppedImageAddress).release();
+                new Mat(paperImageAddress).release();
 
 
 

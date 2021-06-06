@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.fragment.FragFollower;
 import smu.capstone.paper.fragment.FragFollowing;
+import smu.capstone.paper.server.RetrofitClient;
 
 public class FollowActivity extends AppCompatActivity {
     private FragmentManager fm;
@@ -62,16 +64,23 @@ public class FollowActivity extends AppCompatActivity {
         // 사용자 정보 초기화 및 툴바초기화
         Intent intent = getIntent();
 
+
+        String base_url = RetrofitClient.getBaseUrl();
+        Glide.with(FollowActivity.this).load(base_url + intent.getStringExtra("picture")).into(follow_img);
+        follow_intro.setText(intent.getStringExtra("intro"));
+        user_id = intent.getStringExtra("userId");
+
+        Log.d("follow", user_id);
+        Log.d("follow",intent.getStringExtra("intro"));
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.follow_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-
-        actionBar.setTitle(LoginSharedPreference.getLoginId(this)); // 사용자 아이디 추가
+        actionBar.setTitle(user_id);
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
-        Glide.with(FollowActivity.this).load(intent.getStringExtra("picture")).into(follow_img);
-        follow_intro.setText(intent.getStringExtra("intro"));
-        user_id = intent.getStringExtra("userId");
+
         final Bundle bundle = new Bundle();
         bundle.putString("userId",user_id);
 
@@ -120,11 +129,15 @@ public class FollowActivity extends AppCompatActivity {
                 fragFollower.setArguments(bundle);
             }
         });
-
-
-
-
     }
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때

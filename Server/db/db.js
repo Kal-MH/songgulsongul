@@ -10,8 +10,10 @@ var connection = mysql.createConnection({
     database: process.env.DB_DATABASE || "example",
     password: process.env.DB_PASSWORD || "Capstone0!",
     port: process.env.DB_PORT || 3306,
-    dateStrings : 'date',
-    multipleStatements: true // 다중쿼리 사용
+    dateStrings : true,
+    multipleStatements: true, // 다중쿼리 사용
+    timezone : "Asia/Seoul",
+    charset : 'utf8mb4'
 });
 
 //DB connection export

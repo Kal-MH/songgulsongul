@@ -1,24 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/narrow_margin"
+    android:layout_margin = "@dimen/common_margin"
+    android:background="@drawable/border"
+    >
 
-    <LinearLayout
+    <TextView
+        android:layout_marginTop="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginLeft="@dimen/common_margin"
+        android:text="ID를 입력해주세요"
+        style="@style/Text.textBoldStyle">
 
-        <EditText
-            android:id="@+id/find_pw_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="ID" />
+    </TextView>
+    <EditText
+        android:id="@+id/find_pw_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/narrow_margin"
+        android:theme="@style/EditTextTheme"
+        android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginLeft="@dimen/common_margin"
+        style="@style/Text.textStyle"
+        android:background = "@null"
+        android:hint="ID" />
 
-        <EditText
-            android:id="@+id/find_pw_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="e-mail" />
-    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="이메일을 입력해 주세요"
+        style="@style/Text.textBoldStyle"
+        android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginTop="@dimen/common_margin"
+        >
 
-</FrameLayout>
+    </TextView>
+    <EditText
+        android:id="@+id/find_pw_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/EditTextTheme"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginTop="@dimen/narrow_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginBottom="@dimen/common_margin"
+        style="@style/Text.textStyle"
+        android:background = "@null"
+        android:hint="e-mail" />
+
+</LinearLayout>
