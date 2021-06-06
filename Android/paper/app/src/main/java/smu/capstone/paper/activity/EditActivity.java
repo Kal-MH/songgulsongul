@@ -29,6 +29,7 @@ import java.io.IOException;
 
 import smu.capstone.paper.ImageUtil;
 import smu.capstone.paper.R;
+import smu.capstone.paper.songgul;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -134,8 +135,9 @@ public class EditActivity extends AppCompatActivity {
 
         paperImageAddress = getIntent().getLongExtra("paperImageAddress",0);
         croppedImageAddress = getIntent().getLongExtra("croppedImageAddress", 0x00);
-        editingImage = new Mat(croppedImageAddress).clone();
-
+        //editingImage = new Mat(croppedImageAddress).clone();
+        editingImage =  ((songgul)getApplication()).getCroppedMat().clone();
+        ((songgul)getApplication()).setEditingMat(editingImage);
         setImageViewFromMat();
 
 
@@ -151,10 +153,11 @@ public class EditActivity extends AppCompatActivity {
                 intent.putExtra("editedImageAddress",editingImage.getNativeObjAddr());
                 startActivity(intent);
 
+                ((songgul)getApplication()).releaseAllMat();
                 //Edit Done 할시 되돌아 갈 수 없음! 이전 작업 정리해도 안전!
                 //메모리 정리하기
-                new Mat(croppedImageAddress).release();
-                new Mat(paperImageAddress).release();
+                //new Mat(croppedImageAddress).release();
+                //new Mat(paperImageAddress).release();
 
 
 
@@ -259,7 +262,7 @@ public class EditActivity extends AppCompatActivity {
                 intent.putExtra("path", filePath);
                 intent.putExtra("imgInputAddress", paperImageAddress);
                 intent.putExtra("sourceFilePath", sourceFilePath);
-                new Mat(croppedImageAddress).release();
+                //new Mat(croppedImageAddress).release();
                 startActivity(intent);
                 finish();
                 return true;
@@ -267,8 +270,9 @@ public class EditActivity extends AppCompatActivity {
 
             case R.id.toolbar_undo : // 원본으로 복구
 
-                editingImage.release();
-                editingImage = new Mat(croppedImageAddress).clone();
+                //editingImage.release();
+                //editingImage = new Mat(croppedImageAddress).clone();
+                editingImage = ((songgul)getApplication()).getCroppedMat();
                 setImageViewFromMat();
 
 
@@ -296,8 +300,8 @@ public class EditActivity extends AppCompatActivity {
     public void finish() {
         //editingImage.release();
 
-        new Mat(paperImageAddress).release();
-        new Mat(croppedImageAddress).release();
+        //new Mat(paperImageAddress).release();
+        //new Mat(croppedImageAddress).release();
         editingImageBitmap.recycle();
         super.finish();
     }

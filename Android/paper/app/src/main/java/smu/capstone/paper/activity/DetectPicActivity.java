@@ -30,6 +30,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.imgcodecs.Imgcodecs;
 import smu.capstone.paper.ImageUtil;import smu.capstone.paper.R;
+import smu.capstone.paper.songgul;
 
 public class DetectPicActivity extends AppCompatActivity {
 
@@ -80,8 +81,9 @@ public class DetectPicActivity extends AppCompatActivity {
                 // 가져온 이미지 세팅
         //cropImageView.setImageUriAsync(imageUri);
         imgInputAddress = getIntent().getLongExtra("imgInputAddress", 0);
-        paperImage = new Mat(imgInputAddress).clone();
+        //paperImage = new Mat(imgInputAddress).clone();
 
+        paperImage = ((songgul)getApplication()).getPaperMat();
 
         runOnUiThread(new Runnable() {
             @Override
@@ -135,8 +137,10 @@ public class DetectPicActivity extends AppCompatActivity {
                 intent.putExtra("path", filePath);
                 intent.putExtra("sourceFilePath", sourceFilePath);
                 intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
-                intent.putExtra("paperImageAddress", imgInputAddress);
+                intent.putExtra("paperImageAddress", paperImage.getNativeObjAddr());
+                ((songgul)getApplication()).setCroppedMat(croppedImage.clone());
                 startActivity(intent);
+                croppedImage.release();
                 finish();
             }
         });
@@ -183,7 +187,7 @@ public class DetectPicActivity extends AppCompatActivity {
         second_time = System.currentTimeMillis();
         if(second_time-first_time <2000){
             super.onBackPressed();
-            new Mat(imgInputAddress).release();
+            //new Mat(imgInputAddress).release();
             finish();
         }
         else{
@@ -205,7 +209,7 @@ public class DetectPicActivity extends AppCompatActivity {
             case R.id.toolbar_before:{
                 Intent intent = new Intent(DetectPicActivity.this, DetectPaperActivity.class);
                 intent.putExtra("path", sourceFilePath);
-                paperImage.release();
+                //paperImage.release();
                 startActivity(intent);
                 finish();
                 return true;
@@ -217,7 +221,8 @@ public class DetectPicActivity extends AppCompatActivity {
                 intent.putExtra("sourceFilePath", sourceFilePath);
                 croppedImage = paperImage;
                 intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
-                intent.putExtra("paperImageAddress", imgInputAddress);
+                intent.putExtra("paperImageAddress", paperImage.getNativeObjAddr());
+                ((songgul)getApplication()).setCroppedMat(croppedImage.clone());
                 startActivity(intent);
                 finish();
                 return true;

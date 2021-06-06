@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
+import smu.capstone.paper.songgul;
 import smu.capstone.paper.R;
 
 public class EditImageFilterActivity extends AppCompatActivity {
@@ -76,24 +77,9 @@ public class EditImageFilterActivity extends AppCompatActivity {
         filterTest = findViewById(R.id.image_edit_filter_test);
 
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
-        try{
-
-            //편집 취소해도 연동되지 않게 별도 객체로 분리
-            //previewImage.copyTo(previewImage);
-            previewImage = new Mat(editingImageAddress).clone();
-            //previewImage = previewImage.clone();
-        }
-        catch (Exception e){
-
-        }
-        if(previewImage != null){
-            /*
-            Bitmap loc_bitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(previewImage, loc_bitmap);
-            editPreview.setImageBitmap(loc_bitmap);
-            */
-            updatePreviewImageView();
-        }
+        editingImageAddress = ((songgul)getApplication()).getEditingMat().getNativeObjAddr();
+        previewImage = ((songgul)getApplication()).getEditingMat().clone();
+        updatePreviewImageView();
 
 
 
@@ -165,5 +151,13 @@ public class EditImageFilterActivity extends AppCompatActivity {
             Toast.makeText(this,"한번 더 누르면 적용을 취소합니다", Toast.LENGTH_SHORT).show();
             first_time = System.currentTimeMillis();
         }
+    }
+
+
+    @Override
+    public void finish() {
+        super.finish();
+        previewImageBitmap.recycle();
+        previewImage.release();
     }
 }

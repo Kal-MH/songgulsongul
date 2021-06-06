@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import smu.capstone.paper.songgul;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
@@ -90,22 +91,9 @@ public class EditImageHistogramActivity extends AppCompatActivity {
 
 
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
-        try{
-
-            //previewImage.copyTo(previewImage);
-            previewImage = new Mat(editingImageAddress).clone();
-            //previewImage = previewImage.clone();
-        }
-        catch (Exception e){
-
-        }
-        if(previewImage != null){
-            /*
-            previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(previewImage, previewImageBitmap);
-            editPreview.setImageBitmap(previewImageBitmap);*/
-            updatePreviewImageView();
-        }
+        editingImageAddress = ((songgul)getApplication()).getEditingMat().getNativeObjAddr();
+        previewImage = ((songgul)getApplication()).getEditingMat().clone();
+        updatePreviewImageView();
 
 
         //히스토그램평활화 없음 적용

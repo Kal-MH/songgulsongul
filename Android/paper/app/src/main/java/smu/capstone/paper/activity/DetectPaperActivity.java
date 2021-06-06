@@ -37,6 +37,7 @@ import smu.capstone.paper.ImageUtil;
 import smu.capstone.paper.R;
 import smu.capstone.paper.layout.DrawRect;
 import smu.capstone.paper.layout.ZoomView;
+import smu.capstone.paper.songgul;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -96,6 +97,8 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         filePath = getIntent().getStringExtra("path");
         sourceFilePath = filePath;
         Log.i("imread",filePath);
+
+        //imgInput = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
         imgInput = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
         Imgproc.cvtColor(imgInput,imgInput, Imgproc.COLOR_BGR2RGB);//RGB BGR 채널 뒤밖임 수정
         paperPoints = new MatOfPoint();
@@ -177,6 +180,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 PaperProcessing(imgInput.getNativeObjAddr(),imgOutput.getNativeObjAddr(),paperPoints.getNativeObjAddr(),pivotOffsetX,pivotOffsetY,scaleFactor,th1,th2);
                 //Log.w("DetectPaper", "paperImage Address: "+ String.valueOf(imgOutput.getNativeObjAddr()));
                 intent.putExtra("imgInputAddress", imgOutput.getNativeObjAddr());
+                ((songgul)getApplication()).setPaperMat(imgOutput);
                 startActivity(intent);
                 finish();
             }
@@ -190,6 +194,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         second_time = System.currentTimeMillis();
         if(second_time-first_time <2000){
             super.onBackPressed();
+            ((songgul)getApplication()).releaseAllMat();
             finish();
         }
         else{
@@ -619,6 +624,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 intent.putExtra("sourceFilePath", sourceFilePath);
                 imgOutput = imgInput.clone();
                 intent.putExtra("imgInputAddress", imgOutput.getNativeObjAddr());
+                ((songgul)getApplication()).setPaperMat(imgOutput);
                 startActivity(intent);
                 finish();
                 return true;
