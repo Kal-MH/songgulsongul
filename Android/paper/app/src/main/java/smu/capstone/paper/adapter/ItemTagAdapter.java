@@ -1,6 +1,6 @@
 package smu.capstone.paper.adapter;
 
-import android.content.ClipData;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,14 +61,14 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ItemDetailActivity.class);
-                intent.putExtra("id" , item.getId());
-                intent.putExtra("name" ,  item.getName());
-                intent.putExtra("hprice" ,  item.getH_price());
-                intent.putExtra("lprice" ,  item.getL_price());
-                intent.putExtra("url" ,  item.getUrl());
-                intent.putExtra("picture" ,  item.getPicture());
-                context.startActivity(intent);
+
+                /*Intent intent = new Intent(context, ItemDetailActivity.class);
+
+                ((Activity)context).startActivityForResult(intent,1234);*/
+                if(mListener != null){
+                    mListener.onItemClick(v);
+                }
+
             }
         });
 
@@ -79,6 +80,9 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
+
+        int pos = getAdapterPosition();
+
         ImageView pic;
 
         public ViewHolder(@NonNull View itemView){
@@ -89,5 +93,15 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
 
     public List<ItemTag> getDataList(){
         return dataList;
+    }
+    //item 클릭 리스너 인터페이스
+    public interface OnItemClickListener{
+        void onItemClick(View v);
+    }
+
+    private ItemTagAdapter.OnItemClickListener mListener = null;
+
+    public void setOnItemClickListener(ItemTagAdapter.OnItemClickListener listener){
+        this.mListener = listener;
     }
 }

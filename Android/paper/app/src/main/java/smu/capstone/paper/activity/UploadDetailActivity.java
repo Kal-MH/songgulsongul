@@ -1,6 +1,7 @@
 package smu.capstone.paper.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -30,6 +31,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -64,6 +66,9 @@ import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.SettingSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.AddItemTagAdapter;
+import smu.capstone.paper.adapter.ItemSearchAdapter;
+import smu.capstone.paper.adapter.ItemTagAdapter;
+
 import smu.capstone.paper.responseData.CodeResponse;
 import smu.capstone.paper.responseData.ItemTag;
 import smu.capstone.paper.server.RetrofitClient;
@@ -170,30 +175,45 @@ public class UploadDetailActivity extends AppCompatActivity {
         });
 
 
-
-
         // 아이템 태그 어뎁터 설정
         itemtag_rv = findViewById(R.id.upload_itemtag_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         itemtag_rv.setLayoutManager(layoutManager);
 
-        // 임시데이터
-        ItemTag item1 = new ItemTag(1, "item1", 3000, 1000, "https://search.shopping.naver.com/gate.nhn?id=82726822549",
-                "https://shopping-phinf.pstatic.net/main_8272682/82726822549.1.jpg", "brand1", "category1-1", "category2-1");
-        ItemTag item2 = new ItemTag(2, "item1", 4000, 2000, "https://search.shopping.naver.com/gate.nhn?id=82726822549",
-                "https://shopping-phinf.pstatic.net/main_8272682/82726822549.1.jpg", "brand2", "category1-2", "category2-2");
-        itemTagData.add(item1);
-        itemTagData.add(item2);
-        //
 
-        itemTagData.add(new ItemTag(-1));
-        adapter = new AddItemTagAdapter(itemtag_rv.getContext(), itemTagData); // 추가모드 어뎁터 세팅
+        try {
+            adapter = new AddItemTagAdapter(itemtag_rv.getContext(),itemtag_obj ); // 추가모드 어뎁터 세팅
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         // 적용
         itemtag_rv.setAdapter(adapter);
 
+        adapter.setOnItemClickListener(new ItemTagAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v) {
+                Intent intent = new Intent(UploadDetailActivity.this, AddItemtagActivity.class);
+
+                intent.putExtra("key","value");
+                startActivityForResult(intent,123);
+            }
+        });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println(requestCode + " " + resultCode);
+        if(requestCode == 123 && resultCode == RESULT_OK){
+            String myData = data.getStringExtra("key");
 
 
+            System.out.println(myData);
+        }
+        else{
+            System.out.println("there is no data");
+        }
+    }
 
 
 

@@ -18,8 +18,11 @@ import java.util.List;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.activity.AddItemtagActivity;
-import smu.capstone.paper.responseData.ItemTag;
-import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.activity.ItemDetailActivity;
+import smu.capstone.paper.activity.PostEditActivity;
+import smu.capstone.paper.activity.UploadDetailActivity;
+import smu.capstone.paper.item.ItemtagItem;
+
 
 
 public class AddItemTagAdapter extends ItemTagAdapter {
@@ -47,11 +50,9 @@ public class AddItemTagAdapter extends ItemTagAdapter {
                 if( dataList.get(position).getId()== -1){
                     Log.d("TAG","add action");
                     Intent intent = new Intent(context, AddItemtagActivity.class);
-                    context.startActivity(intent);
+                    ((Activity) context).startActivityForResult(intent,100);
                 }
             }
         });
-
     }
-
 }
