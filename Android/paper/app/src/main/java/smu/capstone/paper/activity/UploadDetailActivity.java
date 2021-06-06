@@ -4,12 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
@@ -22,6 +26,7 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,29 +38,65 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okio.BufferedSink;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Multipart;
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.SettingSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.AddItemTagAdapter;
 import smu.capstone.paper.adapter.ItemSearchAdapter;
 import smu.capstone.paper.adapter.ItemTagAdapter;
 
+import smu.capstone.paper.responseData.CodeResponse;
+import smu.capstone.paper.responseData.ItemTag;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
+
 public class UploadDetailActivity extends AppCompatActivity {
+    // ServiceApi 객체 생성
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
 
     String filePath;
-
+    int user_id;
     RecyclerView itemtag_rv;
     AddItemTagAdapter adapter;
-    EditText hashtagText;
-    Switch upload_detail_ccl_1, upload_detail_ccl_2, upload_detail_ccl_3 , upload_detail_ccl_4, upload_detail_ccl_5;
+    List<ItemTag> itemTagData = new ArrayList<>();
+    EditText hashtagText, uploadText;
+    SwitchCompat upload_detail_ccl_1, upload_detail_ccl_2, upload_detail_ccl_3 , upload_detail_ccl_4, upload_detail_ccl_5;
     ImageView upload_detail_img;
+    int ccl1, ccl2, ccl3, ccl4, ccl5;
 
+    RequestBody requestFile, requestId, requestText;
+    MultipartBody.Part imageBody;
+    ArrayList<MultipartBody.Part> hash_tags = new ArrayList<>();
+    ArrayList<MultipartBody.Part> ccl_list = new ArrayList<>();
+    ArrayList<MultipartBody.Part> item_tags = new ArrayList<>();
+
+    final int ON = 1;
+    final int OFF = 0;
 
     long first_time = 0;
     long second_time = 0;
@@ -65,6 +106,9 @@ public class UploadDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_detail);
+
+        uploadText = findViewById(R.id.upload_text);
+        user_id = LoginSharedPreference.getUserId(this);
 
 
         //이미지 세팅
@@ -130,17 +174,19 @@ public class UploadDetailActivity extends AppCompatActivity {
             }
         });
 
+
         // 아이템 태그 어뎁터 설정
         itemtag_rv = findViewById(R.id.upload_itemtag_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         itemtag_rv.setLayoutManager(layoutManager);
-        JSONObject itemtag_obj = getItemtagData();
+
 
         try {
             adapter = new AddItemTagAdapter(itemtag_rv.getContext(),itemtag_obj ); // 추가모드 어뎁터 세팅
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         // 적용
         itemtag_rv.setAdapter(adapter);
 
@@ -161,6 +207,7 @@ public class UploadDetailActivity extends AppCompatActivity {
         if(requestCode == 123 && resultCode == RESULT_OK){
             String myData = data.getStringExtra("key");
 
+
             System.out.println(myData);
         }
         else{
@@ -168,32 +215,83 @@ public class UploadDetailActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public JSONObject getItemtagData(){
-        JSONObject post_itemtag_item = new JSONObject();
-        JSONArray arr= new JSONArray();
 
 
-        //임시 데이터 저장
-        try{
-
-            JSONObject obj2 = new JSONObject();
-            obj2.put("Image", drawable2Bitmap( getDrawable(R.drawable.ic_baseline_add_24)) );
-            arr.put(obj2);
-
-
-            for(int i = 0; i < 5; i++){
-                JSONObject obj = new JSONObject();
-                obj.put("Image", drawable2Bitmap( getDrawable(R.drawable.sampleimg)) );
-                arr.put(obj);
-            }
-            post_itemtag_item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return post_itemtag_item;
     }
 
+    // 서버에 전송할 데이터 묶기
+    public void makeUploadData(){
+        hash_tags.clear();
+        ccl_list.clear();
+        item_tags.clear();
+        ccl1 = ccl2 = ccl3 = ccl4 = ccl5 = OFF;
+
+        // 업로드 이미지
+        File file = new File(filePath);
+        requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
+        imageBody = MultipartBody.Part.createFormData("img_post", file.getName(), requestFile);
+
+        // 사용자 아이디
+        requestId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(user_id));
+
+        // 텍스트
+        String text = uploadText.getText().toString().trim();
+        requestText = RequestBody.create(MediaType.parse("text/plain"), text);
+
+        // 해쉬태그
+        String hashTag = hashtagText.getText().toString() + " ";
+        Pattern pattern = Pattern.compile("[#](.*?)[ ]");
+        Matcher matcher = pattern.matcher(hashTag);
+        while(matcher.find()){
+            hash_tags.add(MultipartBody.Part.createFormData("hash_tag", matcher.group(1)));
+
+            if(matcher.group(1) == null)
+                break;
+        }
+
+        // ccl
+        if(upload_detail_ccl_1.isChecked())
+            ccl1 = ON;
+        if(upload_detail_ccl_2.isChecked())
+            ccl2 = ON;
+        if(upload_detail_ccl_3.isChecked())
+            ccl3 = ON;
+        if(upload_detail_ccl_4.isChecked())
+            ccl4 = ON;
+        if(upload_detail_ccl_5.isChecked())
+            ccl5 = ON;
+
+        ccl_list.add(MultipartBody.Part.createFormData("ccl", String.valueOf(ccl1)));
+        ccl_list.add(MultipartBody.Part.createFormData("ccl", String.valueOf(ccl2)));
+        ccl_list.add(MultipartBody.Part.createFormData("ccl", String.valueOf(ccl3)));
+        ccl_list.add(MultipartBody.Part.createFormData("ccl", String.valueOf(ccl4)));
+        ccl_list.add(MultipartBody.Part.createFormData("ccl", String.valueOf(ccl5)));
+
+        // 아이템 태그
+        List<ItemTag> items = adapter.getDataList();
+        Log.d("item_count", String.valueOf(items.size()));
+
+        if(items.size() > 1) {
+            for (int i = 0; i < items.size() - 1; i++) {
+                item_tags.add(MultipartBody.Part.createFormData("item_name",
+                        items.get(i).getName() == null ? "" : items.get(i).getName()));
+                item_tags.add(MultipartBody.Part.createFormData("item_lowprice",
+                        String.valueOf(items.get(i).getL_price())));
+                item_tags.add(MultipartBody.Part.createFormData("item_highprice",
+                        String.valueOf(items.get(i).getH_price())));
+                item_tags.add(MultipartBody.Part.createFormData("item_link",
+                        items.get(i).getUrl() == null ? "" : items.get(i).getUrl()));
+                item_tags.add(MultipartBody.Part.createFormData("item_img",
+                        items.get(i).getPicture() == null ? "" : items.get(i).getPicture()));
+                item_tags.add(MultipartBody.Part.createFormData("item_brand",
+                        items.get(i).getBrand() == null ? "" :  items.get(i).getBrand()));
+                item_tags.add(MultipartBody.Part.createFormData("item_category1",
+                        items.get(i).getCategory1() == null ? "" : items.get(i).getCategory1()));
+                item_tags.add(MultipartBody.Part.createFormData("item_category2",
+                        items.get(i).getCategory2() == null ? "" : items.get(i).getCategory2()));
+            }
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -223,17 +321,53 @@ public class UploadDetailActivity extends AppCompatActivity {
                 return true;
 
             case R.id.toolbar_done :
-                // 서버에 변경된 data(객체) 전송
+                makeUploadData();
+                serviceApi.PostUpload(requestId, requestText, hash_tags, ccl_list, item_tags, imageBody).enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        try {
+                            JsonObject result = response.body();
+                            int resultCode = result.get("code").getAsInt();
+                            int post_id = result.get("post_id").getAsInt();
 
-                //if resultCode == 200
-                Toast toast = Toast.makeText(UploadDetailActivity.this, "업로드 완료", Toast.LENGTH_SHORT);
-                toast.show();
-                Intent intent = new Intent(UploadDetailActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동
-                startActivity(intent);
+                            if (resultCode == StatusCode.RESULT_OK) {
+                                Toast toast = Toast.makeText(UploadDetailActivity.this, "업로드 완료", Toast.LENGTH_SHORT);
+                                toast.show();
+                                Intent intent = new Intent(UploadDetailActivity.this, PostActivity.class); // 업로드 된 게시물로 이동 (게시글 id 넘기기)
+                                intent.putExtra("post_id", post_id);
+                                startActivity(intent);
+                                finish();
+                            } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
+                                new AlertDialog.Builder(UploadDetailActivity.this)
+                                        .setMessage("업로드에 실패했습니다." + "\n" + "다시 시도해주세요..")
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
 
-                //if resultCode == 500
-                /*Toast toast = Toast.makeText(UploadDetailActivity.this, "업로드 실패", Toast.LENGTH_SHORT);
-                toast.show();*/
+                                            }
+                                        })
+                                        .show();
+                            }
+                        } catch (NullPointerException e){
+                            new AlertDialog.Builder(UploadDetailActivity.this)
+                                    .setMessage("에러발생!")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        Toast.makeText(UploadDetailActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Log.e("게시글 업로드 에러", t.getMessage());
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
                 return true;
 
         }

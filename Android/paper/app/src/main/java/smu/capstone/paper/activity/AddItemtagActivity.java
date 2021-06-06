@@ -46,6 +46,7 @@ import smu.capstone.paper.item.ItemtagItem;
 public class AddItemtagActivity extends Activity {
     SearchView searchView;
 
+
     StringBuffer response;
     String apiHtml;
 
@@ -90,6 +91,9 @@ public class AddItemtagActivity extends Activity {
             }
         }
     };
+
+    public static StringBuilder sb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -161,6 +165,7 @@ public class AddItemtagActivity extends Activity {
 
     // server에서 data전달
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     public void ApiSearch(final String keyword){
         if(keyword.equals("")&&keyword != null){
             Toast.makeText(getApplicationContext(),"검색어를 입력해 주세요.", Toast.LENGTH_SHORT).show();
@@ -211,6 +216,7 @@ public class AddItemtagActivity extends Activity {
                     }
                 }
             }.start();
+
         }
     }
 
@@ -226,5 +232,73 @@ public class AddItemtagActivity extends Activity {
                 drawable.getIntrinsicHeight());
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    public void RunApi(String keyword){
+        String clientId = "vzYQ1acA6vGEyvjeQHAB";// 애플리케이션 클라이언트 아이디값";
+        String clientSecret = "cg4YKUanSV";// 애플리케이션 클라이언트 시크릿값";\
+        int display = 2; // 검색결과갯수. 최대100개
+        try {
+            String text = URLEncoder.encode(keyword, "utf-8");
+            String apiURL = "https://openapi.naver.com/v1/search/shop.json?query=" + text + "&display=" + display + "&";
+
+            URL url = new URL(apiURL);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("X-Naver-Client-Id", clientId);
+            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+            int responseCode = con.getResponseCode();
+            BufferedReader br;
+            if (responseCode == 200) {
+                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            } else {
+                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+            }
+            sb = new StringBuilder();
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            br.close();
+            con.disconnect();
+
+            String data = sb.toString();
+            String[] array;
+            array = data.split("\"");
+
+            String[] title = new String[display];
+            String[] image = new String[display];
+            String[] lprice = new String[display];
+            String[] hprice = new String[display];
+            String[] productId = new String[display];
+
+            int k = 0;
+            for (int i = 0; i < array.length; i++) {
+                if (array[i].equals("title"))
+                    title[k] = array[i + 2];
+                if (array[i].equals("image"))
+                    image[k] = array[i + 2];
+                if (array[i].equals("lprice"))
+                    lprice[k] = array[i + 2];
+                if (array[i].equals("hprice"))
+                    hprice[k] = array[i + 2];
+                if (array[i].equals("productId")) {
+                    productId[k] = array[i + 2];
+                    k++;
+                }
+            }
+            System.out.println(sb);
+
+            for(int j = 0; j<title.length; j++) {
+                System.out.println(title[j]);
+                System.out.println(image[j]);
+                System.out.println(lprice[j]);
+                System.out.println(hprice[j]);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 }

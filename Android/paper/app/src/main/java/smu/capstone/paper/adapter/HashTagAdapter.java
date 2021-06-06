@@ -1,57 +1,36 @@
 package smu.capstone.paper.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import java.util.List;
 
 import smu.capstone.paper.R;
-import smu.capstone.paper.activity.ItemDetailActivity;
-import smu.capstone.paper.item.HashtagItem;
-import smu.capstone.paper.item.ItemtagItem;
+import smu.capstone.paper.responseData.HashTag;
 
 public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHolder>{
     Context context;
-    JSONObject obj = new JSONObject();
-    JSONArray dataList;
+    List<HashTag> dataList;
     LayoutInflater inf;
     int hashCnt;
     int layout;
 
 
-    public HashTagAdapter(Context context, JSONObject obj) throws JSONException{
+    public HashTagAdapter(Context context, List<HashTag>  obj){
         this.context = context;
-        //this.items = items;
-        this.obj = obj;
-
-        dataList = obj.getJSONArray("data");
-        hashCnt = dataList.length();
-    }
-
-    public void setItem(@NonNull HashTagAdapter.ViewHolder holder, JSONObject item, int position){
-        // 받아온 데이터로 셋팅
-        try {
-            holder.content.setText(item.getString("text"));
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
+        dataList = obj;
+        hashCnt = dataList.size();
     }
 
     @NonNull
@@ -65,14 +44,8 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHold
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull HashTagAdapter.ViewHolder holder, final int position) {
-        try {
-            final JSONObject item = dataList.getJSONObject(position);
-            holder.content.setText(item.getString("text"));
-        } catch (JSONException e){
-            e.printStackTrace();
-
-        }
-
+        HashTag item = dataList.get(position);
+        holder.content.setText("#"+item.getText() +" ");
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,20 +57,15 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return dataList.length();
+        return dataList.size();
     }
 
 
     static class ViewHolder extends RecyclerView.ViewHolder{
-
         TextView content;
-
-
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             content = (TextView)itemView.findViewById(R.id.hash_tag_content);
-
         }
-
     }
 }

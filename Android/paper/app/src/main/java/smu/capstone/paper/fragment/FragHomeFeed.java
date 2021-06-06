@@ -1,115 +1,200 @@
 package smu.capstone.paper.fragment;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.jar.JarException;
+import java.util.List;
 
+import javax.net.ssl.HandshakeCompletedEvent;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import smu.capstone.paper.LoginSharedPreference;
 import smu.capstone.paper.R;
 import smu.capstone.paper.adapter.HomeFeedAdapter;
-import smu.capstone.paper.item.HomeFeedItem;
+import smu.capstone.paper.responseData.PostFeedResponse;
+import smu.capstone.paper.responseData.PostFeed;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class FragHomeFeed extends Fragment {
     RecyclerView recyclerView;
+    SwipeRefreshLayout swipeRefreshLayout;
     HomeFeedAdapter adapter;
+
+    int user_id;
+    int lastId;
+
+
+    Boolean isLoading = false;
+
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+
+    StatusCode statusCode;
+
+    List<PostFeed> feeds;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.frag_home_feed, container, false);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.frag_home_feed, container, false);
+        //id 세팅
+        user_id = LoginSharedPreference.getUserId(getActivity());
 
-        JSONObject obj = GetFeedData();
+
+
         recyclerView = rootView.findViewById(R.id.feed_recycler);
 
+        //refresh
+        swipeRefreshLayout = rootView.findViewById(R.id.feed_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // cancel the Visual indication of a refresh
+                swipeRefreshLayout.setRefreshing(false);
+
+                //데이터 변경
+                GetFeedData();
+
+            }
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        try {
-            adapter = new HomeFeedAdapter(getContext(), obj);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        recyclerView.setAdapter(adapter);
+        initScrollListener();
+        GetFeedData();
+
 
         return rootView;
     }
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void setData(){
+       if(feeds.size() == 0){
+           recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
+       }
+       adapter = new HomeFeedAdapter(getContext(), feeds);
+       recyclerView.setAdapter(adapter);
     }
 
-    public static Bitmap drawable2Bitmap(Drawable drawable) {
-        Bitmap bitmap = Bitmap
-                .createBitmap(
-                        drawable.getIntrinsicWidth(),
-                        drawable.getIntrinsicHeight(),
-                        drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
-                                : Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight());
-        drawable.draw(canvas);
-        return bitmap;
+    // server 에서 data 전달
+    public void GetFeedData(){
+        serviceApi.GetFeed(user_id,null ).enqueue(new Callback<PostFeedResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onResponse(Call<PostFeedResponse> call, Response<PostFeedResponse> response) {
+                PostFeedResponse result = response.body();
+
+                int resultCode = result.getCode();
+                if(resultCode == statusCode.RESULT_SERVER_ERR){
+                    Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
+                }
+                else if( resultCode == statusCode.RESULT_OK){
+                    feeds = result.getData();
+                }
+                else {
+                    feeds=result.getData();
+                }
+                setData();
+            }
+
+            @Override
+            public void onFailure(Call<PostFeedResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                feeds = null;
+                Log.d("feed" , "통신 실패");
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
     }
 
-    // server에서 data전달
-    public JSONObject GetFeedData(){
-        JSONObject item = new JSONObject();
-        JSONArray arr= new JSONArray();
 
-        // 임시 데이터 저장
-        try{
-            JSONObject obj = new JSONObject();
-            obj.put("user_id", "wonhee");
-            obj.put("post_time", "21-02-07");
-            obj.put("likeNum", 499);
-            obj.put("commentsNum", 204);
-            obj.put("text", "hi everyone");
-            obj.put("img_profile",R.drawable.ic_baseline_emoji_emotions_24);
-            obj.put("image",R.drawable.sampleimg);
-            obj.put("likeOnset", 0);
-            obj.put("keepOnset",0);
-            obj.put("post_id", 1);
-            arr.put(obj);
+    public void GetFeedDataMore() {
+        lastId = feeds.get(feeds.size()-1).getPost().getId();
+        feeds.add(null);
+        adapter.notifyItemInserted(feeds.size() - 1);
 
-            JSONObject obj2 = new JSONObject();
-            obj2.put("user_id", "YUJIN");
-            obj2.put("post_time", "21-02-07");
-            obj2.put("likeNum", 20);
-            obj2.put("commentsNum", 52);
-            obj2.put("text", "바쁘다 바빠 현대사회에 사는 이유진의 그림입니다~후후");
-            obj2.put("img_profile", R.drawable.sampleimg);
-            obj2.put("image", R.drawable.test);
-            obj2.put("likeOnset", 0);
-            obj2.put("keepOnset", 0);
-            obj2.put("post_id",2);
-            arr.put(obj2);
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                serviceApi.GetFeed(user_id, lastId).enqueue(new Callback<PostFeedResponse>() {
+                    @Override
+                    public void onResponse(Call<PostFeedResponse> call, Response<PostFeedResponse> response) {
+                        feeds.remove(feeds.size()-1);
+                        adapter.notifyItemRemoved(feeds.size());
 
-            item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return item;
+                        PostFeedResponse result = response.body();
+                        int resultCode = result.getCode();
+                        if (resultCode == statusCode.RESULT_SERVER_ERR) {
+                            Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
+                        } else if (resultCode == statusCode.RESULT_OK) {
+                            adapter.addItem(result.getData());
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            adapter.addItem(result.getData());
+                            adapter.notifyDataSetChanged();
+                        }
+                        isLoading = false;
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostFeedResponse> call, Throwable t) {
+                        Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        feeds = null;
+                        Log.d("feed", "통신 실패");
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
+            }
+        };
+
+        handler.postDelayed(runnable, 1000);
+    }
+
+    private void initScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                Log.d("scroll" , layoutManager.findLastVisibleItemPosition() +" | " + ( adapter.getItemCount()  -1 ) );
+                if (!isLoading) {
+                    if (layoutManager != null && layoutManager.findLastVisibleItemPosition()== adapter.getItemCount() - 1) {
+                        //리스트 마지막
+                        GetFeedDataMore();
+                        isLoading = true;
+                        Log.d("home" ,"마지막!");
+                    }
+                }
+            }
+        });
     }
 }

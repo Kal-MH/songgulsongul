@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="@dimen/narrow_margin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/narrow_margin"
+            >
+            <TextView
+                android:id="@+id/edit_account_pwtext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="현재 비밀번호를 입력하세요"
+                android:layout_margin="@dimen/narrow_margin"
+                android:layout_marginTop="@dimen/common_margin"
+                style="@style/Text.textBoldStyle"
+                ></TextView>
+
+            <EditText
+                android:id="@+id/account_pw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@null"
+                android:theme="@style/EditTextTheme"
+                style="@style/EditTextTheme"
+                android:layout_margin="@dimen/narrow_margin"
+                android:hint="현재 비밀번호를 입력해주세요">
+
+            </EditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/narrow_margin"
+        >
+
+            <TextView
+                android:id="@+id/edit_account_newpw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="새 비밀번호를 입력하세요"
+                style="@style/Text.textBoldStyle"
+                android:layout_margin="@dimen/narrow_margin"
+                android:layout_marginTop="@dimen/common_margin"></TextView>
+            <EditText
+                android:id="@+id/account_newpw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:layout_margin="@dimen/narrow_margin"
+                android:theme="@style/EditTextTheme"
+                style="@style/Text.textStyle"
+                android:hint="새 비밀번호를 입력해주세요">
+
+            </EditText>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/border"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/narrow_margin"
+            >
+            <TextView
+                android:id="@+id/edit_account_newpw_checktxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="새 비밀번호를 재입력 해주세요"
+                android:layout_margin="@dimen/narrow_margin"
+                android:layout_marginTop="@dimen/common_margin"
+                style="@style/Text.textBoldStyle"
+                ></TextView>
+            <EditText
+                android:id="@+id/account_newpw_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:theme="@style/EditTextTheme"
+                style="@style/EditTextTheme"
+                android:layout_margin="@dimen/narrow_margin"
+                android:hint="다시 입력해주세요">
+
+            </EditText>
+
+        </LinearLayout>
+
+
+
+        <TextView
+            android:id="@+id/edit_account_pw_correct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/common_margin"
+            android:gravity="center"
+            android:text="비밀번호가 일치합니다"
+            style="@style/Text.textBoldRedStyle"
+            android:textSize="15dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -6,4 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".activity.FirstAuthActivity">
 
+    <TextView
+        android:id="@+id/first_auth_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_margin"
+        android:text="권한을 전부 허용하셔야 \n사용 가능합니다!"
+        style="@style/Text.medium"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

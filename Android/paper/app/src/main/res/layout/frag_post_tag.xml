@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
-    <GridView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/frag_tag_grid"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnWidth="90dp"
-        android:fadeScrollbars="false"
-        android:gravity="center"
-        android:horizontalSpacing="5dp"
-        android:numColumns="2"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="5dp"
-        tools:listitem="@layout/post_image_item" />
+        android:layout_height="match_parent" />
 </LinearLayout>

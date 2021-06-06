@@ -1,92 +1,140 @@
 package smu.capstone.paper.fragment;
 
-import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
-import java.util.ArrayList;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import smu.capstone.paper.R;
-import smu.capstone.paper.activity.PostActivity;
-import smu.capstone.paper.adapter.PostImageAdapter;
-import smu.capstone.paper.item.PostItem;
+import smu.capstone.paper.adapter.PostImageRVAdapter;
+import smu.capstone.paper.responseData.Post;
+import smu.capstone.paper.responseData.PostListResponse;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class FragPostTag extends Fragment {
 
     private View view;
-    PostImageAdapter adapter;
+    PostImageRVAdapter adapter;
+
+    String keyword;
+    RecyclerView recyclerView;
+
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+    StatusCode statusCode;
+    List<Post> tagData;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_post_tag, container, false);
+        recyclerView = view.findViewById(R.id.frag_tag_grid);
 
-        GridView gridView = view.findViewById(R.id.frag_tag_grid);
-        final JSONObject obj = getTagData();
+        //Activity에서 가져옴
+        keyword = this.getArguments().getString("keyword");
 
-        try {
-            adapter = new PostImageAdapter(this.getContext(), R.layout.post_image_item, obj);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        gridView.setAdapter(adapter);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                Intent intent = new Intent(getContext(), PostActivity.class);
-
-                // 게시글 id 전달
-                try {
-                    int postId = obj.getJSONArray("data").getJSONObject(position).getInt("post_id");
-                    intent.putExtra("postId", postId);
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
-
-                startActivity(intent);
-
-                Log.d("TAG", position + "is Clicked");      // Can not getting this method.
-
-            }
-        });
+        getTagData();
 
         return view;
     }
 
     // server에서 data전달
-    public JSONObject getTagData(){
-        JSONObject item = new JSONObject();
-        JSONArray arr= new JSONArray();
-        int pid = 1;
+    public void getTagData(){
+       Log.d("search" , "FragPostTag--> " + keyword);
 
-        //임시 데이터 저장
-        try{
-            for(int i = 0; i < 14; i++){
-                JSONObject obj = new JSONObject();
-                obj.put("image", R.drawable.ic_favorite);
-                obj.put("post_id", pid);
-                pid++;
-                arr.put(obj);
+        serviceApi.SearchPostTag(keyword, 0 ).enqueue(new Callback<PostListResponse>() {
+            @Override
+            public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
+                PostListResponse result = response.body();
+                int resultCode = result.getCode();
+                if(resultCode == statusCode.RESULT_SERVER_ERR){
+                    Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
+                }
+                else if( resultCode == statusCode.RESULT_OK){
+                    tagData = result.getData();
+                }
+                else {
+                    tagData = result.getData();
+                }
+                setTagData();
             }
-            item.put("data", arr);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        return item;
+
+            @Override
+            public void onFailure(Call<PostListResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                tagData = null;
+                Log.d("feed" , "통신 실패");
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
+
+    }
+    // server에서 data전달
+    public void getTagData(String query){
+        Log.d("search" , "FragPostTag--> " + query);
+
+        serviceApi.SearchPostTag(query, 0 ).enqueue(new Callback<PostListResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onResponse(Call<PostListResponse> call, Response<PostListResponse> response) {
+                PostListResponse result = response.body();
+                int resultCode = result.getCode();
+                if(resultCode == statusCode.RESULT_SERVER_ERR){
+                    Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
+                }
+                else if( resultCode == statusCode.RESULT_OK){
+                    tagData = result.getData();
+                }
+                else {
+                    tagData = result.getData();
+                }
+                setTagData();
+            }
+
+            @Override
+            public void onFailure(Call<PostListResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                tagData = null;
+                Log.d("feed" , "통신 실패");
+                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void setTagData(){
+        if(tagData.size() == 0)
+            recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
+
+        else
+            recyclerView.setBackgroundColor(Color.argb(0,10,10,10));
+
+
+        adapter = new PostImageRVAdapter(getContext(), tagData);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
+
     }
 }

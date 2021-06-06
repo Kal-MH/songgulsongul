@@ -2,10 +2,13 @@ package smu.capstone.paper.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
@@ -17,11 +20,26 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 
+import java.io.File;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import smu.capstone.paper.R;
+import smu.capstone.paper.server.RetrofitClient;
+import smu.capstone.paper.server.ServiceApi;
+import smu.capstone.paper.server.StatusCode;
 
 public class SaveImageActivity extends Activity {
     boolean size_check;
+    String post_image;
+    int post_id;
+
+    private File file, dir;
+    private String fileName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +53,11 @@ public class SaveImageActivity extends Activity {
         Spinner save_img_size = (Spinner)findViewById(R.id.save_img_size);
 
         Intent intent = getIntent();
-        Glide.with(SaveImageActivity.this).load(intent.getIntExtra("postImg", 1)).into(image);
+        post_id = intent.getIntExtra("post_id", -1);
+        post_image = RetrofitClient.getBaseUrl() + intent.getStringExtra("post_image");
+        Glide.with(SaveImageActivity.this).load(post_image).into(image);
+
+        size_check = true;
         final int[] image_size= {400, 600, 700, 900, 1000, 1200};
 
         save_img_size.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -55,7 +77,6 @@ public class SaveImageActivity extends Activity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -78,8 +99,9 @@ public class SaveImageActivity extends Activity {
                     myAlertBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // 확인 버튼을 눌렸을 경우
-                            Toast.makeText(getApplicationContext(), "저장 성공",
-                                    Toast.LENGTH_SHORT).show();
+                            DownloadImage();
+                            Toast.makeText(getApplicationContext(), "저장 성공!", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     });
                     myAlertBuilder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -93,7 +115,9 @@ public class SaveImageActivity extends Activity {
                     // Alert를 생성해주고 보여주는 메소드(show를 선언해야 Alert가 생성됨)
                     myAlertBuilder.show();
                 } else {
-                    Toast.makeText(SaveImageActivity.this, "저장 성공", Toast.LENGTH_SHORT).show();
+                    DownloadImage();
+                    Toast.makeText(SaveImageActivity.this, "저장 성공!", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
         });
@@ -104,8 +128,22 @@ public class SaveImageActivity extends Activity {
         getWindow().getAttributes().width = width;
         getWindow().getAttributes().height = height;
 
-        //Intent intent = getIntent();
-        //image.setImageResource(intent.getIntExtra("image", 1));
+    }
 
+    public void DownloadImage(){
+        fileName = post_image.substring(post_image.lastIndexOf('/') + 1, post_image.length());
+        DownloadManager mgr = (DownloadManager)SaveImageActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
+
+        Uri uri = Uri.parse(post_image);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                .setAllowedOverRoaming(false)
+                .setTitle("POST IMAGE")
+                .setDescription("post image download")
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, fileName);
+        mgr.enqueue(request);
+
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+        //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + "mnt/sdcard/Pictures" + fileName + ".jpg")));
     }
 }

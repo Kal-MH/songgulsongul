@@ -11,20 +11,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import smu.capstone.paper.R;
 import smu.capstone.paper.item.GalleryItem;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
-    private ArrayList<GalleryItem> galleryItems;
+    private List<GalleryItem> galleryItems;
     private Context context;
     private OnItemsClickListener listener;
 
-    public GalleryAdapter(Context context, ArrayList<GalleryItem> galleryItems) {
+    public GalleryAdapter(Context context, List<GalleryItem> galleryItems) {
         this.context = context;
         this.galleryItems = galleryItems;
     }
 
+    public boolean addItem( List<GalleryItem> galleryItem){
+        galleryItems.addAll(galleryItem);
+        return true;
+    }
 
     public void setWhenClickListener(OnItemsClickListener listener){
         this.listener = listener;
@@ -40,7 +45,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         final GalleryItem galleryItem = galleryItems.get(i);
-        Glide.with(context).load(galleryItem.getPath()).into(viewHolder.img);
+        Glide.with(context).load(galleryItem.getPath()).thumbnail(0.5f).into(viewHolder.img);
 
         viewHolder.img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +70,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
             super(view);
             img = view.findViewById(R.id.gal_item_img);
         }
-
-
     }
 
     // Interface to perform events on Main-List item click

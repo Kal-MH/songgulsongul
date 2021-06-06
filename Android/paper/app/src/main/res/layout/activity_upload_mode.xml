@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#C5C1C1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/purpleGray"
     tools:context=".activity.UploadModeActivity">
 
     <LinearLayout
@@ -12,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="30dp"
+        android:padding="@dimen/common_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -28,17 +29,18 @@
 
             <ImageButton
                 android:id="@+id/upload_mode_quick_btn"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@null"
-                app:srcCompat="@drawable/ic_baseline_create_24"
+                android:layout_width="@dimen/icon_size_large"
+                android:layout_height="@dimen/icon_size_large"
+                android:background="@drawable/ic_baseline_create_24"
+                android:backgroundTint="@color/inkGrey"
                 android:scaleType="fitCenter"
-                tools:ignore="VectorDrawableCompat" />
+                android:tint="@color/inkGrey" />
 
             <TextView
                 android:id="@+id/upload_mode_quick_t"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/Text.textBoldStyle"
                 android:text="Qick Mode">
 
             </TextView>
@@ -46,7 +48,7 @@
 
 
         <Space
-            android:layout_width="30dp"
+            android:layout_width="@dimen/tab_size"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
@@ -60,17 +62,18 @@
 
             <ImageButton
                 android:id="@+id/upload_mode_normal_btn"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@null"
+                android:background="@drawable/ic_baseline_create_24"
+                android:layout_width="@dimen/icon_size_large"
+                android:layout_height="@dimen/icon_size_large"
+                android:backgroundTint="@color/inkGrey"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_baseline_create_24"
-                tools:ignore="VectorDrawableCompat" />
+                android:tint="@color/inkGrey" />
 
             <TextView
                 android:id="@+id/upload_mode_normal_t"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/Text.textBoldStyle"
                 android:text="Normal Mode">
 
             </TextView>

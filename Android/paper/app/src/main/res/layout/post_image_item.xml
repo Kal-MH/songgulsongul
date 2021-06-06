@@ -1,18 +1,17 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-    <ImageView
+
+    <smu.capstone.paper.layout.SquareImageView
         android:id="@+id/post_image_iv"
-
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
         android:adjustViewBounds="true"
-        android:padding="5dp"
         android:scaleType="fitCenter"
+        android:layout_margin="5dp"
         android:src="@drawable/sampleimg" />
 
-</LinearLayout>
+</RelativeLayout>
 

@@ -3,15 +3,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <ImageView
+    <smu.capstone.paper.layout.SquareImageView
         android:id="@+id/item_tag_img"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_margin="5dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:layout_width="@dimen/icon_size_large"
+        android:layout_height="@dimen/icon_size_large"
+        android:layout_margin="@dimen/narrow_margin"
+        android:scaleType="fitXY"
         android:background="@drawable/borderline"
-        android:src="#8E7777" />
+        />
 
 </LinearLayout>
 
