@@ -32,6 +32,7 @@ const MARKET_BUY = "/buy";
 const MARKET_STICKER_SEARCH = "/sticker-search";
 const MARKET_SEARCH_PRICE = "/search-price";
 const MARKET_SEARCH_DATE = "/search-date";
+const MARKET_UPLOAD = "/upload";
 
 //post Router
 const POST = "/post";
@@ -88,6 +89,7 @@ const routes = {
     marketStickerSearch : MARKET_STICKER_SEARCH,
     marketSearchPrice : MARKET_SEARCH_PRICE,
     marketSearchDate : MARKET_SEARCH_DATE,
+    marketUpload : MARKET_UPLOAD,
 
     post : POST,
     postCommunity : POST_COMMUNITY,

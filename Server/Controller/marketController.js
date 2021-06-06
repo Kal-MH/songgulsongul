@@ -2,6 +2,10 @@ const connection = require("../db/db");
 const statusCode = require("../config/serverStatusCode");
 const db_config = require("../db/db_config");
 
+const fs = require("fs");
+const path = require("path");
+const mime = require("mime");
+
 const marketController = {
    // 마켓 메인
    marketMain : function(req, res){
@@ -244,8 +248,31 @@ const marketController = {
         })
       }
     })
-  }
+  },
 
+  // 마켓 이미지 업로드
+  marketUpload : function(req, res){
+    var name = req.body.name;
+    var text = req.body.text;
+    var price = req.body.price;
+    var user_id = req.body.user_id;
+    var image = req.file.path;
+    image = "/"+image.replace(/\\/g, '/');
+
+    var params = [image, name, text, price, user_id];
+    var sql = 'INSERT INTO market(image, name, text, price, user_id) values(?, ?, ?, ?, ?);';
+    connection.query(sql, function(err, rows){
+      var resultCode = statusCode.SERVER_ERROR);
+      if(err)
+        console.log(err);
+      else
+        resultCode = statusCode.OK;
+
+      res.json({
+        'code': resultCode
+      })
+    })
+  }
  }
 
 module.exports = marketController;
