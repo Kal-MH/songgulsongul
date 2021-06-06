@@ -957,7 +957,7 @@ Java_smu_capstone_paper_activity_EditImageFilterActivity_applyRGBMinGray(JNIEnv 
     Mat &imgInput = *(Mat *) img_input_address;
     Mat &img_output = *(Mat *) img_output_address;
 
-    Mat locMat =  Mat();
+    Mat locMat =  imgInput.clone();
     //RGB2MinGray(imgInput,locMat);
 
 
@@ -975,7 +975,8 @@ Java_smu_capstone_paper_activity_EditImageFilterActivity_applyRGBMinGray(JNIEnv 
     }
 
 
-    img_output.release();//TODO input이랑 output이 같을경우 위험
+    if(img_output.data != nullptr)
+        img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = locMat;
 
 }extern "C"
@@ -993,7 +994,8 @@ Java_smu_capstone_paper_activity_EditImageDenoiseActivity_denoiseColorImage(JNIE
 
     fastNlMeansDenoisingColored(imgInput,locMat,luminance_progress,color_progress,7,21);
 
-    img_output.release();//TODO input이랑 output이 같을경우 위험
+    if(img_output.data != nullptr)
+        img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = locMat;
 }extern "C"
 JNIEXPORT void JNICALL

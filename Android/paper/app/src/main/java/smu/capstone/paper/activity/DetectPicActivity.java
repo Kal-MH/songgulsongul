@@ -59,6 +59,7 @@ public class DetectPicActivity extends AppCompatActivity {
 
         //detect_pic_imageView = findViewById(R.id.detect_pic_iv);
         filePath = getIntent().getStringExtra("path");
+        sourceFilePath = getIntent().getStringExtra("sourceFilePath");
         Uri imageUri = Uri.fromFile(new File(filePath));
 
         //툴바 세팅
@@ -80,8 +81,16 @@ public class DetectPicActivity extends AppCompatActivity {
         imgInputAddress = getIntent().getLongExtra("imgInputAddress", 0);
         paperImage = new Mat(imgInputAddress);
         imgInputBitmap = Bitmap.createBitmap(paperImage.cols(),paperImage.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(paperImage,imgInputBitmap);
-        cropImageView.setImageBitmap(imgInputBitmap);
+        
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //다른 쓰레드에서 비트맵 세팅
+                Utils.matToBitmap(paperImage,imgInputBitmap);
+                cropImageView.setImageBitmap(imgInputBitmap);
+            }
+        });
+
         //paperImage = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
 
         picRectFromOpencv = DetectPic(paperImage.getNativeObjAddr(), th1, th2);
@@ -182,6 +191,7 @@ public class DetectPicActivity extends AppCompatActivity {
             case R.id.toolbar_before:{
                 Intent intent = new Intent(DetectPicActivity.this, DetectPaperActivity.class);
                 intent.putExtra("path", sourceFilePath);
+                paperImage.release();
                 startActivity(intent);
                 finish();
                 return true;

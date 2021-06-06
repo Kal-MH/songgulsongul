@@ -51,9 +51,14 @@ public class EditImageFilterActivity extends AppCompatActivity {
     public void updatePreviewImageView(){
         if(previewImageBitmap!=null)
             previewImageBitmap.recycle();
-        previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(previewImage, previewImageBitmap);
-        editPreview.setImageBitmap(previewImageBitmap);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(previewImage, previewImageBitmap);
+                editPreview.setImageBitmap(previewImageBitmap);
+            }
+        });
     }
 
     @Override
@@ -73,10 +78,9 @@ public class EditImageFilterActivity extends AppCompatActivity {
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
         try{
 
-            Mat locMat = new Mat(editingImageAddress);
             //편집 취소해도 연동되지 않게 별도 객체로 분리
             //previewImage.copyTo(previewImage);
-            previewImage = locMat.clone();
+            previewImage = new Mat(editingImageAddress).clone();
             //previewImage = previewImage.clone();
         }
         catch (Exception e){
@@ -98,8 +102,7 @@ public class EditImageFilterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 selectedFilter = editFilter.None;
                 previewImage.release();
-                Mat loc = new Mat(editingImageAddress).clone();
-                previewImage = loc;
+                previewImage = new Mat(editingImageAddress).clone();
                 updatePreviewImageView();
             }
         });
@@ -108,10 +111,9 @@ public class EditImageFilterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 selectedFilter = editFilter.Gray;
-                Mat locMat = new Mat();
                 previewImage.release();
-                applyRGBMinGray(editingImageAddress,locMat.getNativeObjAddr());
-                previewImage = locMat;
+                previewImage = new Mat(editingImageAddress).clone();
+                applyRGBMinGray(editingImageAddress,previewImage.getNativeObjAddr());
                 updatePreviewImageView();
             }
         });
@@ -122,8 +124,7 @@ public class EditImageFilterActivity extends AppCompatActivity {
                 //TODO:필터 이미지 블랜딩 추가
                 selectedFilter = editFilter.None;
                 previewImage.release();
-                Mat loc = new Mat(editingImageAddress).clone();
-                previewImage = loc;
+                previewImage = new Mat(editingImageAddress).clone();
                 updatePreviewImageView();
             }
         });

@@ -57,13 +57,6 @@ public class EditActivity extends AppCompatActivity {
     Bitmap editingImageBitmap;
 
     public void setImageViewFromMat(){
-        try {
-            if(editingImage == null)
-                editingImage = new Mat(croppedImageAddress);
-        }
-        catch (Exception e){
-
-        }
 
         if(editingImage != null){
             if(editingImageBitmap !=null)
@@ -71,13 +64,19 @@ public class EditActivity extends AppCompatActivity {
 
             //최대 픽셀 제한
             ImageUtil.maxSize2048(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr());
-            ImageUtil.maxSizeCustom(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr(),1024);
+            //ImageUtil.maxSizeCustom(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr(),1024);
 
             Log.i("EditImageSize",String.valueOf(editingImage.rows())+", " + String.valueOf(editingImage.cols()));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    editingImageBitmap = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(editingImage,editingImageBitmap);
+                    edit_iv.setImageBitmap(editingImageBitmap);
+                }
+            });
 
-            editingImageBitmap = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(editingImage,editingImageBitmap);
-            edit_iv.setImageBitmap(editingImageBitmap);
+
         }
         else{
             // TODO: Mat 채우기
@@ -133,8 +132,9 @@ public class EditActivity extends AppCompatActivity {
         //Glide.with(this).load(filePath).into(edit_iv);
 
 
-
+        paperImageAddress = getIntent().getLongExtra("paperImageAddress",0);
         croppedImageAddress = getIntent().getLongExtra("croppedImageAddress", 0x00);
+        editingImage = new Mat(croppedImageAddress).clone();
 
         setImageViewFromMat();
 
@@ -265,7 +265,23 @@ public class EditActivity extends AppCompatActivity {
 
                 return true;
 
+
+            case R.id.toolbar_before:{
+                Intent intent = new Intent(EditActivity.this, DetectPicActivity.class);
+                intent.putExtra("path", filePath);
+                intent.putExtra("imgInputAddress", paperImageAddress);
+                intent.putExtra("sourceFilePath", sourceFilePath);
+                new Mat(croppedImageAddress).release();
+                startActivity(intent);
+                finish();
+                return true;
+            }
+
             case R.id.toolbar_undo : // 원본으로 복구
+
+                editingImage.release();
+                editingImage = new Mat(croppedImageAddress).clone();
+                setImageViewFromMat();
 
 
                 return true;
@@ -291,6 +307,9 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public void finish() {
         //editingImage.release();
+
+        new Mat(paperImageAddress).release();
+        new Mat(croppedImageAddress).release();
         editingImageBitmap.recycle();
         super.finish();
     }

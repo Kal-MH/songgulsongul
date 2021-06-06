@@ -48,6 +48,30 @@ public class EditImageHistogramActivity extends AppCompatActivity {
     // CLAHE(구역별) 히스토그램 평활화
     public native void equalizeHistogramClahe(long inputImgAddress, long outputImgAddress);
 
+    public void updatePreviewImageView(){
+        if(previewImageBitmap!=null)
+            previewImageBitmap.recycle();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(previewImage, previewImageBitmap);
+                editPreview.setImageBitmap(previewImageBitmap);
+            }
+        });
+    }
+    public void updatePreviewImageView(final Mat mat){
+        if(previewImageBitmap!=null)
+            previewImageBitmap.recycle();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(mat, previewImageBitmap);
+                editPreview.setImageBitmap(previewImageBitmap);
+            }
+        });
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,19 +92,19 @@ public class EditImageHistogramActivity extends AppCompatActivity {
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
         try{
 
-            Mat locMat = new Mat(editingImageAddress);
-            //편집 취소해도 연동되지 않게 별도 객체로 분리
             //previewImage.copyTo(previewImage);
-            previewImage = locMat.clone();
+            previewImage = new Mat(editingImageAddress).clone();
             //previewImage = previewImage.clone();
         }
         catch (Exception e){
 
         }
         if(previewImage != null){
+            /*
             previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
             Utils.matToBitmap(previewImage, previewImageBitmap);
-            editPreview.setImageBitmap(previewImageBitmap);
+            editPreview.setImageBitmap(previewImageBitmap);*/
+            updatePreviewImageView();
         }
 
 
@@ -88,6 +112,7 @@ public class EditImageHistogramActivity extends AppCompatActivity {
         histogramNone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 selectedHistogramMod = editHistogramMod.None;
                 Mat locMat = new  Mat(editingImageAddress).clone(); // TODO: 얕은복사(new Mat(address))에서 메모리 누수 나는지 체크 필요
                 if(previewImageBitmap!=null)
@@ -95,7 +120,11 @@ public class EditImageHistogramActivity extends AppCompatActivity {
                 previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(locMat,previewImageBitmap);
                 editPreview.setImageBitmap(previewImageBitmap);
-                locMat.release();
+                locMat.release();*/
+                selectedHistogramMod = editHistogramMod.None;
+                previewImage.release();
+                previewImage = new Mat(editingImageAddress).clone();
+                updatePreviewImageView();
             }
         });
         //히스토그램평활화 기본 적용
@@ -103,6 +132,7 @@ public class EditImageHistogramActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectedHistogramMod = editHistogramMod.Default;
+                /*
                 Mat locMat = new  Mat(editingImageAddress).clone(); // TODO: 얕은복사(new Mat(address))에서 메모리 누수 나는지 체크 필요
                 Mat locMat2 = new Mat();
                 previewImage.release();
@@ -113,7 +143,11 @@ public class EditImageHistogramActivity extends AppCompatActivity {
                 previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(previewImage,previewImageBitmap);
                 editPreview.setImageBitmap(previewImageBitmap);
-                locMat.release();
+                locMat.release();*/
+                previewImage.release();
+                previewImage = new Mat(editingImageAddress).clone();
+                equalizeHistogram(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr());
+                updatePreviewImageView();
             }
         });
         //히스토그램평활화 적응형 (부분구역별) 적용
@@ -121,6 +155,7 @@ public class EditImageHistogramActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectedHistogramMod = editHistogramMod.CLAHE;
+                /*
                 Mat locMat = new  Mat(editingImageAddress).clone(); // TODO: 얕은복사(new Mat(address))에서 메모리 누수 나는지 체크 필요
                 Mat locMat2 = new Mat();
                 previewImage.release();
@@ -131,7 +166,12 @@ public class EditImageHistogramActivity extends AppCompatActivity {
                 previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(previewImage,previewImageBitmap);
                 editPreview.setImageBitmap(previewImageBitmap);
-                locMat.release();
+                locMat.release();*/
+                selectedHistogramMod = editHistogramMod.CLAHE;
+                previewImage.release();
+                previewImage = new Mat(editingImageAddress).clone();
+                equalizeHistogramClahe(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr());
+                updatePreviewImageView();
             }
         });
 

@@ -55,9 +55,15 @@ public class EditImageDenoiseActivity extends AppCompatActivity {
     public void updatePreviewImageView(){
         if(previewImageBitmap!=null)
             previewImageBitmap.recycle();
-        previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(previewImage, previewImageBitmap);
-        editPreview.setImageBitmap(previewImageBitmap);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(previewImage, previewImageBitmap);
+                editPreview.setImageBitmap(previewImageBitmap);
+            }
+        });
+
     }
 
     @Override

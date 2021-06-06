@@ -92,13 +92,14 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detect_paper);
-
         //gets the file path
         filePath = getIntent().getStringExtra("path");
         sourceFilePath = filePath;
+        Log.i("imread",filePath);
         imgInput = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
         Imgproc.cvtColor(imgInput,imgInput, Imgproc.COLOR_BGR2RGB);//RGB BGR 채널 뒤밖임 수정
         paperPoints = new MatOfPoint();
+
 
         //zoom View 세팅
         LayoutInflater inflater = this.getLayoutInflater();
@@ -116,8 +117,15 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
         //대상 이미지 동기 로딩
         imgInputBitmap= Bitmap.createBitmap(imgInput.cols(),imgInput.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(imgInput,imgInputBitmap);
-        zoom_background.setImageBitmap(imgInputBitmap);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //이미지뷰 비트맵 설정
+                Utils.matToBitmap(imgInput,imgInputBitmap);
+                zoom_background.setImageBitmap(imgInputBitmap);
+            }
+        });
         
 
         //툴바 세팅

@@ -42,6 +42,22 @@ public class EditImageRatioActivity extends AppCompatActivity {
 
     public native void changeImageRatio(long inputImgAddress, long outputImgAddress ,int seekBarProgress);
 
+    public void updatePreviewImageView(){
+        /**/
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(editPreviewBitmap!=null)
+                    editPreviewBitmap.recycle();
+                editPreviewBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(previewImage, editPreviewBitmap);
+                editPreview.setImageBitmap(editPreviewBitmap);
+            }
+        });
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -65,16 +81,18 @@ public class EditImageRatioActivity extends AppCompatActivity {
             //편집 취소해도 연동되지 않게 별도 객체로 분리
             //previewImage.copyTo(previewImage);
             previewImage = preEditImage.clone();
-            editPreviewBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+            //editPreviewBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
             //previewImage = previewImage.clone();
         }
         catch (Exception e){
 
         }
         if(previewImage != null){
+            /*
             Bitmap loc_bitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
             Utils.matToBitmap(previewImage, loc_bitmap);
-            editPreview.setImageBitmap(loc_bitmap);
+            editPreview.setImageBitmap(loc_bitmap);*/
+            updatePreviewImageView();
         }
 
 
@@ -102,11 +120,14 @@ public class EditImageRatioActivity extends AppCompatActivity {
                     Mat locMat = new Mat();
                     changeImageRatio(preEditImage.getNativeObjAddr(),locMat.getNativeObjAddr(),progress);
                     previewImage = locMat;
-                    editPreviewBitmap.recycle();
 
+
+                    /*
+                    editPreviewBitmap.recycle();
                     editPreviewBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
                     Utils.matToBitmap(previewImage, editPreviewBitmap);
-                    editPreview.setImageBitmap(editPreviewBitmap);
+                    editPreview.setImageBitmap(editPreviewBitmap);*/
+                    updatePreviewImageView();
                     //System.gc();
                 }
 
