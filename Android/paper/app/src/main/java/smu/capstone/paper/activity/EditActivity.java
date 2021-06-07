@@ -29,6 +29,7 @@ import java.io.IOException;
 
 import smu.capstone.paper.ImageUtil;
 import smu.capstone.paper.R;
+import smu.capstone.paper.songgul;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -57,27 +58,26 @@ public class EditActivity extends AppCompatActivity {
     Bitmap editingImageBitmap;
 
     public void setImageViewFromMat(){
-        try {
-            if(editingImage == null)
-                editingImage = new Mat(croppedImageAddress);
-        }
-        catch (Exception e){
-
-        }
 
         if(editingImage != null){
             if(editingImageBitmap !=null)
                 editingImageBitmap.recycle();
 
             //최대 픽셀 제한
-            ImageUtil.maxSize2048(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr());
-            ImageUtil.maxSizeCustom(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr(),1024);
+            //ImageUtil.maxSize2048(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr());
+            ImageUtil.maxSizeCustom(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr(),512);
 
             Log.i("EditImageSize",String.valueOf(editingImage.rows())+", " + String.valueOf(editingImage.cols()));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    editingImageBitmap = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(editingImage,editingImageBitmap);
+                    edit_iv.setImageBitmap(editingImageBitmap);
+                }
+            });
 
-            editingImageBitmap = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(editingImage,editingImageBitmap);
-            edit_iv.setImageBitmap(editingImageBitmap);
+
         }
         else{
             // TODO: Mat 채우기
@@ -133,9 +133,11 @@ public class EditActivity extends AppCompatActivity {
         //Glide.with(this).load(filePath).into(edit_iv);
 
 
-
+        paperImageAddress = getIntent().getLongExtra("paperImageAddress",0);
         croppedImageAddress = getIntent().getLongExtra("croppedImageAddress", 0x00);
-
+        //editingImage = new Mat(croppedImageAddress).clone();
+        editingImage =  ((songgul)getApplication()).getCroppedMat().clone();
+        ((songgul)getApplication()).setEditingMat(editingImage);
         setImageViewFromMat();
 
 
@@ -151,22 +153,11 @@ public class EditActivity extends AppCompatActivity {
                 intent.putExtra("editedImageAddress",editingImage.getNativeObjAddr());
                 startActivity(intent);
 
+                ((songgul)getApplication()).releaseAllMat();
                 //Edit Done 할시 되돌아 갈 수 없음! 이전 작업 정리해도 안전!
                 //메모리 정리하기
-                try{
-                    Mat loc = new Mat(croppedImageAddress);
-                    loc.release();
-                }
-                catch (Exception e){
-
-                }
-                try{
-                    Mat loc2 = new Mat(paperImageAddress);
-                    loc2.release();
-                }
-                catch (Exception e){
-
-                }
+                //new Mat(croppedImageAddress).release();
+                //new Mat(paperImageAddress).release();
 
 
 
@@ -265,7 +256,24 @@ public class EditActivity extends AppCompatActivity {
 
                 return true;
 
+
+            case R.id.toolbar_before:{
+                Intent intent = new Intent(EditActivity.this, DetectPicActivity.class);
+                intent.putExtra("path", filePath);
+                intent.putExtra("imgInputAddress", paperImageAddress);
+                intent.putExtra("sourceFilePath", sourceFilePath);
+                //new Mat(croppedImageAddress).release();
+                startActivity(intent);
+                finish();
+                return true;
+            }
+
             case R.id.toolbar_undo : // 원본으로 복구
+
+                //editingImage.release();
+                //editingImage = new Mat(croppedImageAddress).clone();
+                editingImage = ((songgul)getApplication()).getCroppedMat();
+                setImageViewFromMat();
 
 
                 return true;
@@ -291,6 +299,9 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public void finish() {
         //editingImage.release();
+
+        //new Mat(paperImageAddress).release();
+        //new Mat(croppedImageAddress).release();
         editingImageBitmap.recycle();
         super.finish();
     }

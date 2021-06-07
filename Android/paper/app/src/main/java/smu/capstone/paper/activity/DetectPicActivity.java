@@ -30,6 +30,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.imgcodecs.Imgcodecs;
 import smu.capstone.paper.ImageUtil;import smu.capstone.paper.R;
+import smu.capstone.paper.songgul;
 
 public class DetectPicActivity extends AppCompatActivity {
 
@@ -38,7 +39,7 @@ public class DetectPicActivity extends AppCompatActivity {
     ImageView detect_pic_imageView;
     Toolbar toolbar;
     CropImageView cropImageView;
-    Button okbtn,rotateBtn;
+    Button okbtn, rotateBtn;
 
     long first_time = 0;
     long second_time = 0;
@@ -50,6 +51,7 @@ public class DetectPicActivity extends AppCompatActivity {
     //MatOfPoint picPoints;
     int[] picRectFromOpencv = new int[]{400,400,800,500};
     Bitmap imgInputBitmap;
+    Rect cropRect = new Rect(400, 400, 800, 500);
 
     public native int[] DetectPic(long imgInput, int th1, int th2);
     //public native void ProcessPic();    @Override
@@ -59,6 +61,7 @@ public class DetectPicActivity extends AppCompatActivity {
 
         //detect_pic_imageView = findViewById(R.id.detect_pic_iv);
         filePath = getIntent().getStringExtra("path");
+        sourceFilePath = getIntent().getStringExtra("sourceFilePath");
         Uri imageUri = Uri.fromFile(new File(filePath));
 
         //툴바 세팅
@@ -73,41 +76,53 @@ public class DetectPicActivity extends AppCompatActivity {
 
         cropImageView = (CropImageView) findViewById(R.id.cropImageView);
 
-        Rect cropRect = new Rect(400, 400, 800, 500);
+
 
                 // 가져온 이미지 세팅
         //cropImageView.setImageUriAsync(imageUri);
         imgInputAddress = getIntent().getLongExtra("imgInputAddress", 0);
-        paperImage = new Mat(imgInputAddress);
-        imgInputBitmap = Bitmap.createBitmap(paperImage.cols(),paperImage.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(paperImage,imgInputBitmap);
-        cropImageView.setImageBitmap(imgInputBitmap);
-        //paperImage = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
+        //paperImage = new Mat(imgInputAddress).clone();
 
-        picRectFromOpencv = DetectPic(paperImage.getNativeObjAddr(), th1, th2);
-        detect_pic_imageView = findViewById(R.id.ImageView_image);
-        int[] loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[0],picRectFromOpencv[1]);
+        paperImage = ((songgul)getApplication()).getPaperMat();
 
-        picRectFromOpencv[0] = loc[0];
-        picRectFromOpencv[1] = loc[1];
-        loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[2],picRectFromOpencv[3]);
-        picRectFromOpencv[2] = loc[0];
-        picRectFromOpencv[3] = loc[1];
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //다른 쓰레드에서 비트맵 세팅
+                imgInputBitmap = Bitmap.createBitmap(paperImage.cols(),paperImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(paperImage,imgInputBitmap);
+                cropImageView.setImageBitmap(imgInputBitmap);
+                //paperImage = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
 
-        cropRect.left = picRectFromOpencv[0];
-        cropRect.top = picRectFromOpencv[1];
-        cropRect.right = picRectFromOpencv[2];
-        cropRect.bottom = picRectFromOpencv[3];
-        Log.i("DetectPic",String.valueOf(cropRect.left));
-        Log.i("DetectPic",String.valueOf(cropRect.top));
-        Log.i("DetectPic",String.valueOf(cropRect.right));
-        Log.i("DetectPic",String.valueOf(cropRect.bottom));
+                picRectFromOpencv = DetectPic(paperImage.getNativeObjAddr(), th1, th2);
+                detect_pic_imageView = findViewById(R.id.ImageView_image);
+                int[] loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[0],picRectFromOpencv[1]);
 
+                picRectFromOpencv[0] = loc[0];
+                picRectFromOpencv[1] = loc[1];
+                loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[2],picRectFromOpencv[3]);
+                picRectFromOpencv[2] = loc[0];
+                picRectFromOpencv[3] = loc[1];
+
+                cropRect.left = picRectFromOpencv[0];
+                cropRect.top = picRectFromOpencv[1];
+                cropRect.right = picRectFromOpencv[2];
+                cropRect.bottom = picRectFromOpencv[3];
+                Log.i("DetectPic",String.valueOf(cropRect.left));
+                Log.i("DetectPic",String.valueOf(cropRect.top));
+                Log.i("DetectPic",String.valueOf(cropRect.right));
+                Log.i("DetectPic",String.valueOf(cropRect.bottom));
+
+
+            }
+        });
         //세부내용 세팅
         cropImageView.setGuidelines(CropImageView.Guidelines.ON);
         cropImageView.setScaleType(CropImageView.ScaleType.FIT_CENTER);
         cropImageView.setAutoZoomEnabled(true);
         cropImageView.setCropRect(cropRect);
+
+
 
 
         okbtn = findViewById(R.id.detect_pic_btn);
@@ -122,12 +137,13 @@ public class DetectPicActivity extends AppCompatActivity {
                 intent.putExtra("path", filePath);
                 intent.putExtra("sourceFilePath", sourceFilePath);
                 intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
-                intent.putExtra("paperImageAddress", imgInputAddress);
+                intent.putExtra("paperImageAddress", paperImage.getNativeObjAddr());
+                ((songgul)getApplication()).setCroppedMat(croppedImage.clone());
                 startActivity(intent);
+                croppedImage.release();
                 finish();
             }
         });
-
         rotateBtn = findViewById(R.id.rotate_btn);
         rotateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,8 +151,9 @@ public class DetectPicActivity extends AppCompatActivity {
                 cropImageView.rotateImage(90);
             }
         });
-
     }
+
+
 
     private Object saveBitmapToCache(Bitmap bitmap, String name) {
 
@@ -170,6 +187,7 @@ public class DetectPicActivity extends AppCompatActivity {
         second_time = System.currentTimeMillis();
         if(second_time-first_time <2000){
             super.onBackPressed();
+            //new Mat(imgInputAddress).release();
             finish();
         }
         else{
@@ -191,6 +209,7 @@ public class DetectPicActivity extends AppCompatActivity {
             case R.id.toolbar_before:{
                 Intent intent = new Intent(DetectPicActivity.this, DetectPaperActivity.class);
                 intent.putExtra("path", sourceFilePath);
+                //paperImage.release();
                 startActivity(intent);
                 finish();
                 return true;
@@ -200,9 +219,10 @@ public class DetectPicActivity extends AppCompatActivity {
                 Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
                 intent.putExtra("path", filePath);
                 intent.putExtra("sourceFilePath", sourceFilePath);
-                croppedImage = paperImage.clone();
+                croppedImage = paperImage;
                 intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
-                intent.putExtra("paperImageAddress", imgInputAddress);
+                intent.putExtra("paperImageAddress", paperImage.getNativeObjAddr());
+                ((songgul)getApplication()).setCroppedMat(croppedImage.clone());
                 startActivity(intent);
                 finish();
                 return true;
@@ -213,7 +233,6 @@ public class DetectPicActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        paperImage.release();
         imgInputBitmap.recycle();
         super.finish();
     }

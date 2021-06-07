@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
+import smu.capstone.paper.songgul;
 import smu.capstone.paper.ImageUtil;
 import smu.capstone.paper.R;
 
@@ -55,9 +56,15 @@ public class EditImageDenoiseActivity extends AppCompatActivity {
     public void updatePreviewImageView(){
         if(previewImageBitmap!=null)
             previewImageBitmap.recycle();
-        previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(previewImage, previewImageBitmap);
-        editPreview.setImageBitmap(previewImageBitmap);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(previewImage, previewImageBitmap);
+                editPreview.setImageBitmap(previewImageBitmap);
+            }
+        });
+
     }
 
     @Override
@@ -75,29 +82,10 @@ public class EditImageDenoiseActivity extends AppCompatActivity {
         editPreview = findViewById(R.id.editPreview);
 
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
-        try{
-
-            Mat locMat = new Mat(editingImageAddress);
-            //편집 취소해도 연동되지 않게 별도 객체로 분리
-            //previewImage.copyTo(previewImage);
-            previewImage = locMat.clone();
-            //editingImageResized = locMat.clone();
-            //ImageUtil.maxSizeCustom(editingImageResized.getNativeObjAddr(),editingImageResized.getNativeObjAddr(),512);
-            //previewImage = previewImage.clone();
-        }
-        catch (Exception e){
-
-        }
-        if(previewImage != null){
-            /*
-            Bitmap loc_bitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(previewImage, loc_bitmap);
-            editPreview.setImageBitmap(loc_bitmap);
-            */
-
-            updatePreviewDenoise();
-            updatePreviewImageView();
-        }
+        editingImageAddress = ((songgul)getApplication()).getEditingMat().getNativeObjAddr();
+        previewImage = ((songgul)getApplication()).getEditingMat().clone();
+        updatePreviewDenoise();
+        updatePreviewImageView();
 
 
 
@@ -174,4 +162,11 @@ public class EditImageDenoiseActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void finish() {
+        super.finish();
+        previewImageBitmap.recycle();
+        previewImage.release();
+    }
 }

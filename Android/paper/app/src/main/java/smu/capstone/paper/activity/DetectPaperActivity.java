@@ -37,6 +37,7 @@ import smu.capstone.paper.ImageUtil;
 import smu.capstone.paper.R;
 import smu.capstone.paper.layout.DrawRect;
 import smu.capstone.paper.layout.ZoomView;
+import smu.capstone.paper.songgul;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -92,13 +93,16 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detect_paper);
-
         //gets the file path
         filePath = getIntent().getStringExtra("path");
         sourceFilePath = filePath;
+        Log.i("imread",filePath);
+
+        //imgInput = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
         imgInput = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
         Imgproc.cvtColor(imgInput,imgInput, Imgproc.COLOR_BGR2RGB);//RGB BGR 채널 뒤밖임 수정
         paperPoints = new MatOfPoint();
+
 
         //zoom View 세팅
         LayoutInflater inflater = this.getLayoutInflater();
@@ -116,8 +120,15 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
         //대상 이미지 동기 로딩
         imgInputBitmap= Bitmap.createBitmap(imgInput.cols(),imgInput.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(imgInput,imgInputBitmap);
-        zoom_background.setImageBitmap(imgInputBitmap);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //이미지뷰 비트맵 설정
+                Utils.matToBitmap(imgInput,imgInputBitmap);
+                zoom_background.setImageBitmap(imgInputBitmap);
+            }
+        });
         
 
         //툴바 세팅
@@ -169,6 +180,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 PaperProcessing(imgInput.getNativeObjAddr(),imgOutput.getNativeObjAddr(),paperPoints.getNativeObjAddr(),pivotOffsetX,pivotOffsetY,scaleFactor,th1,th2);
                 //Log.w("DetectPaper", "paperImage Address: "+ String.valueOf(imgOutput.getNativeObjAddr()));
                 intent.putExtra("imgInputAddress", imgOutput.getNativeObjAddr());
+                ((songgul)getApplication()).setPaperMat(imgOutput);
                 startActivity(intent);
                 finish();
             }
@@ -182,6 +194,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         second_time = System.currentTimeMillis();
         if(second_time-first_time <2000){
             super.onBackPressed();
+            ((songgul)getApplication()).releaseAllMat();
             finish();
         }
         else{
@@ -611,6 +624,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 intent.putExtra("sourceFilePath", sourceFilePath);
                 imgOutput = imgInput.clone();
                 intent.putExtra("imgInputAddress", imgOutput.getNativeObjAddr());
+                ((songgul)getApplication()).setPaperMat(imgOutput);
                 startActivity(intent);
                 finish();
                 return true;

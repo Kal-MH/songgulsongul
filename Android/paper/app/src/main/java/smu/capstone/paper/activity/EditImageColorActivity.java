@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
+import smu.capstone.paper.songgul;
 import smu.capstone.paper.R;
 
 public class EditImageColorActivity extends AppCompatActivity {
@@ -57,11 +58,25 @@ public class EditImageColorActivity extends AppCompatActivity {
     }
 
     public void updatePreviewImageView(){
+        /**/
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(previewImageBitmap!=null)
+                    previewImageBitmap.recycle();
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(previewImage, previewImageBitmap);
+                editPreview.setImageBitmap(previewImageBitmap);
+            }
+        });
+
+        /*
         if(previewImageBitmap!=null)
             previewImageBitmap.recycle();
         previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(previewImage, previewImageBitmap);
         editPreview.setImageBitmap(previewImageBitmap);
+         */
     }
 
 
@@ -80,27 +95,10 @@ public class EditImageColorActivity extends AppCompatActivity {
 
         editPreview = findViewById(R.id.editPreview);
 
-        editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
-        try{
-
-            Mat locMat = new Mat(editingImageAddress);
-            //편집 취소해도 연동되지 않게 별도 객체로 분리
-            //previewImage.copyTo(previewImage);
-            previewImage = locMat.clone();
-            //previewImage = previewImage.clone();
-        }
-        catch (Exception e){
-
-        }
-        if(previewImage != null){
-            /*
-            Bitmap loc_bitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(previewImage, loc_bitmap);
-            editPreview.setImageBitmap(loc_bitmap);
-            */
-            updatePreviewImageView();
-        }
-
+        //editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
+        editingImageAddress = ((songgul)getApplication()).getEditingMat().getNativeObjAddr();
+        previewImage = ((songgul)getApplication()).getEditingMat().clone();
+        updatePreviewImageView();
 
 
         seekBarHue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -209,4 +207,11 @@ public class EditImageColorActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void finish() {
+        super.finish();
+        previewImageBitmap.recycle();
+        previewImage.release();
+    }
 }
