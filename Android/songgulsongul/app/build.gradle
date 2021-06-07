@@ -8,7 +8,7 @@ android {
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
     defaultConfig {
-        applicationId "smu.capstone.paper"
+        applicationId "smu.capstone.songgulsongul"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
