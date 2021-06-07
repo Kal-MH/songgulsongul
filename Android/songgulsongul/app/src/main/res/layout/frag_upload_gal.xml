@@ -11,7 +11,7 @@
         android:id="@+id/upload_gal_pick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#CEBFCF" />
+        android:background="@color/purpleGray" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/upload_gal_grid"

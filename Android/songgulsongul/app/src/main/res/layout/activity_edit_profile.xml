@@ -128,7 +128,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:theme="@style/EditTextTheme"
+                            android:theme="@style/PurpleGrayTheme"
                             style="@style/Text.textBoldStyle"
                             android:background="@null"
                             android:hint="userid">
@@ -185,7 +185,7 @@
                        android:layout_marginBottom="@dimen/common_margin"
                        android:hint="소개글을 입력하세요"
                        style="@style/Text.textStyle"
-                       android:theme="@style/EditTextTheme"
+                       android:theme="@style/PurpleGrayTheme"
                        >
 
                    </EditText>
@@ -260,7 +260,7 @@
                         android:layout_marginBottom="@dimen/common_margin"
 
                         android:hint="sns주소"
-                        android:theme="@style/EditTextTheme"
+                        android:theme="@style/PurpleGrayTheme"
                         style="@style/Text.textStyle"
                         >
 

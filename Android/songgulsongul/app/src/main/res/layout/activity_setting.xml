@@ -71,7 +71,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:theme="@style/EditTextTheme"/>
+                        android:theme="@style/PurpleGrayTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -99,7 +99,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:theme="@style/EditTextTheme"
+                        android:theme="@style/PurpleGrayTheme"
                         />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -128,7 +128,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:theme="@style/EditTextTheme"/>
+                        android:theme="@style/PurpleGrayTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -156,7 +156,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:theme="@style/EditTextTheme"/>
+                        android:theme="@style/PurpleGrayTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -184,7 +184,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:theme="@style/EditTextTheme"/>
+                        android:theme="@style/PurpleGrayTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -234,7 +234,7 @@
                         android:gravity="center"
                         android:textAlignment="gravity"
                         android:visibility="visible"
-                        style="@style/Text.textStyle"
+                        android:theme="@style/SpinnerTheme"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -263,7 +263,7 @@
                         android:layout_height="wrap_content"
                         android:entries="@array/wm_repeat"
                         android:gravity="center"
-                        style="@style/Text.textStyle"
+                        android:theme="@style/SpinnerTheme"
                         android:textAlignment="gravity"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -294,7 +294,7 @@
                         android:entries="@array/wm_type"
                         android:gravity="center"
                         android:textAlignment="gravity"
-                        style="@style/Text.textStyle"
+                        android:theme="@style/SpinnerTheme"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -312,6 +312,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/common_margin"
                         android:layout_marginLeft="@dimen/common_margin"
                         style="@style/Text.textBoldStyle"
                         android:text="워터마크 문구">
@@ -321,7 +322,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin = "@dimen/narrow_margin"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -332,7 +332,7 @@
                             android:layout_marginLeft="@dimen/common_margin"
                             android:layout_marginRight="@dimen/narrow_margin"
                             android:layout_weight="1"
-                            android:theme="@style/EditTextTheme"
+                            android:theme="@style/PurpleGrayTheme"
                             style="@style/Text.textStyle"
                             android:hint="워터마크 문구를 입력하세요"
 
@@ -470,7 +470,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:theme="@style/EditTextTheme"/>
+                        android:theme="@style/PurpleGrayTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -495,7 +495,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/tab_size"
-                        android:theme="@style/EditTextTheme"
+                        android:theme="@style/PurpleGrayTheme"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -526,7 +526,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:theme="@style/EditTextTheme"
+                        android:theme="@style/PurpleGrayTheme"
                         />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -555,7 +555,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:theme="@style/EditTextTheme"/>
+                        android:theme="@style/PurpleGrayTheme"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
@@ -600,7 +600,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:theme="@style/EditTextTheme"
+                    android:theme="@style/PurpleGrayTheme"
                     style="@style/Text.textBoldStyle"
                     app:layout_constraintTop_toBottomOf="@+id/setting_then_text">
 

@@ -27,7 +27,7 @@
         android:layout_marginRight="@dimen/common_margin"
         android:layout_marginTop="@dimen/narrow_margin"
         android:hint="e-mail"
-        android:theme="@style/EditTextTheme"
+        android:theme="@style/PurpleGrayTheme"
         style="@style/Text.textStyle"
         android:background="@null"
         android:layout_marginBottom="@dimen/common_margin"
