@@ -40,8 +40,9 @@
                     android:layout_height="wrap_content"
 
                     android:background="@null"
-                    android:theme="@style/EditTextTheme"
-                    style="@style/EditTextTheme"
+                    android:theme="@style/PurpleGrayTheme"
+                    style="@style/PurpleGrayTheme"
+                    android:inputType="textPassword"
                     android:layout_margin="@dimen/narrow_margin"
                     android:hint="현재 비밀번호를 입력해주세요">
 
@@ -83,7 +84,8 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:layout_margin="@dimen/narrow_margin"
-                android:theme="@style/EditTextTheme"
+                android:inputType="textPassword"
+                android:theme="@style/PurpleGrayTheme"
                 style="@style/Text.textStyle"
                 android:hint="새 비밀번호를 입력해주세요">
 
@@ -114,8 +116,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:theme="@style/EditTextTheme"
-                style="@style/EditTextTheme"
+                android:theme="@style/PurpleGrayTheme"
+                style="@style/PurpleGrayTheme"
+                android:inputType="textPassword"
                 android:layout_margin="@dimen/narrow_margin"
                 android:hint="다시 입력해주세요">
 

@@ -25,36 +25,36 @@
 
         <ImageView
             android:id="@+id/dot1"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="@dimen/paperDot"
+            android:layout_height="@dimen/paperDot"
             android:src="@drawable/ic_baseline_dot"
-            app:tint="#6E2ED6">
+            app:tint="@color/selected">
 
         </ImageView>
 
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            app:tint="#AB77FF"
+            android:layout_width="@dimen/paperDot"
+            android:layout_height="@dimen/paperDot"
             android:src="@drawable/ic_baseline_dot"
+            app:tint="@color/selected"
             android:id="@+id/dot2"
             >
 
         </ImageView>
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            app:tint="#3D009F"
+            android:layout_width="@dimen/paperDot"
+            android:layout_height="@dimen/paperDot"
             android:src="@drawable/ic_baseline_dot"
+            app:tint="@color/selected"
             android:id="@+id/dot3"
             >
 
         </ImageView>
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            app:tint="#180439"
+            android:layout_width="@dimen/paperDot"
+            android:layout_height="@dimen/paperDot"
             android:src="@drawable/ic_baseline_dot"
+            app:tint="@color/selected"
             android:id="@+id/dot4"
             >
 

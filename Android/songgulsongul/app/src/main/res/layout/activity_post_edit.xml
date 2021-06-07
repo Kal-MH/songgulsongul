@@ -53,7 +53,7 @@
                     android:inputType="textMultiLine"
                     android:gravity="top|left"
                     android:hint=" 문구 입력\n여러줄을 입력할수있습니다"
-                    android:theme="@style/EditTextTheme"
+                    android:theme="@style/PurpleGrayTheme"
                     android:background="@null"
                     style="@style/Text.textStyle"
                     >
@@ -152,6 +152,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/tab_size"
+                        android:theme="@style/PurpleGrayTheme"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -179,6 +180,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/tab_size"
+                        android:theme="@style/PurpleGrayTheme"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -206,6 +208,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/tab_size"
+                        android:theme="@style/PurpleGrayTheme"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -233,6 +236,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/tab_size"
+                        android:theme="@style/PurpleGrayTheme"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -260,6 +264,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/tab_size"
+                        android:theme="@style/PurpleGrayTheme"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

@@ -36,5 +36,6 @@
         android:background="@color/backgroundGrey"
         app:itemIconTint="@color/inkGrey"
         app:itemTextColor="@color/inkGrey"
+        android:theme="@style/ToolbarTheme"
         app:menu="@menu/upload_bottom_menu" />
 </LinearLayout>

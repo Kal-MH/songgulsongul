@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/tab_size"
 
-            android:theme="@style/EditTextTheme"
+            android:theme="@style/PurpleGrayTheme"
             android:showText="true"
             android:textOff="OFF"
             android:textOn="ON"
@@ -69,7 +69,7 @@
             android:layout_marginStart="@dimen/tab_size"
             android:layout_marginEnd="@dimen/tab_size"
             android:entries="@array/image_size"
-            android:theme="@style/EditTextTheme"/>
+            android:theme="@style/PurpleGrayTheme"/>
     </LinearLayout>
 
     <LinearLayout
