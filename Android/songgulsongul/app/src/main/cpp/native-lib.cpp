@@ -537,7 +537,7 @@ vector<Point> ResizePoints(vector<Point> pointsInput, float scaleX, float scaleY
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_smu_capstone_paper_activity_DetectPaperActivity_PaperProcessing(JNIEnv *env, jobject thiz,
+Java_com_smu_songgulsongul_activity_DetectPaperActivity_PaperProcessing(JNIEnv *env, jobject thiz,
                                                                      jlong input_image,
                                                                      jlong output_image,
                                                                      jlong input_points,jint offset_x,jint offset_y, jfloat scale_factor, jint th1,
@@ -661,7 +661,7 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_PaperProcessing(JNIEnv *env
 
 }extern "C"
 JNIEXPORT void JNICALL
-Java_smu_capstone_paper_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env, jobject thiz,
+Java_com_smu_songgulsongul_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env, jobject thiz,
                                                                     jlong input_image,
                                                                     jlong output_point, jint th1,
                                                                     jint th2) {
@@ -709,7 +709,7 @@ Java_smu_capstone_paper_activity_DetectPaperActivity_GetPaperPoints(JNIEnv *env,
     smallImg.release();
 }extern "C"
 JNIEXPORT jintArray JNICALL
-Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobject thiz,
+Java_com_smu_songgulsongul_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobject thiz,
                                                              jlong img_input,
                                                              jint th1, jint th2) {
     Mat &imgInput = *(Mat *) img_input;
@@ -791,7 +791,7 @@ Java_smu_capstone_paper_activity_DetectPicActivity_DetectPic(JNIEnv *env, jobjec
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_smu_capstone_paper_activity_EditImageRatioActivity_changeImageRatio(JNIEnv *env, jobject thiz,
+Java_com_smu_songgulsongul_activity_EditImageRatioActivity_changeImageRatio(JNIEnv *env, jobject thiz,
                                                                          jlong input_img_address,
                                                                          jlong output_img_address,
                                                                          jint seek_bar_progress) {
@@ -812,7 +812,7 @@ Java_smu_capstone_paper_activity_EditImageRatioActivity_changeImageRatio(JNIEnv 
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogram(JNIEnv *env,
+Java_com_smu_songgulsongul_activity_EditImageHistogramActivity_equalizeHistogram(JNIEnv *env,
                                                                               jobject thiz,
                                                                               jlong input_img_address,
                                                                               jlong output_img_address) {
@@ -841,7 +841,7 @@ Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogram(JN
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogramClahe(JNIEnv *env,
+Java_com_smu_songgulsongul_activity_EditImageHistogramActivity_equalizeHistogramClahe(JNIEnv *env,
                                                                                    jobject thiz,
                                                                                    jlong input_img_address,
                                                                                    jlong output_img_address) {
@@ -872,7 +872,7 @@ Java_smu_capstone_paper_activity_EditImageHistogramActivity_equalizeHistogramCla
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_smu_capstone_paper_activity_EditImageColorActivity_setColors(JNIEnv *env, jobject thiz,
+Java_com_smu_songgulsongul_activity_EditImageColorActivity_setColors(JNIEnv *env, jobject thiz,
                                                                   jlong input_image_address,
                                                                   jlong output_image_address,
                                                                   jint hue_progress,
@@ -951,7 +951,7 @@ Java_smu_capstone_paper_activity_EditImageColorActivity_setColors(JNIEnv *env, j
     img_output = locMat;
 }extern "C"
 JNIEXPORT void JNICALL
-Java_smu_capstone_paper_activity_EditImageFilterActivity_applyRGBMinGray(JNIEnv *env, jobject thiz,
+Java_com_smu_songgulsongul_activity_EditImageFilterActivity_applyRGBMinGray(JNIEnv *env, jobject thiz,
                                                                          jlong img_input_address,
                                                                          jlong img_output_address) {
     Mat &imgInput = *(Mat *) img_input_address;
@@ -981,7 +981,7 @@ Java_smu_capstone_paper_activity_EditImageFilterActivity_applyRGBMinGray(JNIEnv 
 
 }extern "C"
 JNIEXPORT void JNICALL
-Java_smu_capstone_paper_activity_EditImageDenoiseActivity_denoiseColorImage(JNIEnv *env,
+Java_com_smu_songgulsongul_activity_EditImageDenoiseActivity_denoiseColorImage(JNIEnv *env,
                                                                             jobject thiz,
                                                                             jlong input_image_address,
                                                                             jlong output_image_address,
@@ -999,7 +999,7 @@ Java_smu_capstone_paper_activity_EditImageDenoiseActivity_denoiseColorImage(JNIE
     img_output = locMat;
 }extern "C"
 JNIEXPORT void JNICALL
-Java_smu_capstone_paper_ImageUtil_maxSize2048(JNIEnv *env, jclass clazz, jlong input_image_address,
+Java_com_smu_songgulsongul_ImageUtil_maxSize2048(JNIEnv *env, jclass clazz, jlong input_image_address,
                                               jlong output_image_address) {
     Mat &imgInput = *(Mat *) input_image_address;
     Mat &img_output = *(Mat *) output_image_address;
@@ -1009,7 +1009,7 @@ Java_smu_capstone_paper_ImageUtil_maxSize2048(JNIEnv *env, jclass clazz, jlong i
     ResizeTo2048(imgInput,img_output);
 }extern "C"
 JNIEXPORT void JNICALL
-Java_smu_capstone_paper_ImageUtil_maxSizeCustom(JNIEnv *env, jclass clazz,
+Java_com_smu_songgulsongul_ImageUtil_maxSizeCustom(JNIEnv *env, jclass clazz,
                                                 jlong input_image_address,
                                                 jlong output_image_address, jint max_pixel_size) {
     Mat &imgInput = *(Mat *) input_image_address;

@@ -57,7 +57,7 @@ public class FragEditPw extends Fragment {
         account_newpw = (EditText)rootView.findViewById(R.id.account_newpw);
         account_newpw_check = (EditText)rootView.findViewById(R.id.account_newpw_check);
         pw_check_text = (TextView)rootView.findViewById(R.id.edit_account_pw_correct);
-
+        account_pw_check = rootView.findViewById(R.id.edit_account_pw_check);
         user_id = LoginSharedPreference.getUserId(getContext());
         pw_check_text.setVisibility(View.INVISIBLE);
 

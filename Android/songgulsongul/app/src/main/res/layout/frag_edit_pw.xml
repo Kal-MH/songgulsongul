@@ -14,31 +14,51 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/border"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_margin="@dimen/narrow_margin"
+            android:gravity="center_vertical"
             >
-            <TextView
-                android:id="@+id/edit_account_pwtext"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="현재 비밀번호를 입력하세요"
-                android:layout_margin="@dimen/narrow_margin"
-                android:layout_marginTop="@dimen/common_margin"
-                style="@style/Text.textBoldStyle"
-                ></TextView>
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <TextView
+                    android:id="@+id/edit_account_pwtext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="현재 비밀번호를 입력하세요"
+                    android:layout_margin="@dimen/narrow_margin"
+                    android:layout_marginTop="@dimen/common_margin"
+                    style="@style/Text.textBoldStyle"
+                    ></TextView>
 
-            <EditText
-                android:id="@+id/account_pw"
-                android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/account_pw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:background="@null"
+                    android:theme="@style/EditTextTheme"
+                    style="@style/EditTextTheme"
+                    android:layout_margin="@dimen/narrow_margin"
+                    android:hint="현재 비밀번호를 입력해주세요">
+
+                </EditText>
+            </LinearLayout>
+            <Button
+                android:layout_margin="@dimen/narrow_margin"
+                android:layout_width="@dimen/tab_size"
                 android:layout_height="wrap_content"
+                android:text="확인"
+                android:id="@+id/edit_account_pw_check"
+                style="@style/Text.textStyle"
+                android:background="@color/purpleGray"
+                >
 
-                android:background="@null"
-                android:theme="@style/EditTextTheme"
-                style="@style/EditTextTheme"
-                android:layout_margin="@dimen/narrow_margin"
-                android:hint="현재 비밀번호를 입력해주세요">
+            </Button>
 
-            </EditText>
         </LinearLayout>
 
         <LinearLayout

@@ -43,7 +43,7 @@
                     android:id="@+id/setting_ccl_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/narrow_margin"
+                    android:layout_margin="@dimen/common_margin"
                     android:text="CCL 기본값 설정"
                     style="@style/Text.textBoldStyle" />
 
@@ -204,7 +204,7 @@
                     android:id="@+id/setting_wm_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/narrow_margin"
+                    android:layout_margin="@dimen/common_margin"
                     android:text="워터마크 기본값 설정"
                     style="@style/Text.textBoldStyle"
                    />
@@ -312,7 +312,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/narrow_margin"
+                        android:layout_marginLeft="@dimen/common_margin"
                         style="@style/Text.textBoldStyle"
                         android:text="워터마크 문구">
 
@@ -376,7 +376,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/narrow_margin">
+                        android:layout_margin="@dimen/common_margin">
 
                         <ImageView
                             android:id="@+id/setting_wm_img"
@@ -441,7 +441,7 @@
                     android:id="@+id/setting_alert_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/narrow_margin"
+                    android:layout_margin="@dimen/common_margin"
                     android:text="알림 설정"
                     style="@style/Text.textBoldStyle"
                     />
@@ -513,6 +513,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/common_margin"
                         android:text="좋아요 알림"
+                        style="@style/Text.textStyle"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -577,7 +578,7 @@
                     style="@style/Text.textBoldStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/narrow_margin"
+                    android:layout_margin="@dimen/common_margin"
                     android:text="테마 설정"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -600,7 +601,9 @@
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     android:theme="@style/EditTextTheme"
+                    style="@style/Text.textBoldStyle"
                     app:layout_constraintTop_toBottomOf="@+id/setting_then_text">
+
 
                 </ToggleButton>
 
