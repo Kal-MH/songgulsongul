@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.EditProfileActivity"
+    android:background="@color/backgroundLightGrey"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/edit_profile_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_size"
+        android:theme="@style/ToolbarTheme"
+        android:background="@color/backgroundGrey"
+    >
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/narrow_margin"
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <com.smu.songgulsongul.layout.RoundImageView
+                    android:id="@+id/profile_set_img"
+                    android:layout_width="@dimen/tab_size_large"
+                    android:layout_height="@dimen/tab_size_large"
+                    android:layout_margin="@dimen/common_margin"
+                    android:src="@drawable/ic_baseline_emoji_emotions_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </com.smu.songgulsongul.layout.RoundImageView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginStart="@dimen/common_margin"
+
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/profile_set_img"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:gravity="center"
+                    app:layout_constraintVertical_bias="0.5">
+
+                    <TextView
+                        android:id="@+id/profile_edit_id"
+                        style="@style/Text.medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="USER ID_can be long">
+
+                    </TextView>
+
+                    <Button
+                        android:id="@+id/profile_img_chnage"
+                        style="@style/Text.textStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/tab_size_small"
+                        android:background="@color/purpleGray"
+                        android:layout_marginTop="@dimen/narrow_margin"
+                        android:text=" 프로필 사진 변경 ">
+
+                    </Button>
+
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/borderline"
+                android:layout_margin="@dimen/common_margin"
+                android:orientation="vertical"
+                >
+
+
+                <LinearLayout
+                    android:layout_margin="@dimen/common_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/border"
+                    >
+
+                    <TextView
+                        android:id="@+id/edit_profile_idtext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="아이디 변경"
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:layout_marginTop="@dimen/common_margin"
+                        style="@style/Text.textBoldStyle">
+
+                    </TextView>
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginRight="@dimen/common_margin"
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:layout_marginBottom="@dimen/common_margin"
+                        >
+
+                        <EditText
+                            android:id="@+id/profile_newid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:theme="@style/EditTextTheme"
+                            style="@style/Text.textBoldStyle"
+                            android:background="@null"
+                            android:hint="userid">
+
+                        </EditText>
+
+                        <Button
+                            android:id="@+id/profile_check"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/common_margin"
+                            android:background="@color/purpleGray"
+                            style="@style/Text.textStyle"
+                            android:text="중복확인">
+
+                        </Button>
+
+                    </LinearLayout>
+
+                
+
+                
+                </LinearLayout>
+
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_margin= "@dimen/common_margin"
+                   android:background="@drawable/border"
+                   android:orientation="vertical"
+                   >
+
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:text="소개말 변경"
+                       android:layout_marginTop="@dimen/common_margin"
+                       android:layout_marginLeft="@dimen/common_margin"
+                       android:layout_marginRight="@dimen/common_margin"
+                       android:id="@+id/edit_profile_introtext"
+                       style="@style/Text.textBoldStyle"
+                       >
+
+                   </TextView>
+
+                   <EditText
+                       android:id="@+id/profile_new_intro"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+
+                       android:layout_marginLeft="@dimen/common_margin"
+                       android:layout_marginRight="@dimen/common_margin"
+                       android:layout_marginBottom="@dimen/common_margin"
+                       android:hint="소개글을 입력하세요"
+                       style="@style/Text.textStyle"
+                       android:theme="@style/EditTextTheme"
+                       >
+
+                   </EditText>
+
+
+
+               </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin= "@dimen/common_margin"
+                    android:background="@drawable/border"
+                    android:orientation="vertical"
+                    >
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+
+                        android:layout_marginTop="@dimen/common_margin"
+                        android:layout_marginRight="@dimen/common_margin"
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView"
+                            style="@style/Text.textBoldStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="SNS 계정">
+
+                        </TextView>
+
+                        <RadioGroup
+                            android:id="@+id/profile_edit_sns_radio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/tab_size"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/profile_sns_radio_yes"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/Text.textBoldStyle"
+                                android:text="유">
+
+                            </RadioButton>
+
+                            <RadioButton
+                                android:id="@+id/profile_sns_radio_no"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/common_margin"
+                                style="@style/Text.textBoldStyle"
+                                android:text="무">
+
+                            </RadioButton>
+
+                        </RadioGroup>
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/profile_new_sns"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:layout_marginRight="@dimen/common_margin"
+                        android:layout_marginBottom="@dimen/common_margin"
+
+                        android:hint="sns주소"
+                        android:theme="@style/EditTextTheme"
+                        style="@style/Text.textStyle"
+                        >
+
+                    </EditText>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/profile_delete_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/tab_size_large"
+                    android:layout_marginBottom="@dimen/common_margin"
+                    android:text="회원 탈퇴"
+                    style="@style/Text.textBoldStyle"
+                    android:background="@color/selected"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </Button>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
+
+
+
+    </ScrollView>
+
+</LinearLayout>
