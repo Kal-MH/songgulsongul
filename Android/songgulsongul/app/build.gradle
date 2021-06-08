@@ -3,12 +3,14 @@ apply plugin: 'com.android.application'
 //Realm
 apply plugin: 'realm-android'
 
+//Fire base
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
     defaultConfig {
-        applicationId "smu.capstone.paper"
+        applicationId "com.smu.songgulsongul"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
@@ -52,8 +54,13 @@ dependencies {
     //glide
     implementation 'com.github.bumptech.glide:glide:3.7.0'
 
+    //balloon for ccl
     implementation "com.github.skydoves:balloon:1.2.3"
 
     //Image Cropper
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
+    //fire base
+    implementation platform('com.google.firebase:firebase-bom:27.1.0')
+    implementation 'com.google.firebase:firebase-messaging'
 }
