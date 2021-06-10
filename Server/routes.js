@@ -24,6 +24,10 @@ const USER_FOLLOWER_LIST = "/follower-list";
 const USER_DATA_DELETE = "/data-delete";
 const USER_LFOLLOW_LIST = "/lfollow-list";
 
+//notification Router
+const NOTIFICATION = "/notification";
+const PUSHALARM = "/pushalarm";
+
 //market Router
 const MARKET = "/market";
 const MARKET_MAIN = "/main";
@@ -81,6 +85,9 @@ const routes = {
     userFollowerList : USER_FOLLOWER_LIST,
     userDataDelete : USER_DATA_DELETE,
     userLFollowList : USER_LFOLLOW_LIST,
+
+    notification: NOTIFICATION,
+    pushAlarm : PUSHALARM,
 
     market : MARKET,
     marketMain : MARKET_MAIN,
