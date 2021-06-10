@@ -44,7 +44,6 @@ public class ItemSearchAdapter extends RecyclerView.Adapter<ItemSearchAdapter.Vi
         ItemSearchItem item = mlist.get(position);
 
         Glide.with(holder.picurl.getContext()).load(item.getPic()).override(100,100).into(holder.picurl); // 제품 사진
-        //Glide.with(holder.picurl.getContext()).load("https://shopping-phinf.pstatic.net/main_8177959/81779594902.2.jpg").override(100,100).into(holder.picurl);
         holder.name.setText(item.getName()); //제품 이름
         holder.lprice.setText(item.getLprice()); //제품 최저가
         holder.hprice.setText(item.getHprice()); //제품 최고가

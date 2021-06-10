@@ -12,17 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.data.LoginData;
@@ -216,17 +211,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-    public void setToken(){
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if( task.isSuccessful()){
-                    String token = task.getResult();
-                    LoginSharedPreference.setToken(LoginActivity.this,token);
-                }
-            }
-        });
-    }
-
 }

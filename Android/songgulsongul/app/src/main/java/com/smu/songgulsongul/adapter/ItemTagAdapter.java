@@ -1,11 +1,15 @@
 package com.smu.songgulsongul.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -16,6 +20,8 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import com.smu.songgulsongul.R;
+import com.smu.songgulsongul.activity.ItemDetailActivity;
+import com.smu.songgulsongul.activity.UploadDetailActivity;
 import com.smu.songgulsongul.responseData.ItemTag;
 import com.smu.songgulsongul.server.RetrofitClient;
 
@@ -55,16 +61,17 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
             @Override
             public void onClick(View v) {
 
-                /*Intent intent = new Intent(context, ItemDetailActivity.class);
+                Intent intent = new Intent(context, ItemDetailActivity.class);
+                intent.putExtra("id", item.getId());
+                intent.putExtra("name", item.getName());
+                intent.putExtra("hprice", item.getH_price());
+                intent.putExtra("lprice", item.getL_price());
+                intent.putExtra("url", item.getUrl());
+                intent.putExtra("picture", item.getPicture());
 
-                ((Activity)context).startActivityForResult(intent,1234);*/
-                if(mListener != null){
-                    mListener.onItemClick(v);
-                }
-
+                context.startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -86,15 +93,5 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
 
     public List<ItemTag> getDataList(){
         return dataList;
-    }
-    //item 클릭 리스너 인터페이스
-    public interface OnItemClickListener{
-        void onItemClick(View v);
-    }
-
-    private ItemTagAdapter.OnItemClickListener mListener = null;
-
-    public void setOnItemClickListener(ItemTagAdapter.OnItemClickListener listener){
-        this.mListener = listener;
     }
 }

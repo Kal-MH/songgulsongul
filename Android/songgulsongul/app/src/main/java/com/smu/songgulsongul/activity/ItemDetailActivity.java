@@ -57,9 +57,9 @@ public class ItemDetailActivity extends Activity {
         // 넘겨받은 item tag정보로 내용 변경
         Intent intent = getIntent();
         item_name.setText(intent.getStringExtra("name"));
-        Glide.with(ItemDetailActivity.this).load(RetrofitClient.getBaseUrl() + intent.getStringExtra("picture")).into(image); // 게시물 사진
-        item_lprice.setText(intent.getIntExtra("lprice" , 0) + " ");
-        item_hprice.setText(intent.getIntExtra("hprice" , 0) + " ");
+        Glide.with(ItemDetailActivity.this).load(intent.getStringExtra("picture")).into(image); // 게시물 사진
+        item_lprice.setText(intent.getStringExtra("lprice") + " ");
+        item_hprice.setText(intent.getStringExtra("hprice") + " ");
         item_link.setText(intent.getStringExtra("url"));
 
     }

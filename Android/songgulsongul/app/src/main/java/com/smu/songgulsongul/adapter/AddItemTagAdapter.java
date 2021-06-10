@@ -1,7 +1,9 @@
 package com.smu.songgulsongul.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -16,6 +18,7 @@ import java.util.List;
 
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.AddItemtagActivity;
+import com.smu.songgulsongul.activity.ItemDetailActivity;
 import com.smu.songgulsongul.responseData.ItemTag;
 
 
@@ -27,7 +30,7 @@ public class AddItemTagAdapter extends ItemTagAdapter {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-        ItemTag item = dataList.get(position);
+        final ItemTag item = dataList.get(position);
         if(item.getId() == -1 ){
             Resources res = context.getResources();
             Drawable myImage = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_add_24, null);
@@ -43,10 +46,54 @@ public class AddItemTagAdapter extends ItemTagAdapter {
             public void onClick(View v) {
                 if( dataList.get(position).getId()== -1){
                     Log.d("TAG","add action");
-                    Intent intent = new Intent(context, AddItemtagActivity.class);
-                    ((Activity) context).startActivityForResult(intent,100);
+                    mListener.onItemClick(v);
+                }
+                else{
+                    Intent intent = new Intent(context, ItemDetailActivity.class);
+                    intent.putExtra("id", item.getId());
+                    intent.putExtra("name", item.getName());
+                    intent.putExtra("hprice", item.getH_price());
+                    intent.putExtra("lprice", item.getL_price());
+                    intent.putExtra("url", item.getUrl());
+                    intent.putExtra("picture", item.getPicture());
+
+                    context.startActivity(intent);
                 }
             }
         });
+
+        holder.pic.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                new AlertDialog.Builder(context)
+                        .setMessage("삭제하시겠습니까?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //삭제하는 코드
+                                dataList.remove(position);
+                                notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .show();
+
+                return false;
+            }
+        });
+    }
+    //item 클릭 리스너 인터페이스
+    public interface OnItemClickListener{
+        void onItemClick(View v);
+    }
+
+    private AddItemTagAdapter.OnItemClickListener mListener = null;
+
+    public void setOnItemClickListener(AddItemTagAdapter.OnItemClickListener listener){
+        this.mListener = listener;
     }
 }

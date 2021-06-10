@@ -170,33 +170,37 @@ public class UploadDetailActivity extends AppCompatActivity {
         // 적용
         itemtag_rv.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new ItemTagAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new AddItemTagAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v) {
                 Intent intent = new Intent(UploadDetailActivity.this, AddItemtagActivity.class);
 
-                intent.putExtra("key","value");
-                startActivityForResult(intent,123);
+                startActivityForResult(intent,1234);
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println(requestCode + " " + resultCode);
-        if(requestCode == 123 && resultCode == RESULT_OK){
-            String myData = data.getStringExtra("key");
+        if(requestCode == 1234 && resultCode == RESULT_OK){
+            //AddItemtagActivity에서 받아온 데이터 처리
+            int id = data.getIntExtra("id",0);
+            String name = data.getStringExtra("name");
+            String hprice = data.getStringExtra("hprice");
+            String lprice = data.getStringExtra("lprice");
+            String url = data.getStringExtra("url");
+            String picture = data.getStringExtra("picture");
+            String brand = data.getStringExtra("brand");
+            String category1 = data.getStringExtra("category1");
+            String category2 = data.getStringExtra("category2");
 
-
-            System.out.println(myData);
+            itemTagData.add(new ItemTag(id, name, hprice, lprice, url, picture, brand, category1, category2));
         }
         else{
             System.out.println("there is no data");
         }
     }
-
-
-
 
     // 서버에 전송할 데이터 묶기
     public void makeUploadData(){

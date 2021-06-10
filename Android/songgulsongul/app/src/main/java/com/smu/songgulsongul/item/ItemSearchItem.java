@@ -7,6 +7,10 @@ public class ItemSearchItem {
     String name;
     String hprice;
     String lprice;
+    String url;
+    String brand;
+    String category1;
+    String category2;
 
     public void setPic(String picurl) {
         this.picurl = picurl;
@@ -32,6 +36,15 @@ public class ItemSearchItem {
         this.lprice = lprice;
     }
 
+    public void setUrl(String url) { this.url = url; }
+
+    public void setBrand(String brand) { this.brand = brand; }
+
+    public void setCategory1(String category1) { this.category1 = category1; }
+
+    public void setCategory2(String category2) { this.category2 = category2; }
+
+
     public String getPic(){
         return picurl;
     }
@@ -55,4 +68,14 @@ public class ItemSearchItem {
     public String getLprice(){
         return lprice;
     }
+
+    public String getUrl(){
+        return url;
+    }
+
+    public String getBrand() { return brand; }
+
+    public String getCategory1() { return category1; }
+
+    public String getCategory2() { return category2; }
 }

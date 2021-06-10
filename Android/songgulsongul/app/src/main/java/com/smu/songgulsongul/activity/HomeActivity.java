@@ -6,10 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,14 +19,6 @@ import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.fragment.FragHomeComu;
 import com.smu.songgulsongul.fragment.FragHomeFeed;
 import com.smu.songgulsongul.fragment.FragHomeMarket;
-import com.smu.songgulsongul.responseData.CodeResponse;
-import com.smu.songgulsongul.server.RetrofitClient;
-import com.smu.songgulsongul.server.ServiceApi;
-import com.smu.songgulsongul.server.StatusCode;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -40,11 +28,6 @@ public class HomeActivity extends AppCompatActivity {
     private FragHomeComu fragHomeComu;
     private FragHomeMarket fragHomeMarket;
     private Toolbar toolbar;
-
-
-    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
-    StatusCode statusCode;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,25 +69,6 @@ public class HomeActivity extends AppCompatActivity {
         fragHomeMarket = new FragHomeMarket();
 
         setFrag(0);
-
-        Button tmp = findViewById(R.id.home_temp);
-        tmp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                serviceApi.PushAlarm(LoginSharedPreference.getToken(HomeActivity.this))
-                .enqueue(new Callback<CodeResponse>() {
-                    @Override
-                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-
-                    }
-                    @Override
-                    public void onFailure(Call<CodeResponse> call, Throwable t) {
-                        Toast.makeText(HomeActivity.this, "푸쉬알람 실패.", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-            }
-        });
 
     }
 
