@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class DrawRect extends View {
     Paint paint;
-    float lineThickness = 10.0f;
+    float lineThickness = 7.0f;
     ArrayList<int[]> pos;
     int gap;
     public DrawRect(Context context) {
@@ -31,7 +31,7 @@ public class DrawRect extends View {
         paint = new Paint();
         this.pos = pos;
         this.gap = gap;
-        paint.setColor(Color.argb(255,200,0,200));
+        paint.setColor(R.color.inkLightGrey);
         paint.setStrokeWidth(lineThickness);
         paint.setStyle(Paint.Style.STROKE);
 
