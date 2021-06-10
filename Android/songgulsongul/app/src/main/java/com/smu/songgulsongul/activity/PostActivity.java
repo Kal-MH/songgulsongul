@@ -657,17 +657,26 @@ public class PostActivity extends AppCompatActivity {
 
 
 
-        if(ccl.getCcl_cc()==1)
+        if(ccl.getCcl_cc()==1) {
             post_ccl_cc.setImageResource(R.drawable.ccl_cc_fill);
-        if(ccl.getCcl_a()==1)
+            post_ccl_cc.setColorFilter(R.color.inkGrey ,PorterDuff.Mode.SRC_IN);
+        }
+        if(ccl.getCcl_a()==1) {
             post_ccl_a.setImageResource(R.drawable.ccl_attribution_fill);
-        if(ccl.getCcl_nc()==1)
+            post_ccl_a.setColorFilter(R.color.inkGrey, PorterDuff.Mode.SRC_IN);
+        }
+        if(ccl.getCcl_nc()==1) {
             post_ccl_nc.setImageResource(R.drawable.ccl_noncommercial_fill);
-        if(ccl.getCcl_nd()==1)
+            post_ccl_nc.setColorFilter(R.color.inkGrey, PorterDuff.Mode.SRC_IN);
+        }
+        if(ccl.getCcl_nd()==1) {
             post_ccl_nd.setImageResource(R.drawable.ccl_no_derivative_fill);
-        if(ccl.getCcl_sa()==1)
+            post_ccl_nd.setColorFilter(R.color.inkGrey, PorterDuff.Mode.SRC_IN);
+        }
+        if(ccl.getCcl_sa()==1) {
             post_ccl_sa.setImageResource(R.drawable.ccl_share_alike_fill);
-
+            post_ccl_sa.setColorFilter(R.color.inkGrey, PorterDuff.Mode.SRC_IN);
+        }
 
         return true;
     }
