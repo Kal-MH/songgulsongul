@@ -1,10 +1,13 @@
 package com.smu.songgulsongul.layout;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
+
+import com.smu.songgulsongul.R;
 
 import java.util.ArrayList;
 
@@ -26,6 +29,7 @@ public class DrawRect extends View {
         gap = 100;
     }
 
+    @SuppressLint("ResourceAsColor")
     public DrawRect(Context context, ArrayList<int[]> pos, int gap){
         super(context);
         paint = new Paint();
