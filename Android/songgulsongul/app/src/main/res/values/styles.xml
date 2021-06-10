@@ -9,7 +9,7 @@
     </style>
 
     <!-- Custom Theme -->
-    <style name="EditTextTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="PurpleGrayTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/selected</item>
         <item name="colorPrimary">@color/purpleGray</item>
     </style>
@@ -17,6 +17,12 @@
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:fontFamily">@font/ibm_plex_sans_midium</item>
     </style>
+
+
+    <style name="SpinnerTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:fontFamily">@font/ibm_plex_sans_light</item>
+    </style>
+
 
     <!-- Text Style -->
     <style name="Text.textSmallStyle" parent="android:TextAppearance">

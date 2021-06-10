@@ -11,7 +11,7 @@
         android:queryHint="검색"
         android:background="@drawable/border"
         android:layout_margin="@dimen/narrow_margin"
-        android:theme="@style/EditTextTheme"
+        android:theme="@style/PurpleGrayTheme"
         style="@style/Text.medium">
 
     </SearchView>

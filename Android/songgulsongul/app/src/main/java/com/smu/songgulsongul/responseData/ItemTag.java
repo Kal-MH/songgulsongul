@@ -4,8 +4,8 @@ public class ItemTag {
     int id;
     int post_id;
     String name;
-    int h_price;
-    int l_price;
+    String h_price;
+    String l_price;
     String url;
     String picture;
     String brand;
@@ -13,7 +13,7 @@ public class ItemTag {
     String category2;
 
     // post upload test용 생성자 --> 추후 삭제
-    public ItemTag(int id, String name, int h_price, int l_price, String url, String picture, String brand, String category1, String category2){
+    public ItemTag(int id, String name, String h_price, String l_price, String url, String picture, String brand, String category1, String category2){
         this.name = name;
         this.h_price = h_price;
         this.l_price = l_price;
@@ -40,11 +40,11 @@ public class ItemTag {
         return name;
     }
 
-    public int getH_price() {
+    public String getH_price() {
         return h_price;
     }
 
-    public int getL_price() {
+    public String getL_price() {
         return l_price;
     }
 

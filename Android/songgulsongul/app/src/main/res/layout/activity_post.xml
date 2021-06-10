@@ -159,7 +159,7 @@
                             android:layout_width="@dimen/small_icon_size"
                             android:layout_height="@dimen/small_icon_size"
                             app:srcCompat="@drawable/ccl_cc"
-                            app:tint="@color/inkGrey"
+                            app:tint="@color/inkGreyTransparent"
                             tools:ignore="VectorDrawableCompat" />
 
                         <ImageView
@@ -167,7 +167,7 @@
                             android:layout_width="@dimen/small_icon_size"
                             android:layout_height="@dimen/small_icon_size"
                             app:srcCompat="@drawable/ccl_attribution"
-                            app:tint="@color/inkGrey"
+                            app:tint="@color/inkGreyTransparent"
                             tools:ignore="VectorDrawableCompat" />
 
                         <ImageView
@@ -175,7 +175,7 @@
                             android:layout_width="@dimen/small_icon_size"
                             android:layout_height="@dimen/small_icon_size"
                             app:srcCompat="@drawable/ccl_noncommercial"
-                            app:tint="@color/inkGrey"
+                            app:tint="@color/inkGreyTransparent"
                             tools:ignore="VectorDrawableCompat" />
 
                         <ImageView
@@ -183,7 +183,7 @@
                             android:layout_width="@dimen/small_icon_size"
                             android:layout_height="@dimen/small_icon_size"
                             app:srcCompat="@drawable/ccl_no_derivative"
-                            app:tint="@color/inkGrey"
+                            app:tint="@color/inkGreyTransparent"
                             tools:ignore="VectorDrawableCompat" />
 
                         <ImageView
@@ -191,7 +191,7 @@
                             android:layout_width="@dimen/small_icon_size"
                             android:layout_height="@dimen/small_icon_size"
                             app:srcCompat="@drawable/ccl_share_alike"
-                            app:tint="@color/inkGrey"
+                            app:tint="@color/inkGreyTransparent"
                             tools:ignore="VectorDrawableCompat" />
                     </LinearLayout>
 
@@ -290,7 +290,7 @@
                     android:layout_marginLeft="@dimen/narrow_margin"
                     android:hint="\t댓글입력..."
                     android:background="@null"
-                    android:theme="@style/EditTextTheme"
+                    android:theme="@style/PurpleGrayTheme"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/post_write"
                     app:layout_constraintHorizontal_bias="0.5"

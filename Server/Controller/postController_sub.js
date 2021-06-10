@@ -157,10 +157,14 @@ const postController_subFunc = {
             hashTagsSplitItemParams = hashTags;
         }
         for (var i = 0; i < hashTagsSplitItemParams.length; i++) {
+          if(hashTagsSplitItemParams[i] != '')
             sql += `insert into hash_tag (post_id, text) values (${postId}, ?);`
+          else{
+            hashTagsSplitItemParams.splice(i,1);
+            i--;
+          }
         }
-
-        if (items.name.length > 0) {
+        if (items.length > 0) {
             for (var i = 0; i < items.name.length; i++) {
                 insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, brand, category1, category2, url, picture)
                     values(${postId}, '${items.name[i]}', ${items.lowprice[i]}, ${items.highprice[i]}, ?, ?, ?, ?, ?);`;

@@ -11,6 +11,7 @@ const homeRouter = require('./Router/homeRouter');
 const apiRouter = require('./Router/apiRouter');
 const postRouter = require('./Router/postRouter');
 const marketRouter = require('./Router/marketRouter');
+const notificationRouter = require('./Router/notificationRouter');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -42,6 +43,7 @@ app.use(routes.api, apiRouter);
 app.use(routes.user, userRouter);
 app.use(routes.post, postRouter);
 app.use(routes.market, marketRouter);
+app.use(routes.notification, notificationRouter);
 
 //Server listening
 app.listen(PORT, function () {

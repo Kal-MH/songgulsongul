@@ -27,4 +27,5 @@
 
     <dimen name="selectedDot">20dp</dimen>
     <dimen name="Dot">18dp</dimen>
+    <dimen name="paperDot">10dp</dimen>
 </resources>

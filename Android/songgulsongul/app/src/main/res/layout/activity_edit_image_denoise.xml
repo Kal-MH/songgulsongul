@@ -101,7 +101,7 @@
                         android:id="@+id/seekBarLuminance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:theme="@style/EditTextTheme"
+                        android:theme="@style/PurpleGrayTheme"
                         android:max="40"
                         android:progress="10" />
 
@@ -139,7 +139,7 @@
                             android:id="@+id/seekBarColor"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:theme="@style/EditTextTheme"
+                            android:theme="@style/PurpleGrayTheme"
                             android:max="40"
                             android:progress="10" />
 
