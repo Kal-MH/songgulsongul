@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 int user_id = result.getId();
                                 LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
-
+                                setToken();
                                 Toast.makeText(LoginActivity.this, "출석체크 되었습니다!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
@@ -132,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                             else if( resultCode == statusCode.RESULT_NO){ // 로그인 성공, 오늘의 첫로그인 아님
                                 int user_id = result.getId();
                                 LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
+                                setToken();
                                 Toast.makeText(LoginActivity.this, "반갑습니다!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
