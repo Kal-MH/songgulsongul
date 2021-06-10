@@ -200,4 +200,7 @@ public interface ServiceApi {
     // 스티커 검색 - 최신순
     @GET("/market/search-date")
     Call<MarketResponse> SearchDate(@Query("search_word") String search_word, @Query("offset") int offset);
+
+    @GET("/notification/pushalarm")
+    Call<CodeResponse> PushAlarm(@Query("token")String token);
 }
