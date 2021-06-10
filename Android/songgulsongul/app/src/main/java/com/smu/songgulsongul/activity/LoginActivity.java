@@ -12,17 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.data.LoginData;
@@ -128,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 int user_id = result.getId();
                                 LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
-                                setToken();
+
                                 Toast.makeText(LoginActivity.this, "출석체크 되었습니다!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
@@ -137,7 +132,6 @@ public class LoginActivity extends AppCompatActivity {
                             else if( resultCode == statusCode.RESULT_NO){ // 로그인 성공, 오늘의 첫로그인 아님
                                 int user_id = result.getId();
                                 LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
-                                setToken();
                                 Toast.makeText(LoginActivity.this, "반갑습니다!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
@@ -216,17 +210,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-    public void setToken(){
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if( task.isSuccessful()){
-                    String token = task.getResult();
-                    LoginSharedPreference.setToken(LoginActivity.this,token);
-                }
-            }
-        });
-    }
-
 }

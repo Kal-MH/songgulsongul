@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
@@ -32,10 +33,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.adapter.ItemSearchAdapter;
 import com.smu.songgulsongul.item.ItemSearchItem;
+import com.smu.songgulsongul.responseData.ItemTag;
 
 
 public class AddItemtagActivity extends Activity {
@@ -73,10 +76,15 @@ public class AddItemtagActivity extends Activity {
                     ItemSearchItem item = new ItemSearchItem();
 
                     //item에 JSONObject 값 전달
+                    item.setId(apiObject.getInt("productId"));
                     item.setPic(apiObject.getString("image"));
                     item.setName(apiObject.getString("title"));
                     item.setHprice(apiObject.getString("hprice"));
                     item.setLprice(apiObject.getString("lprice"));
+                    item.setUrl(apiObject.getString("link"));
+                    item.setBrand(apiObject.getString("brand"));
+                    item.setCategory1(apiObject.getString("category3"));
+                    item.setCategory2(apiObject.getString("category4"));
 
                     mlist.add(item);
                 }
@@ -131,11 +139,7 @@ public class AddItemtagActivity extends Activity {
             @Override
             public void onItemClick(View v, int pos) {
                 position = pos;
-
                 Intent intent = getIntent();
-                String mdata = intent.getStringExtra("key");
-
-                System.out.println(mdata); //null 나옴
 
                 resultData();
             }
@@ -152,7 +156,18 @@ public class AddItemtagActivity extends Activity {
     private void resultData(){
         Intent intent = new Intent();
 
-        intent.putExtra("key", mlist.get(position).toString()); //맞는 position의 주소값이 제대로 나오긴 함
+        ItemSearchItem item = mlist.get(position);
+
+        //UploadDetailActivity로 보낼 데이터
+        intent.putExtra("id",item.getId());
+        intent.putExtra("name", item.getName());
+        intent.putExtra("hprice", item.getHprice());
+        intent.putExtra("lprice", item.getLprice());
+        intent.putExtra("url", item.getUrl());
+        intent.putExtra("picture", item.getPic());
+        intent.putExtra("brand", item.getBrand());
+        intent.putExtra("category1", item.getCategory1());
+        intent.putExtra("category2", item.getCategory2());
 
         setResult(RESULT_OK,intent);
         finish();
@@ -171,7 +186,7 @@ public class AddItemtagActivity extends Activity {
                 public void run() {
                     String clientId = "vzYQ1acA6vGEyvjeQHAB";// 애플리케이션 클라이언트 아이디값";
                     String clientSecret = "cg4YKUanSV";// 애플리케이션 클라이언트 시크릿값";\
-                    int display = 5; // 검색결과갯수
+                    int display = 20; // 검색결과갯수
 
                     try {
                         String text = URLEncoder.encode(keyword, "utf-8");
@@ -227,73 +242,5 @@ public class AddItemtagActivity extends Activity {
                 drawable.getIntrinsicHeight());
         drawable.draw(canvas);
         return bitmap;
-    }
-
-    public void RunApi(String keyword){
-        String clientId = "vzYQ1acA6vGEyvjeQHAB";// 애플리케이션 클라이언트 아이디값";
-        String clientSecret = "cg4YKUanSV";// 애플리케이션 클라이언트 시크릿값";\
-        int display = 2; // 검색결과갯수. 최대100개
-        try {
-            String text = URLEncoder.encode(keyword, "utf-8");
-            String apiURL = "https://openapi.naver.com/v1/search/shop.json?query=" + text + "&display=" + display + "&";
-
-            URL url = new URL(apiURL);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("X-Naver-Client-Id", clientId);
-            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
-            int responseCode = con.getResponseCode();
-            BufferedReader br;
-            if (responseCode == 200) {
-                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            } else {
-                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-            }
-            sb = new StringBuilder();
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            br.close();
-            con.disconnect();
-
-            String data = sb.toString();
-            String[] array;
-            array = data.split("\"");
-
-            String[] title = new String[display];
-            String[] image = new String[display];
-            String[] lprice = new String[display];
-            String[] hprice = new String[display];
-            String[] productId = new String[display];
-
-            int k = 0;
-            for (int i = 0; i < array.length; i++) {
-                if (array[i].equals("title"))
-                    title[k] = array[i + 2];
-                if (array[i].equals("image"))
-                    image[k] = array[i + 2];
-                if (array[i].equals("lprice"))
-                    lprice[k] = array[i + 2];
-                if (array[i].equals("hprice"))
-                    hprice[k] = array[i + 2];
-                if (array[i].equals("productId")) {
-                    productId[k] = array[i + 2];
-                    k++;
-                }
-            }
-            System.out.println(sb);
-
-            for(int j = 0; j<title.length; j++) {
-                System.out.println(title[j]);
-                System.out.println(image[j]);
-                System.out.println(lprice[j]);
-                System.out.println(hprice[j]);
-            }
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
     }
 }
