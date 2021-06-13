@@ -255,6 +255,7 @@ const postController = {
             category1 : req.body.item_category1,
             category2 : req.body.item_category2
         }
+        console.log(req.body);
 
         var postImages = req.file.path;
         postImages = "/"+postImages.replace(/\\/g, '/');

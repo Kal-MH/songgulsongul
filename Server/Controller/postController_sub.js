@@ -164,7 +164,8 @@ const postController_subFunc = {
             i--;
           }
         }
-        if (items.length > 0) {
+        console.log(items.name.length);
+        if (items.name.length > 0) {
             for (var i = 0; i < items.name.length; i++) {
                 insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, brand, category1, category2, url, picture)
                     values(${postId}, '${items.name[i]}', ${items.lowprice[i]}, ${items.highprice[i]}, ?, ?, ?, ?, ?);`;
