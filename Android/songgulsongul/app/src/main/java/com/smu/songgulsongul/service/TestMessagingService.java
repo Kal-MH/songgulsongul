@@ -21,7 +21,10 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
+import com.smu.songgulsongul.SettingSharedPreference;
+import com.smu.songgulsongul.activity.FirstAuthActivity;
 import com.smu.songgulsongul.activity.HomeActivity;
+import com.smu.songgulsongul.activity.PostActivity;
 import com.smu.songgulsongul.data.TokenData;
 import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.server.RetrofitClient;
@@ -41,6 +44,9 @@ public class TestMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        if(!SettingSharedPreference.getSetting(this, "alert1")){ //수신거부
+            return;
+        }
         if (remoteMessage != null && remoteMessage.getData().size() > 0) {
             sendNotification(remoteMessage);
         }
@@ -50,6 +56,7 @@ public class TestMessagingService extends FirebaseMessagingService {
 
         String title = remoteMessage.getData().get("title");
         String message = remoteMessage.getData().get("message");
+        String mode = remoteMessage.getData().get("mode");
 
         final String CHANNEL_ID = "ChannerID";
         NotificationManager mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -68,6 +75,25 @@ public class TestMessagingService extends FirebaseMessagingService {
             mManager.createNotificationChannel(mChannel);
         }
 
+
+        Intent intent;
+        PendingIntent pendingIntent;
+        if(mode.equals("1") || mode.equals("2")){ // 특정 게시글로 이동
+            String postid = remoteMessage.getData().get("postid");
+            int postId = Integer.parseInt(postid);
+            intent = new Intent(this, PostActivity.class);
+            intent.putExtra("post_id", postId);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        }
+        else { //홈 화면으로 이동
+
+            intent = new Intent(this, FirstAuthActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        }
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
         builder.setSmallIcon(R.drawable.ic_launcher_background);
         builder.setAutoCancel(true);
@@ -80,7 +106,9 @@ public class TestMessagingService extends FirebaseMessagingService {
             builder.setContentTitle(title);
             builder.setVibrate(new long[]{500, 500});
         }
-        mManager.notify(0, builder.build());
+        builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
+        mManager.notify((int) System.currentTimeMillis(), builder.build());
     }
 
     @Override

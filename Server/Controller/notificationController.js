@@ -58,12 +58,15 @@ function sendNotiPostid (postid, mode, title, msg , res) {
                     })
                 }
                 else {
+                    console.log(String(postid));
                     for (var i = 0; i < result.length; i++) {
                         var target_token = result[i].token_key;
                         let message = {
                             data: {
                                 title: title,
-                                message: msg
+                                message: msg,
+                                mode: String(mode),
+                                postid : String(postid)
                             },
                             token: target_token,
                         }
@@ -139,7 +142,8 @@ function sendNotiUserid (loginid, mode, title, msg , res) {
                         let message = {
                             data: {
                                 title: title,
-                                message: msg
+                                message: msg,
+                                mode: String(mode)
                             },
                             token: target_token,
                         }
