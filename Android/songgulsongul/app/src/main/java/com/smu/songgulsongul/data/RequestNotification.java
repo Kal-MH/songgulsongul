@@ -4,10 +4,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class RequestNotification {
 
-    @SerializedName("loginid") //  "to" changed to token
+    @SerializedName("sender") // 보낸사람 id
+    private int sender;
+
+
+    @SerializedName("loginid") // 알림받을 사람의 loginid
     private String loginid;
 
-    @SerializedName("postid")
+    @SerializedName("postid") //알림 받을 사람의 postid
     private  int postid;
 
     public int getPostid() {
@@ -51,4 +55,11 @@ public class RequestNotification {
         this.mode = mode;
     }
 
+    public int getSender() {
+        return sender;
+    }
+
+    public void setSender(int sender) {
+        this.sender = sender;
+    }
 }

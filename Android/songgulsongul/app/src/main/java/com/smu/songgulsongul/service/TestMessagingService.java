@@ -57,6 +57,12 @@ public class TestMessagingService extends FirebaseMessagingService {
         String title = remoteMessage.getData().get("title");
         String message = remoteMessage.getData().get("message");
         String mode = remoteMessage.getData().get("mode");
+        String sender = remoteMessage.getData().get("sender");
+
+
+        if( !SettingSharedPreference.getSetting(this, "alert"+mode ) ) //해당모드 false상태이면
+            return;
+
 
         final String CHANNEL_ID = "ChannerID";
         NotificationManager mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -78,10 +84,10 @@ public class TestMessagingService extends FirebaseMessagingService {
 
         Intent intent;
         PendingIntent pendingIntent;
-        if(mode.equals("1") || mode.equals("2")){ // 특정 게시글로 이동
+        if(mode.equals("2") || mode.equals("3")){ // 댓글, 좋아요 --> 특정 게시글로 이동
 
-            int id = Integer.parseInt(remoteMessage.getData().get("userid"));
-            if( id == LoginSharedPreference.getUserId(this) ) //셀프 좋아요, 댓글
+            Log.d("alaert",  Integer.parseInt(sender) +", "+ LoginSharedPreference.getUserId(this) );
+            if( Integer.parseInt(sender) == LoginSharedPreference.getUserId(this) ) //셀프 좋아요, 댓글
                 return;
 
 

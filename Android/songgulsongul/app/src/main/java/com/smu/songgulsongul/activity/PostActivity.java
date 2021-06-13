@@ -807,6 +807,7 @@ public class PostActivity extends AppCompatActivity {
         RequestNotification requestNotification = new RequestNotification();
         requestNotification.setSendNotificationModel(notificationData);
         requestNotification.setMode(2);
+        requestNotification.setSender( LoginSharedPreference.getUserId(this));
         requestNotification.setPostid(postData.getId());
 
         retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
@@ -828,7 +829,8 @@ public class PostActivity extends AppCompatActivity {
         NotificationData notificationData = new NotificationData(loginid+ getString(R.string.comment_msg),  getString(R.string.comment_title));
         RequestNotification requestNotification = new RequestNotification();
         requestNotification.setSendNotificationModel(notificationData);
-        requestNotification.setMode(1);
+        requestNotification.setMode(3);
+        requestNotification.setSender( LoginSharedPreference.getUserId(this));
         requestNotification.setPostid(postData.getId());
 
         retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);

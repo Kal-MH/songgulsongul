@@ -178,8 +178,9 @@ public class ProfileActivity extends AppCompatActivity {
                             NotificationData notificationData = new NotificationData(login_id+ getString(R.string.follow_noti), getString(R.string.follow_title));
                             RequestNotification requestNotification = new RequestNotification();
                             requestNotification.setSendNotificationModel(notificationData);
-                            requestNotification.setMode(3);
+                            requestNotification.setMode(1);
                             requestNotification.setLoginid(user_id);
+                            requestNotification.setSender( LoginSharedPreference.getUserId(ProfileActivity.this));
                             retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
                             responseBodyCall.enqueue(new Callback<ResponseBody>() {
                                 @Override

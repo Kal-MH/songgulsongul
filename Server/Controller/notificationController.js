@@ -9,7 +9,7 @@ admin.initializeApp({
 });
 
 
-function sendNotiPostid (postid, mode, title, msg , res) {  
+function sendNotiPostid (sender, postid, mode, title, msg , res) {  
     // postid로 포스트 작성한 작성자 id 찾기
     var findIdSql = `SELECT user_id FROM post WHERE id=${postid};`
     connection.query(findIdSql, function (err, result) {
@@ -20,34 +20,9 @@ function sendNotiPostid (postid, mode, title, msg , res) {
             })
         }
         else {
-            var id = result[0].user_id;
+            var id = result[0].user_id;            
 
-            // 작성자 id의 알림설정 체크
-            var getNotiset = `SELECT * FROM notification where userid = ${id};`
-            connection.query(getNotiset, mode, function (err, result) {
-                if (err) {
-                    console.log(err);
-                    res.json({
-                        'code': statusCode.SERVER_ERROR
-                    })
-                }
-                else {
-                    if (mode == 1) {
-                        if (result[0].comment == 0)
-                            return;
-                    }
-                    else if (mode == 2) {
-                        if (result[0].like == 0)
-                            return;
-                    }
-                }
-
-            })
-
-            // 알림 보내기        
-            console.log(title);
-            console.log(msg);
-
+       
             //targetToken 체크
             var getTokenSql = `select token_key from token where userid=${id}`
             connection.query(getTokenSql, mode, function (err, result) {
@@ -58,7 +33,11 @@ function sendNotiPostid (postid, mode, title, msg , res) {
                     })
                 }
                 else {
-                    console.log(String(postid));
+                    console.log("mode " + mode);
+                    console.log("postid " + String(postid));
+                    console.log("userid " + String(id));
+                    console.log(title)
+                    console.log(msg);
                     for (var i = 0; i < result.length; i++) {
                         var target_token = result[i].token_key;
                         let message = {
@@ -68,6 +47,7 @@ function sendNotiPostid (postid, mode, title, msg , res) {
                                 mode: String(mode),
                                 postid: String(postid), //이동할 게시글의 id
                                 userid: String(id) //알림받는 id
+                                ,sender : String(sender)
                             },
                             token: target_token,
                         }
@@ -88,7 +68,7 @@ function sendNotiPostid (postid, mode, title, msg , res) {
         }
     });
 }
-function sendNotiUserid (loginid, mode, title, msg , res) {
+function sendNotiUserid (sender, loginid, mode, title, msg , res) {
     // loginid 로 id 찾기
     var findIdSql = `SELECT id FROM user WHERE login_id='${loginid}';`
     connection.query(findIdSql, function (err, result) {
@@ -100,32 +80,8 @@ function sendNotiUserid (loginid, mode, title, msg , res) {
         }
         else {
             var id = result[0].id;
-
-            // 작성자 id의 알림설정 체크
-            var getNotiset = `SELECT * FROM notification WHERE userid='${id}' ;`
             
-            connection.query(getNotiset, function (err, result) {
-                if (err) {
-                    console.log(err);
-                    res.json({
-                        'code': statusCode.SERVER_ERROR
-                    })
-                }
-                else {
-                    console.log(result);
-                    if (mode == 3) {
-                        if (result[0].follow == 0)
-                            return;
-                    }
-                }
-
-            })
-
-
-            // 알림 보내기    
-            console.log(title);
-            console.log(msg);
-
+  
 
             //targetToken 체크
             var getTokenSql = `select token_key from token where userid=${id}`
@@ -139,12 +95,18 @@ function sendNotiUserid (loginid, mode, title, msg , res) {
                 else {
                     for (var i = 0; i < result.length; i++) {
 
+                        console.log("mode " + mode);
+                        console.log(title)
+                        console.log(msg);
+
+
                         var target_token = result[i].token_key;
                         let message = {
                             data: {
                                 title: title,
                                 message: msg,
-                                mode: String(mode)
+                                mode: String(mode),
+                                sender: String(sender)
                             },
                             token: target_token,
                         }
@@ -172,27 +134,28 @@ var notificationController = {
     sendNotification: function (req, res) {
         /* mode 설명 
            0 : 푸쉬알람 설정 userid(int), notification
-           1 : 댓글 알림     postid, notification 
+           1 : 팔로우 알림   loginid(string), notification
            2 : 좋아요 알림   postid
-           3 : 팔로우 알림   loginid(string), notification
+           3 : 댓글 알림     postid, notification
        */
         
         var mode = req.body.mode;
+        var sender = req.body.sender;
 
-        if (mode == 1 || mode == 2) {
+        if (mode == 3 || mode == 2) { //좋아요, 댓글
             var postid = req.body.postid;
             var title = req.body.notification.title;
             var msg = req.body.notification.message;
 
-            sendNotiPostid(postid, mode, title, msg, res);
+            sendNotiPostid(sender,postid, mode, title, msg, res);
         }
-        else if (mode == 3) {
+        else if (mode == 1) { // 팔로우
 
             var loginid = req.body.loginid;
             var title = req.body.notification.title;
             var msg = req.body.notification.message;
 
-            sendNotiUserid(loginid, mode, title, msg, res);
+            sendNotiUserid(sender,loginid, mode, title, msg, res);
         }
     },
     setToken: function (req, res) { //데이터베이스에 토큰 등록 
