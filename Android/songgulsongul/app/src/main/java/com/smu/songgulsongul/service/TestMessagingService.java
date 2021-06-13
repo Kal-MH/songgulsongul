@@ -79,6 +79,12 @@ public class TestMessagingService extends FirebaseMessagingService {
         Intent intent;
         PendingIntent pendingIntent;
         if(mode.equals("1") || mode.equals("2")){ // 특정 게시글로 이동
+
+            int id = Integer.parseInt(remoteMessage.getData().get("userid"));
+            if( id == LoginSharedPreference.getUserId(this) ) //셀프 좋아요, 댓글
+                return;
+
+
             String postid = remoteMessage.getData().get("postid");
             int postId = Integer.parseInt(postid);
             intent = new Intent(this, PostActivity.class);

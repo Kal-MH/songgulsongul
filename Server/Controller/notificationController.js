@@ -66,7 +66,8 @@ function sendNotiPostid (postid, mode, title, msg , res) {
                                 title: title,
                                 message: msg,
                                 mode: String(mode),
-                                postid : String(postid)
+                                postid: String(postid), //이동할 게시글의 id
+                                userid: String(id) //알림받는 id
                             },
                             token: target_token,
                         }
