@@ -120,8 +120,9 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
                             NotificationData notificationData = new NotificationData(login_id+ context.getString(R.string.follow_noti), context.getString(R.string.follow_title));
                             RequestNotification requestNotification = new RequestNotification();
                             requestNotification.setSendNotificationModel(notificationData);
-                            requestNotification.setMode(3);
+                            requestNotification.setMode(1);
                             requestNotification.setLoginid(user_id);
+                            requestNotification.setSender( LoginSharedPreference.getUserId(context));
                             retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
                             responseBodyCall.enqueue(new Callback<ResponseBody>() {
                                 @Override

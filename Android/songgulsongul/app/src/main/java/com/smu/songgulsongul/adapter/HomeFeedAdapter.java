@@ -120,6 +120,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                             RequestNotification requestNotification = new RequestNotification();
                                             requestNotification.setSendNotificationModel(notificationData);
                                             requestNotification.setMode(2);
+                                            requestNotification.setSender( LoginSharedPreference.getUserId(context));
                                             requestNotification.setPostid(postId);
 
                                             retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
