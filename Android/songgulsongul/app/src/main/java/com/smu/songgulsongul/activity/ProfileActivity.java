@@ -175,7 +175,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                             // 알림 보내기
-                            NotificationData notificationData = new NotificationData(login_id+ getString(R.string.comment_msg), getString(R.string.comment_title));
+                            NotificationData notificationData = new NotificationData(login_id+ getString(R.string.follow_noti), getString(R.string.follow_title));
                             RequestNotification requestNotification = new RequestNotification();
                             requestNotification.setSendNotificationModel(notificationData);
                             requestNotification.setMode(3);

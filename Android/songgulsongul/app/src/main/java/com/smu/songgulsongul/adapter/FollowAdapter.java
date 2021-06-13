@@ -117,7 +117,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
                             holder.follow_text.setVisibility(View.VISIBLE);
 
                             // 알림 보내기
-                            NotificationData notificationData = new NotificationData(login_id+ context.getString(R.string.comment_msg), context.getString(R.string.comment_title));
+                            NotificationData notificationData = new NotificationData(login_id+ context.getString(R.string.follow_noti), context.getString(R.string.follow_title));
                             RequestNotification requestNotification = new RequestNotification();
                             requestNotification.setSendNotificationModel(notificationData);
                             requestNotification.setMode(3);
