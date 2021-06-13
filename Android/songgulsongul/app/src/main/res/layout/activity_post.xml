@@ -20,7 +20,7 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -280,7 +280,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/common_margin"
                 android:background="@drawable/border"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:nestedScrollingEnabled="false"
+                >
+
 
                 <EditText
                     android:id="@+id/post_input"
@@ -313,7 +316,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 </LinearLayout>
