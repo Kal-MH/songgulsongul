@@ -91,33 +91,6 @@ public class HomeActivity extends AppCompatActivity {
 
         setFrag(0);
 
-        Button tmp = findViewById(R.id.home_temp);
-
-        tmp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NotificationData notificationData = new NotificationData("check", "i miss you");
-                RequestNotification requestNotification = new RequestNotification();
-                requestNotification.setSendNotificationModel(notificationData);
-                requestNotification.setMode(2);
-                requestNotification.setLoginid("yujin");
-                requestNotification.setPostid(4); //내 게시물
-                // 현재 나한테 임시로 보내기
-
-                retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
-                responseBodyCall.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        Toast.makeText(HomeActivity.this, "성공!!", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
-                        Toast.makeText(HomeActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
     }
 
     private void setFrag(int n){
