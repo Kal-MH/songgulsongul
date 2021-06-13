@@ -12,7 +12,8 @@ const middleWares = require('../middlewares');
 
 var notificationRouter = express.Router();
 
-notificationRouter.get(routes.pushAlarm, notificationController.pushAlarm);
-
+notificationRouter.post(routes.sendNotification, notificationController.sendNotification);
+notificationRouter.post(routes.setToken, notificationController.setToken);
+notificationRouter.post(routes.deleteToken, notificationController.deleteToken);
 
 module.exports = notificationRouter;

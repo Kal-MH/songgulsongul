@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -17,11 +19,27 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.HomeActivity;
+import com.smu.songgulsongul.data.TokenData;
+import com.smu.songgulsongul.responseData.CodeResponse;
+import com.smu.songgulsongul.server.RetrofitClient;
+import com.smu.songgulsongul.server.ServiceApi;
+import com.smu.songgulsongul.server.StatusCode;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TestMessagingService extends FirebaseMessagingService {
-     @Override
+
+
+    ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
+    StatusCode statusCode;
+
+
+    @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if (remoteMessage != null && remoteMessage.getData().size() > 0) {
             sendNotification(remoteMessage);
@@ -68,5 +86,23 @@ public class TestMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
+        sendRegistrationToServer(s);
+    }
+
+    void sendRegistrationToServer(String token){
+        TokenData tokenData = new TokenData(LoginSharedPreference.getUserId(this), token);
+        serviceApi.setToken(tokenData)
+                .enqueue(new Callback<CodeResponse>() {
+                    @Override
+                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+
+
+                    }
+                    @Override
+                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                        Log.e("Token" , "등록 실패");
+                    }
+         });
+
     }
 }

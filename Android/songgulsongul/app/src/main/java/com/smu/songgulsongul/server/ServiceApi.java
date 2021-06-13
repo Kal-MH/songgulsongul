@@ -8,6 +8,7 @@ import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -19,6 +20,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import com.smu.songgulsongul.data.PostEditData;
 import com.smu.songgulsongul.data.PwEditData;
+import com.smu.songgulsongul.data.RequestNotification;
+import com.smu.songgulsongul.data.TokenData;
 import com.smu.songgulsongul.responseData.CodeResponse;
 
 import com.smu.songgulsongul.data.CommentData;
@@ -201,6 +204,16 @@ public interface ServiceApi {
     @GET("/market/search-date")
     Call<MarketResponse> SearchDate(@Query("search_word") String search_word, @Query("offset") int offset);
 
-    @GET("/notification/pushalarm")
-    Call<CodeResponse> PushAlarm(@Query("token")String token);
+
+
+    // mode에 따라서 알림보내기
+    @POST("/notification/sendNotification")
+    Call<ResponseBody> sendChatNotification(@Body RequestNotification requestNotification);
+
+    //토큰등록
+    @POST("notification/setToken")
+    Call<CodeResponse> setToken(@Body TokenData tokenData);
+
+    @POST("notification/deleteToken")
+    Call<CodeResponse> deleteToken(@Body TokenData tokenData);
 }

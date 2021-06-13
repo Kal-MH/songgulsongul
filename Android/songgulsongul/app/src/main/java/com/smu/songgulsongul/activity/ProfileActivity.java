@@ -27,12 +27,16 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.adapter.PostImageRVAdapter;
+import com.smu.songgulsongul.data.NotificationData;
+import com.smu.songgulsongul.data.RequestNotification;
+import com.smu.songgulsongul.data.TokenData;
 import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.data.FollowData;
 import com.smu.songgulsongul.data.UserData;
@@ -168,6 +172,25 @@ public class ProfileActivity extends AppCompatActivity {
                             int follower_cnt = Integer.parseInt(follower_count_tv.getText().toString());
                             follower_cnt++;
                             follower_count_tv.setText(follower_cnt+"");
+
+
+                            // 알림 보내기
+                            NotificationData notificationData = new NotificationData(login_id+ getString(R.string.comment_msg), getString(R.string.comment_title));
+                            RequestNotification requestNotification = new RequestNotification();
+                            requestNotification.setSendNotificationModel(notificationData);
+                            requestNotification.setMode(3);
+                            requestNotification.setLoginid(user_id);
+                            retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
+                            responseBodyCall.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                                }
+                                @Override
+                                public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                                }
+                            });
+
+
                         }
                         else if(resultCode == statusCode.RESULT_CLIENT_ERR){
                             new AlertDialog.Builder(ProfileActivity.this)
@@ -359,7 +382,24 @@ public class ProfileActivity extends AppCompatActivity {
 
             case R.id.profile_logout:
                 // LogoutAction
+
+                TokenData tokenData = new TokenData(LoginSharedPreference.getUserId(this), LoginSharedPreference.getToken(this));
+                serviceApi.deleteToken(tokenData)
+                        .enqueue(new Callback<CodeResponse>() {
+                            @Override
+                            public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+
+
+                            }
+                            @Override
+                            public void onFailure(Call<CodeResponse> call, Throwable t) {
+
+                            }
+                        });
+
+
                 LoginSharedPreference.clearLogin(ProfileActivity.this);
+
                 Intent intent3 = new Intent(ProfileActivity.this, LoginActivity.class);
                 intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent3);

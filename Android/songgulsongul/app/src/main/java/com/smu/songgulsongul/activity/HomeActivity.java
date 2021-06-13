@@ -3,6 +3,7 @@ package com.smu.songgulsongul.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +21,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
+import com.smu.songgulsongul.data.NotificationData;
+import com.smu.songgulsongul.data.RequestNotification;
 import com.smu.songgulsongul.fragment.FragHomeComu;
 import com.smu.songgulsongul.fragment.FragHomeFeed;
 import com.smu.songgulsongul.fragment.FragHomeMarket;
@@ -28,6 +31,7 @@ import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,24 +92,32 @@ public class HomeActivity extends AppCompatActivity {
         setFrag(0);
 
         Button tmp = findViewById(R.id.home_temp);
+
         tmp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                serviceApi.PushAlarm(LoginSharedPreference.getToken(HomeActivity.this))
-                        .enqueue(new Callback<CodeResponse>() {
-                            @Override
-                            public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                NotificationData notificationData = new NotificationData("check", "i miss you");
+                RequestNotification requestNotification = new RequestNotification();
+                requestNotification.setSendNotificationModel(notificationData);
+                requestNotification.setMode(2);
+                requestNotification.setLoginid("yujin");
+                requestNotification.setPostid(4); //내 게시물
+                // 현재 나한테 임시로 보내기
 
-                            }
-                            @Override
-                            public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                Toast.makeText(HomeActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
-                                // 이부분 미완성 성공일때도 onFailure 실행됨됨
-                           }
-                        });
+                retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
+                responseBodyCall.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                        Toast.makeText(HomeActivity.this, "성공!!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(HomeActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
-
     }
 
     private void setFrag(int n){

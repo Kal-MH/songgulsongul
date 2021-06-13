@@ -27,6 +27,9 @@ const USER_LFOLLOW_LIST = "/lfollow-list";
 //notification Router
 const NOTIFICATION = "/notification";
 const PUSHALARM = "/pushalarm";
+const SENDNOTI = "/sendNotification";
+const SETTOKEN = "/setToken";
+const DELETETOKEN = "/deleteToken"
 
 //market Router
 const MARKET = "/market";
@@ -87,7 +90,9 @@ const routes = {
     userLFollowList : USER_LFOLLOW_LIST,
 
     notification: NOTIFICATION,
-    pushAlarm : PUSHALARM,
+    sendNotification: SENDNOTI,
+    setToken: SETTOKEN,
+    deleteToken: DELETETOKEN,
 
     market : MARKET,
     marketMain : MARKET_MAIN,
