@@ -52,10 +52,10 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
         final ItemTag item = dataList.get(position);
 
         //임시로 세팅
-        Glide.with(context).load(RetrofitClient.getBaseUrl() + item.getPicture() ).into(holder.pic); // 게시물 사진
+        //Glide.with(context).load(RetrofitClient.getBaseUrl() + item.getPicture() ).into(holder.pic); // 게시물 사진
 
         // item tag 추가의 경우 naver api 이용한 http 이미지 링크 받아오므로 baseUrl 제거 --> 실제 아래 코드 사용
-        // Glide.with(context).load(item.getPicture() ).into(holder.pic); // 게시물 사진
+        Glide.with(context).load(item.getPicture() ).into(holder.pic); // 게시물 사진
 
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,8 +64,8 @@ public class ItemTagAdapter extends RecyclerView.Adapter<ItemTagAdapter.ViewHold
                 Intent intent = new Intent(context, ItemDetailActivity.class);
                 intent.putExtra("id", item.getId());
                 intent.putExtra("name", item.getName());
-                intent.putExtra("hprice", item.getH_price());
-                intent.putExtra("lprice", item.getL_price());
+                intent.putExtra("hprice", item.getH_price().equals("-1") ? "" : item.getH_price());
+                intent.putExtra("lprice", item.getL_price().equals("-1") ? "" : item.getL_price());
                 intent.putExtra("url", item.getUrl());
                 intent.putExtra("picture", item.getPicture());
 
