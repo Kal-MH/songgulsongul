@@ -255,7 +255,7 @@ public class UploadDetailActivity extends AppCompatActivity {
         Log.d("item_count", String.valueOf(items.size()));
 
         if(items.size() > 1) {
-            for (int i = 0; i < items.size() - 1; i++) {
+            for (int i = 1; i < items.size(); i++) {
                 item_tags.add(MultipartBody.Part.createFormData("item_name",
                         items.get(i).getName() == null ? "" : items.get(i).getName()));
                 item_tags.add(MultipartBody.Part.createFormData("item_lowprice",
