@@ -352,8 +352,8 @@ const postController = {
         
                                     insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, url, picture, brand, category1, category2) values(${postId}, ?, ?, ?, ?, ?, ?, ?, ?);`;
                                     insertItemParams.push(req.body.item_tag[i].name);
-                                    insertItemParams.push(Number(req.body.item_tag[i].l_price));
-                                    insertItemParams.push(Number(req.body.item_tag[i].h_price));
+                                    insertItemParams.push(req.body.item_tag[i].l_price ? Number(req.body.item_tag[i].l_price) : -1);
+                                    insertItemParams.push(req.body.item_tag[i].h_price ? Number(req.body.item_tag[i].h_price) : -1);
                                     insertItemParams.push(req.body.item_tag[i].url);
                                     insertItemParams.push(itemImg);
                                     insertItemParams.push(req.body.item_tag[i].brand);

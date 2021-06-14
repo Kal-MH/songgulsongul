@@ -168,7 +168,7 @@ const postController_subFunc = {
         
         if (typeof items.name == 'string' && items.name != ''){
             insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, brand, category1, category2, url, picture)
-            values(${postId}, '${items.name}', ${items.lowprice ? items.lowprice : -1}, ${items.highprice ? items.highprice : -1}, ?, ?, ?, ?, ?);`;
+            values(${postId}, '${items.name}', ${items.lowprice ? Number(items.lowprice) : -1}, ${items.highprice ? Number(items.highprice) : -1}, ?, ?, ?, ?, ?);`;
 
             hashTagsSplitItemParams.push(items.brand);
             hashTagsSplitItemParams.push(items.category1);
@@ -183,7 +183,7 @@ const postController_subFunc = {
             itemForIndex = items.name.length;
             for (var i = 0; i < itemForIndex; i++) {
                 insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, brand, category1, category2, url, picture)
-                    values(${postId}, '${items.name[i]}', ${items.lowprice[i] ? items.lowprice[i] : -1}, ${items.highprice[i] ? items.highprice[i] : -1}, ?, ?, ?, ?, ?);`;
+                    values(${postId}, '${items.name[i]}', ${items.lowprice[i] ? Number(items.lowprice[i]) : -1}, ${items.highprice[i] ? Number(items.highprice[i]) : -1}, ?, ?, ?, ?, ?);`;
     
                 hashTagsSplitItemParams.push(items.brand[i]);
                 hashTagsSplitItemParams.push(items.category1[i]);
