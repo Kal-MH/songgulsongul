@@ -311,7 +311,7 @@ const postController = {
         } else {
 
             console.log(req.body);
-    
+
             var updatePostSql = `update post set text='${req.body.text}', ccl_cc=?, ccl_a=?, ccl_nc=?, ccl_nd=?, ccl_sa=? where id = ${postId};`;
             connection.query(updatePostSql, req.body.ccl, function (err, result) {
                 if (err) {
@@ -349,11 +349,11 @@ const postController = {
                                     } else {
                                         itemImg = req.body.item_tag[i].picture;
                                     }
-        
+
                                     insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, url, picture, brand, category1, category2) values(${postId}, ?, ?, ?, ?, ?, ?, ?, ?);`;
                                     insertItemParams.push(req.body.item_tag[i].name);
-                                    insertItemParams.push(req.body.item_tag[i].l_price ? Number(req.body.item_tag[i].l_price) : -1);
-                                    insertItemParams.push(req.body.item_tag[i].h_price ? Number(req.body.item_tag[i].h_price) : -1);
+                                    insertItemParams.push(req.body.item_tag[i].lprice ? Number(req.body.item_tag[i].lprice) : -1);
+                                    insertItemParams.push(req.body.item_tag[i].hprice ? Number(req.body.item_tag[i].hprice) : -1);
                                     insertItemParams.push(req.body.item_tag[i].url);
                                     insertItemParams.push(itemImg);
                                     insertItemParams.push(req.body.item_tag[i].brand);
