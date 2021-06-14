@@ -12,8 +12,9 @@ public class ItemTag {
     String category1;
     String category2;
 
-    // post upload test용 생성자 --> 추후 삭제
-    public ItemTag(int id, String name, String h_price, String l_price, String url, String picture, String brand, String category1, String category2){
+    // RV 데이터 추가위해 남겨둠
+    public ItemTag( String name, String h_price, String l_price, String url, String picture,
+                   String brand, String category1, String category2){
         this.name = name;
         this.hprice = h_price;
         this.lprice = l_price;

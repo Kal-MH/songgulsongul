@@ -1,11 +1,13 @@
 package com.smu.songgulsongul.adapter;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,48 +21,82 @@ import java.util.ArrayList;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.item.ItemSearchItem;
 
-public class ItemSearchAdapter extends RecyclerView.Adapter<ItemSearchAdapter.ViewHolder> {
-    private ArrayList<ItemSearchItem> mlist;
+public class ItemSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    private ArrayList<ItemSearchItem> data;
 
-    public ItemSearchAdapter(ArrayList<ItemSearchItem> list) {
-        mlist = list;
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
+    Context context;
+
+    public ItemSearchAdapter(Context context,ArrayList<ItemSearchItem> list) {
+        this.context = context;
+        data = list;
     }
 
     @NonNull
     @Override
-    public ItemSearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View itemView = inflater.inflate(R.layout.itemsearch_item, parent, false);
-        ItemSearchAdapter.ViewHolder vh = new ItemSearchAdapter.ViewHolder(itemView);
-
-        return vh;
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if(viewType == VIEW_TYPE_ITEM){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.itemsearch_item, parent, false);
+            return new ItemSearchAdapter.ItemViewHolder(view);
+        }
+        else{
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
+            return new ItemSearchAdapter.LoadingViewHolder(view);
+        }
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onBindViewHolder(@NonNull ItemSearchAdapter.ViewHolder holder, int position) {
-        ItemSearchItem item = mlist.get(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ItemSearchAdapter.ItemViewHolder) {
 
-        Glide.with(holder.picurl.getContext()).load(item.getPic()).override(100,100).into(holder.picurl); // 제품 사진
-        holder.name.setText(item.getName()); //제품 이름
-        holder.lprice.setText(item.getLprice()); //제품 최저가
-        holder.hprice.setText(item.getHprice()); //제품 최고가
+            ItemSearchItem item = data.get(position);
+
+            Glide.with(context).load( item.getImg() ).into(((ItemViewHolder) holder).picurl); // 제품 사진
+            String name = item.getTitle();
+            name = name.replaceAll("<b>","");
+            name = name.replaceAll("<b>","");
+            name = name.replaceAll("</b>","");
+            name = name.replaceAll("&lt;","<");
+            name = name.replaceAll("&gt;",">");
+            name = name.replaceAll("&amp;","&");
+            ((ItemViewHolder) holder).name.setText(name); //제품 이름
+
+            if( name.length() >15)
+                name = name.substring(0,15);
+
+            ((ItemViewHolder) holder).lprice.setText(item.getLprice()); //제품 최저가
+            ((ItemViewHolder) holder).hprice.setText(item.getHprice()); //제품 최고가
+        }
+        else if (holder instanceof ItemSearchAdapter.LoadingViewHolder) {
+            showLoadingView((ItemSearchAdapter.LoadingViewHolder) holder, position);
+        }
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return data.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
     @Override
     public int getItemCount() {
-        return mlist.size();
+        return data.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    private void showLoadingView(ItemSearchAdapter.LoadingViewHolder holder, int position) {
+
+    }
+
+    private class ItemViewHolder extends RecyclerView.ViewHolder {
+
         ImageView picurl;
         TextView name;
         TextView lprice;
         TextView hprice;
 
-        ViewHolder(@NonNull View itemView){
+        ItemViewHolder(@NonNull View itemView){
             super(itemView);
 
             picurl = itemView.findViewById(R.id.itemseach_item_img);
@@ -80,6 +116,15 @@ public class ItemSearchAdapter extends RecyclerView.Adapter<ItemSearchAdapter.Vi
                     }
                 }
             });
+        }
+    }
+
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        private ProgressBar progressBar;
+
+        public LoadingViewHolder(@NonNull View itemView) {
+            super(itemView);
+            progressBar = itemView.findViewById(R.id.item_progressBar);
         }
     }
 
