@@ -31,7 +31,7 @@
                 android:id="@+id/upload_mode_quick_btn"
                 android:layout_width="@dimen/icon_size_large"
                 android:layout_height="@dimen/icon_size_large"
-                android:background="@drawable/ic_baseline_create_24"
+                android:background="@drawable/rocket_4973"
                 android:backgroundTint="@color/inkGrey"
                 android:scaleType="fitCenter"
                 android:tint="@color/inkGrey" />
@@ -62,9 +62,9 @@
 
             <ImageButton
                 android:id="@+id/upload_mode_normal_btn"
-                android:background="@drawable/ic_baseline_create_24"
                 android:layout_width="@dimen/icon_size_large"
                 android:layout_height="@dimen/icon_size_large"
+                android:background="@drawable/stage_process_icon"
                 android:backgroundTint="@color/inkGrey"
                 android:scaleType="fitCenter"
                 android:tint="@color/inkGrey" />
