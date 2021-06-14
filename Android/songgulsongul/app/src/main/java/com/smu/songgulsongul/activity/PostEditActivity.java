@@ -364,7 +364,7 @@ public class PostEditActivity extends AppCompatActivity {
             String category1 = data.getStringExtra("category1");
             String category2 = data.getStringExtra("category2");
 
-            itemTagData.add(new ItemTag(id, name, hprice, lprice, url, picture, brand, category1, category2));
+            itemTagData.add(new ItemTag(name, hprice, lprice, url, picture, brand, category1, category2));
             adapter.notifyItemChanged(itemTagData.size()-1);
         }
         else{
