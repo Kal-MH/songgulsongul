@@ -94,7 +94,7 @@
                 <ImageView
                     android:layout_width="@dimen/icon_size_large"
                     android:layout_height="@dimen/icon_size_large"
-                    app:srcCompat="@drawable/ic_baseline_face_24"
+                    app:srcCompat="@drawable/filter_none"
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView
@@ -120,40 +120,14 @@
                 <ImageView
                     android:layout_width="@dimen/icon_size_large"
                     android:layout_height="@dimen/icon_size_large"
-                    app:srcCompat="@drawable/ic_baseline_face_24"
+                    app:srcCompat="@drawable/filter_mingray"
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView
+                    style="@style/Text.textStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Text.textStyle"
-                    android:text="흑백" />
-            </LinearLayout>
-
-            <Space
-                android:layout_width="@dimen/common_margin"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <LinearLayout
-                android:id="@+id/image_edit_filter_test"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="@dimen/icon_size_large"
-                    android:layout_height="@dimen/icon_size_large"
-                    app:srcCompat="@drawable/ic_baseline_face_24"
-                    tools:ignore="VectorDrawableCompat" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/Text.textStyle"
-                    android:text="테스트필터" />
+                    android:text="형광도 잘보이는 흑백" />
             </LinearLayout>
 
 

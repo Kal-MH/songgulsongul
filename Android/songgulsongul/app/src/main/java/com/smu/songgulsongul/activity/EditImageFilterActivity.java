@@ -72,7 +72,7 @@ public class EditImageFilterActivity extends AppCompatActivity {
 
         filterNone = findViewById(R.id.image_edit_filter_none);
         filterGrey = findViewById(R.id.image_edit_filter_gray);
-        filterTest = findViewById(R.id.image_edit_filter_test);
+        //filterTest = findViewById(R.id.image_edit_filter_test);
 
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
         editingImageAddress = ((songgul)getApplication()).getEditingMat().getNativeObjAddr();
@@ -102,6 +102,7 @@ public class EditImageFilterActivity extends AppCompatActivity {
             }
         });
 
+        /*
         filterTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +112,7 @@ public class EditImageFilterActivity extends AppCompatActivity {
                 previewImage = new Mat(editingImageAddress).clone();
                 updatePreviewImageView();
             }
-        });
+        });*/
 
 
 
