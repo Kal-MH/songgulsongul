@@ -51,7 +51,8 @@
                <ImageView
                    android:layout_width="100dp"
                    android:layout_height="100dp"
-                   android:background="#88FFA3A3"></ImageView>
+                   android:background="#88FFA3A3"
+                   android:src="@drawable/paper_detactbad"></ImageView>
 
                <TextView
                    android:layout_width="wrap_content"
@@ -75,7 +76,8 @@
                <ImageView
                    android:layout_width="100dp"
                    android:layout_height="100dp"
-                   android:background="#88EFC4C4"></ImageView>
+                   android:background="#88C4EFC8"
+                   android:src="@drawable/paper_detactgood"></ImageView>
 
                <TextView
                    android:layout_width="wrap_content"

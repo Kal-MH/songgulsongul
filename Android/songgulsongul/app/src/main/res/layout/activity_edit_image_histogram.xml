@@ -92,11 +92,11 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="@dimen/icon_size_large"
-                    android:layout_height="@dimen/icon_size_large"
-                    app:srcCompat="@drawable/ic_baseline_face_24"
-                    tools:ignore="VectorDrawableCompat" />
+            <ImageView
+                android:layout_width="@dimen/icon_size_large"
+                android:layout_height="@dimen/icon_size_large"
+                app:srcCompat="@drawable/originalcaligra"
+                tools:ignore="VectorDrawableCompat" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -121,7 +121,7 @@
                 <ImageView
                     android:layout_width="@dimen/icon_size_large"
                     android:layout_height="@dimen/icon_size_large"
-                    app:srcCompat="@drawable/ic_baseline_face_24"
+                    app:srcCompat="@drawable/histogram"
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView
@@ -147,7 +147,7 @@
                 <ImageView
                     android:layout_width="@dimen/icon_size_large"
                     android:layout_height="@dimen/icon_size_large"
-                    app:srcCompat="@drawable/ic_baseline_face_24"
+                    app:srcCompat="@drawable/histogram2"
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView
