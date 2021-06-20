@@ -44,10 +44,6 @@ public class LoginActivity extends AppCompatActivity {
     EditText login_username, login_pw;
 
 
-    //debug
-    Button devLoginPassButton;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         login_go_join = findViewById(R.id.login_go_join);
         login_go_find = findViewById(R.id.login_go_find);
 
-        //debug
-        devLoginPassButton = findViewById(R.id.devButton);
 
         login_go_join.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,22 +170,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
-        //debug
-        devLoginPassButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                final String login_id = login_username.getText().toString();
-                String passsword = login_pw.getText().toString();
-                login_id.trim();
-                passsword.trim();
-
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
 
 
         // 텍스트 입력시 로그인 버튼 활성화
