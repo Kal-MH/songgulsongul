@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/login_logo"
-        android:layout_width="@dimen/icon_size_large"
-        android:layout_height="@dimen/icon_size_large"
+        android:layout_width="@dimen/tab_size_large"
+        android:layout_height="@dimen/tab_size_large"
 
 
         android:layout_marginTop="@dimen/tab_size_large"
@@ -22,8 +22,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
 
-        app:srcCompat="@drawable/ic_launcher_foreground"
-        tools:ignore="VectorDrawableCompat" />
+        android:src="@mipmap/ic_launcher"
+         />
 
     <EditText
         android:id="@+id/login_username"
@@ -148,13 +148,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
 
-    <Button
-        android:id="@+id/devButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="loginPass"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

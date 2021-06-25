@@ -185,7 +185,6 @@ public class UploadDetailActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1234 && resultCode == RESULT_OK){
             //AddItemtagActivity에서 받아온 데이터 처리
-            int id = data.getIntExtra("id",0);
             String name = data.getStringExtra("name");
             String hprice = data.getStringExtra("hprice");
             String lprice = data.getStringExtra("lprice");
@@ -194,8 +193,9 @@ public class UploadDetailActivity extends AppCompatActivity {
             String brand = data.getStringExtra("brand");
             String category1 = data.getStringExtra("category1");
             String category2 = data.getStringExtra("category2");
-
-            itemTagData.add(new ItemTag(id, name, hprice, lprice, url, picture, brand, category1, category2));
+            Log.d("TAG", name+" " + hprice+" " + lprice+ url+" " + picture+ " " +brand+ " " +category1+ " " +category2);
+            itemTagData.add(new ItemTag( name, hprice, lprice, url, picture, brand, category1, category2));
+            adapter.notifyItemChanged(itemTagData.size()-1);
         }
         else{
             System.out.println("there is no data");
@@ -255,7 +255,7 @@ public class UploadDetailActivity extends AppCompatActivity {
         Log.d("item_count", String.valueOf(items.size()));
 
         if(items.size() > 1) {
-            for (int i = 0; i < items.size() - 1; i++) {
+            for (int i = 1; i < items.size(); i++) {
                 item_tags.add(MultipartBody.Part.createFormData("item_name",
                         items.get(i).getName() == null ? "" : items.get(i).getName()));
                 item_tags.add(MultipartBody.Part.createFormData("item_lowprice",

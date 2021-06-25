@@ -26,6 +26,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.data.LoginData;
+import com.smu.songgulsongul.data.TokenData;
+import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.responseData.LoginResponse;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
@@ -42,9 +44,6 @@ public class LoginActivity extends AppCompatActivity {
     EditText login_username, login_pw;
 
 
-    //debug
-    Button devLoginPassButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         login_go_join = findViewById(R.id.login_go_join);
         login_go_find = findViewById(R.id.login_go_find);
 
-        //debug
-        devLoginPassButton = findViewById(R.id.devButton);
 
         login_go_join.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,26 +165,11 @@ public class LoginActivity extends AppCompatActivity {
                             t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                         }
                     });
+
                 }
             }
         });
 
-
-        //debug
-        devLoginPassButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                final String login_id = login_username.getText().toString();
-                String passsword = login_pw.getText().toString();
-                login_id.trim();
-                passsword.trim();
-
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
 
 
         // 텍스트 입력시 로그인 버튼 활성화
@@ -224,9 +206,30 @@ public class LoginActivity extends AppCompatActivity {
                 if( task.isSuccessful()){
                     String token = task.getResult();
                     LoginSharedPreference.setToken(LoginActivity.this,token);
+
+                    TokenData tokenData = new TokenData(LoginSharedPreference.getUserId(LoginActivity.this), token) ;
+                    serviceApi.setToken(tokenData )
+                            .enqueue(new Callback<CodeResponse>() {
+                                @Override
+                                public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+
+                                    Toast.makeText(LoginActivity.this, "기기를 등록했습니다", Toast.LENGTH_SHORT).show();
+
+                                }
+                                @Override
+                                public void onFailure(Call<CodeResponse> call, Throwable t) {
+
+                                    Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Log.e("Token" , "등록 실패");
+                                }
+
+                            });
+
+
                 }
             }
         });
     }
+
 
 }

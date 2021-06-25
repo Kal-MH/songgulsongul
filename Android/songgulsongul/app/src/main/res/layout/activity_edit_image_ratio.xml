@@ -100,7 +100,7 @@
                 <ImageView
                     android:layout_width="@dimen/icon_size_large"
                     android:layout_height="@dimen/icon_size_large"
-                    app:srcCompat="@drawable/ic_baseline_face_24"
+                    app:srcCompat="@drawable/ratio_wide"
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView
@@ -127,7 +127,7 @@
                 <ImageView
                     android:layout_width="@dimen/icon_size_large"
                     android:layout_height="@dimen/icon_size_large"
-                    app:srcCompat="@drawable/ic_baseline_face_24"
+                    app:srcCompat="@drawable/ratio_tall"
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView

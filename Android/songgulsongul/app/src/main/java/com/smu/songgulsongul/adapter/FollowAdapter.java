@@ -23,12 +23,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
+import com.smu.songgulsongul.activity.PostActivity;
 import com.smu.songgulsongul.activity.ProfileActivity;
+import com.smu.songgulsongul.data.NotificationData;
+import com.smu.songgulsongul.data.RequestNotification;
 import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.data.FollowData;
 import com.smu.songgulsongul.server.RetrofitClient;
@@ -100,7 +104,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
         holder.follow_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user_id = item.getAsJsonObject().get("userId").getAsString();
+                final String user_id = item.getAsJsonObject().get("userId").getAsString();
                 //팔로우 액션 --> server에 FolowData객체 전달
                 FollowData data = new FollowData(login_id, user_id);
                 serviceApi.Follow(data).enqueue(new Callback<CodeResponse>() {
@@ -111,6 +115,23 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
                         if(resultCode == statusCode.RESULT_OK){
                             holder.follow_btn.setVisibility(View.GONE);
                             holder.follow_text.setVisibility(View.VISIBLE);
+
+                            // 알림 보내기
+                            NotificationData notificationData = new NotificationData(login_id+ context.getString(R.string.follow_noti), context.getString(R.string.follow_title));
+                            RequestNotification requestNotification = new RequestNotification();
+                            requestNotification.setSendNotificationModel(notificationData);
+                            requestNotification.setMode(1);
+                            requestNotification.setLoginid(user_id);
+                            requestNotification.setSender( LoginSharedPreference.getUserId(context));
+                            retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
+                            responseBodyCall.enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                                }
+                                @Override
+                                public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                                }
+                            });
                         }
                         else if(resultCode == statusCode.RESULT_CLIENT_ERR){
                             new AlertDialog.Builder(context)

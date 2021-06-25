@@ -4,19 +4,20 @@ public class ItemTag {
     int id;
     int post_id;
     String name;
-    String h_price;
-    String l_price;
+    String hprice;
+    String lprice;
     String url;
     String picture;
     String brand;
     String category1;
     String category2;
 
-    // post upload test용 생성자 --> 추후 삭제
-    public ItemTag(int id, String name, String h_price, String l_price, String url, String picture, String brand, String category1, String category2){
+    // RV 데이터 추가위해 남겨둠
+    public ItemTag( String name, String h_price, String l_price, String url, String picture,
+                   String brand, String category1, String category2){
         this.name = name;
-        this.h_price = h_price;
-        this.l_price = l_price;
+        this.hprice = h_price;
+        this.lprice = l_price;
         this.url = url;
         this.picture = picture;
         this.brand = brand;
@@ -41,11 +42,11 @@ public class ItemTag {
     }
 
     public String getH_price() {
-        return h_price;
+        return hprice;
     }
 
     public String getL_price() {
-        return l_price;
+        return lprice;
     }
 
     public String getUrl() {

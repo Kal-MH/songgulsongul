@@ -43,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,6 +52,8 @@ import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.adapter.HashTagAdapter;
 import com.smu.songgulsongul.adapter.ItemTagAdapter;
 import com.smu.songgulsongul.adapter.PostCmtAdapter;
+import com.smu.songgulsongul.data.NotificationData;
+import com.smu.songgulsongul.data.RequestNotification;
 import com.smu.songgulsongul.responseData.Ccl;
 import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.data.CommentData;
@@ -271,9 +274,10 @@ public class PostActivity extends AppCompatActivity {
                                 like = 0;
                                 data.setLikeNum(--likeNum);
                             }
-                            else{
+                            else{ // 좋아요 누름
                                 like = 1;
                                 data.setLikeNum(++likeNum);
+                                sendLikeNoti();
                             }
                             data.setLikeOnset(like);
                             post_like_cnt.setText("좋아요 " + likeNum);
@@ -386,6 +390,7 @@ public class PostActivity extends AppCompatActivity {
                              //다시 불러오기.. 아니면 댓글만 가져오는 코드 짜야함!
                             post_input.setText("");
                             getData();
+                            sendCommentNoti();
                         }
                         else if( resultCode == statusCode.RESULT_CLIENT_ERR){
                             Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
@@ -792,6 +797,52 @@ public class PostActivity extends AppCompatActivity {
             public void onFailure(Call<CodeResponse> call, Throwable t) {
                 Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+            }
+        });
+    }
+
+    public void sendLikeNoti(){
+        String loginid = LoginSharedPreference.getLoginId(this);
+        NotificationData notificationData = new NotificationData(loginid+ getString(R.string.like_noti), getString(R.string.like_title));
+        RequestNotification requestNotification = new RequestNotification();
+        requestNotification.setSendNotificationModel(notificationData);
+        requestNotification.setMode(2);
+        requestNotification.setSender( LoginSharedPreference.getUserId(this));
+        requestNotification.setPostid(postData.getId());
+
+        retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
+        responseBodyCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                Toast.makeText(PostActivity.this, "성공!!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(PostActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+    public void sendCommentNoti(){
+        String loginid = LoginSharedPreference.getLoginId(this);
+        NotificationData notificationData = new NotificationData(loginid+ getString(R.string.comment_msg),  getString(R.string.comment_title));
+        RequestNotification requestNotification = new RequestNotification();
+        requestNotification.setSendNotificationModel(notificationData);
+        requestNotification.setMode(3);
+        requestNotification.setSender( LoginSharedPreference.getUserId(this));
+        requestNotification.setPostid(postData.getId());
+
+        retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
+        responseBodyCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                Toast.makeText(PostActivity.this, "성공!!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(PostActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
             }
         });
     }

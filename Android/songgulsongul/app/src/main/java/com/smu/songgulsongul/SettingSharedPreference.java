@@ -20,7 +20,7 @@ public class SettingSharedPreference {
     // 저장된 정보 가져오기
     public static boolean getSetting(Context ctx, String key) {
         SharedPreferences prefs = getSharedPreferences(ctx);
-        boolean value = prefs.getBoolean(key, false);
+        boolean value = prefs.getBoolean(key, true);
         return value;
     }
 

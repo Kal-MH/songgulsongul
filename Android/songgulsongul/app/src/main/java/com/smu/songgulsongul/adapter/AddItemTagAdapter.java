@@ -52,8 +52,8 @@ public class AddItemTagAdapter extends ItemTagAdapter {
                     Intent intent = new Intent(context, ItemDetailActivity.class);
                     intent.putExtra("id", item.getId());
                     intent.putExtra("name", item.getName());
-                    intent.putExtra("hprice", item.getH_price());
-                    intent.putExtra("lprice", item.getL_price());
+                    intent.putExtra("hprice", item.getH_price().equals("-1") ? "" : item.getH_price());
+                    intent.putExtra("lprice", item.getL_price().equals("-1") ? "" : item.getL_price());
                     intent.putExtra("url", item.getUrl());
                     intent.putExtra("picture", item.getPicture());
 

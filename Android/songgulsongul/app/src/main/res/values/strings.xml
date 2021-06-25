@@ -104,4 +104,13 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+
+    <string name="like_title">좋아요가 늘었습니다!</string>
+    <string name="like_noti">님이 좋아요를 눌렀습니다</string>
+
+    <string name="follow_title">팔로워가 늘었습니다!</string>
+    <string name="follow_noti">님이 팔로우합니다.</string>
+
+    <string name="comment_title">댓글이 달렸습니다</string>
+    <string name="comment_msg">님이 댓글을 달았습니다.</string>
 </resources>

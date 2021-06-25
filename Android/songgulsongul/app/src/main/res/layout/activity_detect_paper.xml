@@ -80,7 +80,7 @@
                 android:id="@+id/detect_paper_sample"
                 android:layout_width="@dimen/icon_size_large"
                 android:layout_height="@dimen/icon_size_large"
-                app:srcCompat="@drawable/ic_papersample"
+                app:srcCompat="@drawable/paper_detact_icon"
                 tools:ignore="VectorDrawableCompat" />
 
             <TextView

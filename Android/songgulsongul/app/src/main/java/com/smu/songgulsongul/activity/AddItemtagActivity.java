@@ -3,100 +3,57 @@ package com.smu.songgulsongul.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.os.Parcelable;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
-import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.adapter.ItemSearchAdapter;
+import com.smu.songgulsongul.responseData.ShoppingResults;
 import com.smu.songgulsongul.item.ItemSearchItem;
-import com.smu.songgulsongul.responseData.ItemTag;
+import com.smu.songgulsongul.server.NaverApi;
+import com.smu.songgulsongul.server.RetrofitNaver;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class AddItemtagActivity extends Activity {
+
     SearchView searchView;
+    RecyclerView recyclerView = null;
+    ItemSearchAdapter adapter = null;
 
-
-    StringBuffer response;
-    String apiHtml;
-
-    RecyclerView mRecyclerView = null;
-    ItemSearchAdapter mAdapter = null;
     private ArrayList<ItemSearchItem> mlist = new ArrayList<ItemSearchItem>();
+
     int position = -1;
+    String key;
 
-    Handler handler = new Handler(){
-        public void handleMessage(Message msg){
-            Bundle bun = msg.getData();
-            apiHtml = bun.getString("API_HTML");
+    Button more;
+    boolean isLoading;
 
-            //부호 정리
-            apiHtml = apiHtml.replaceAll("<b>","");
-            apiHtml = apiHtml.replaceAll("</b>","");
-            apiHtml = apiHtml.replaceAll("&lt;","<");
-            apiHtml = apiHtml.replaceAll("&gt;",">");
-            apiHtml = apiHtml.replaceAll("&amp;","&");
 
-            try{
-                JSONObject jsonObject = new JSONObject(apiHtml);
-                JSONArray apiArray = jsonObject.getJSONArray("items");
+    NaverApi naverApi = RetrofitNaver.getClient().create(NaverApi.class);
 
-                mlist.clear();
+    private final static String CLIENT_ID ="vzYQ1acA6vGEyvjeQHAB";
+    private final static String CLIENT_PW = "cg4YKUanSV";
 
-                for (int i = 0; i<apiArray.length();i++){
-                    JSONObject apiObject = apiArray.getJSONObject(i);
-                    ItemSearchItem item = new ItemSearchItem();
 
-                    //item에 JSONObject 값 전달
-                    item.setId(apiObject.getInt("productId"));
-                    item.setPic(apiObject.getString("image"));
-                    item.setName(apiObject.getString("title"));
-                    item.setHprice(apiObject.getString("hprice"));
-                    item.setLprice(apiObject.getString("lprice"));
-                    item.setUrl(apiObject.getString("link"));
-                    item.setBrand(apiObject.getString("brand"));
-                    item.setCategory1(apiObject.getString("category3"));
-                    item.setCategory2(apiObject.getString("category4"));
-
-                    mlist.add(item);
-                }
-                mAdapter.notifyDataSetChanged();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
-    public static StringBuilder sb;
-
+    int idx = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -105,12 +62,9 @@ public class AddItemtagActivity extends Activity {
         setContentView(R.layout.activity_add_itemtag);
 
         searchView = findViewById(R.id.itemtag_search);
-        mRecyclerView = findViewById(R.id.itemtag_list);
+        recyclerView = findViewById(R.id.itemtag_list);
 
-        mAdapter = new ItemSearchAdapter(mlist);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter.notifyDataSetChanged();
+
 
         //검색창 전체 영역 터치 가능
         searchView.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +78,8 @@ public class AddItemtagActivity extends Activity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                ApiSearch(query);
+                SearchRetrofit(query);
+                key = query;
                 return true;
             }
 
@@ -134,23 +89,15 @@ public class AddItemtagActivity extends Activity {
             }
         });
 
-        //아이템 클릭 리스너
-        mAdapter.setOnItemClickListener(new ItemSearchAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int pos) {
-                position = pos;
-                Intent intent = getIntent();
 
-                resultData();
-            }
-        });
 
         //윈도우 크기 설정
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         int width = (int)(display.getWidth()* 0.98);
-        int height = (int)(display.getHeight() * 0.9);
+        int height = (int)(display.getHeight() * 0.98);
         getWindow().getAttributes().width = width;
         getWindow().getAttributes().height = height;
+
     }
 
     private void resultData(){
@@ -159,88 +106,131 @@ public class AddItemtagActivity extends Activity {
         ItemSearchItem item = mlist.get(position);
 
         //UploadDetailActivity로 보낼 데이터
-        intent.putExtra("id",item.getId());
-        intent.putExtra("name", item.getName());
+        String name = item.getTitle();
+        name = name.replaceAll("<b>","");
+        name = name.replaceAll("<b>","");
+        name = name.replaceAll("</b>","");
+        name = name.replaceAll("&lt;","<");
+        name = name.replaceAll("&gt;",">");
+        name = name.replaceAll("&amp;","&");
+
+        intent.putExtra("name", name);
         intent.putExtra("hprice", item.getHprice());
         intent.putExtra("lprice", item.getLprice());
-        intent.putExtra("url", item.getUrl());
-        intent.putExtra("picture", item.getPic());
+        intent.putExtra("url", item.getLink());
+        intent.putExtra("picture", item.getImg());
         intent.putExtra("brand", item.getBrand());
-        intent.putExtra("category1", item.getCategory1());
-        intent.putExtra("category2", item.getCategory2());
+        intent.putExtra("category1", item.getCategory3());
+        intent.putExtra("category2", item.getCategory4());
 
         setResult(RESULT_OK,intent);
         finish();
     }
 
     // server에서 data전달
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void SearchRetrofit(final String keyword){
+        naverApi.search(CLIENT_ID,CLIENT_PW, keyword,10,1).enqueue(new Callback<ShoppingResults>() {
+            @Override
+            public void onResponse(Call<ShoppingResults> call, Response<ShoppingResults> response) {
+                Log.d("item", response.toString());
 
-    public void ApiSearch(final String keyword){
-        if(keyword.equals("")&&keyword != null){
-            Toast.makeText(getApplicationContext(),"검색어를 입력해 주세요.", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            new Thread(){
-                @Override
-                public void run() {
-                    String clientId = "vzYQ1acA6vGEyvjeQHAB";// 애플리케이션 클라이언트 아이디값";
-                    String clientSecret = "cg4YKUanSV";// 애플리케이션 클라이언트 시크릿값";\
-                    int display = 20; // 검색결과갯수
+                ShoppingResults result = response.body();
+                if (response.isSuccessful()) {
+                    //리스트 비우고 상태 초기화
+                    mlist.clear();
 
-                    try {
-                        String text = URLEncoder.encode(keyword, "utf-8");
-                        String apiURL = "https://openapi.naver.com/v1/search/shop.json?query=" + text + "&display=" + display + "&";
+                    // 데이터 세팅
+                    mlist.addAll(result.getItems());
 
-                        URL url = new URL(apiURL);
-                        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                        con.setRequestMethod("GET");
-                        con.setRequestProperty("X-Naver-Client-Id", clientId);
-                        con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
-                        BufferedReader br;
-                        int responseCode = con.getResponseCode();
-
-                        if (responseCode == 200) {
-                            br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-                        } else {
-                            br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                    //어뎁터 초기화
+                    adapter = new ItemSearchAdapter(AddItemtagActivity.this,mlist);
+                    adapter.setOnItemClickListener(new ItemSearchAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View v, int pos) {
+                            position = pos;
+                            Intent intent = getIntent();
+                            resultData();
                         }
-                        String inputLine;
-                        response = new StringBuffer();
+                    });
 
-                        while ((inputLine = br.readLine()) != null) {
-                            response.append(inputLine);
-                            response.append("\n");
-                        }
-                        br.close();
+                    // 어뎁터 세팅
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(AddItemtagActivity.this));
 
-                        String apiHtml = response.toString();
+                    idx += 10;
+                    initScroll();
 
-                        Bundle bun = new Bundle();
-                        bun.putString("API_HTML", apiHtml);
-                        Message msg = handler.obtainMessage();
-                        msg.setData(bun);
-                        handler.sendMessage(msg);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ShoppingResults> call, Throwable t) {
+            }
+        });
+    }
+
+    public void SearchRetrofitMore(final String keyword){
+        mlist.add(null);
+        adapter.notifyItemInserted(mlist.size() - 1);
+
+        naverApi.search(CLIENT_ID,CLIENT_PW, keyword,10, idx).enqueue(new Callback<ShoppingResults>() {
+            @Override
+            public void onResponse(Call<ShoppingResults> call, Response<ShoppingResults> response) {
+                mlist.remove(mlist.size()-1);
+                adapter.notifyItemRemoved(mlist.size());
+
+                ShoppingResults result = response.body();
+                if (response.isSuccessful()) {
+                    //데이터 추가!
+                    mlist.addAll(result.getItems());
+                    adapter.notifyDataSetChanged();
+                    idx += 10;
+
+                } else {
+
+                }
+
+
+                isLoading = false;
+
+            }
+
+            @Override
+            public void onFailure(Call<ShoppingResults> call, Throwable t) {
+            }
+        });
+
+
+    }
+
+    public void initScroll(){
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                Log.d("scroll" , layoutManager.findLastVisibleItemPosition() +" | " + ( adapter.getItemCount()  -1 ) );
+                if (!isLoading) {
+                    if (layoutManager != null && layoutManager.findLastVisibleItemPosition()== adapter.getItemCount() - 1) {
+                        //리스트 마지막
+                        SearchRetrofitMore(key);
+                        isLoading = true;
                     }
                 }
-            }.start();
+            }
+        });
 
-        }
     }
 
-    public static Bitmap drawable2Bitmap(Drawable drawable) {
-        Bitmap bitmap = Bitmap
-                .createBitmap(
-                        drawable.getIntrinsicWidth(),
-                        drawable.getIntrinsicHeight(),
-                        drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
-                                : Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
+
 }

@@ -3,6 +3,7 @@ package com.smu.songgulsongul.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +21,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
+import com.smu.songgulsongul.data.NotificationData;
+import com.smu.songgulsongul.data.RequestNotification;
 import com.smu.songgulsongul.fragment.FragHomeComu;
 import com.smu.songgulsongul.fragment.FragHomeFeed;
 import com.smu.songgulsongul.fragment.FragHomeMarket;
@@ -28,6 +31,7 @@ import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -86,25 +90,6 @@ public class HomeActivity extends AppCompatActivity {
         fragHomeMarket = new FragHomeMarket();
 
         setFrag(0);
-
-        Button tmp = findViewById(R.id.home_temp);
-        tmp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                serviceApi.PushAlarm(LoginSharedPreference.getToken(HomeActivity.this))
-                        .enqueue(new Callback<CodeResponse>() {
-                            @Override
-                            public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-
-                            }
-                            @Override
-                            public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                Toast.makeText(HomeActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
-                                // 이부분 미완성 성공일때도 onFailure 실행됨됨
-                           }
-                        });
-            }
-        });
 
     }
 

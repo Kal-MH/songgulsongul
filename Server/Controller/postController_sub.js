@@ -150,6 +150,7 @@ const postController_subFunc = {
     updatePointInsertHashItem : function (res, postId, hashTags, items, sql) {
         var hashTagsSplitItemParams = [];
         var insertItemSql = "";
+        var itemForIndex = 0;
 
         if (typeof hashTags == 'string'){
             hashTagsSplitItemParams.push(hashTags);
@@ -164,11 +165,26 @@ const postController_subFunc = {
             i--;
           }
         }
-        if (items.length > 0) {
-            for (var i = 0; i < items.name.length; i++) {
-                insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, brand, category1, category2, url, picture)
-                    values(${postId}, '${items.name[i]}', ${items.lowprice[i]}, ${items.highprice[i]}, ?, ?, ?, ?, ?);`;
+        
+        if (typeof items.name == 'string' && items.name != ''){
+            insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, brand, category1, category2, url, picture)
+            values(${postId}, '${items.name}', ${items.lowprice ? Number(items.lowprice) : -1}, ${items.highprice ? Number(items.highprice) : -1}, ?, ?, ?, ?, ?);`;
 
+            hashTagsSplitItemParams.push(items.brand);
+            hashTagsSplitItemParams.push(items.category1);
+            hashTagsSplitItemParams.push(items.category2);
+            hashTagsSplitItemParams.push(items.itemLink);
+            if (items.itemImg) {
+                hashTagsSplitItemParams.push(items.itemImg)
+            } else {
+                hashTagsSplitItemParams.push(serverConfig.defaultImg);
+            }
+        } else if (typeof items.name != 'string'){
+            itemForIndex = items.name.length;
+            for (var i = 0; i < itemForIndex; i++) {
+                insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, brand, category1, category2, url, picture)
+                    values(${postId}, '${items.name[i]}', ${items.lowprice[i] ? Number(items.lowprice[i]) : -1}, ${items.highprice[i] ? Number(items.highprice[i]) : -1}, ?, ?, ?, ?, ?);`;
+    
                 hashTagsSplitItemParams.push(items.brand[i]);
                 hashTagsSplitItemParams.push(items.category1[i]);
                 hashTagsSplitItemParams.push(items.category2[i]);
@@ -180,7 +196,6 @@ const postController_subFunc = {
                 }
             }
         }
-
         connection.query(sql + insertItemSql, hashTagsSplitItemParams, function (err, result) {
             if (err) {
                 console.log(err);

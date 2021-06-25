@@ -1,6 +1,7 @@
 package com.smu.songgulsongul.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -146,7 +148,7 @@ public class PostEditActivity extends AppCompatActivity {
 
         // 아이템 태그
         List<ItemTag> items = adapter.getDataList();
-        items.remove(items.size() - 1); // 마지막 값(추가 버튼) 제거
+        items.remove(0); // 맨앞 추가버튼 제거!
 
         PostEditData data = new PostEditData(user_id, post_id, text, hash_tags, ccl_arr, items);
 
@@ -333,11 +335,41 @@ public class PostEditActivity extends AppCompatActivity {
     }
     public boolean setItemTagData(){
         itemTagData = data.getItemTags();
-        itemTagData.add(new ItemTag(-1));
+        itemTagData.add(0, new ItemTag(-1));
         adapter = new AddItemTagAdapter(itemtag_rv.getContext(), itemTagData); // 추가모드 어뎁터 세팅
+        adapter.setOnItemClickListener(new AddItemTagAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v) {
+                Intent intent = new Intent(PostEditActivity.this, AddItemtagActivity.class);
+                startActivityForResult(intent,1234);
+            }
+        });
+
         itemtag_rv.setAdapter(adapter);
 
         return true;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1234 && resultCode == RESULT_OK){
+            //AddItemtagActivity에서 받아온 데이터 처리
+            int id = data.getIntExtra("id",0);
+            String name = data.getStringExtra("name");
+            String hprice = data.getStringExtra("hprice");
+            String lprice = data.getStringExtra("lprice");
+            String url = data.getStringExtra("url");
+            String picture = data.getStringExtra("picture");
+            String brand = data.getStringExtra("brand");
+            String category1 = data.getStringExtra("category1");
+            String category2 = data.getStringExtra("category2");
+
+            itemTagData.add(new ItemTag(name, hprice, lprice, url, picture, brand, category1, category2));
+            adapter.notifyItemChanged(itemTagData.size()-1);
+        }
+        else{
+            System.out.println("there is no data");
+        }
     }
 
 }

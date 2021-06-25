@@ -28,13 +28,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
+import com.smu.songgulsongul.activity.HomeActivity;
 import com.smu.songgulsongul.activity.PostActivity;
 import com.smu.songgulsongul.activity.ProfileActivity;
+import com.smu.songgulsongul.data.NotificationData;
+import com.smu.songgulsongul.data.RequestNotification;
 import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.responseData.Post;
 import com.smu.songgulsongul.responseData.PostFeed;
@@ -110,6 +114,29 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         else{
                                             like = 1;
                                             item.setLikeNum(likeNum+1);
+
+                                            String loginid = LoginSharedPreference.getLoginId(context);
+                                            NotificationData notificationData = new NotificationData(loginid+ context.getString(R.string.like_noti), context.getString(R.string.like_title));
+                                            RequestNotification requestNotification = new RequestNotification();
+                                            requestNotification.setSendNotificationModel(notificationData);
+                                            requestNotification.setMode(2);
+                                            requestNotification.setSender( LoginSharedPreference.getUserId(context));
+                                            requestNotification.setPostid(postId);
+
+                                            retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
+                                            responseBodyCall.enqueue(new Callback<ResponseBody>() {
+                                                @Override
+                                                public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                                                    Toast.makeText(context, "성공!!", Toast.LENGTH_SHORT).show();
+                                                }
+
+                                                @Override
+                                                public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                                                    Toast.makeText(context, "onFailure", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+
                                         }
                                         item.setLikeOnset(like);
                                         notifyItemChanged(position);
