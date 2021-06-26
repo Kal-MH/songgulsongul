@@ -64,10 +64,11 @@ public class EditDoneActivity extends AppCompatActivity {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EditDoneActivity.this, UploadDetailActivity.class);
-                intent.putExtra("path", filePath);
-                startActivity(intent);
-                finish();
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, filePath);
+                shareIntent.setType("image/jpeg");
+                startActivity(Intent.createChooser(shareIntent, "공유하기"));
             }
         });
 
