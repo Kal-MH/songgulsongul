@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/common_margin"
             android:background="@color/purpleGray"
-            android:text="cancle" />
+            android:text="cancel" />
 
         <Button
             android:id="@+id/save_img_btn"

@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.smu.songgulsongul.R;
 
 public class EditDoneActivity extends AppCompatActivity {
-    Button upload, back;
+    Button upload, back, market_upload, share;
     String filePath;
     ImageView edit_done_pic;
 
@@ -25,6 +25,8 @@ public class EditDoneActivity extends AppCompatActivity {
 
         upload = findViewById(R.id.edit_done_upload);
         back = findViewById(R.id.edit_done_back);
+        market_upload = findViewById(R.id.edit_done_market);
+        share = findViewById(R.id.edit_done_share);
 
         filePath = getIntent().getStringExtra("path");
         edit_done_pic = findViewById(R.id.edit_done_pic);
@@ -48,5 +50,27 @@ public class EditDoneActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        market_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EditDoneActivity.this, MarketUploadActivity.class);
+                intent.putExtra("path", filePath);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, filePath);
+                shareIntent.setType("image/jpeg");
+                startActivity(Intent.createChooser(shareIntent, "공유하기"));
+            }
+        });
+
     }
 }
