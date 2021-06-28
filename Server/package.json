@@ -10,6 +10,7 @@
   "author": "capstone21",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.935.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -23,6 +24,7 @@
     "mime": "^2.5.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
     "mysql": "^2.18.1",
     "nodemailer": "^6.4.17"
   },

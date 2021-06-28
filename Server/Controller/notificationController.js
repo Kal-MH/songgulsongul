@@ -3,14 +3,14 @@ var statusCode = require("../config/serverStatusCode");
 const connection = require("../db/db");
 
 var admin = require("firebase-admin");
-var serviceAccount = require("./serviceAccountKey.json");
+var serviceAccount = require("../config/serviceAccountKey.json");
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
 
 
 function sendNotiPostid (sender, postid, mode, title, msg , res) {  
-    // postid·Î Æ÷½ºÆ® ÀÛ¼ºÇÑ ÀÛ¼ºÀÚ id Ã£±â
+    // postidï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Û¼ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½ï¿½ï¿½ id Ã£ï¿½ï¿½
     var findIdSql = `SELECT user_id FROM post WHERE id=${postid};`
     connection.query(findIdSql, function (err, result) {
         if (err) {
@@ -45,8 +45,8 @@ function sendNotiPostid (sender, postid, mode, title, msg , res) {
                                 title: title,
                                 message: msg,
                                 mode: String(mode),
-                                postid: String(postid), //ÀÌµ¿ÇÒ °Ô½Ã±ÛÀÇ id
-                                userid: String(id) //¾Ë¸²¹Þ´Â id
+                                postid: String(postid), //ï¿½Ìµï¿½ï¿½ï¿½ ï¿½Ô½Ã±ï¿½ï¿½ï¿½ id
+                                userid: String(id) //ï¿½Ë¸ï¿½ï¿½Þ´ï¿½ id
                                 ,sender : String(sender)
                             },
                             token: target_token,
@@ -69,7 +69,7 @@ function sendNotiPostid (sender, postid, mode, title, msg , res) {
     });
 }
 function sendNotiUserid (sender, loginid, mode, title, msg , res) {
-    // loginid ·Î id Ã£±â
+    // loginid ï¿½ï¿½ id Ã£ï¿½ï¿½
     var findIdSql = `SELECT id FROM user WHERE login_id='${loginid}';`
     connection.query(findIdSql, function (err, result) {
         if (err) {
@@ -132,24 +132,24 @@ function sendNotiUserid (sender, loginid, mode, title, msg , res) {
 var notificationController = {
     
     sendNotification: function (req, res) {
-        /* mode ¼³¸í 
-           0 : Çª½¬¾Ë¶÷ ¼³Á¤ userid(int), notification
-           1 : ÆÈ·Î¿ì ¾Ë¸²   loginid(string), notification
-           2 : ÁÁ¾Æ¿ä ¾Ë¸²   postid
-           3 : ´ñ±Û ¾Ë¸²     postid, notification
+        /* mode ï¿½ï¿½ï¿½ï¿½ 
+           0 : Çªï¿½ï¿½ï¿½Ë¶ï¿½ ï¿½ï¿½ï¿½ï¿½ userid(int), notification
+           1 : ï¿½È·Î¿ï¿½ ï¿½Ë¸ï¿½   loginid(string), notification
+           2 : ï¿½ï¿½ï¿½Æ¿ï¿½ ï¿½Ë¸ï¿½   postid
+           3 : ï¿½ï¿½ï¿½ ï¿½Ë¸ï¿½     postid, notification
        */
         
         var mode = req.body.mode;
         var sender = req.body.sender;
 
-        if (mode == 3 || mode == 2) { //ÁÁ¾Æ¿ä, ´ñ±Û
+        if (mode == 3 || mode == 2) { //ï¿½ï¿½ï¿½Æ¿ï¿½, ï¿½ï¿½ï¿½
             var postid = req.body.postid;
             var title = req.body.notification.title;
             var msg = req.body.notification.message;
 
             sendNotiPostid(sender,postid, mode, title, msg, res);
         }
-        else if (mode == 1) { // ÆÈ·Î¿ì
+        else if (mode == 1) { // ï¿½È·Î¿ï¿½
 
             var loginid = req.body.loginid;
             var title = req.body.notification.title;
@@ -158,7 +158,7 @@ var notificationController = {
             sendNotiUserid(sender,loginid, mode, title, msg, res);
         }
     },
-    setToken: function (req, res) { //µ¥ÀÌÅÍº£ÀÌ½º¿¡ ÅäÅ« µî·Ï 
+    setToken: function (req, res) { //ï¿½ï¿½ï¿½ï¿½ï¿½Íºï¿½ï¿½Ì½ï¿½ï¿½ï¿½ ï¿½ï¿½Å« ï¿½ï¿½ï¿½ 
         var userid = req.body.userid;
         var token = req.body.token;
 
@@ -176,7 +176,7 @@ var notificationController = {
             }
             else {
                 if (result.length == 0) {
-                    //ÅäÅ« Ãß°¡
+                    //ï¿½ï¿½Å« ï¿½ß°ï¿½
                     var addTokenSql = `insert into token (userid, token_key) values (${userid}, '${token}');`;
                     connection.query(addTokenSql, function (err, result) {
                         var code = statusCode.OK;

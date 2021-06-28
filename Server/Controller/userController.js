@@ -481,8 +481,7 @@
 
            // 기존 프로필 이미지와 비교 후 db갱신
            if(is_img_check === 1){
-             var fileString = `${req.file.path}`;
-             new_image = "/"+fileString.replace(/\\/g, '/');
+            var new_image = req.file.location;
              console.log("here");
              console.log(new_image);
 
