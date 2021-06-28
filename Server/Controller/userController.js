@@ -4,13 +4,11 @@
  */
 
  var connection = require("../db/db");
- var apiController = require("./apiController");
  var statusCode = require("../config/serverStatusCode");
 
- const fs = require("fs");
- const path = require("path");
- const mime = require("mime");
  const crypto = require('crypto');
+
+ const s3 = require("../config/s3");
 
  var userController = {
      // 프로필
@@ -481,7 +479,7 @@
 
            // 기존 프로필 이미지와 비교 후 db갱신
            if(is_img_check === 1){
-            var new_image = req.file.location;
+            new_image = req.file.location;
              console.log("here");
              console.log(new_image);
 

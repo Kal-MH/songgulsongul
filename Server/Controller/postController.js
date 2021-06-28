@@ -4,9 +4,6 @@ const db_config = require("../db/db_config");
 const statusCode = require("../config/serverStatusCode");
 const serverConfig = require("../config/serverConfig");
 
-const fs = require("fs");
-const path = require("path");
-const mime = require("mime");
 const s3 = require("../config/s3");
 
 const postController = {
@@ -420,10 +417,11 @@ const postController = {
                     'code': statusCode.SERVER_ERROR,
                 })
             } else {
+                var fileImage = result[0].image;
                 var fileName = result[0].image.split('/')[3];
                 console.log(fileName);
                 var deletePostSql = `delete from post where image = ?;`;
-                connection.query(deletePostSql, fileName, function (err, result) {
+                connection.query(deletePostSql, fileImage, function (err, result) {
                     if (err) {
                         console.log(err);
                         res.json({

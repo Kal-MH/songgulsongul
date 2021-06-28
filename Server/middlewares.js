@@ -1,6 +1,7 @@
 const multer = require("multer");
 const s3 = require("./config/s3");
-const multerS3 = require("multer-s3")
+const multerS3 = require("multer-s3");
+const serverConfig = require("./config/serverConfig");
 
 /*
  **
@@ -12,7 +13,7 @@ const multerS3 = require("multer-s3")
 
 var profileStorage = multerS3({
     s3: s3,
-    bucket: "songgulsongul",
+    bucket: serverConfig.s3BuckerName,
     key: function (req, file, cb) {
         var mimeType = file.mimetype.split('/')[1];
         if (!['png', 'jpg', 'jpeg', 'gif', 'bmp'].includes(mimeType)) {
@@ -25,7 +26,7 @@ var profileStorage = multerS3({
 
 var postStorage = multerS3({
     s3: s3,
-    bucket: "songgulsongul",
+    bucket: serverConfig.s3BuckerName,
     key: function (req, file, cb) {
         var mimeType = file.mimetype.split('/')[1];
         if (!['png', 'jpg', 'jpeg', 'gif', 'bmp'].includes(mimeType)) {
