@@ -30,6 +30,7 @@ public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHold
     final Context context;
     List<Comment> dataList;
     int cmtCnt;
+    final String DEFAULT_IMAGE = "/public/default/user.png";
 
 
     private OnItemLongClickEventListener mItemLongClickListener;
@@ -93,7 +94,13 @@ public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHold
         else
             holder.date.setText( item.getC_date()); //게시 날짜
 
-        Glide.with(context).load(RetrofitClient.getBaseUrl() + item.getImg_profile() ).into(holder.profile); // 게시물 사진
+        String pro_img = item.getImg_profile();
+        String img_addr;
+        if(pro_img.equals(DEFAULT_IMAGE))
+            img_addr = RetrofitClient.getBaseUrl() + pro_img;
+        else
+            img_addr = pro_img;
+        Glide.with(context).load(img_addr).into(holder.profile);
 
 
         holder.userId.setOnClickListener(new View.OnClickListener() {

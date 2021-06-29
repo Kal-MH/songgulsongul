@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,6 +66,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private int profile_modify_check;
     private int NO = 0;
     private int YES = 1;
+    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,21 +209,25 @@ public class EditProfileActivity extends AppCompatActivity {
                 else if(sns_radio.getCheckedRadioButtonId() == R.id.profile_sns_radio_yes)
                     profile_sns_check = YES;
 
+                String new_sns = profile_new_sns.getText().toString().trim();
+
+                HashMap<String, RequestBody> requestMap = getMapData(profile_sns_check, profile_modify_check, login_id, new_intro, new_sns);
+
                 if(!profile_img_old.equals(profile_img_path)) {
                     profile_modify_check = YES;
-                    File file = new File(profile_img_path);
+                    File file = new File(profile_img_path); // 변경한 프로필 이미지
                     requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
                     body = MultipartBody.Part.createFormData("img_profile", file.getName(), requestFile);
+
+                    // 기존 프로필 이미지
+                    RequestBody old_profile_body = RequestBody.create(MediaType.parse("text/plain"), profile_img_old);
+                    requestMap.put("old_profile_img", old_profile_body);
                 }
                 else {
                     profile_modify_check = NO;
                     requestFile = RequestBody.create(MediaType.parse("image/jpeg"), profile_img_path);
                     body = MultipartBody.Part.createFormData("img_profile", profile_img_path);
                 }
-
-                String new_sns = profile_new_sns.getText().toString().trim();
-
-                HashMap<String, RequestBody> requestMap = getMapData(profile_sns_check, profile_modify_check, login_id, new_intro, new_sns);
 
                 if(profile_sns_check == YES && new_sns.getBytes().length <= 0){
                         new AlertDialog.Builder(EditProfileActivity.this)
@@ -355,10 +361,16 @@ public class EditProfileActivity extends AppCompatActivity {
         profile_img_old =  user.getImg_profile();
         profile_img_path = profile_img_old;
 
-        String img_addr = profile_img_old;
+        String img_addr;
         String base_url = RetrofitClient.getBaseUrl();
 
-        Glide.with(this).load(base_url + img_addr).into(profile_set_img);
+        if(profile_img_old.equals(DEFAULT_IMAGE))
+            img_addr = base_url + profile_img_old;
+        else
+            img_addr = profile_img_old;
+
+        Glide.with(this).load(img_addr).into(profile_set_img);
+
         int sns_check = user.getSnsCheck();
         Log.d("sns_check", String.valueOf(sns_check));
 

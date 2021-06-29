@@ -45,6 +45,7 @@ public class KeepActivity extends AppCompatActivity {
     ImageView keep_imae;
 
     String login_id;
+    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +78,13 @@ public class KeepActivity extends AppCompatActivity {
         keep_id.setText(login_id);
 
         // 프로필 이미지 셋팅
-        String profile_image = RetrofitClient.getBaseUrl() + data.getProfileImg();
-        Glide.with(this).load(profile_image).into(keep_imae);
+        String profile_image = data.getProfileImg();
+        String img_addr;
+        if(profile_image.equals(DEFAULT_IMAGE))
+            img_addr = RetrofitClient.getBaseUrl() + profile_image;
+        else
+            img_addr = profile_image;
+        Glide.with(this).load(img_addr).into(keep_imae);
 
         // 보관한 게시글 개수 셋팅
         int keep_cnt = data.getKeepcnt();

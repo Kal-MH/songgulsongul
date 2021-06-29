@@ -37,7 +37,7 @@ public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdap
     public void setItem(@NonNull StickerSearchAdapter.ViewHolder holder, Sticker sticker){
         holder.sticker_price.setText(sticker.getPrice() + "p");
         holder.sticker_name.setText(sticker.getName());
-        Glide.with(context).load(RetrofitClient.getBaseUrl() + sticker.getImage()).into(holder.sticker_image);
+        Glide.with(context).load(sticker.getImage()).into(holder.sticker_image);
     }
 
     @NonNull

@@ -63,9 +63,7 @@ public class FollowActivity extends AppCompatActivity {
         // 사용자 정보 초기화 및 툴바초기화
         Intent intent = getIntent();
 
-
-        String base_url = RetrofitClient.getBaseUrl();
-        Glide.with(FollowActivity.this).load(base_url + intent.getStringExtra("picture")).into(follow_img);
+        Glide.with(FollowActivity.this).load(intent.getStringExtra("picture")).into(follow_img);
         follow_intro.setText(intent.getStringExtra("intro"));
         user_id = intent.getStringExtra("userId");
 

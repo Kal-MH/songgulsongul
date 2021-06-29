@@ -45,6 +45,7 @@ public class StickerDetailActivity extends AppCompatActivity {
     ImageView sticker_img, sticker_profile;
     TextView sticker_name, sticker_price, sticker_com, sticker_seller;
     String file_name, img_path, seller_id;
+    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,12 +178,18 @@ public class StickerDetailActivity extends AppCompatActivity {
         sticker_price.setText(price + "p");
 
 
-        img_path = RetrofitClient.getBaseUrl() + sticker.get(0).getImage();
+        img_path = sticker.get(0).getImage();
         Glide.with(this).load(img_path).into(sticker_img);
         sticker_com.append("\n\n\n");
         sticker_com.append(sticker.get(0).getText());
 
-        Glide.with(this).load(RetrofitClient.getBaseUrl() + user.get(0).getImg_profile()).into(sticker_profile);
+        String pro_img = user.get(0).getImg_profile();
+        String img_addr;
+        if(pro_img.equals(DEFAULT_IMAGE))
+            img_addr = RetrofitClient.getBaseUrl() + pro_img;
+        else
+            img_addr = pro_img;
+        Glide.with(this).load(img_addr).into(sticker_profile);
 
         seller_id = user.get(0).getLogin_id();
         sticker_seller.setText(seller_id);

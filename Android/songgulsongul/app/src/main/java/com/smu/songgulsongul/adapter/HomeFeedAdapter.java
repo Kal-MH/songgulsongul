@@ -51,6 +51,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
+    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     Context context;
 
@@ -280,12 +281,19 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         else
             holder.timestamp.setText( post.getPost_date()); //게시 날짜
 
-        Glide.with(context).load(RetrofitClient.getBaseUrl() + post.getImage() ).into(holder.picture); // 게시물 사진
+        Glide.with(context).load(post.getImage() ).into(holder.picture); // 게시물 사진
         holder.comment_counter.setText("댓글 " + items.get(position).getCommentsNum()); // 댓글 수
         holder.favorite_counter.setText("좋아요 " + items.get(position).getLikeNum()); // 좋아요 수
 
         holder.user_id.setText(user.getLogin_id()); // 게시자 id
-        Glide.with(context).load(RetrofitClient.getBaseUrl() + user.getImg_profile()).into(holder.profile_image); // 게시자 프로필 사진
+
+        String img_addr;
+        String pro_img = user.getImg_profile();
+        if(pro_img.equals(DEFAULT_IMAGE))
+            img_addr = RetrofitClient.getBaseUrl() + pro_img;
+        else
+            img_addr = pro_img;
+        Glide.with(context).load(img_addr).into(holder.profile_image); // 게시자 프로필 사진
 
 
         if(items.get(position).getLikeOnset()== 0)
