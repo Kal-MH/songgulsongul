@@ -265,7 +265,6 @@ const postController = {
             category2 : req.body.item_category2
         }
 
-        console.log(req.file);
         var postImages = req.file.location;
 
 
@@ -300,8 +299,6 @@ const postController = {
                     var updatePointinsertHashItemsSql = "";
                     if (result[1].length <= 5)
                         updatePointinsertHashItemsSql += `update user set point = point + 100 where id = ${loggedUser};`
-                    console.log(result[1]);
-                    console.log(updatePointinsertHashItemsSql);
 
                     postController_subFunc.updatePointInsertHashItem(res, postId, hashTags, items, updatePointinsertHashItemsSql);
                 }

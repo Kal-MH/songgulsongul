@@ -5,6 +5,7 @@
 
  var connection = require("../db/db");
  var statusCode = require("../config/serverStatusCode");
+ const serverConfig = require("../config/serverConfig");
 
  const crypto = require('crypto');
 
@@ -478,15 +479,28 @@
            }
 
            // 기존 프로필 이미지와 비교 후 db갱신
-           if(is_img_check === 1){
+           if (req.file != undefined) {
+             
+             var fileName = req.body.old_profile_img;
+             if (fileName != serverConfig.defaultUserProfile) {
+               s3.deleteObject({
+                 Bucket : serverConfig.s3BuckerName,
+                 Key: fileName.split('/')[3]
+                }, function (err, data) {
+                  if (err) {
+                    console.log(err);
+                    res.json({
+                      'code' : statusCode.SERVER_ERROR
+                    })
+                  }
+                })
+             }
             new_image = req.file.location;
-             console.log("here");
-             console.log(new_image);
-
-             sql += 'UPDATE user SET img_profile = ? WHERE login_id = ?;';
-             param.push(new_image, id)
-             check_cnt += 1;
+            sql += 'UPDATE user SET img_profile = ? WHERE login_id = ?;';
+            param.push(new_image, id)
+            check_cnt += 1;
            }
+           console.log(sql, param, check_cnt);
 
            if(check_cnt > 0){
             connection.query(sql, param, function(err, rows){
