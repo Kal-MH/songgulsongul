@@ -528,43 +528,87 @@
 
      // 회원 탈퇴
      userDataDelete : function(req, res) {
-       const id = req.body.id;
+       const loginId = req.body.id;
 
-       var imgProfile;
-       var userRecordId;
-       var sql = `select * from user where login_id = '${id}';`;
-       connection.query(sql, function (err, rows) {
-         if (err){
-           console.log(err);
-           res.json({
-             'code' : statusCode.SERVER_ERROR
-           })
-         } else {
-           imgProfile = rows[0].img_profile;
-           userRecordId = rows[0].id;
-         }
-       })
+       if (loginId == undefined || loginId == ''){
+         res.json({
+           'code' : statusCode.CLIENT_ERROR
+         })
+       } else {
 
-      //  var param = [id];
-    //    var sql = 'DELETE FROM user WHERE login_id = ?;'
+         var sql = `select * from user where login_id = '${loginId}';`;
+         connection.query(sql, function (err, rows) {
+           if (err){
+             console.log(err);
+             res.json({
+               'code' : statusCode.SERVER_ERROR
+             })
+           } else {
+             var imgProfile = serverConfig.s3BucketProfileFolderName +  rows[0].img_profile.split('/')[4];
+             var userRecordId = rows[0].id;
+  
+             sql = `select image from post where user_id = ${userRecordId};`;
+             connection.query(sql, function (err, rows) {
+               if (err){
+                console.log(err);
+                res.json({
+                  'code' : statusCode.SERVER_ERROR
+                })
+               } else {
+                 //Delete user profile, user uploaded posts in S3.
+                var params = {
+                  Bucket: serverConfig.s3BucketName, 
+                  Delete: {
+                   Objects: [
+                     {
+                       Key : imgProfile
+                     }
+                   ], 
+                   Quiet: false
+                  }
+                 };
+                 for(var i = 0;i < rows.length; i++) {
+                   var object = {
+                     Key : serverConfig.s3BucketPostFolderName + rows[i].image.split('/')[4]
+                   }
+                   params.Delete.Objects.push(object);
+                 }
+                 console.log(imgProfile);
+                 console.log(params.Delete);
+                 s3.deleteObjects(params, function(err, data) {
+                   if (err){
+                     console.log(err) // an error occurred
+                     res.json({
+                      'code' : statusCode.SERVER_ERROR
+                    })
+                   } else {
+                     //Delete user record in mysqlDB.
+                     sql = `DELETE FROM user WHERE login_id = '${loginId}';`
+                     connection.query(sql, function(err, rows){
+                       var resultCode = statusCode.SERVER_ERROR;
+              
+                       if(err) {
+                         console.log(err);
+                         res.json({
+                           'code': resultCode
+                         })
+                       }
+                       else{
+                         resultCode = statusCode.OK;
+                         res.json({
+                           'code': resultCode
+                         })
+                       }
+                     })
+                  }
+                });
+               }
+             })
+           }
+         })
+       }
 
-    //    connection.query(sql, param, function(err, rows){
-    //      var resultCode = statusCode.SERVER_ERROR;
 
-    //      if(err) {
-    //        console.log(err);
-    //        res.json({
-    //          'code': resultCode
-    //        })
-    //      }
-    //      else{
-    //        resultCode = statusCode.OK;
-
-    //        res.json({
-    //          'code': resultCode
-    //        })
-    //      }
-    //    })
     }
  }
 
