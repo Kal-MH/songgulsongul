@@ -254,14 +254,16 @@ const marketController = {
   marketUpload : function(req, res){
     var name = req.body.name;
     var text = req.body.text;
-    var price = req.body.price;
-    var user_id = req.body.user_id;
+    var price = Number(req.body.price);
+    var user_id = Number(req.body.user_id);
     var image = req.file.path;
     image = "/"+image.replace(/\\/g, '/');
 
+    console.log(price)
+
     var params = [image, name, text, price, user_id];
     var sql = 'INSERT INTO market(image, name, text, price, user_id) values(?, ?, ?, ?, ?);';
-    connection.query(sql, function(err, rows){
+    connection.query(sql, params, function(err, rows){
       var resultCode = statusCode.SERVER_ERROR;
       if(err)
         console.log(err);

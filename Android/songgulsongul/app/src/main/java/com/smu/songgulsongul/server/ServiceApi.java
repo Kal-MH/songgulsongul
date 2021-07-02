@@ -204,6 +204,16 @@ public interface ServiceApi {
     @GET("/market/search-date")
     Call<MarketResponse> SearchDate(@Query("search_word") String search_word, @Query("offset") int offset);
 
+    // 마켓 업로드
+    @Multipart
+    @POST("/market/upload")
+    Call<CodeResponse> MarketUpload(
+            @Part("name") RequestBody name,
+            @Part("text") RequestBody text,
+            @Part("price") RequestBody price,
+            @Part("user_id") RequestBody user_id,
+            @Part MultipartBody.Part marketImg
+    );
 
 
     // mode에 따라서 알림보내기

@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
+import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -47,7 +48,7 @@ public class MarketUploadActivity extends AppCompatActivity {
     int user_id;
     ImageView market_upload_img;
     EditText market_upload_name, market_upload_price, market_upload_text;
-    RequestBody requestFile, requestId, requestPrice, requestText;
+    RequestBody requestFile, requestId, requestPrice, requestText, requestName;
     MultipartBody.Part imageBody;
 
     long first_time = 0;
@@ -88,19 +89,22 @@ public class MarketUploadActivity extends AppCompatActivity {
         // 업로드 이미지
         File file = new File(filePath);
         requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
-        imageBody = MultipartBody.Part.createFormData("img_post", file.getName(), requestFile);
+        imageBody = MultipartBody.Part.createFormData("img_market", file.getName(), requestFile);
+
+        // 상품 이름
+        String name = market_upload_name.getText().toString().trim();
+        requestName = RequestBody.create(MediaType.parse("text/plain"), name);
 
         // 사용자 아이디
         requestId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(user_id));
 
         //판매 가격
-        String price = market_upload_text.getText().toString().trim();
-        requestPrice = RequestBody.create(MediaType.parse("text/plain"),String.valueOf(price));
+        String price = market_upload_price.getText().toString().trim();
+        requestPrice = RequestBody.create(MediaType.parse("text/plain"), price);
 
         // 상세 설명
         String text = market_upload_text.getText().toString().trim();
         requestText = RequestBody.create(MediaType.parse("text/plain"), text);
-
     }
 
     @Override
@@ -134,17 +138,50 @@ public class MarketUploadActivity extends AppCompatActivity {
 
             case R.id.toolbar_done :
                 makeUploadData();
+                serviceApi.MarketUpload(requestName, requestText, requestPrice, requestId, imageBody).enqueue(new Callback<CodeResponse>() {
+                    @Override
+                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                        CodeResponse result = response.body();
+                        int resultCode = result.getCode();
 
-                Toast toast = Toast.makeText(MarketUploadActivity.this, "업로드 완료", Toast.LENGTH_SHORT);
-                toast.show();
-                Intent intent = new Intent(MarketUploadActivity.this, StickerDetailActivity.class); // 업로드 된 게시물로 이동 (게시글 id 넘기기)
-                intent.putExtra("path",filePath);
-                intent.putExtra("name",market_upload_name.getText().toString());
-                intent.putExtra("price",market_upload_price.getText().toString());
-                intent.putExtra("text",market_upload_text.getText().toString());
-                intent.putExtra("loginId",login_id);
-                startActivity(intent);
-                finish();
+                        if(resultCode == StatusCode.RESULT_OK){
+                            Toast toast = Toast.makeText(MarketUploadActivity.this, "업로드 완료", Toast.LENGTH_SHORT);
+                            toast.show();
+//                            Intent intent = new Intent(MarketUploadActivity.this, StickerDetailActivity.class);
+//                            startActivity(intent);
+//                            finish();
+                        }
+                        else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                            new AlertDialog.Builder(MarketUploadActivity.this)
+                                    .setTitle("경고")
+                                    .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                        Toast.makeText(MarketUploadActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Log.e("마켓 업로드 에러", t.getMessage());
+                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                    }
+                });
+
+
+//                Intent intent = new Intent(MarketUploadActivity.this, StickerDetailActivity.class); // 업로드 된 게시물로 이동 (게시글 id 넘기기)
+//                intent.putExtra("path",filePath);
+//                intent.putExtra("name",market_upload_name.getText().toString());
+//                intent.putExtra("price",market_upload_price.getText().toString());
+//                intent.putExtra("text",market_upload_text.getText().toString());
+//                intent.putExtra("loginId",login_id);
+//                startActivity(intent);
+//                finish();
                 return true;
 
         }
