@@ -13,55 +13,46 @@ const serverConfig = require("./config/serverConfig");
 
 var profileStorage = multerS3({
     s3: s3,
-    bucket: serverConfig.s3BuckerName,
+    bucket: serverConfig.s3BucketName,
     key: function (req, file, cb) {
         var mimeType = file.mimetype.split('/')[1];
         if (!['png', 'jpg', 'jpeg', 'gif', 'bmp'].includes(mimeType)) {
             return cb(new Error('Only images are allowed.'));
         }
-        cb(null, 'profile' + '_' + Date.now() + '.'+ mimeType);
+        cb(null, serverConfig.s3BucketProfileFolderName + 'profile' + '_' + Date.now() + '.'+ mimeType);
     },
     acl : 'public-read'
 })
 
 var postStorage = multerS3({
     s3: s3,
-    bucket: serverConfig.s3BuckerName,
+    bucket: serverConfig.s3BucketName,
     key: function (req, file, cb) {
         var mimeType = file.mimetype.split('/')[1];
         if (!['png', 'jpg', 'jpeg', 'gif', 'bmp'].includes(mimeType)) {
             return cb(new Error('Only images are allowed.'));
         }
-        cb(null, 'post' + '_' + Date.now() + '.'+ mimeType);
+        cb(null, serverConfig.s3BucketPostFolderName + 'post' + '_' + Date.now() + '.'+ mimeType);
     },
     acl : 'public-read'
 })
 
 var marketStorage = multer.diskStorage({
     s3: s3,
-    bucket: "songgulsongul",
+    bucket: serverConfig.s3BucketName,
     key: function (req, file, cb) {
         var mimeType = file.mimetype.split('/')[1];
         if (!['png', 'jpg', 'jpeg', 'gif', 'bmp'].includes(mimeType)) {
             return cb(new Error('Only images are allowed.'));
         }
-        cb(null, 'market' + '_' + Date.now() + '.'+ mimeType);
+        cb(null, serverConfig.s3BucketMarketFolderName + 'market' + '_' + Date.now() + '.'+ mimeType);
     },
     acl : 'public-read'
 })
 
-const multerProfile = multer({
-    dest : "upload/profile/",
-    storage : profileStorage
-});
-const multerPost = multer({
-    dest : "upload/post/",
-    storage : postStorage
-});
-const multerMarket = multer({
-    dest : "upload/market",
-    storage : marketStorage
-});
+const multerProfile = multer({storage : profileStorage});
+const multerPost = multer({storage : postStorage});
+const multerMarket = multer({storage : marketStorage});
 
 var middleWares = {
     multerProfile : multerProfile.single("img_profile"),

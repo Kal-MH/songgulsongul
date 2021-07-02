@@ -415,7 +415,7 @@ const postController = {
                 })
             } else {
                 var fileImage = result[0].image;
-                var fileName = result[0].image.split('/')[3];
+                var fileName = serverConfig.s3BucketPostFolderName + result[0].image.split('/')[4];
                 console.log(fileName);
                 var deletePostSql = `delete from post where image = ?;`;
                 connection.query(deletePostSql, fileImage, function (err, result) {
@@ -426,7 +426,7 @@ const postController = {
                         })
                     } else {
                         s3.deleteObject({
-                            Bucket : serverConfig.s3BuckerName,
+                            Bucket : serverConfig.s3BucketName,
                             Key: fileName
                         }, function (err, data) {
                             if (err) {

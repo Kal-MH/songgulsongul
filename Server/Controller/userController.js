@@ -484,8 +484,8 @@
              var fileName = req.body.old_profile_img;
              if (fileName != serverConfig.defaultUserProfile) {
                s3.deleteObject({
-                 Bucket : serverConfig.s3BuckerName,
-                 Key: fileName.split('/')[3]
+                 Bucket : serverConfig.s3BucketName,
+                 Key: serverConfig.s3BucketProfileFolderName + fileName.split('/')[4]
                 }, function (err, data) {
                   if (err) {
                     console.log(err);
@@ -530,27 +530,42 @@
      userDataDelete : function(req, res) {
        const id = req.body.id;
 
-       var param = [id];
-       var sql = 'DELETE FROM user WHERE login_id = ?;'
-
-       connection.query(sql, param, function(err, rows){
-         var resultCode = statusCode.SERVER_ERROR;
-
-         if(err) {
+       var imgProfile;
+       var userRecordId;
+       var sql = `select * from user where login_id = '${id}';`;
+       connection.query(sql, function (err, rows) {
+         if (err){
            console.log(err);
            res.json({
-             'code': resultCode
+             'code' : statusCode.SERVER_ERROR
            })
-         }
-         else{
-           resultCode = statusCode.OK;
-
-           res.json({
-             'code': resultCode
-           })
+         } else {
+           imgProfile = rows[0].img_profile;
+           userRecordId = rows[0].id;
          }
        })
-     }
+
+      //  var param = [id];
+    //    var sql = 'DELETE FROM user WHERE login_id = ?;'
+
+    //    connection.query(sql, param, function(err, rows){
+    //      var resultCode = statusCode.SERVER_ERROR;
+
+    //      if(err) {
+    //        console.log(err);
+    //        res.json({
+    //          'code': resultCode
+    //        })
+    //      }
+    //      else{
+    //        resultCode = statusCode.OK;
+
+    //        res.json({
+    //          'code': resultCode
+    //        })
+    //      }
+    //    })
+    }
  }
 
  module.exports = userController;
