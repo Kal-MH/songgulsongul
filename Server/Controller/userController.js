@@ -544,9 +544,9 @@
                'code' : statusCode.SERVER_ERROR
              })
            } else {
-             var imgProfile = serverConfig.s3BucketProfileFolderName +  rows[0].img_profile.split('/')[4];
              var userRecordId = rows[0].id;
-  
+             var imgProfile = rows[0].img_profile;
+
              sql = `select image from post where user_id = ${userRecordId};`;
              connection.query(sql, function (err, rows) {
                if (err){
@@ -559,11 +559,7 @@
                 var params = {
                   Bucket: serverConfig.s3BucketName, 
                   Delete: {
-                   Objects: [
-                     {
-                       Key : imgProfile
-                     }
-                   ], 
+                   Objects: [], 
                    Quiet: false
                   }
                  };
@@ -573,36 +569,62 @@
                    }
                    params.Delete.Objects.push(object);
                  }
-                 console.log(imgProfile);
-                 console.log(params.Delete);
-                 s3.deleteObjects(params, function(err, data) {
-                   if (err){
-                     console.log(err) // an error occurred
-                     res.json({
-                      'code' : statusCode.SERVER_ERROR
-                    })
-                   } else {
-                     //Delete user record in mysqlDB.
-                     sql = `DELETE FROM user WHERE login_id = '${loginId}';`
-                     connection.query(sql, function(err, rows){
-                       var resultCode = statusCode.SERVER_ERROR;
-              
-                       if(err) {
-                         console.log(err);
-                         res.json({
-                           'code': resultCode
-                         })
-                       }
-                       else{
-                         resultCode = statusCode.OK;
-                         res.json({
-                           'code': resultCode
-                         })
-                       }
-                     })
-                  }
-                });
-               }
+                 if (imgProfile != serverConfig.defaultUserProfile) {
+                   var profileObject = {
+                     Key : serverConfig.s3BucketProfileFolderName +  imgProfile.split('/')[4]
+                   }
+                   params.Delete.Objects.push(profileObject);
+                 }
+                console.log(params.Delete);
+                 if (params.Delete.Objects.length > 0) {
+                   s3.deleteObjects(params, function(err, data) {
+                     if (err){
+                       console.log(err) // an error occurred
+                       res.json({
+                        'code' : statusCode.SERVER_ERROR
+                      })
+                     } else {
+                       //Delete user record in mysqlDB.
+                       sql = `DELETE FROM user WHERE login_id = '${loginId}';`
+                       connection.query(sql, function(err, rows){
+                         var resultCode = statusCode.SERVER_ERROR;
+                
+                         if(err) {
+                           console.log(err);
+                           res.json({
+                             'code': resultCode
+                           })
+                         }
+                         else{
+                           resultCode = statusCode.OK;
+                           res.json({
+                             'code': resultCode
+                           })
+                         }
+                       })
+                    }
+                  });
+                 } else {
+                   //Delete user record in mysqlDB.
+                   sql = `DELETE FROM user WHERE login_id = '${loginId}';`
+                   connection.query(sql, function(err, rows){
+                     var resultCode = statusCode.SERVER_ERROR;
+            
+                     if(err) {
+                       console.log(err);
+                       res.json({
+                         'code': resultCode
+                       })
+                     }
+                     else{
+                       resultCode = statusCode.OK;
+                       res.json({
+                         'code': resultCode
+                       })
+                     }
+                   })
+                 }
+                }
              })
            }
          })
