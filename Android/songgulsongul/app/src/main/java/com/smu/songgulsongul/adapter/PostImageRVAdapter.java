@@ -60,7 +60,7 @@ public class PostImageRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof PostImageRVAdapter.ItemViewHolder) {
-            Glide.with(context).load(RetrofitClient.getBaseUrl()+ items.get(position).getImage())
+            Glide.with(context).load(items.get(position).getImage())
                     .into(((ItemViewHolder) holder).img); // 게시물 사진 세팅
 
             ((ItemViewHolder) holder).img.setOnClickListener(new View.OnClickListener() {

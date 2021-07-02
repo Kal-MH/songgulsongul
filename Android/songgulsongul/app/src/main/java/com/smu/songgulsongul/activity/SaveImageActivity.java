@@ -48,7 +48,7 @@ public class SaveImageActivity extends Activity {
 
         Intent intent = getIntent();
         post_id = intent.getIntExtra("post_id", -1);
-        post_image = RetrofitClient.getBaseUrl() + intent.getStringExtra("post_image");
+        post_image = intent.getStringExtra("post_image");
         Glide.with(SaveImageActivity.this).load(post_image).into(image);
 
         size_check = true;

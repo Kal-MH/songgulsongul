@@ -4,9 +4,7 @@ const db_config = require("../db/db_config");
 const statusCode = require("../config/serverStatusCode");
 const serverConfig = require("../config/serverConfig");
 
-const fs = require("fs");
-const path = require("path");
-const mime = require("mime");
+const s3 = require("../config/s3");
 
 const postController = {
     getPostDetail: function (req, res) {
@@ -228,18 +226,29 @@ const postController = {
         /*
          * 현재 넘겨받는 데이터의 임시 구조
          * 추후에 안드로이드와 연결하는 부분에서 수정사항 발생할 수 있다.
-         * hashTags = [ 'hash1', 'hash2', 'hash3' ]
-           items = {
-                    name: [ 'item1', 'item2' ],
-                    lowprice: [ '1000', '20000' ],
-                    highprice: [ '2000', '30000' ],
-                    itemLink:
-                    [ 'https://search.shopping.naver.com/gate.nhn?id=82726822549',
-                        'https://search.shopping.naver.com/gate.nhn?id=82726822549' ],
-                    itemImg:
-                    [ 'https://shopping-phinf.pstatic.net/main_8272682/82726822549.1.jpg',
-                      '' ]
-                }
+         * req.body =  {
+            user_id: '2',
+            text: '',
+            hash_tag: '',
+            ccl: [ '1', '1', '1', '1', '1' ],
+            item_name: [
+                '갤럭시 A51 SM-A516N 잇item 모던 기본 폰케이스',
+                '[BEST ITEM] 김혜수 핸드폰줄 아르노폰스트랩 노트 갤럭시 카드수납 지갑 목걸이핸드폰'
+            ],
+            item_lowprice: [ '6550', '10800' ],
+            item_highprice: [ '', '' ],
+            item_link: [
+                'https://search.shopping.naver.com/gate.nhn?id=27701808406',
+                'https://search.shopping.naver.com/gate.nhn?id=82462722047'
+            ],
+            item_img: [
+                'https://shopping-phinf.pstatic.net/main_2770180/27701808406.jpg',
+                'https://shopping-phinf.pstatic.net/main_8246272/82462722047.8.jpg'
+            ],
+            item_brand: [ '', '' ],
+            item_category1: [ '휴대폰케이스', '휴대폰케이스' ],
+            item_category2: [ '기타케이스', '기타케이스' ]
+            }
          */
         var loggedUser = req.body.user_id * 1;
         var text = req.body.text;
@@ -255,10 +264,9 @@ const postController = {
             category1 : req.body.item_category1,
             category2 : req.body.item_category2
         }
-        console.log(req.body);
 
-        var postImages = req.file.path;
-        postImages = "/"+postImages.replace(/\\/g, '/');
+        var postImages = req.file.location;
+
 
         if (req.file == undefined || ccl.length != 5)
         {
@@ -276,7 +284,6 @@ const postController = {
             //current date 계산
             var date = new Date();
             var yearMonthDate = date.getFullYear() + "-" + ((date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + "-" + date.getDate();
-            console.log(yearMonthDate);
             updatePointinsertPostSql += `select post_time, post_date from post where post_date = '${yearMonthDate}' and user_id = ${loggedUser} limit ${db_config.limitation};`;
 
             connection.query(updatePointinsertPostSql, insertPostParams, function (err, result) {
@@ -290,7 +297,6 @@ const postController = {
 
                     // 오늘 날짜의 게시글이 5개 이하이면 포인트 100을 추가로 반영한다.
                     var updatePointinsertHashItemsSql = "";
-
                     if (result[1].length <= 5)
                         updatePointinsertHashItemsSql += `update user set point = point + 100 where id = ${loggedUser};`
 
@@ -340,6 +346,23 @@ const postController = {
                             var deleteItemTagSql = `delete from item_tag where post_id=${postId};`;
                             var insertItemSql = "";
                             var insertItemParams = [];
+
+                            /*
+                             * req.body.item_tag: [
+                                    {
+                                    brand: '',
+                                    category1: '휴대폰케이스',
+                                    category2: '기타케이스',
+                                    hprice: '',
+                                    id: 0,
+                                    lprice: '6550',
+                                    name: '갤럭시 A51 SM-A516N 잇item 모던 기본 폰케이스',
+                                    picture: 'https://shopping-phinf.pstatic.net/main_2770180/27701808406.jpg',
+                                    post_id: 0,
+                                    url: 'https://search.shopping.naver.com/gate.nhn?id=27701808406'
+                                    }
+                                ]
+                             */
 
                             if (req.body.item_tag.length > 0) {
                                 for (var i = 0; i < req.body.item_tag.length; i++) {
@@ -392,7 +415,8 @@ const postController = {
                 })
             } else {
                 var fileImage = result[0].image;
-                var filePath = `./${fileImage}`;
+                var fileName = serverConfig.s3BucketPostFolderName + result[0].image.split('/')[4];
+                console.log(fileName);
                 var deletePostSql = `delete from post where image = ?;`;
                 connection.query(deletePostSql, fileImage, function (err, result) {
                     if (err) {
@@ -401,24 +425,21 @@ const postController = {
                             'code': statusCode.SERVER_ERROR
                         })
                     } else {
-                        if (fs.existsSync(filePath)) {
-                            fs.unlink(filePath, function (err) {
-                                if (err) {
-                                    console.log(err);
-                                    res.json({
-                                        'code': statusCode.SERVER_ERROR,
-                                    })
-                                } else {
-                                    res.json({
-                                        'code': statusCode.OK,
-                                    })
-                                }
-                            })
-                        } else {
-                            res.json({
-                                'code': statusCode.OK,
-                            })
-                        }
+                        s3.deleteObject({
+                            Bucket : serverConfig.s3BucketName,
+                            Key: fileName
+                        }, function (err, data) {
+                            if (err) {
+                                console.log(err);
+                                res.json({
+                                    'code' : statusCode.SERVER_ERROR
+                                })
+                            } else {
+                                res.json({
+                                    'code' : statusCode.OK
+                                })
+                            }
+                        })
                     }
                 })
             }

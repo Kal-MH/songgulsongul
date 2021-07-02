@@ -55,12 +55,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     final int MY = 1;
     final int OTHER = 0;
+    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     public int Status;
     public static final int REQUEST_CODE = 100;
 
     String login_id;
     String user_id;
+    String img_addr;
 
     private RecyclerView recyclerview;
     private PostImageRVAdapter adapter;
@@ -132,7 +134,7 @@ public class ProfileActivity extends AppCompatActivity {
                 // intro, picture 전달
                 intent.putExtra("userId", user_id );
                 intent.putExtra("intro", user_data.getIntro());
-                intent.putExtra("picture", user_data.getImg_profile());
+                intent.putExtra("picture", img_addr);
 
                startActivity(intent);
             }
@@ -318,10 +320,16 @@ public class ProfileActivity extends AppCompatActivity {
         intro_tv.setText(user_data.getIntro());
         sns_tv.setText(user_data.getSns());
 
+        String profile_image = user_data.getImg_profile();
 
-        String img_addr = RetrofitClient.getBaseUrl()+ user_data.getImg_profile();
+        // 프로필 이미지가 기본 이미지인지 확인
+        if(profile_image.equals(DEFAULT_IMAGE))
+            img_addr = RetrofitClient.getBaseUrl()+ profile_image;
+        else
+            img_addr = profile_image;
+
         Log.d("profile", img_addr);
-        Glide.with(this).load( img_addr).into(profile_userimage);
+        Glide.with(this).load(img_addr).into(profile_userimage);
         feed_count_tv.setText(post_data.size()+"");
 
 

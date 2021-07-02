@@ -27,6 +27,7 @@ public class UserlistAdapter extends  RecyclerView.Adapter<UserlistAdapter.ViewH
     List<User> userList;
     Context context;
     int len = 15;
+    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     public UserlistAdapter (Context context,  List<User>  obj) {
         this.context = context;
@@ -49,7 +50,13 @@ public class UserlistAdapter extends  RecyclerView.Adapter<UserlistAdapter.ViewH
         if( intro.length() > len)
             intro = intro.substring(0,len) +" ...";
         holder.intro.setText(intro);
-        String img_addr = RetrofitClient.getBaseUrl() + item.getImg_profile();
+
+        String profile_image = item.getImg_profile();
+        String img_addr;
+        if(profile_image.equals(DEFAULT_IMAGE))
+            img_addr = RetrofitClient.getBaseUrl() + profile_image;
+        else
+            img_addr = profile_image;
         Glide.with(context).load(img_addr).into(holder.image);
 
     }

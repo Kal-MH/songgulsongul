@@ -4,13 +4,12 @@
  */
 
  var connection = require("../db/db");
- var apiController = require("./apiController");
  var statusCode = require("../config/serverStatusCode");
+ const serverConfig = require("../config/serverConfig");
 
- const fs = require("fs");
- const path = require("path");
- const mime = require("mime");
  const crypto = require('crypto');
+
+ const s3 = require("../config/s3");
 
  var userController = {
      // 프로필
@@ -480,16 +479,28 @@
            }
 
            // 기존 프로필 이미지와 비교 후 db갱신
-           if(is_img_check === 1){
-             var fileString = `${req.file.path}`;
-             new_image = "/"+fileString.replace(/\\/g, '/');
-             console.log("here");
-             console.log(new_image);
-
-             sql += 'UPDATE user SET img_profile = ? WHERE login_id = ?;';
-             param.push(new_image, id)
-             check_cnt += 1;
+           if (req.file != undefined) {
+             
+             var fileName = req.body.old_profile_img;
+             if (fileName != serverConfig.defaultUserProfile) {
+               s3.deleteObject({
+                 Bucket : serverConfig.s3BucketName,
+                 Key: serverConfig.s3BucketProfileFolderName + fileName.split('/')[4]
+                }, function (err, data) {
+                  if (err) {
+                    console.log(err);
+                    res.json({
+                      'code' : statusCode.SERVER_ERROR
+                    })
+                  }
+                })
+             }
+            new_image = req.file.location;
+            sql += 'UPDATE user SET img_profile = ? WHERE login_id = ?;';
+            param.push(new_image, id)
+            check_cnt += 1;
            }
+           console.log(sql, param, check_cnt);
 
            if(check_cnt > 0){
             connection.query(sql, param, function(err, rows){
@@ -517,29 +528,110 @@
 
      // 회원 탈퇴
      userDataDelete : function(req, res) {
-       const id = req.body.id;
+       const loginId = req.body.id;
 
-       var param = [id];
-       var sql = 'DELETE FROM user WHERE login_id = ?;'
+       if (loginId == undefined || loginId == ''){
+         res.json({
+           'code' : statusCode.CLIENT_ERROR
+         })
+       } else {
 
-       connection.query(sql, param, function(err, rows){
-         var resultCode = statusCode.SERVER_ERROR;
+         var sql = `select * from user where login_id = '${loginId}';`;
+         connection.query(sql, function (err, rows) {
+           if (err){
+             console.log(err);
+             res.json({
+               'code' : statusCode.SERVER_ERROR
+             })
+           } else {
+             var userRecordId = rows[0].id;
+             var imgProfile = rows[0].img_profile;
 
-         if(err) {
-           console.log(err);
-           res.json({
-             'code': resultCode
-           })
-         }
-         else{
-           resultCode = statusCode.OK;
+             sql = `select image from post where user_id = ${userRecordId};`;
+             connection.query(sql, function (err, rows) {
+               if (err){
+                console.log(err);
+                res.json({
+                  'code' : statusCode.SERVER_ERROR
+                })
+               } else {
+                 //Delete user profile, user uploaded posts in S3.
+                var params = {
+                  Bucket: serverConfig.s3BucketName, 
+                  Delete: {
+                   Objects: [], 
+                   Quiet: false
+                  }
+                 };
+                 for(var i = 0;i < rows.length; i++) {
+                   var object = {
+                     Key : serverConfig.s3BucketPostFolderName + rows[i].image.split('/')[4]
+                   }
+                   params.Delete.Objects.push(object);
+                 }
+                 if (imgProfile != serverConfig.defaultUserProfile) {
+                   var profileObject = {
+                     Key : serverConfig.s3BucketProfileFolderName +  imgProfile.split('/')[4]
+                   }
+                   params.Delete.Objects.push(profileObject);
+                 }
+                console.log(params.Delete);
+                 if (params.Delete.Objects.length > 0) {
+                   s3.deleteObjects(params, function(err, data) {
+                     if (err){
+                       console.log(err) // an error occurred
+                       res.json({
+                        'code' : statusCode.SERVER_ERROR
+                      })
+                     } else {
+                       //Delete user record in mysqlDB.
+                       sql = `DELETE FROM user WHERE login_id = '${loginId}';`
+                       connection.query(sql, function(err, rows){
+                         var resultCode = statusCode.SERVER_ERROR;
+                
+                         if(err) {
+                           console.log(err);
+                           res.json({
+                             'code': resultCode
+                           })
+                         }
+                         else{
+                           resultCode = statusCode.OK;
+                           res.json({
+                             'code': resultCode
+                           })
+                         }
+                       })
+                    }
+                  });
+                 } else {
+                   //Delete user record in mysqlDB.
+                   sql = `DELETE FROM user WHERE login_id = '${loginId}';`
+                   connection.query(sql, function(err, rows){
+                     var resultCode = statusCode.SERVER_ERROR;
+            
+                     if(err) {
+                       console.log(err);
+                       res.json({
+                         'code': resultCode
+                       })
+                     }
+                     else{
+                       resultCode = statusCode.OK;
+                       res.json({
+                         'code': resultCode
+                       })
+                     }
+                   })
+                 }
+                }
+             })
+           }
+         })
+       }
 
-           res.json({
-             'code': resultCode
-           })
-         }
-       })
-     }
+
+    }
  }
 
  module.exports = userController;

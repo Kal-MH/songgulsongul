@@ -50,6 +50,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
     int itemCnt;
     int status;
     String login_id;
+    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     public FollowAdapter (Context context, JsonObject obj, int status) {
         this.context = context;
@@ -64,7 +65,14 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
     // 받아온 데이터로 팔로우/팔로워 리스트 내용 셋팅
     public void setItem(@NonNull FollowAdapter.ViewHolder holder, JsonElement item){
         holder.userid.setText(item.getAsJsonObject().get("userId").getAsString());
-        String img_addr = RetrofitClient.getBaseUrl() + item.getAsJsonObject().get("image").getAsString();
+        String pro_image = item.getAsJsonObject().get("image").getAsString();
+        String img_addr;
+
+        if(pro_image.equals(DEFAULT_IMAGE))
+            img_addr = RetrofitClient.getBaseUrl() + pro_image;
+        else
+            img_addr = pro_image;
+
         Glide.with(context).load(img_addr).into(holder.profile_image);
     }
 

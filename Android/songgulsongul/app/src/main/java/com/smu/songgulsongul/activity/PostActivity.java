@@ -91,6 +91,7 @@ public class PostActivity extends AppCompatActivity {
     int status;
     final int MY = 1;
     final int OTHER = 2;
+    final String DEFAULT_IMAGE = "/public/default/user.png";
 
 
     int user_id, post_id;
@@ -166,7 +167,7 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent goZoom = new Intent(PostActivity.this , ZoomActivity.class);
-                goZoom.putExtra("path", RetrofitClient.getBaseUrl() + postData.getImage() );
+                goZoom.putExtra("path", postData.getImage());
                 startActivity(goZoom);
             }
         });
@@ -623,8 +624,14 @@ public class PostActivity extends AppCompatActivity {
         //작성자 프로필
         p_user_id = userData.getLogin_id();
         post_user_id.setText(userData.getLogin_id());
+
         img_path = userData.getImg_profile();
-        Glide.with(this).load(RetrofitClient.getBaseUrl() + img_path).into(post_profile);
+        String img_addr;
+        if(img_path.equals(DEFAULT_IMAGE))
+            img_addr = RetrofitClient.getBaseUrl() + img_path;
+        else
+            img_addr = img_path;
+        Glide.with(this).load(img_addr).into(post_profile);
 
         // 게시글 정보 세팅
         if( date.format(today).equals((postData.getPost_date()))) {
@@ -645,7 +652,7 @@ public class PostActivity extends AppCompatActivity {
 
         post_text.setText(postData.getText());
         post_image = postData.getImage();
-        Glide.with(this).load(RetrofitClient.getBaseUrl() + post_image).into(post_pic);
+        Glide.with(this).load(post_image).into(post_pic);
 
 
         // data 세팅

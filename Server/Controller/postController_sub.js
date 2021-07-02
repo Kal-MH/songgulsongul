@@ -147,6 +147,50 @@ const postController_subFunc = {
             })
         }
     },
+    /* item 구조 객체
+     * item 지정 x
+        items = {
+        name: undefined,
+        lowprice: undefined,
+        highprice: undefined,
+        itemLink: undefined,
+        itemImg: undefined,
+        brand: undefined,
+        category1: undefined,
+        category2: undefined
+        }
+     * item 1개
+         items = {
+        name: '갤럭시 A51 SM-A516N 잇item 모던 기본 폰케이스',
+        lowprice: '6550',
+        highprice: '',
+        itemLink: 'https://search.shopping.naver.com/gate.nhn?id=27701808406',
+        itemImg: 'https://shopping-phinf.pstatic.net/main_2770180/27701808406.jpg',
+        brand: '',
+        category1: '휴대폰케이스',
+        category2: '기타케이스'
+        }
+     * item 다중
+        items = {
+        name: [
+            '갤럭시 A51 SM-A516N 잇item 모던 기본 폰케이스',
+            '[BEST ITEM] 김혜수 핸드폰줄 아르노폰스트랩 노트 갤럭시 카드수납 지갑 목걸이핸드폰'
+        ],
+        lowprice: [ '6550', '10800' ],
+        highprice: [ '', '' ],
+        itemLink: [
+            'https://search.shopping.naver.com/gate.nhn?id=27701808406',
+            'https://search.shopping.naver.com/gate.nhn?id=82462722047'
+        ],
+        itemImg: [
+            'https://shopping-phinf.pstatic.net/main_2770180/27701808406.jpg',
+            'https://shopping-phinf.pstatic.net/main_8246272/82462722047.8.jpg'
+        ],
+        brand: [ '', '' ],
+        category1: [ '휴대폰케이스', '휴대폰케이스' ],
+        category2: [ '기타케이스', '기타케이스' ]
+        }
+     */
     updatePointInsertHashItem : function (res, postId, hashTags, items, sql) {
         var hashTagsSplitItemParams = [];
         var insertItemSql = "";
@@ -165,34 +209,35 @@ const postController_subFunc = {
             i--;
           }
         }
-        
-        if (typeof items.name == 'string' && items.name != ''){
-            insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, brand, category1, category2, url, picture)
-            values(${postId}, '${items.name}', ${items.lowprice ? Number(items.lowprice) : -1}, ${items.highprice ? Number(items.highprice) : -1}, ?, ?, ?, ?, ?);`;
-
-            hashTagsSplitItemParams.push(items.brand);
-            hashTagsSplitItemParams.push(items.category1);
-            hashTagsSplitItemParams.push(items.category2);
-            hashTagsSplitItemParams.push(items.itemLink);
-            if (items.itemImg) {
-                hashTagsSplitItemParams.push(items.itemImg)
-            } else {
-                hashTagsSplitItemParams.push(serverConfig.defaultImg);
-            }
-        } else if (typeof items.name != 'string'){
-            itemForIndex = items.name.length;
-            for (var i = 0; i < itemForIndex; i++) {
+        if (items.name != undefined) {
+            if (typeof items.name == 'string'){
                 insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, brand, category1, category2, url, picture)
-                    values(${postId}, '${items.name[i]}', ${items.lowprice[i] ? Number(items.lowprice[i]) : -1}, ${items.highprice[i] ? Number(items.highprice[i]) : -1}, ?, ?, ?, ?, ?);`;
+                values(${postId}, '${items.name}', ${items.lowprice ? Number(items.lowprice) : -1}, ${items.highprice ? Number(items.highprice) : -1}, ?, ?, ?, ?, ?);`;
     
-                hashTagsSplitItemParams.push(items.brand[i]);
-                hashTagsSplitItemParams.push(items.category1[i]);
-                hashTagsSplitItemParams.push(items.category2[i]);
-                hashTagsSplitItemParams.push(items.itemLink[i]);
-                if (items.itemImg[i]) {
-                    hashTagsSplitItemParams.push(items.itemImg[i])
+                hashTagsSplitItemParams.push(items.brand);
+                hashTagsSplitItemParams.push(items.category1);
+                hashTagsSplitItemParams.push(items.category2);
+                hashTagsSplitItemParams.push(items.itemLink);
+                if (items.itemImg) {
+                    hashTagsSplitItemParams.push(items.itemImg)
                 } else {
                     hashTagsSplitItemParams.push(serverConfig.defaultImg);
+                }
+            } else {
+                itemForIndex = items.name.length;
+                for (var i = 0; i < itemForIndex; i++) {
+                    insertItemSql += `insert into item_tag (post_id, name, lprice, hprice, brand, category1, category2, url, picture)
+                        values(${postId}, '${items.name[i]}', ${items.lowprice[i] ? Number(items.lowprice[i]) : -1}, ${items.highprice[i] ? Number(items.highprice[i]) : -1}, ?, ?, ?, ?, ?);`;
+        
+                    hashTagsSplitItemParams.push(items.brand[i]);
+                    hashTagsSplitItemParams.push(items.category1[i]);
+                    hashTagsSplitItemParams.push(items.category2[i]);
+                    hashTagsSplitItemParams.push(items.itemLink[i]);
+                    if (items.itemImg[i]) {
+                        hashTagsSplitItemParams.push(items.itemImg[i])
+                    } else {
+                        hashTagsSplitItemParams.push(serverConfig.defaultImg);
+                    }
                 }
             }
         }

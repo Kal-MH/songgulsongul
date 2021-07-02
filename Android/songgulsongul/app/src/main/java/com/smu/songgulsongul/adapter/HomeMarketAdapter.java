@@ -64,7 +64,7 @@ public class HomeMarketAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof HomeMarketAdapter.ItemViewHolder) {
 
-            Glide.with(context).load(RetrofitClient.getBaseUrl()+ items.get(position).getImage())
+            Glide.with(context).load(items.get(position).getImage())
                     .into(((HomeMarketAdapter.ItemViewHolder) holder).img);
             ((ItemViewHolder) holder).name.setText(items.get(position).getName());
             ((ItemViewHolder) holder).cost.setText(items.get(position).getPrice() + "p") ;
