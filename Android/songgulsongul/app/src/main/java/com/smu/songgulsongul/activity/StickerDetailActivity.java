@@ -72,18 +72,6 @@ public class StickerDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         sticker_id = intent.getIntExtra("sticker_id", -1);
 
-        String name = intent.getStringExtra("name") ;
-        String filepath = intent.getStringExtra("path") ;
-        String s_price = intent.getStringExtra("price") ;
-        String text = intent.getStringExtra("text") ;
-        String userId = intent.getStringExtra("loginId") ;
-
-        Glide.with(this).load(filepath).into(sticker_img);
-        sticker_name.setText(name);
-        sticker_price.setText(s_price);
-        sticker_com.setText(text);
-        sticker_seller.setText(userId);
-
         getStickerDtData();
 
         // 구매자 프로필 click listener
