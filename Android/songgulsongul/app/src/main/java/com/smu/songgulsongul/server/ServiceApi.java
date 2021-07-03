@@ -207,7 +207,7 @@ public interface ServiceApi {
     // 마켓 업로드
     @Multipart
     @POST("/market/upload")
-    Call<CodeResponse> MarketUpload(
+    Call<JsonObject> MarketUpload(
             @Part("name") RequestBody name,
             @Part("text") RequestBody text,
             @Part("price") RequestBody price,

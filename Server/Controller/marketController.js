@@ -259,20 +259,25 @@ const marketController = {
     var image = req.file.path;
     image = "/"+image.replace(/\\/g, '/');
 
-    console.log(price)
-
     var params = [image, name, text, price, user_id];
     var sql = 'INSERT INTO market(image, name, text, price, user_id) values(?, ?, ?, ?, ?);';
-    connection.query(sql, params, function(err, rows){
+    sql += 'SELECT id FROM market ORDER BY id DESC limit 1;';
+    connection.query(sql, params, function(err, result){
       var resultCode = statusCode.SERVER_ERROR;
-      if(err)
+      if(err){
         console.log(err);
-      else
+        res.json({
+          'code': resultCode,
+        })
+      }
+      else{
         resultCode = statusCode.OK;
-
-      res.json({
-        'code': resultCode
-      })
+        var market_id = result[1][0].id;
+        res.json({
+          'code': resultCode,
+          'market_id': market_id
+        })
+      }
     })
   }
  }
