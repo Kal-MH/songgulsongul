@@ -37,7 +37,7 @@ var postStorage = multerS3({
     acl : 'public-read'
 })
 
-var marketStorage = multer.diskStorage({
+var marketStorage = multerS3({
     s3: s3,
     bucket: serverConfig.s3BucketName,
     key: function (req, file, cb) {
