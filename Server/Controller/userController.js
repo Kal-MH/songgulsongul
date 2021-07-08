@@ -548,6 +548,7 @@
              var imgProfile = rows[0].img_profile;
 
              sql = `select image from post where user_id = ${userRecordId};`;
+             sql += `select image from market where user_id = ${userRecordId};`;
              connection.query(sql, function (err, rows) {
                if (err){
                 console.log(err);
@@ -563,12 +564,18 @@
                    Quiet: false
                   }
                  };
-                 for(var i = 0;i < rows.length; i++) {
+                 for(var i = 0;i < rows[0].length; i++) {
                    var object = {
-                     Key : serverConfig.s3BucketPostFolderName + rows[i].image.split('/')[4]
+                     Key : serverConfig.s3BucketPostFolderName + rows[0][i].image.split('/')[4]
                    }
                    params.Delete.Objects.push(object);
                  }
+                 for(var i = 0;i < rows[1].length; i++) {
+                  var object = {
+                    Key : serverConfig.s3BucketMarketFolderName + rows[1][i].image.split('/')[4]
+                  }
+                  params.Delete.Objects.push(object);
+                }
                  if (imgProfile != serverConfig.defaultUserProfile) {
                    var profileObject = {
                      Key : serverConfig.s3BucketProfileFolderName +  imgProfile.split('/')[4]
