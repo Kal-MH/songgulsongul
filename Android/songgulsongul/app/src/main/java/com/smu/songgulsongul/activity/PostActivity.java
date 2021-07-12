@@ -177,10 +177,7 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View v) {
                 PopupMenu popup = new PopupMenu(getApplicationContext(),v);
                 Log.d("p_user_id", p_user_id);
-                //if(login_id.equals(p_user_id))
-                    popup.getMenuInflater().inflate(R.menu.post_setting_menu, popup.getMenu());
-                //else
-                //    popup.getMenuInflater().inflate(R.menu.post_setting_menu_other, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.post_setting_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
                     @Override
                     public boolean onMenuItemClick(MenuItem item){
