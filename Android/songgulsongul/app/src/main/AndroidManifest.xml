@@ -50,6 +50,12 @@
         <activity
             android:name=".activity.EditImageDenoiseActivity"
             android:parentActivityName=".activity.EditActivity" />
+        <activity
+            android:name=".activity.EditImageRemoveShadowActivity"
+            android:parentActivityName=".activity.EditActivity" />
+        <activity
+            android:name=".activity.EditImageAddWeightActivity"
+            android:parentActivityName=".activity.EditActivity" />
         <activity android:name=".activity.FirstAuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
