@@ -43,6 +43,7 @@ import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.responseData.Post;
 import com.smu.songgulsongul.responseData.PostFeed;
 import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -51,7 +52,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
-    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     Context context;
 
@@ -289,7 +289,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         String img_addr;
         String pro_img = user.getImg_profile();
-        if(pro_img.equals(DEFAULT_IMAGE))
+        if(pro_img.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = RetrofitClient.getBaseUrl() + pro_img;
         else
             img_addr = pro_img;

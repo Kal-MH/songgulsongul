@@ -33,6 +33,7 @@ import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.responseData.MarketDetailResponse;
 import com.smu.songgulsongul.responseData.Sticker;
 import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -45,7 +46,6 @@ public class StickerDetailActivity extends AppCompatActivity {
     ImageView sticker_img, sticker_profile;
     TextView sticker_name, sticker_price, sticker_com, sticker_seller;
     String file_name, img_path, seller_id;
-    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,7 +183,7 @@ public class StickerDetailActivity extends AppCompatActivity {
 
         String pro_img = user.get(0).getImg_profile();
         String img_addr;
-        if(pro_img.equals(DEFAULT_IMAGE))
+        if(pro_img.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = RetrofitClient.getBaseUrl() + pro_img;
         else
             img_addr = pro_img;

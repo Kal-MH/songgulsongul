@@ -64,6 +64,7 @@ import com.smu.songgulsongul.responseData.Post;
 import com.smu.songgulsongul.responseData.PostDetail;
 import com.smu.songgulsongul.responseData.PostResponse;
 import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -91,7 +92,6 @@ public class PostActivity extends AppCompatActivity {
     int status;
     final int MY = 1;
     final int OTHER = 2;
-    final String DEFAULT_IMAGE = "/public/default/user.png";
 
 
     int user_id, post_id;
@@ -624,7 +624,7 @@ public class PostActivity extends AppCompatActivity {
 
         img_path = userData.getImg_profile();
         String img_addr;
-        if(img_path.equals(DEFAULT_IMAGE))
+        if(img_path.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = RetrofitClient.getBaseUrl() + img_path;
         else
             img_addr = img_path;
