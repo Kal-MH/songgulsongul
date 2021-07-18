@@ -44,9 +44,9 @@ var homeController = {
                     // 삽입을 수행하는 sql문.
                     var sql = "";
                     if (snsUrl == undefined || snsUrl == ""){
-                        sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, last_login, point, sns_check) VALUES (?, ?, ?, ?, ?, ?, NOW() ,1000, 0)';
+                        sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, intro, last_login, point, sns_check) VALUES (?, ?, ?, ?, ?, ?, "", NOW() ,1000, 0)';
                     } else {
-                        sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, last_login, point, sns_check) VALUES (?, ?, ?, ?, ?, ?, NOW() ,1000, 1)';
+                        sql = 'INSERT INTO user (email, login_id, password, salt, sns_url, img_profile, intro, last_login, point, sns_check) VALUES (?, ?, ?, ?, ?, ?, "", NOW() ,1000, 1)';
                     }
                     var params = [email, loginId, hashedPassword, salt, snsUrl, imgProfile];
 
@@ -139,7 +139,7 @@ var homeController = {
                         subject: "아이디 찾기.",
                         text: loginIds
                     }
-    
+
                     await smtpTransport.sendMail(mailOptions, function (err, response) {
                         var resultCode;
                         if (err) {
@@ -190,7 +190,7 @@ var homeController = {
                             // 삽입을 수행하는 sql문.
                             var passwordSql = "update user set password = ?, salt = ? where email = ? and login_id = ?"
                             var passwordParams = [hashedPassword, salt, email, loginId];
-    
+
                             connection.query(passwordSql, passwordParams, async function (err, result) {
                                 if (err) {
                                     res.json({
@@ -203,7 +203,7 @@ var homeController = {
                                         subject: "임시비밀번호 발급.",
                                         text: "임시비밀번호 : " + tmpPassword
                                     }
-    
+
                                     await smtpTransport.sendMail(mailOptions, function (err, response) {
                                         if (err) {
                                             console.log(err);
@@ -218,7 +218,7 @@ var homeController = {
                                     })
                                 }
                             })
-    
+
                         })
                     })
                 }
@@ -228,4 +228,4 @@ var homeController = {
     },
 }
 
-module.exports = homeController; 
+module.exports = homeController;

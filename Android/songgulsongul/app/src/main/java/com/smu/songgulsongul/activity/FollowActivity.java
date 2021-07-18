@@ -68,8 +68,7 @@ public class FollowActivity extends AppCompatActivity {
         user_id = intent.getStringExtra("userId");
 
         Log.d("follow", user_id);
-        Log.d("follow",intent.getStringExtra("intro"));
-
+        Log.d("intro", intent.getStringExtra("intro"));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.follow_toolbar);
         setSupportActionBar(toolbar);
