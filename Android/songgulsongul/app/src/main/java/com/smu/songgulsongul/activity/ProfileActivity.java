@@ -43,6 +43,7 @@ import com.smu.songgulsongul.data.UserData;
 import com.smu.songgulsongul.responseData.Post;
 import com.smu.songgulsongul.responseData.ProfileResponse;
 import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -55,7 +56,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     final int MY = 1;
     final int OTHER = 0;
-    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     public int Status;
     public static final int REQUEST_CODE = 100;
@@ -323,7 +323,7 @@ public class ProfileActivity extends AppCompatActivity {
         String profile_image = user_data.getImg_profile();
 
         // 프로필 이미지가 기본 이미지인지 확인
-        if(profile_image.equals(DEFAULT_IMAGE))
+        if(profile_image.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = RetrofitClient.getBaseUrl()+ profile_image;
         else
             img_addr = profile_image;

@@ -19,6 +19,7 @@ import java.util.List;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.ProfileActivity;
 import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 
 
@@ -27,7 +28,6 @@ public class UserlistAdapter extends  RecyclerView.Adapter<UserlistAdapter.ViewH
     List<User> userList;
     Context context;
     int len = 15;
-    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     public UserlistAdapter (Context context,  List<User>  obj) {
         this.context = context;
@@ -53,7 +53,7 @@ public class UserlistAdapter extends  RecyclerView.Adapter<UserlistAdapter.ViewH
 
         String profile_image = item.getImg_profile();
         String img_addr;
-        if(profile_image.equals(DEFAULT_IMAGE))
+        if(profile_image.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = RetrofitClient.getBaseUrl() + profile_image;
         else
             img_addr = profile_image;

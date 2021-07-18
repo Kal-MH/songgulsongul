@@ -64,6 +64,7 @@ import com.smu.songgulsongul.responseData.Post;
 import com.smu.songgulsongul.responseData.PostDetail;
 import com.smu.songgulsongul.responseData.PostResponse;
 import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -91,10 +92,11 @@ public class PostActivity extends AppCompatActivity {
     int status;
     final int MY = 1;
     final int OTHER = 2;
-    final String DEFAULT_IMAGE = "/public/default/user.png";
+    final int YES = 1;
+    final int NO = 0;
 
 
-    int user_id, post_id;
+    int user_id, post_id, share_flag;
     String login_id, p_user_id, img_path, post_image;
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
@@ -158,7 +160,7 @@ public class PostActivity extends AppCompatActivity {
         user_id = LoginSharedPreference.getUserId(PostActivity.this);
         post_id = intent.getIntExtra("post_id",-1);
         login_id = LoginSharedPreference.getLoginId(PostActivity.this);
-
+        share_flag = NO;
 
         //서버통신
         getData();
@@ -177,7 +179,11 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View v) {
                 PopupMenu popup = new PopupMenu(getApplicationContext(),v);
                 Log.d("p_user_id", p_user_id);
-                popup.getMenuInflater().inflate(R.menu.post_setting_menu, popup.getMenu());
+                if(login_id.equals(p_user_id)) // 게시물 작성자 == 로그인한 사용자
+                    popup.getMenuInflater().inflate(R.menu.post_setting_menu, popup.getMenu());
+                else if(!login_id.equals(p_user_id)) { // 게시물 작성자 != 로그인한 사용자
+                    popup.getMenuInflater().inflate(R.menu.post_setting_menu_other, popup.getMenu());
+                }
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
                     @Override
                     public boolean onMenuItemClick(MenuItem item){
@@ -624,7 +630,7 @@ public class PostActivity extends AppCompatActivity {
 
         img_path = userData.getImg_profile();
         String img_addr;
-        if(img_path.equals(DEFAULT_IMAGE))
+        if(img_path.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = RetrofitClient.getBaseUrl() + img_path;
         else
             img_addr = img_path;
@@ -668,6 +674,7 @@ public class PostActivity extends AppCompatActivity {
 
 
         if(ccl.getCcl_cc()==1) {
+            share_flag = YES;
             post_ccl_cc.setImageResource(R.drawable.ccl_cc_fill);
             post_ccl_cc.setColorFilter(R.color.inkGrey ,PorterDuff.Mode.SRC_IN);
         }
@@ -756,6 +763,7 @@ public class PostActivity extends AppCompatActivity {
         return true;
     }
     public boolean setStatusData(){
+
         if(LoginSharedPreference.getLoginId(PostActivity.this).equals( userData.getLogin_id()) )
             status = MY;
         else
@@ -770,8 +778,14 @@ public class PostActivity extends AppCompatActivity {
                 post_keep_btn.setVisibility(View.INVISIBLE);
                 break;
             case OTHER:
-                post_setting_btn.setEnabled(false);
-                post_setting_btn.setVisibility(View.INVISIBLE);
+                if(share_flag == YES){ // 공유 허용
+                    post_setting_btn.setEnabled(true);
+                    post_setting_btn.setVisibility(View.VISIBLE);
+                }
+                else if(share_flag == NO){ // 공유 비허용
+                    post_setting_btn.setEnabled(false);
+                    post_setting_btn.setVisibility(View.INVISIBLE);
+                }
                 post_keep_btn.setVisibility(View.VISIBLE);
                 break;
             default:
