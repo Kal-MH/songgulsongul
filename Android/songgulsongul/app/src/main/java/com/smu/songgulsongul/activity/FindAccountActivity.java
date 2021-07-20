@@ -1,6 +1,8 @@
 package com.smu.songgulsongul.activity;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -116,7 +119,7 @@ public class FindAccountActivity extends AppCompatActivity {
 
                         // 입력한 이메일이 공백값일 경우 --> 서버 통신x
                         if(email.getBytes().length <= 0){
-                            new AlertDialog.Builder(FindAccountActivity.this)
+                            /*new AlertDialog.Builder(FindAccountActivity.this)
                                     .setTitle("경고")
                                     .setMessage("이메일을 입력해주세요.")
                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -125,12 +128,36 @@ public class FindAccountActivity extends AppCompatActivity {
 
                                         }
                                     })
-                                    .show();
+                                    .show();*/
+                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                            builder.setView(dialogView);
+
+                            final AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                            TextView title=dialogView.findViewById(R.id.titleTV);
+                            title.setText("경고");
+
+                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            txt.setText("이메일을 입력해주세요.");
+
+                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+
+                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                            cancel_btn.setVisibility(View.GONE);
                         }
 
                         // 입력한 이메일이 형식에서 벗어날 경우 --> 서버 통신x
                         else if(!email_pattern.matcher(email).matches()){
-                            new AlertDialog.Builder(FindAccountActivity.this)
+                            /*new AlertDialog.Builder(FindAccountActivity.this)
                                     .setTitle("경고")
                                     .setMessage("올바른 이메일 형식이 아닙니다.")
                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -139,7 +166,31 @@ public class FindAccountActivity extends AppCompatActivity {
 
                                         }
                                     })
-                                    .show();
+                                    .show();*/
+                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                            builder.setView(dialogView);
+
+                            final AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                            TextView title=dialogView.findViewById(R.id.titleTV);
+                            title.setText("경고");
+
+                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            txt.setText("올바른 이메일 형식이 아닙니다.");
+
+                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+
+                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                            cancel_btn.setVisibility(View.GONE);
                         }
 
                         else{
@@ -154,7 +205,7 @@ public class FindAccountActivity extends AppCompatActivity {
                                         Log.d("code", String.valueOf(resultCode));
 
                                         if (resultCode == StatusCode.RESULT_OK) {
-                                            new AlertDialog.Builder(FindAccountActivity.this)
+                                            /*new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setMessage("이메일로 아이디를 전송하였습니다.")
                                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                                         @Override
@@ -162,9 +213,35 @@ public class FindAccountActivity extends AppCompatActivity {
                                                             find_id_email.setText(null);
                                                         }
                                                     })
-                                                    .show();
+                                                    .show();*/
+                                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                                            builder.setView(dialogView);
+
+                                            final AlertDialog alertDialog = builder.create();
+                                            alertDialog.show();
+                                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                            TextView title=dialogView.findViewById(R.id.titleTV);
+                                            title.setVisibility(View.GONE);
+
+                                            TextView txt=dialogView.findViewById(R.id.txtText);
+                                            txt.setText("이메일로 아이디를 전송하였습니다.");
+
+                                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    find_id_email.setText(null);
+                                                    alertDialog.dismiss();
+                                                }
+                                            });
+
+                                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                            cancel_btn.setVisibility(View.GONE);
+
                                         } else if (resultCode == StatusCode.RESULT_CLIENT_ERR) {
-                                            new AlertDialog.Builder(FindAccountActivity.this)
+                                            /*new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setTitle("경고")
                                                     .setMessage("가입되지 않은 이메일입니다.")
                                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -173,9 +250,34 @@ public class FindAccountActivity extends AppCompatActivity {
                                                             find_id_email.setText(null);
                                                         }
                                                     })
-                                                    .show();
+                                                    .show();*/
+                                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                                            builder.setView(dialogView);
+
+                                            final AlertDialog alertDialog = builder.create();
+                                            alertDialog.show();
+                                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                            TextView title=dialogView.findViewById(R.id.titleTV);
+                                            title.setText("경고");
+
+                                            TextView txt=dialogView.findViewById(R.id.txtText);
+                                            txt.setText("가입되지 않은 이메일입니다.");
+
+                                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    find_id_email.setText(null);
+                                                    alertDialog.dismiss();
+                                                }
+                                            });
+
+                                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                            cancel_btn.setVisibility(View.GONE);
                                         } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
-                                            new AlertDialog.Builder(FindAccountActivity.this)
+                                            /*new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setTitle("경고")
                                                     .setMessage("에러가 발생했습니다." + "\n" + "다시 시도해주세요.")
                                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -184,12 +286,37 @@ public class FindAccountActivity extends AppCompatActivity {
                                                             find_id_email.setText(null);
                                                         }
                                                     })
-                                                    .show();
+                                                    .show();*/
+                                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                                            builder.setView(dialogView);
+
+                                            final AlertDialog alertDialog = builder.create();
+                                            alertDialog.show();
+                                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                            TextView title=dialogView.findViewById(R.id.titleTV);
+                                            title.setText("경고");
+
+                                            TextView txt=dialogView.findViewById(R.id.txtText);
+                                            txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    find_id_email.setText(null);
+                                                    alertDialog.dismiss();
+                                                }
+                                            });
+
+                                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                            cancel_btn.setVisibility(View.GONE);
                                         } else {
                                             Toast.makeText(FindAccountActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                                         }
                                     }catch (NullPointerException e){
-                                        new AlertDialog.Builder(FindAccountActivity.this)
+                                        /*new AlertDialog.Builder(FindAccountActivity.this)
                                                 .setTitle("경고")
                                                 .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
                                                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -198,7 +325,31 @@ public class FindAccountActivity extends AppCompatActivity {
 
                                                     }
                                                 })
-                                                .show();
+                                                .show();*/
+                                        View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                                        builder.setView(dialogView);
+
+                                        final AlertDialog alertDialog = builder.create();
+                                        alertDialog.show();
+                                        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                        TextView title=dialogView.findViewById(R.id.titleTV);
+                                        title.setText("경고");
+
+                                        TextView txt=dialogView.findViewById(R.id.txtText);
+                                        txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                                        Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                        ok_btn.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                alertDialog.dismiss();
+                                            }
+                                        });
+
+                                        Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                        cancel_btn.setVisibility(View.GONE);
                                     }
                                 }
 
@@ -222,7 +373,7 @@ public class FindAccountActivity extends AppCompatActivity {
 
                         // 입력한 이메일 또는 아이디가 공백값일 경우 --> 서버 통신x
                         if(id.getBytes().length <= 0 || pw_email.getBytes().length <= 0){
-                            new AlertDialog.Builder(FindAccountActivity.this)
+                            /*new AlertDialog.Builder(FindAccountActivity.this)
                                     .setTitle("경고")
                                     .setMessage("미입력된 값을 입력해주세요.")
                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -231,12 +382,36 @@ public class FindAccountActivity extends AppCompatActivity {
 
                                         }
                                     })
-                                    .show();
+                                    .show();*/
+                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                            builder.setView(dialogView);
+
+                            final AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                            TextView title=dialogView.findViewById(R.id.titleTV);
+                            title.setText("경고");
+
+                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            txt.setText("미입력된 값을 입력해주세요.");
+
+                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+
+                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                            cancel_btn.setVisibility(View.GONE);
                         }
 
                         // 입력한 이메일이 형식에서 벗어날 경우 --> 서버 통신x
                         else if(!pw_email_pattern.matcher(pw_email).matches()){
-                            new AlertDialog.Builder(FindAccountActivity.this)
+                            /*new AlertDialog.Builder(FindAccountActivity.this)
                                     .setTitle("경고")
                                     .setMessage("올바른 이메일 형식이 아닙니다.")
                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -245,7 +420,31 @@ public class FindAccountActivity extends AppCompatActivity {
 
                                         }
                                     })
-                                    .show();
+                                    .show();*/
+                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                            builder.setView(dialogView);
+
+                            final AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                            TextView title=dialogView.findViewById(R.id.titleTV);
+                            title.setText("경고");
+
+                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            txt.setText("올바른 이메일 형식이 아닙니다.");
+
+                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+
+                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                            cancel_btn.setVisibility(View.GONE);
                         }
 
                         else{
@@ -259,7 +458,7 @@ public class FindAccountActivity extends AppCompatActivity {
                                         int resultCode = result.getCode();
 
                                         if (resultCode == StatusCode.RESULT_OK) {
-                                            new AlertDialog.Builder(FindAccountActivity.this)
+                                            /*new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setMessage("이메일로 임시 비밀번호를 전송하였습니다.")
                                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                                         @Override
@@ -267,9 +466,33 @@ public class FindAccountActivity extends AppCompatActivity {
 
                                                         }
                                                     })
-                                                    .show();
+                                                    .show();*/
+                                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                                            builder.setView(dialogView);
+
+                                            final AlertDialog alertDialog = builder.create();
+                                            alertDialog.show();
+                                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                            TextView title=dialogView.findViewById(R.id.titleTV);
+                                            title.setVisibility(View.GONE);
+
+                                            TextView txt=dialogView.findViewById(R.id.txtText);
+                                            txt.setText("이메일로 임시 비밀번호를 전송하였습니다.");
+
+                                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    alertDialog.dismiss();
+                                                }
+                                            });
+
+                                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                            cancel_btn.setVisibility(View.GONE);
                                         } else if (resultCode == StatusCode.RESULT_CLIENT_ERR) {
-                                            new AlertDialog.Builder(FindAccountActivity.this)
+                                            /*new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setTitle("경고")
                                                     .setMessage("존재하지 않는 정보입니다." + "\n" + "이메일 또는 아이디를 확인해주세요.")
                                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -279,9 +502,35 @@ public class FindAccountActivity extends AppCompatActivity {
                                                             find_pw_email.setText(null);
                                                         }
                                                     })
-                                                    .show();
+                                                    .show();*/
+                                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                                            builder.setView(dialogView);
+
+                                            final AlertDialog alertDialog = builder.create();
+                                            alertDialog.show();
+                                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                            TextView title=dialogView.findViewById(R.id.titleTV);
+                                            title.setText("경고");
+
+                                            TextView txt=dialogView.findViewById(R.id.txtText);
+                                            txt.setText("존재하지 않는 정보입니다."+"\n"+"이메일 또는 아이디를 확인해주세요.");
+
+                                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    find_pw_id.setText(null);
+                                                    find_pw_email.setText(null);
+                                                    alertDialog.dismiss();
+                                                }
+                                            });
+
+                                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                            cancel_btn.setVisibility(View.GONE);
                                         } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
-                                            new AlertDialog.Builder(FindAccountActivity.this)
+                                            /*new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setTitle("경고")
                                                     .setMessage("에러가 발생했습니다." + "\n" + "다시 시도해주세요.")
                                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -291,12 +540,38 @@ public class FindAccountActivity extends AppCompatActivity {
                                                             find_pw_email.setText(null);
                                                         }
                                                     })
-                                                    .show();
+                                                    .show();*/
+                                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                                            builder.setView(dialogView);
+
+                                            final AlertDialog alertDialog = builder.create();
+                                            alertDialog.show();
+                                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                            TextView title=dialogView.findViewById(R.id.titleTV);
+                                            title.setText("경고");
+
+                                            TextView txt=dialogView.findViewById(R.id.txtText);
+                                            txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    find_pw_id.setText(null);
+                                                    find_pw_email.setText(null);
+                                                    alertDialog.dismiss();
+                                                }
+                                            });
+
+                                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                            cancel_btn.setVisibility(View.GONE);
                                         } else {
                                             Toast.makeText(FindAccountActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
                                         }
                                     } catch (NullPointerException e){
-                                        new AlertDialog.Builder(FindAccountActivity.this)
+                                        /*new AlertDialog.Builder(FindAccountActivity.this)
                                                 .setTitle("경고")
                                                 .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
                                                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -305,7 +580,31 @@ public class FindAccountActivity extends AppCompatActivity {
 
                                                     }
                                                 })
-                                                .show();
+                                                .show();*/
+                                        View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
+                                        builder.setView(dialogView);
+
+                                        final AlertDialog alertDialog = builder.create();
+                                        alertDialog.show();
+                                        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                        TextView title=dialogView.findViewById(R.id.titleTV);
+                                        title.setText("경고");
+
+                                        TextView txt=dialogView.findViewById(R.id.txtText);
+                                        txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                                        Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                        ok_btn.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                alertDialog.dismiss();
+                                            }
+                                        });
+
+                                        Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                        cancel_btn.setVisibility(View.GONE);
                                     }
                                 }
 

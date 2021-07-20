@@ -10,8 +10,8 @@ cmake_minimum_required(VERSION 3.4.1)
 #set(pathPROJECT D:/SMU_Capstone2/Capstone2021/Android/paper) # 개인별 수정필요 #신희찬2
 #set(pathPROJECT C:/Code/Capstone2021/Android/songgulsongul) # 개인별 수정필요 #이유진
 
-set(pathPROJECT D:/Capstone2021/Android/songgulsongul) # 개인별 수정필요 #조아람
-#set(pathPROJECT D:/SMU_Capstone/Capstone2021/Android/paper) # 개인별 수정필요 #ㅇㅇㅇ
+#set(pathPROJECT D:/Capstone2021/Android/songgulsongul) # 개인별 수정필요 #조아람
+set(pathPROJECT C:/code/study/Capstone2021/Android/songgulsongul) # 개인별 수정필요 #나원희
 #set(pathPROJECT D:/SMU_Capstone/Capstone2021/Android/paper) # 개인별 수정필요 #ㅇㅇㅇ
 
 set(pathOPENCV ${pathPROJECT}/opencv)

@@ -3,6 +3,8 @@ package com.smu.songgulsongul.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -142,7 +144,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
                             });
                         }
                         else if(resultCode == statusCode.RESULT_CLIENT_ERR){
-                            new AlertDialog.Builder(context)
+                            /*new AlertDialog.Builder(context)
                                     .setTitle("경고")
                                     .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -150,7 +152,32 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
                                         public void onClick(DialogInterface dialog, int which) {
                                         }
                                     })
-                                    .show();
+                                    .show();*/
+                            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View dialogView = inflater.inflate(R.layout.activity_popup,null);
+                            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+                            builder.setView(dialogView);
+
+                            final AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                            TextView title=dialogView.findViewById(R.id.titleTV);
+                            title.setText("경고");
+
+                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+
+                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                            cancel_btn.setVisibility(View.GONE);
                         }
                         else {
                             Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();

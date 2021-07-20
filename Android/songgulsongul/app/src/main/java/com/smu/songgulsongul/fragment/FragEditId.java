@@ -1,8 +1,12 @@
 package com.smu.songgulsongul.fragment;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +27,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
+import com.smu.songgulsongul.activity.EditAccountActivity;
 import com.smu.songgulsongul.data.IdCheckData;
 import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.server.RetrofitClient;
@@ -45,7 +51,7 @@ public class FragEditId extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.frag_edit_id, container, false);
 
         Button account_id_check= (Button) rootView.findViewById(R.id.account_id_check);
@@ -80,7 +86,7 @@ public class FragEditId extends Fragment {
                 if(new_id.getBytes().length <= 0){
                     id_check = NO;
                     id_modify_check = NO;
-                    new AlertDialog.Builder(getContext())
+                    /*new AlertDialog.Builder(getContext())
                             .setTitle("경고")
                             .setMessage("변경할 아이디를 입력해주세요.")
                             .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -89,21 +95,72 @@ public class FragEditId extends Fragment {
 
                                 }
                             })
-                            .show();
+                            .show();*/
+
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    Context context = getActivity();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    TextView title=dialogView.findViewById(R.id.titleTV);
+                    title.setText("경고");
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("변경할 아이디를 입력해주세요.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
 
                 // 현재 사용중인 id와 동일한 id 입력시 --> 서버 통신x
                 else if (login_id.equals(new_id)){
                     id_check = NO;
                     id_modify_check = NO;
-                    new AlertDialog.Builder(getContext())
+                    /*new AlertDialog.Builder(getContext())
                             .setMessage("현재 아이디와 동일한 아이디입니다.")
                             .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                 }
                             })
-                            .show();
+                            .show();*/
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    Context context = getActivity();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    TextView title=dialogView.findViewById(R.id.titleTV);
+                    title.setVisibility(View.GONE);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("현재 아이디와 동일한 아이디입니다.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
 
                 else{
@@ -115,7 +172,7 @@ public class FragEditId extends Fragment {
                             int resultCode = result.getCode();
 
                             if(resultCode == StatusCode.RESULT_OK){
-                                new AlertDialog.Builder(getContext())
+                                /*new AlertDialog.Builder(getContext())
                                         .setMessage("사용할 수 있는 아이디입니다.")
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                             @Override
@@ -123,7 +180,33 @@ public class FragEditId extends Fragment {
 
                                             }
                                         })
-                                        .show();
+                                        .show();*/
+                                View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                Context context = getActivity();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setView(dialogView);
+
+                                final AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                TextView title=dialogView.findViewById(R.id.titleTV);
+                                title.setVisibility(View.GONE);
+
+                                TextView txt=dialogView.findViewById(R.id.txtText);
+                                txt.setText("사용할 수 있는 아이디입니다.");
+
+                                Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                ok_btn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        alertDialog.dismiss();
+                                    }
+                                });
+
+                                Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                cancel_btn.setVisibility(View.GONE);
+
                                 id_check = YES;
                                 id_modify_check = YES;
                             }
@@ -131,7 +214,7 @@ public class FragEditId extends Fragment {
                             else if (resultCode == StatusCode.RESULT_CLIENT_ERR){
                                 id_check = NO;
                                 id_modify_check = NO;
-                                new AlertDialog.Builder(getContext())
+                                /*new AlertDialog.Builder(getContext())
                                         .setTitle("경고")
                                         .setMessage("이미 사용중인 아이디입니다."+"\n"+"다시 입력해 주세요.")
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -140,13 +223,40 @@ public class FragEditId extends Fragment {
                                                 account_newid.setText(null);
                                             }
                                         })
-                                        .show();
+                                        .show();*/
+                                View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                Context context = getActivity();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setView(dialogView);
+
+                                final AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                TextView title=dialogView.findViewById(R.id.titleTV);
+                                title.setText("경고");
+
+                                TextView txt=dialogView.findViewById(R.id.txtText);
+                                txt.setText("이미 사용중인 아이디입니다."+"\n"+"다시 입력해주세요.");
+
+                                Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                ok_btn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        account_newid.setText(null);
+                                        alertDialog.dismiss();
+                                    }
+                                });
+
+                                Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                cancel_btn.setVisibility(View.GONE);
+
                             }
 
                             else if (resultCode == StatusCode.RESULT_SERVER_ERR){
                                 id_check = NO;
                                 id_modify_check = NO;
-                                new AlertDialog.Builder(getContext())
+                                /*new AlertDialog.Builder(getContext())
                                         .setTitle("경고")
                                         .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -154,7 +264,32 @@ public class FragEditId extends Fragment {
                                             public void onClick(DialogInterface dialog, int which) {
                                             }
                                         })
-                                        .show();
+                                        .show();*/
+                                View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                Context context = getActivity();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setView(dialogView);
+
+                                final AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                TextView title=dialogView.findViewById(R.id.titleTV);
+                                title.setText("경고");
+
+                                TextView txt=dialogView.findViewById(R.id.txtText);
+                                txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                                Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                ok_btn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        alertDialog.dismiss();
+                                    }
+                                });
+
+                                Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                cancel_btn.setVisibility(View.GONE);
                             }
                         }
 

@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,8 +26,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -186,7 +190,7 @@ public class PostEditActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                             } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
-                                new AlertDialog.Builder(PostEditActivity.this)
+                                /*new AlertDialog.Builder(PostEditActivity.this)
                                         .setMessage("게시물 수정에 실패했습니다." + "\n" + "다시 시도해주세요..")
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                             @Override
@@ -194,10 +198,34 @@ public class PostEditActivity extends AppCompatActivity {
 
                                             }
                                         })
-                                        .show();
+                                        .show();*/
+                                View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(PostEditActivity.this);
+                                builder.setView(dialogView);
+
+                                final AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                TextView title=dialogView.findViewById(R.id.titleTV);
+                                title.setVisibility(View.GONE);
+
+                                TextView txt=dialogView.findViewById(R.id.txtText);
+                                txt.setText("게시물 수정에 실패했습니다."+"\n"+"다시 시도해주세요.");
+
+                                Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                ok_btn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        alertDialog.dismiss();
+                                    }
+                                });
+
+                                Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                cancel_btn.setVisibility(View.GONE);
                             }
                         } catch (NullPointerException e){
-                            new AlertDialog.Builder(PostEditActivity.this)
+                            /*new AlertDialog.Builder(PostEditActivity.this)
                                     .setMessage("에러발생!")
                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                         @Override
@@ -205,7 +233,31 @@ public class PostEditActivity extends AppCompatActivity {
 
                                         }
                                     })
-                                    .show();
+                                    .show();*/
+                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(PostEditActivity.this);
+                            builder.setView(dialogView);
+
+                            final AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                            TextView title=dialogView.findViewById(R.id.titleTV);
+                            title.setVisibility(View.GONE);
+
+                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            txt.setText("에러발생!");
+
+                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+
+                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                            cancel_btn.setVisibility(View.GONE);
                         }
                     }
 
