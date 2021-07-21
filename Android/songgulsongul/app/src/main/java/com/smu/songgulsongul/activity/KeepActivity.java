@@ -34,6 +34,7 @@ import com.smu.songgulsongul.adapter.PostImageRVAdapter;
 import com.smu.songgulsongul.data.KeepData;
 import com.smu.songgulsongul.responseData.KeepResponse;
 import com.smu.songgulsongul.responseData.Post;
+import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -49,7 +50,6 @@ public class KeepActivity extends AppCompatActivity {
     ImageView keep_imae;
 
     String login_id;
-    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class KeepActivity extends AppCompatActivity {
         // 프로필 이미지 셋팅
         String profile_image = data.getProfileImg();
         String img_addr;
-        if(profile_image.equals(DEFAULT_IMAGE))
+        if(profile_image.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = RetrofitClient.getBaseUrl() + profile_image;
         else
             img_addr = profile_image;

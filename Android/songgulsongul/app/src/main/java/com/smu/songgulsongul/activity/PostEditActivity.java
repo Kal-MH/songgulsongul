@@ -319,7 +319,7 @@ public class PostEditActivity extends AppCompatActivity {
 
         // 게시글 정보 세팅
         post_edit_text.setText(postData.getText());
-        Glide.with(this).load(RetrofitClient.getBaseUrl() + postData.getImage()).into(post_edit_pic);
+        Glide.with(this).load(postData.getImage()).into(post_edit_pic);
 
 
         //CCL 세팅

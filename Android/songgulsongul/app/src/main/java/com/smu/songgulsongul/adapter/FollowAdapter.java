@@ -37,6 +37,7 @@ import com.smu.songgulsongul.data.NotificationData;
 import com.smu.songgulsongul.data.RequestNotification;
 import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.data.FollowData;
+import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -52,7 +53,6 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
     int itemCnt;
     int status;
     String login_id;
-    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     public FollowAdapter (Context context, JsonObject obj, int status) {
         this.context = context;
@@ -70,7 +70,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
         String pro_image = item.getAsJsonObject().get("image").getAsString();
         String img_addr;
 
-        if(pro_image.equals(DEFAULT_IMAGE))
+        if(pro_image.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = RetrofitClient.getBaseUrl() + pro_image;
         else
             img_addr = pro_image;

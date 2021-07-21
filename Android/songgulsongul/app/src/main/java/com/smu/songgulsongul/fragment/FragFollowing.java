@@ -188,6 +188,10 @@ public class FragFollowing extends Fragment {
                     JsonArray user_list = result.getAsJsonArray("userFollowInfo");
                     // 선택한 사용자의 팔로우 리스트에 있는 사용자를 팔로우 했는지 체크
                     for(int i = 0; i < user_list.size(); i++){
+                        if(login_list.size() == 0) {
+                            user_list.get(i).getAsJsonObject().addProperty("flag", false);
+                            continue;
+                        }
                         for(int j = 0; j < login_list.size(); j++){
                             int check = 0;
                             String user_follower_id = user_list.get(i).getAsJsonObject().get("userId").getAsString();

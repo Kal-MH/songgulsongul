@@ -50,6 +50,7 @@ import com.smu.songgulsongul.data.UserData;
 import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.responseData.ProfileResponse;
 import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -69,7 +70,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private int profile_modify_check;
     private int NO = 0;
     private int YES = 1;
-    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -545,7 +545,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String img_addr;
         String base_url = RetrofitClient.getBaseUrl();
 
-        if(profile_img_old.equals(DEFAULT_IMAGE))
+        if(profile_img_old.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = base_url + profile_img_old;
         else
             img_addr = profile_img_old;

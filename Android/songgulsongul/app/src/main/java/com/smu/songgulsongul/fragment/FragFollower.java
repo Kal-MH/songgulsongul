@@ -125,6 +125,10 @@ public class FragFollower extends Fragment {
 
                     // 팔로워 리스트에 있는 사용자를 팔로우 했는지 체크
                     for (int i = 0; i < follower_list.size(); i++) {
+                        if(following_list.size() == 0) {
+                            follower_list.get(i).getAsJsonObject().addProperty("flag", false);
+                            continue;
+                        }
                         for (int j = 0; j < following_list.size(); j++) {
                             int check = 0;
                             String following_id = following_list.get(j).getAsJsonObject().get("userId").getAsString();
