@@ -41,22 +41,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Text.textBoldStyle"
-                android:text="Qick Mode">
+                android:text="게시글 업로드">
 
             </TextView>
         </LinearLayout>
 
-
-        <Space
-            android:layout_width="@dimen/tab_size"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
 
         <LinearLayout
             android:id="@+id/linearLayout6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginStart="@dimen/tab_size"
 
             android:orientation="vertical">
 
@@ -74,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Text.textBoldStyle"
-                android:text="Normal Mode">
+                android:text="편집 및 업로드">
 
             </TextView>
         </LinearLayout>
