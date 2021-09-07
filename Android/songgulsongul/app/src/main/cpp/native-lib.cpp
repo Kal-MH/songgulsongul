@@ -993,7 +993,34 @@ Java_com_smu_songgulsongul_activity_EditImageFilterActivity_applyRGBMinGray(JNIE
         img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = locMat;
 
-}extern "C"
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_smu_songgulsongul_activity_EditImageFilterActivity_applyFilterSharp(JNIEnv *env,
+                                                                             jobject thiz,
+                                                                             jlong img_input_address,
+                                                                             jlong img_output_address) {
+    Mat &imgInput = *(Mat *) img_input_address;
+    Mat &img_output = *(Mat *) img_output_address;
+
+    Mat locMat =  imgInput.clone();
+
+    Mat sharpening_kernel = (Mat_<double>(3, 3) << -1, -1, -1,
+            -1, 9, -1,
+            -1, -1, -1);
+    filter2D(imgInput, locMat, -1, sharpening_kernel);
+
+    if(img_output.data != nullptr)
+        img_output.release();//TODO input이랑 output이 같을경우 위험
+    img_output = locMat;
+
+}
+
+
+
+
+
+extern "C"
 JNIEXPORT void JNICALL
 Java_com_smu_songgulsongul_activity_EditImageDenoiseActivity_denoiseColorImage(JNIEnv *env,
                                                                             jobject thiz,
@@ -1011,7 +1038,50 @@ Java_com_smu_songgulsongul_activity_EditImageDenoiseActivity_denoiseColorImage(J
     if(img_output.data != nullptr)
         img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = locMat;
-}extern "C"
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_smu_songgulsongul_activity_EditImageDenoiseActivity_denoiseColorImageMedianFiltering(
+        JNIEnv *env, jobject thiz, jlong input_image_address, jlong output_image_address,
+        jint luminance_progress, jint color_progress) {
+    Mat &imgInput = *(Mat *) input_image_address;
+    Mat &img_output = *(Mat *) output_image_address;
+
+    Mat locMat = Mat();
+    int ksize = luminance_progress/2;
+    if(ksize%2 != 1)
+        ksize += 1;
+    medianBlur(imgInput,locMat,ksize);
+
+
+    if(img_output.data != nullptr)
+        img_output.release();//TODO input이랑 output이 같을경우 위험
+    img_output = locMat;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_smu_songgulsongul_activity_EditImageDenoiseActivity_denoiseColorImageGaussian(JNIEnv *env,
+                                                                                       jobject thiz,
+                                                                                       jlong input_image_address,
+                                                                                       jlong output_image_address,
+                                                                                       jint luminance_progress,
+                                                                                       jint color_progress) {
+    Mat &imgInput = *(Mat *) input_image_address;
+    Mat &img_output = *(Mat *) output_image_address;
+
+    Mat locMat = Mat();
+
+    int ksize = luminance_progress/2;
+    if(ksize%2 != 1)
+        ksize += 1;
+    GaussianBlur(imgInput,locMat,Size(ksize,ksize),1.5);
+
+    if(img_output.data != nullptr)
+        img_output.release();//TODO input이랑 output이 같을경우 위험
+    img_output = locMat;
+}
+
+extern "C"
 JNIEXPORT void JNICALL
 Java_com_smu_songgulsongul_ImageUtil_maxSize2048(JNIEnv *env, jclass clazz, jlong input_image_address,
                                               jlong output_image_address) {

@@ -128,7 +128,7 @@ public class EditActivity extends AppCompatActivity {
         editHistogram = findViewById(R.id.edit_image_histogram);
         editDenoise = findViewById(R.id.edit_image_denoise);
         editShadowRemove = findViewById(R.id.edit_image_shadow);
-        editAddWeight = findViewById(R.id.edit_image_addWeight);
+        //editAddWeight = findViewById(R.idksg.edit_image_addWeight);
 
         filePath = getIntent().getStringExtra("path");
         sourceFilePath = getIntent().getStringExtra("sourceFilePath");
@@ -230,6 +230,7 @@ public class EditActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        /*
         editAddWeight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
@@ -238,7 +239,7 @@ public class EditActivity extends AppCompatActivity {
                 intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
                 startActivity(intent);
             }
-        });
+        });*/
         editShadowRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
