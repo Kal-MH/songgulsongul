@@ -7,8 +7,18 @@ public class User {
         this.img_profile = img_profile;
     }
 
+    public User(String userId, String img_profile, String intro, String sns, int point, int sns_check) {
+        this.userId = userId;
+        this.img_profile = img_profile;
+        this.intro = intro;
+        this.sns = sns;
+        this.point = point;
+        this.sns_check = sns_check;
+    }
+
     int user_id;
     String login_id;
+    String userId;
     String img_profile;
     String intro;
     String sns;
@@ -51,5 +61,9 @@ public class User {
 
     public String getImg_profile() {
         return img_profile;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }
