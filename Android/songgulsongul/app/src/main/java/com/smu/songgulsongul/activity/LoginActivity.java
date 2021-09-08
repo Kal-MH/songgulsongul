@@ -83,9 +83,9 @@ public class LoginActivity extends AppCompatActivity {
                 passsword.trim();
 
                 //opencv Debug Pass code! need to remove
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                startActivity(intent);
-                finish();
+                //Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                //startActivity(intent);
+                //finish();
 
 
                 // 입력한 아이디가 공백값일 경우 --> 서버 통신 x
