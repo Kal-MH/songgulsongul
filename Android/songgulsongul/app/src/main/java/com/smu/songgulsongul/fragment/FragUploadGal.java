@@ -44,7 +44,7 @@ public class FragUploadGal extends Fragment {
     Cursor cursor;
     int columnIndex;
     int columnDisplayname;
-    int offset = 9;
+    int offset = 12;
 
 
     Display display;

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,12 +41,14 @@ public class EditImageHistogramActivity extends AppCompatActivity {
     Mat previewImage;
     Bitmap previewImageBitmap;
 
+    SeekBar alpha;
+
     editHistogramMod selectedHistogramMod = editHistogramMod.None;
 
     // 기본히스토그램 평활화
-    public native void equalizeHistogram(long inputImgAddress, long outputImgAddress);
+    public native void equalizeHistogram(long inputImgAddress, long outputImgAddress, int progress);
     // CLAHE(구역별) 히스토그램 평활화
-    public native void equalizeHistogramClahe(long inputImgAddress, long outputImgAddress);
+    public native void equalizeHistogramClahe(long inputImgAddress, long outputImgAddress, int progress);
 
     public void updatePreviewImageView(){
         if(previewImageBitmap!=null)
@@ -86,6 +89,7 @@ public class EditImageHistogramActivity extends AppCompatActivity {
         histogramDefault = findViewById(R.id.histogramDefault);
         histogramCLAHE = findViewById(R.id.histogramCLAHE);
 
+        alpha = findViewById(R.id.seekBarAlpha);
 
 
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
@@ -132,7 +136,7 @@ public class EditImageHistogramActivity extends AppCompatActivity {
                 locMat.release();*/
                 previewImage.release();
                 previewImage = new Mat(editingImageAddress).clone();
-                equalizeHistogram(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr());
+                equalizeHistogram(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr(), alpha.getProgress());
                 updatePreviewImageView();
             }
         });
@@ -156,8 +160,37 @@ public class EditImageHistogramActivity extends AppCompatActivity {
                 selectedHistogramMod = editHistogramMod.CLAHE;
                 previewImage.release();
                 previewImage = new Mat(editingImageAddress).clone();
-                equalizeHistogramClahe(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr());
+                equalizeHistogramClahe(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr(), alpha.getProgress());
                 updatePreviewImageView();
+            }
+        });
+
+        alpha.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                previewImage.release();
+                previewImage = new Mat(editingImageAddress).clone();
+                switch (selectedHistogramMod){
+                    case None: //do nothing
+                        break;
+                    case Default: equalizeHistogram(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr(), progress);
+                        break;
+                    case CLAHE: equalizeHistogramClahe(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr(), progress);
+                        break;
+                    default:
+                        break;
+                }
+                updatePreviewImageView();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
@@ -170,9 +203,9 @@ public class EditImageHistogramActivity extends AppCompatActivity {
                 switch (selectedHistogramMod){
                     case None: //do nothing
                         break;
-                    case Default: equalizeHistogram(editingImageAddress,editingImageAddress);
+                    case Default: equalizeHistogram(editingImageAddress,editingImageAddress,alpha.getProgress());
                         break;
-                    case CLAHE: equalizeHistogramClahe(editingImageAddress,editingImageAddress);
+                    case CLAHE: equalizeHistogramClahe(editingImageAddress,editingImageAddress,alpha.getProgress());
                         break;
                     default:
                         break;

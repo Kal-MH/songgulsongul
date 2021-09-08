@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,6 +44,9 @@ public class EditActivity extends AppCompatActivity {
     LinearLayout editDenoise;
     LinearLayout editFilter;
     LinearLayout editTransparency;
+    LinearLayout editShadowRemove;
+    LinearLayout editAddWeight;
+
 
     long first_time = 0;
     long second_time = 0;
@@ -123,6 +127,8 @@ public class EditActivity extends AppCompatActivity {
         editFilter = findViewById(R.id.edit_image_filter);
         editHistogram = findViewById(R.id.edit_image_histogram);
         editDenoise = findViewById(R.id.edit_image_denoise);
+        editShadowRemove = findViewById(R.id.edit_image_shadow);
+        //editAddWeight = findViewById(R.idksg.edit_image_addWeight);
 
         filePath = getIntent().getStringExtra("path");
         sourceFilePath = getIntent().getStringExtra("sourceFilePath");
@@ -134,6 +140,13 @@ public class EditActivity extends AppCompatActivity {
         croppedImageAddress = getIntent().getLongExtra("croppedImageAddress", 0x00);
         //editingImage = new Mat(croppedImageAddress).clone();
         editingImage =  ((songgul)getApplication()).getCroppedMat().clone();
+
+
+        //fix many channel issues
+        Imgproc.cvtColor(editingImage,editingImage,Imgproc.COLOR_RGB2HSV);
+        Imgproc.cvtColor(editingImage,editingImage,Imgproc.COLOR_HSV2RGB);
+
+
         ((songgul)getApplication()).setEditingMat(editingImage);
         setImageViewFromMat();
 
@@ -217,6 +230,26 @@ public class EditActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        /*
+        editAddWeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent( EditActivity.this , EditImageAddWeightActivity.class);
+                intent.putExtra("path", filePath);
+                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                startActivity(intent);
+            }
+        });*/
+        editShadowRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent( EditActivity.this , EditImageRemoveShadowActivity.class);
+                intent.putExtra("path", filePath);
+                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                startActivity(intent);
+            }
+        });
+
 
 
 
