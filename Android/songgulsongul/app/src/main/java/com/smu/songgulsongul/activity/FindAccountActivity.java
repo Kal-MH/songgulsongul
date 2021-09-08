@@ -31,6 +31,9 @@ import com.smu.songgulsongul.fragment.FragFindId;
 import com.smu.songgulsongul.fragment.FragFindPw;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
+import com.smu.songgulsongul.server.StatusCode;
+
+import javax.net.ssl.SSLEngineResult;
 
 public class FindAccountActivity extends AppCompatActivity {
     // ServiceApi 객체 생성
@@ -38,10 +41,6 @@ public class FindAccountActivity extends AppCompatActivity {
 
     Button find_id_btn, find_pw_btn, find_account_btn;
     int flag = 1; // 아이디 찾기 mode
-
-    final int RESULT_OK = 200;
-    final int RESULT_CLIENT_ERR= 204;
-    final int RESULT_SERVER_ERR = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,8 +151,9 @@ public class FindAccountActivity extends AppCompatActivity {
                                     try {
                                         CodeResponse result = response.body();
                                         int resultCode = result.getCode();
+                                        Log.d("code", String.valueOf(resultCode));
 
-                                        if (resultCode == RESULT_OK) {
+                                        if (resultCode == StatusCode.RESULT_OK) {
                                             new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setMessage("이메일로 아이디를 전송하였습니다.")
                                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -163,7 +163,7 @@ public class FindAccountActivity extends AppCompatActivity {
                                                         }
                                                     })
                                                     .show();
-                                        } else if (resultCode == RESULT_CLIENT_ERR) {
+                                        } else if (resultCode == StatusCode.RESULT_CLIENT_ERR) {
                                             new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setTitle("경고")
                                                     .setMessage("가입되지 않은 이메일입니다.")
@@ -174,7 +174,7 @@ public class FindAccountActivity extends AppCompatActivity {
                                                         }
                                                     })
                                                     .show();
-                                        } else if (resultCode == RESULT_SERVER_ERR) {
+                                        } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                             new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setTitle("경고")
                                                     .setMessage("에러가 발생했습니다." + "\n" + "다시 시도해주세요.")
@@ -258,7 +258,7 @@ public class FindAccountActivity extends AppCompatActivity {
                                         CodeResponse result = response.body();
                                         int resultCode = result.getCode();
 
-                                        if (resultCode == RESULT_OK) {
+                                        if (resultCode == StatusCode.RESULT_OK) {
                                             new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setMessage("이메일로 임시 비밀번호를 전송하였습니다.")
                                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -268,7 +268,7 @@ public class FindAccountActivity extends AppCompatActivity {
                                                         }
                                                     })
                                                     .show();
-                                        } else if (resultCode == RESULT_CLIENT_ERR) {
+                                        } else if (resultCode == StatusCode.RESULT_CLIENT_ERR) {
                                             new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setTitle("경고")
                                                     .setMessage("존재하지 않는 정보입니다." + "\n" + "이메일 또는 아이디를 확인해주세요.")
@@ -280,7 +280,7 @@ public class FindAccountActivity extends AppCompatActivity {
                                                         }
                                                     })
                                                     .show();
-                                        } else if (resultCode == RESULT_SERVER_ERR) {
+                                        } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                             new AlertDialog.Builder(FindAccountActivity.this)
                                                     .setTitle("경고")
                                                     .setMessage("에러가 발생했습니다." + "\n" + "다시 시도해주세요.")

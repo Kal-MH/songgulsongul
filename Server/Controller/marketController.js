@@ -256,8 +256,10 @@ const marketController = {
     var text = req.body.text;
     var price = Number(req.body.price);
     var user_id = Number(req.body.user_id);
-    var image = req.file.path;
-    image = "/"+image.replace(/\\/g, '/');
+    var image = req.file.location;
+
+    console.log(req.file);
+    console.log(image);
 
     var params = [image, name, text, price, user_id];
     var sql = 'INSERT INTO market(image, name, text, price, user_id) values(?, ?, ?, ?, ?);';

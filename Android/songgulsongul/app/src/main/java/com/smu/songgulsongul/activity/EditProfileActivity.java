@@ -13,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -41,12 +41,14 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.data.UserData;
 import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.responseData.ProfileResponse;
 import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -59,6 +61,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private RadioButton profile_sns_radio_yes, profile_sns_radio_no;
     private EditText profile_new_sns, profile_new_intro;
     private Button profile_img_change, profile_delete_account;
+    private TextView profile_edit_id;
     private ImageView profile_set_img;
     private static final int REQUEST_CODE = 0;
     private int profile_sns_check;
@@ -66,7 +69,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private int profile_modify_check;
     private int NO = 0;
     private int YES = 1;
-    final String DEFAULT_IMAGE = "/public/default/user.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +84,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
         login_id = LoginSharedPreference.getLoginId(EditProfileActivity.this);
 
-        profile_new_intro = (EditText)findViewById(R.id.profile_new_intro);
-        profile_new_sns = (EditText)findViewById(R.id.profile_new_sns);
+        profile_new_intro = (EditText) findViewById(R.id.profile_new_intro);
+        profile_new_sns = (EditText) findViewById(R.id.profile_new_sns);
+        profile_edit_id = findViewById(R.id.profile_edit_id);
         profile_img_change = findViewById(R.id.profile_img_chnage);
         profile_set_img = findViewById(R.id.profile_set_img);
         sns_radio = findViewById(R.id.profile_edit_sns_radio);
@@ -108,14 +111,14 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // sns 무 선택 -> 입력창 비활성화
 
-                if(checkedId == R.id.profile_sns_radio_no) {
+                if (checkedId == R.id.profile_sns_radio_no) {
                     profile_new_sns.setClickable(false);
                     profile_new_sns.setFocusable(false);
                     profile_new_sns.setHint("sns 계정 없음");
                     profile_new_sns.setText("");
                 }
                 // sns 유 선택 -> 입력창 활성화
-                else{
+                else {
                     profile_new_sns.setFocusableInTouchMode(true);
                     profile_new_sns.setFocusable(true);
                     profile_new_sns.setHint("sns 계정을 입력하세요");
@@ -144,17 +147,16 @@ public class EditProfileActivity extends AppCompatActivity {
                                         CodeResponse result = response.body();
                                         int resultCode = result.getCode();
 
-                                        if(resultCode == StatusCode.RESULT_OK){
+                                        if (resultCode == StatusCode.RESULT_OK) {
                                             Toast.makeText(EditProfileActivity.this, "회원 탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show();
                                             LoginSharedPreference.clearLogin(EditProfileActivity.this);
                                             Intent intent3 = new Intent(EditProfileActivity.this, LoginActivity.class);
                                             intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                             startActivity(intent3);
-                                        }
-                                        else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                                        } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                             new AlertDialog.Builder(EditProfileActivity.this)
                                                     .setTitle("경고")
-                                                    .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                                    .setMessage("에러가 발생했습니다." + "\n" + "다시 시도해주세요.")
                                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
@@ -180,7 +182,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
         intent.putExtra("userId", login_id);
         startActivity(intent);
@@ -204,16 +206,16 @@ public class EditProfileActivity extends AppCompatActivity {
                 RequestBody requestFile;
                 MultipartBody.Part body;
 
-                if(sns_radio.getCheckedRadioButtonId() == R.id.profile_sns_radio_no)
+                if (sns_radio.getCheckedRadioButtonId() == R.id.profile_sns_radio_no)
                     profile_sns_check = NO;
-                else if(sns_radio.getCheckedRadioButtonId() == R.id.profile_sns_radio_yes)
+                else if (sns_radio.getCheckedRadioButtonId() == R.id.profile_sns_radio_yes)
                     profile_sns_check = YES;
 
                 String new_sns = profile_new_sns.getText().toString().trim();
 
                 HashMap<String, RequestBody> requestMap = getMapData(profile_sns_check, profile_modify_check, login_id, new_intro, new_sns);
 
-                if(!profile_img_old.equals(profile_img_path)) {
+                if (!profile_img_old.equals(profile_img_path)) {
                     profile_modify_check = YES;
                     File file = new File(profile_img_path); // 변경한 프로필 이미지
                     requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
@@ -222,54 +224,49 @@ public class EditProfileActivity extends AppCompatActivity {
                     // 기존 프로필 이미지
                     RequestBody old_profile_body = RequestBody.create(MediaType.parse("text/plain"), profile_img_old);
                     requestMap.put("old_profile_img", old_profile_body);
-                }
-                else {
+                } else {
                     profile_modify_check = NO;
                     requestFile = RequestBody.create(MediaType.parse("image/jpeg"), profile_img_path);
                     body = MultipartBody.Part.createFormData("img_profile", profile_img_path);
                 }
 
-                if(profile_sns_check == YES && new_sns.getBytes().length <= 0){
-                        new AlertDialog.Builder(EditProfileActivity.this)
-                                .setMessage("SNS계정을 입력해주세요.")
-                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                if (profile_sns_check == YES && new_sns.getBytes().length <= 0) {
+                    new AlertDialog.Builder(EditProfileActivity.this)
+                            .setMessage("SNS계정을 입력해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                    }
-                                })
-                                .show();
-                }
-
-                else{
+                                }
+                            })
+                            .show();
+                } else {
                     serviceApi.EditProfile(requestMap, body).enqueue(new Callback<CodeResponse>() {
                         @Override
                         public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                             CodeResponse result = response.body();
                             int resultCode = result.getCode();
 
-                            if(resultCode == StatusCode.RESULT_OK){
+                            if (resultCode == StatusCode.RESULT_OK) {
                                 Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
                                 intent.putExtra("userId", login_id);
                                 startActivity(intent);
                                 finish();
                                 Toast.makeText(EditProfileActivity.this, "프로필 수정 완료!", Toast.LENGTH_SHORT).show();
-                            }
-                            else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
+                            } else if (resultCode == StatusCode.RESULT_CLIENT_ERR) {
                                 new AlertDialog.Builder(EditProfileActivity.this)
                                         .setTitle("경고")
-                                        .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                                        .setMessage("에러가 발생했습니다." + "\n" + "다시 시도해주세요.")
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                             }
                                         })
                                         .show();
-                            }
-                            else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                            } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                 new AlertDialog.Builder(EditProfileActivity.this)
                                         .setTitle("경고")
-                                        .setMessage("Server Err."+"\n"+"다시 시도해주세요.")
+                                        .setMessage("Server Err." + "\n" + "다시 시도해주세요.")
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
@@ -294,10 +291,10 @@ public class EditProfileActivity extends AppCompatActivity {
                 onBackPressed();
                 break;
         }
-        return  true;
+        return true;
     }
 
-    public HashMap<String, RequestBody> getMapData(int profile_sns_check, int profile_modify_check, String login_id, String new_intro, String new_SNS){
+    public HashMap<String, RequestBody> getMapData(int profile_sns_check, int profile_modify_check, String login_id, String new_intro, String new_SNS) {
         HashMap<String, RequestBody> requestMap = new HashMap<>();
 
         RequestBody sns_flag_body = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(profile_sns_check));
@@ -315,7 +312,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     //server에서 data전달
-    public void getProfileData(){
+    public void getProfileData() {
         UserData data = new UserData(login_id, 1);
         serviceApi.Profile(data).enqueue(new Callback<ProfileResponse>() {
             @Override
@@ -323,13 +320,12 @@ public class EditProfileActivity extends AppCompatActivity {
                 ProfileResponse result = response.body();
                 int resultCode = result.getCode();
 
-                if(resultCode == StatusCode.RESULT_OK){
+                if (resultCode == StatusCode.RESULT_OK) {
                     setProfileData(result);
-                }
-                else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                     new AlertDialog.Builder(EditProfileActivity.this)
                             .setTitle("경고")
-                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                            .setMessage("에러가 발생했습니다." + "\n" + "다시 시도해주세요.")
                             .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -352,19 +348,19 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void setProfileData(ProfileResponse data){
+    public void setProfileData(ProfileResponse data) {
         User user = data.getProfileInfo();
 
         profile_new_intro.setText(user.getIntro());
         profile_new_sns.setText(user.getSns());
-
-        profile_img_old =  user.getImg_profile();
+        profile_edit_id.setText(user.getUserId());
+        profile_img_old = user.getImg_profile();
         profile_img_path = profile_img_old;
 
         String img_addr;
         String base_url = RetrofitClient.getBaseUrl();
 
-        if(profile_img_old.equals(DEFAULT_IMAGE))
+        if (profile_img_old.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = base_url + profile_img_old;
         else
             img_addr = profile_img_old;
@@ -374,34 +370,33 @@ public class EditProfileActivity extends AppCompatActivity {
         int sns_check = user.getSnsCheck();
         Log.d("sns_check", String.valueOf(sns_check));
 
-        if(sns_check == NO){
-                profile_sns_radio_no.setChecked(true);
-                profile_sns_radio_yes.setChecked(false);
-                profile_new_sns.setClickable(false);
-                profile_new_sns.setFocusable(false);
-                profile_new_sns.setHint("sns 계정 없음");
-                profile_new_sns.setText("");
-            }
-        else{
-                profile_sns_radio_yes.setChecked(true);
-                profile_sns_radio_no.setChecked(false);
-                profile_new_sns.setFocusableInTouchMode(true);
-                profile_new_sns.setFocusable(true);
-                profile_new_sns.setHint("sns 계정을 입력하세요");
-            }
+        if (sns_check == NO) {
+            profile_sns_radio_no.setChecked(true);
+            profile_sns_radio_yes.setChecked(false);
+            profile_new_sns.setClickable(false);
+            profile_new_sns.setFocusable(false);
+            profile_new_sns.setHint("sns 계정 없음");
+            profile_new_sns.setText("");
+        } else {
+            profile_sns_radio_yes.setChecked(true);
+            profile_sns_radio_no.setChecked(false);
+            profile_new_sns.setFocusableInTouchMode(true);
+            profile_new_sns.setFocusable(true);
+            profile_new_sns.setHint("sns 계정을 입력하세요");
+        }
 
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1){
-            if(resultCode == RESULT_OK){
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
                 Uri uri = null;
-                if(data != null){
+                if (data != null) {
                     uri = data.getData();
                 }
-                if(uri != null){
+                if (uri != null) {
                     profile_set_img.setImageURI(uri);
                     profile_img_path = createCopyAndReturnRealPath(this, uri);
                     Log.d("img_path", profile_img_path);
@@ -411,10 +406,10 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     @Nullable
-    public static String createCopyAndReturnRealPath(@NonNull Context context, @NonNull Uri uri){
+    public static String createCopyAndReturnRealPath(@NonNull Context context, @NonNull Uri uri) {
         final ContentResolver contentResolver = context.getContentResolver();
 
-        if(contentResolver == null)
+        if (contentResolver == null)
             return null;
 
         String filePath = context.getApplicationInfo().dataDir + File.separator
@@ -431,9 +426,9 @@ public class EditProfileActivity extends AppCompatActivity {
             int len;
             while ((len = inputStream.read(buf)) > 0)
                 outputStream.write(buf, 0, len);
-                outputStream.close();
-                inputStream.close();
-        } catch (IOException e){
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
             return null;
         }
         return file.getAbsolutePath();
