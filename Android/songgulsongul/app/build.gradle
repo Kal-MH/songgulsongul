@@ -66,4 +66,7 @@ dependencies {
 
     //Toasty
     implementation 'com.github.GrenderG:Toasty:1.5.2'
+
+    //ReadMoreTextView
+    implementation 'kr.co.prnd:readmore-textview:1.0.0'
 }
