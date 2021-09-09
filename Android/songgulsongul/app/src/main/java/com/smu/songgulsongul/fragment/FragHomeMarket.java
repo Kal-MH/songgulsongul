@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -127,13 +128,13 @@ public  class FragHomeMarket extends Fragment {
 
                }
                else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                   Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                   Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                }
            }
 
            @Override
            public void onFailure(Call<MarketResponse> call, Throwable t) {
-               Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+               Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                Log.e("마켓 불러오기 에러", t.getMessage());
                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
            }
@@ -166,7 +167,7 @@ public  class FragHomeMarket extends Fragment {
 
                         }
                         else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                            Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                         }
 
                         isLoading = false;
@@ -175,7 +176,7 @@ public  class FragHomeMarket extends Fragment {
 
                     @Override
                     public void onFailure(Call<MarketResponse> call, Throwable t) {
-                        Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                         Log.e("마켓 불러오기 에러", t.getMessage());
                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                     }

@@ -3,6 +3,7 @@ package com.smu.songgulsongul.activity;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -43,6 +44,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -95,6 +97,8 @@ public class PostActivity extends AppCompatActivity {
     final int YES = 1;
     final int NO = 0;
 
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     int user_id, post_id, share_flag;
     String login_id, p_user_id, img_path, post_image;
@@ -222,11 +226,11 @@ public class PostActivity extends AppCompatActivity {
                                                             int resultCode = result.getCode();
 
                                                             if (resultCode == StatusCode.RESULT_OK) {
-                                                                Toast.makeText(getApplicationContext(), "게시글 삭제 완료!", Toast.LENGTH_SHORT).show();
+                                                                Toasty.custom(getApplicationContext(), "게시글 삭제 완료!", null, BackColor, FontColor, 2000, false, true).show();
                                                                 onBackPressed();
                                                                 finish();
                                                             } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
-                                                                Toast.makeText(getApplicationContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                                                Toasty.normal(getApplicationContext(), "서버와의 통신이 불안정합니다").show();
                                                             }
                                                         } catch (NullPointerException e){
                                                             new AlertDialog.Builder(PostActivity.this)
@@ -243,7 +247,7 @@ public class PostActivity extends AppCompatActivity {
 
                                                     @Override
                                                     public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                                        Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                                        Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                                                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                                                     }
                                                 });
@@ -288,16 +292,16 @@ public class PostActivity extends AppCompatActivity {
                             post_like_btn.setSelected(!post_like_btn.isSelected()); //버튼 반대로 체크
                         }
                         else if( resultCode == statusCode.RESULT_CLIENT_ERR){
-                            Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(PostActivity.this, "잘못된 접근입니다").show();
                         }
                         else if( resultCode == statusCode.RESULT_SERVER_ERR){
-                            Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<CodeResponse> call, Throwable t) {
-                        Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                     }
                 });
@@ -318,25 +322,25 @@ public class PostActivity extends AppCompatActivity {
                                     keep = (keep==1)? 0 : 1;
                                     data.setKeepOnset(keep);
                                     if( keep == 1)
-                                        Toast.makeText(PostActivity.this, "보관함에 저장 되었습니다", Toast.LENGTH_SHORT).show();
+                                        Toasty.custom(PostActivity.this, "보관함에 저장 되었습니다", null, BackColor, FontColor, 2000, false, true).show();
                                     else
-                                        Toast.makeText(PostActivity.this, "보관함에서 삭제 되었습니다", Toast.LENGTH_SHORT).show();
+                                        Toasty.custom(PostActivity.this, "보관함에서 삭제 되었습니다", null, BackColor, FontColor, 2000, false, true).show();
 
 
                                     post_keep_btn.setSelected(!post_keep_btn.isSelected());
 
                                 }
                                 else if( resultCode == statusCode.RESULT_CLIENT_ERR){
-                                    Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(PostActivity.this, "잘못된 접근입니다").show();
                                 }
                                 else if( resultCode == statusCode.RESULT_SERVER_ERR){
-                                    Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                             }
                         });
@@ -397,16 +401,16 @@ public class PostActivity extends AppCompatActivity {
                             sendCommentNoti();
                         }
                         else if( resultCode == statusCode.RESULT_CLIENT_ERR){
-                            Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(PostActivity.this, "잘못된 접근입니다").show();
                         }
                         else if( resultCode == statusCode.RESULT_SERVER_ERR){
-                            Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<CodeResponse> call, Throwable t) {
-                        Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                     }
                 });
@@ -462,12 +466,12 @@ public class PostActivity extends AppCompatActivity {
 
                 }
                 else if(resultCode == statusCode.RESULT_SERVER_ERR){
-                    Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                     // 빈화면 말고 다른행동..
 
                 }
                 else {
-                    Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(PostActivity.this, "잘못된 접근입니다").show();
 
                 }
             }
@@ -476,7 +480,7 @@ public class PostActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PostResponse> call, Throwable t) {
-                Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
@@ -800,20 +804,20 @@ public class PostActivity extends AppCompatActivity {
                 int resultCode = response.body().getCode();
                 if( resultCode == statusCode.RESULT_OK){
                     //다시 불러오기.. 아니면 댓글만 가져오는 코드 짜야함!
-                    Toast.makeText(PostActivity.this, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.custom(PostActivity.this, "댓글이 삭제되었습니다", null, BackColor, FontColor, 2000, false, true).show();
                     getData();
                 }
                 else if( resultCode == statusCode.RESULT_CLIENT_ERR){
-                    Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(PostActivity.this, "잘못된 접근입니다").show();
                 }
                 else if( resultCode == statusCode.RESULT_SERVER_ERR){
-                    Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                 }
             }
 
             @Override
             public void onFailure(Call<CodeResponse> call, Throwable t) {
-                Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
@@ -832,12 +836,12 @@ public class PostActivity extends AppCompatActivity {
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                Toast.makeText(PostActivity.this, "성공!!", Toast.LENGTH_SHORT).show();
+                Toasty.custom(PostActivity.this, "성공!!", null, BackColor, FontColor, 2000, false, true).show();
             }
 
             @Override
             public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(PostActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
+                Toasty.normal(PostActivity.this, "onFailure").show();
             }
         });
 
@@ -855,12 +859,12 @@ public class PostActivity extends AppCompatActivity {
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                Toast.makeText(PostActivity.this, "성공!!", Toast.LENGTH_SHORT).show();
+                Toasty.custom(PostActivity.this, "성공!!", null, BackColor, FontColor, 2000, false, true).show();
             }
 
             @Override
             public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(PostActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
+                Toasty.normal(PostActivity.this, "onFailure").show();
             }
         });
     }

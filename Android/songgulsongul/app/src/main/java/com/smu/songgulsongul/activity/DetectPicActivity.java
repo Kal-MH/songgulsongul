@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import org.opencv.core.Mat;
 import com.smu.songgulsongul.ImageUtil;import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.songgul;
 
+import es.dmoral.toasty.Toasty;
+
 public class DetectPicActivity extends AppCompatActivity {
 
     String filePath;
@@ -38,6 +41,9 @@ public class DetectPicActivity extends AppCompatActivity {
     Toolbar toolbar;
     CropImageView cropImageView;
     Button okbtn, rotateBtn;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     long first_time = 0;
     long second_time = 0;
@@ -189,7 +195,7 @@ public class DetectPicActivity extends AppCompatActivity {
             finish();
         }
         else{
-            Toast.makeText(this,"한번 더 누르면 편집을 종료합니다", Toast.LENGTH_SHORT).show();
+            Toasty.custom(this, "한번 더 누르면 편집을 종료합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
     }

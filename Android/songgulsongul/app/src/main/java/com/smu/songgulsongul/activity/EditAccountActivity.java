@@ -2,6 +2,7 @@ package com.smu.songgulsongul.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,6 +49,9 @@ public class EditAccountActivity extends AppCompatActivity {
     int id_check, id_modify_check, pw_check, pw_check_flag;
     private int NO = 0;
     private int YES = 1;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +149,7 @@ public class EditAccountActivity extends AppCompatActivity {
                                         Intent intent = new Intent(EditAccountActivity.this, ProfileActivity.class);
                                         LoginSharedPreference.changeLoginId(EditAccountActivity.this, new_id);
 
-                                        Toast.makeText(EditAccountActivity.this, "아이디 변경 완료!", Toast.LENGTH_SHORT).show();
+                                        Toasty.custom(EditAccountActivity.this, "아이디 변경 완료!", null, BackColor, FontColor, 2000, false, true).show();
                                         intent.putExtra("userId", new_id);
                                         startActivity(intent);
                                         finish();
@@ -165,7 +170,7 @@ public class EditAccountActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                    Toast.makeText(EditAccountActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(EditAccountActivity.this, "서버와의 통신이 불안정합니다").show();
                                     Log.e("아이디 변경 에러", t.getMessage());
                                     t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                                 }
@@ -231,13 +236,13 @@ public class EditAccountActivity extends AppCompatActivity {
                                         Intent intent = new Intent(EditAccountActivity.this, LoginActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
-                                        Toast.makeText(EditAccountActivity.this, "비밀번호 변경 완료!" + "\n"+"재로그인이 필요합니다.", Toast.LENGTH_LONG).show();
+                                        Toasty.custom(EditAccountActivity.this, "비밀번호 변경 완료!" + "\n"+"재로그인이 필요합니다.", null, BackColor, FontColor, 2000, false, true).show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                    Toast.makeText(EditAccountActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(EditAccountActivity.this, "서버와의 통신이 불안정합니다").show();
                                     Log.e("비밀번호 변경 에러", t.getMessage());
                                     t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                                 }

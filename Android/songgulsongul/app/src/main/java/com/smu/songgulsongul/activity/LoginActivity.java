@@ -3,6 +3,7 @@ package com.smu.songgulsongul.activity;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
     Button login_btn;
     EditText login_username, login_pw;
 
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                                 int user_id = result.getId();
                                 LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
                                 setToken();
-                                Toast.makeText(LoginActivity.this, "출석체크 되었습니다!", Toast.LENGTH_SHORT).show();
+                                Toasty.custom(LoginActivity.this, "출석체크 되었습니다!", null, BackColor, FontColor, 2000, false, true).show();
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -140,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                                 int user_id = result.getId();
                                 LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
                                 setToken();
-                                Toast.makeText(LoginActivity.this, "반갑습니다!", Toast.LENGTH_SHORT).show();
+                                Toasty.custom(LoginActivity.this, "반갑습니다!", null, BackColor, FontColor, 2000, false, true).show();
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -159,13 +163,13 @@ public class LoginActivity extends AppCompatActivity {
                                 login_pw.setText(null);
                             }
                             else {
-                                Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                Toasty.normal(LoginActivity.this, "서버와의 통신이 불안정합니다").show();
                             }
                         }
 
                         @Override
                         public void onFailure(Call<LoginResponse> call, Throwable t) {
-                            Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(LoginActivity.this, "서버와의 통신이 불안정합니다").show();
                             Log.e("로그인 에러", t.getMessage());
                             t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                         }
@@ -218,13 +222,13 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
 
-                                    Toast.makeText(LoginActivity.this, "기기를 등록했습니다", Toast.LENGTH_SHORT).show();
+                                    Toasty.custom(LoginActivity.this, "기기를 등록했습니다", null, BackColor, FontColor, 2000, false, true).show();
 
                                 }
                                 @Override
                                 public void onFailure(Call<CodeResponse> call, Throwable t) {
 
-                                    Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(LoginActivity.this, "서버와의 통신이 불안정합니다").show();
                                     Log.e("Token" , "등록 실패");
                                 }
 

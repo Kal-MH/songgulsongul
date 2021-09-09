@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import java.util.regex.Pattern;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -186,7 +187,7 @@ public class FindAccountActivity extends AppCompatActivity {
                                                     })
                                                     .show();
                                         } else {
-                                            Toast.makeText(FindAccountActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                            Toasty.normal(FindAccountActivity.this, "서버와의 통신이 불안정합니다").show();
                                         }
                                     }catch (NullPointerException e){
                                         new AlertDialog.Builder(FindAccountActivity.this)
@@ -204,7 +205,7 @@ public class FindAccountActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                    Toast.makeText(FindAccountActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(FindAccountActivity.this, "서버와의 통신이 불안정합니다").show();
                                     Log.e("아이디 찾기 에러", t.getMessage());
                                     t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                                 }
@@ -293,7 +294,7 @@ public class FindAccountActivity extends AppCompatActivity {
                                                     })
                                                     .show();
                                         } else {
-                                            Toast.makeText(FindAccountActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                            Toasty.normal(FindAccountActivity.this, "서버와의 통신이 불안정합니다").show();
                                         }
                                     } catch (NullPointerException e){
                                         new AlertDialog.Builder(FindAccountActivity.this)
@@ -311,7 +312,7 @@ public class FindAccountActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                    Toast.makeText(FindAccountActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(FindAccountActivity.this, "서버와의 통신이 불안정합니다").show();
                                     Log.e("비밀번호 찾기 에러", t.getMessage());
                                     t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                                 }

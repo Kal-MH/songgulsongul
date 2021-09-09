@@ -4,6 +4,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,6 +26,7 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,6 +48,9 @@ public class StickerDetailActivity extends AppCompatActivity {
     ImageView sticker_img, sticker_profile;
     TextView sticker_name, sticker_price, sticker_com, sticker_seller;
     String file_name, img_path, seller_id;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +132,7 @@ public class StickerDetailActivity extends AppCompatActivity {
                                                         .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, file_name);
                                                 mgr.enqueue(request);
 
-                                                Toast.makeText(StickerDetailActivity.this, "구매 완료!", Toast.LENGTH_SHORT).show();
+                                                Toasty.custom(StickerDetailActivity.this, "구매 완료!", null, BackColor, FontColor, 2000, false, true).show();
 
                                                 // 포인트가 차감 되었으므로 새로고침
                                                 Intent intent = getIntent();
@@ -149,7 +154,7 @@ public class StickerDetailActivity extends AppCompatActivity {
 
                                         @Override
                                         public void onFailure(Call<JsonObject> call, Throwable t) {
-                                            Toast.makeText(StickerDetailActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                            Toasty.normal(StickerDetailActivity.this, "서버와의 통신이 불안정합니다").show();
                                             Log.e("스티커 구매 에러", t.getMessage());
                                             t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                                         }
@@ -226,7 +231,7 @@ public class StickerDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MarketDetailResponse> call, Throwable t) {
-                Toast.makeText(StickerDetailActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(StickerDetailActivity.this, "서버와의 통신이 불안정합니다").show();
                 Log.e("스티커 상세 보기에러", t.getMessage());
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }

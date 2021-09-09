@@ -3,6 +3,7 @@ package com.smu.songgulsongul.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.Spannable;
@@ -28,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -128,12 +130,12 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                             responseBodyCall.enqueue(new Callback<ResponseBody>() {
                                                 @Override
                                                 public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                                                    Toast.makeText(context, "성공!!", Toast.LENGTH_SHORT).show();
+                                                    Toasty.custom(context, "성공!!", null, Color.parseColor("#BFB1D8"), Color.parseColor("#000000"), 2000, false, true);
                                                 }
 
                                                 @Override
                                                 public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
-                                                    Toast.makeText(context, "onFailure", Toast.LENGTH_SHORT).show();
+                                                    Toasty.normal(context, "onFailure").show();
                                                 }
                                             });
 
@@ -143,16 +145,16 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         notifyItemChanged(position);
                                     }
                                     else if( resultCode == statusCode.RESULT_CLIENT_ERR){
-                                        Toast.makeText(context, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                                        Toasty.normal(context, "잘못된 접근입니다.").show();
                                     }
                                     else if( resultCode == statusCode.RESULT_SERVER_ERR){
-                                        Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                        Toasty.normal(context, "서버와의 통신이 불안정합니다.").show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                    Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(context, "서버와의 통신이 불안정합니다.").show();
                                     t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                                 }
                             });
@@ -175,21 +177,22 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         item.setKeepOnset(keep);
                                         notifyItemChanged(position);
                                         if( keep == 1)
-                                            Toast.makeText(context, "보관함에 저장 되었습니다", Toast.LENGTH_SHORT).show();
+                                            Toasty.custom(context, "보관함에 저장 되었습니다", null, Color.parseColor("#BFB1D8"), Color.parseColor("#000000"), 2000, false, true);
                                         else
-                                            Toast.makeText(context, "보관함에서 삭제 되었습니다", Toast.LENGTH_SHORT).show();
+                                            Toasty.custom(context, "보관함에서 삭제 되었습니다", null, Color.parseColor("#BFB1D8"), Color.parseColor("#000000"), 2000, false, true);
                                     }
                                     else if( resultCode == statusCode.RESULT_CLIENT_ERR){
-                                        Toast.makeText(context, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                                        Toasty.normal(context, "잘못된 접근입니다.").show();
+
                                     }
                                     else if( resultCode == statusCode.RESULT_SERVER_ERR){
-                                        Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                        Toasty.normal(context, "서버와의 통신이 불안정합니다.").show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                    Toast.makeText(context, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(context, "서버와의 통신이 불안정합니다.").show();
                                     t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                                 }
                             });
