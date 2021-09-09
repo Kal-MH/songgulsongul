@@ -97,7 +97,7 @@ public class EditActivity extends AppCompatActivity {
 
         File tempFile = null;
         try {
-            tempFile = File.createTempFile(name, null, getCacheDir());
+            tempFile = File.createTempFile(name, ".jpeg", getCacheDir());
 
             FileOutputStream out = new FileOutputStream(tempFile);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
