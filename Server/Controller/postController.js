@@ -321,7 +321,7 @@ const postController = {
             var ccl = req.body.ccl;
             var updatePostParams = [req.body.text, ccl[0], ccl[1], ccl[2], ccl[3], ccl[4]];
             var updatePostSql = `update post set text=?, ccl_cc=?, ccl_a=?, ccl_nc=?, ccl_nd=?, ccl_sa=? where id = ${postId};`;
-            connection.query(updatePostSql, req.body.ccl, function (err, result) {
+            connection.query(updatePostSql, updatePostParams, function (err, result) {
                 if (err) {
                     console.log(err);
                     res.json({
