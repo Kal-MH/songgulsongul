@@ -4,19 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -30,13 +24,13 @@ import java.util.Date;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
+import kr.co.prnd.readmore.ReadMoreTextView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.activity.HomeActivity;
 import com.smu.songgulsongul.activity.PostActivity;
 import com.smu.songgulsongul.activity.ProfileActivity;
 import com.smu.songgulsongul.data.NotificationData;
@@ -221,7 +215,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             ((ItemViewHolder) holder).comment.setOnClickListener(goPostActivity);
             ((ItemViewHolder) holder).picture.setOnClickListener(goPostActivity);
-            ((ItemViewHolder) holder).text.setOnClickListener(goPostActivity);
 
             ((ItemViewHolder) holder).user_id.setOnClickListener(goProfile);
             ((ItemViewHolder) holder).profile_image.setOnClickListener(goProfile);
@@ -256,17 +249,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         // 받아온 데이터로 게시글 내용 셋팅
         String text = post.getText();
-        if(text.length() > 15) {// text가 15자 이상일 때
-            text = text.substring(0, 15);
-            text += " ...더 보기";
-            SpannableString newText= new SpannableString(text);
-            newText.setSpan(new ForegroundColorSpan(R.color.inkLightGrey), 15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            newText.setSpan(new StyleSpan(Typeface.ITALIC),15, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            holder.text.setText(newText); // 글 내용(15자 이상)
-        }
-        else{
-            holder.text.setText(text); // 글 내용(15자 이하)
-        }
+        holder.text.setText(text);
 
         if( date.format(today).equals((post.getPost_date()))) {
             int hour = Integer.parseInt(post.getPost_time().substring(0,2));
@@ -325,7 +308,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView favorite;
         TextView favorite_counter;
         TextView comment_counter;
-        TextView text;
+        ReadMoreTextView text;
         ImageView keep;
         ImageView comment;
 
@@ -337,7 +320,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             picture=(ImageView)itemView.findViewById(R.id.feed_item_pic);
             favorite_counter=(TextView)itemView.findViewById(R.id.feed_item_like_cnt);
             comment_counter=(TextView)itemView.findViewById(R.id.feed_item_com_cnt);
-            text=(TextView)itemView.findViewById(R.id.feed_item_text);
+            text=(ReadMoreTextView)itemView.findViewById(R.id.feed_item_text);
             favorite = (ImageView)itemView.findViewById(R.id.feed_item_like);
             keep = (ImageView)itemView.findViewById(R.id.feed_item_keep);
             comment = (ImageView)itemView.findViewById(R.id.feed_item_com);
