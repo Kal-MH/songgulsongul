@@ -278,8 +278,8 @@ const postController = {
                 ccl[i] = ccl[i] * 1;
 
             var updatePointinsertPostSql = `insert into post (image, text, post_time, post_date, user_id, ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa)
-            values (?, '${text}', curtime(), curdate(), ${loggedUser}, ?);`;
-            var insertPostParams = [postImages, req.body.ccl];
+            values ('${postImages}', ?, curtime(), curdate(), ${loggedUser}, ?);`;
+            var insertPostParams = [text, req.body.ccl];
 
             //current date 계산
             var date = new Date();
@@ -318,7 +318,9 @@ const postController = {
 
             console.log(req.body);
 
-            var updatePostSql = `update post set text='${req.body.text}', ccl_cc=?, ccl_a=?, ccl_nc=?, ccl_nd=?, ccl_sa=? where id = ${postId};`;
+            var ccl = req.body.ccl;
+            var updatePostParams = [req.body.text, ccl[0], ccl[1], ccl[2], ccl[3], ccl[4]];
+            var updatePostSql = `update post set text=?, ccl_cc=?, ccl_a=?, ccl_nc=?, ccl_nd=?, ccl_sa=? where id = ${postId};`;
             connection.query(updatePostSql, req.body.ccl, function (err, result) {
                 if (err) {
                     console.log(err);
