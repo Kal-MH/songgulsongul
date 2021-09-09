@@ -2,6 +2,7 @@ package com.smu.songgulsongul.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,7 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -53,6 +55,9 @@ public class MarketUploadActivity extends AppCompatActivity {
 
     long first_time = 0;
     long second_time = 0;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -122,7 +127,7 @@ public class MarketUploadActivity extends AppCompatActivity {
             finish();
         }
         else{
-            Toast.makeText(this,"한번 더 누르면 업로드를 종료합니다", Toast.LENGTH_SHORT).show();
+            Toasty.custom(this, "한번 더 누르면 업로드를 종료합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
     }
@@ -174,7 +179,7 @@ public class MarketUploadActivity extends AppCompatActivity {
                             int sticker_id = result.get("market_id").getAsInt();
 
                             if (resultCode == StatusCode.RESULT_OK) {
-                                Toast toast = Toast.makeText(MarketUploadActivity.this, "업로드 완료", Toast.LENGTH_SHORT);
+                                Toast toast = Toasty.custom(MarketUploadActivity.this, "업로드 완료", null, BackColor, FontColor, 2000, false, true);
                                 toast.show();
                                 Intent intent = new Intent(MarketUploadActivity.this, StickerDetailActivity.class);
                                 intent.putExtra("sticker_id", sticker_id);
@@ -196,7 +201,7 @@ public class MarketUploadActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<JsonObject> call, Throwable t) {
-                            Toast.makeText(MarketUploadActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(MarketUploadActivity.this, "서버와의 통신이 불안정합니다").show();
                             Log.e("마켓 업로드 에러", t.getMessage());
                             t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                         }

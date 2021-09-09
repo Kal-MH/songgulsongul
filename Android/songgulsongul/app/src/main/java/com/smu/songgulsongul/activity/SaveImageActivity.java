@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +27,8 @@ import java.io.File;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.server.RetrofitClient;
 
+import es.dmoral.toasty.Toasty;
+
 public class SaveImageActivity extends Activity {
     boolean size_check;
     String post_image;
@@ -34,6 +37,8 @@ public class SaveImageActivity extends Activity {
     private File file, dir;
     private String fileName;
 
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +65,7 @@ public class SaveImageActivity extends Activity {
                 //Toast.makeText(SaveImageActivity.this, position+"번", Toast.LENGTH_SHORT).show();
                 if(position>0){
                     if(image.getWidth()<image_size[position-1]||image.getHeight()<image_size[position-1]){
-                        Toast.makeText(SaveImageActivity.this, "저장된 이미지의 화질이 저하될 수 있습니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.custom(SaveImageActivity.this, "저장된 이미지의 화질이 저하될 수 있습니다", null, BackColor, FontColor, 2000, false, true).show();
                         size_check = false;
                     }
                     else{
@@ -94,7 +99,7 @@ public class SaveImageActivity extends Activity {
                         public void onClick(DialogInterface dialog, int which) {
                             // 확인 버튼을 눌렸을 경우
                             DownloadImage();
-                            Toast.makeText(getApplicationContext(), "저장 성공!", Toast.LENGTH_SHORT).show();
+                            Toasty.custom(getApplicationContext(), "저장 성공!", null, BackColor, FontColor, 2000, false, true).show();
                             finish();
                         }
                     });
@@ -102,15 +107,14 @@ public class SaveImageActivity extends Activity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // 취소 버튼을 눌렸을 경우
-                            Toast.makeText(getApplicationContext(), "Pressed Cancle",
-                                    Toast.LENGTH_SHORT).show();
+                            Toasty.custom(getApplicationContext(), "Pressed Cancel", null, BackColor, FontColor, 2000, false, true).show();
                         }
                     });
                     // Alert를 생성해주고 보여주는 메소드(show를 선언해야 Alert가 생성됨)
                     myAlertBuilder.show();
                 } else {
                     DownloadImage();
-                    Toast.makeText(SaveImageActivity.this, "저장 성공!", Toast.LENGTH_SHORT).show();
+                    Toasty.custom(SaveImageActivity.this, "저장 성공!", null, BackColor, FontColor, 2000, false, true).show();
                     finish();
                 }
             }

@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -129,13 +130,13 @@ public class FragFollowing extends Fragment {
                             .show();
                 }
                 else{
-                    Toast.makeText(getContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(getContext(), "서버와의 통신이 불안정합니다.").show();
                 }
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Toast.makeText(getContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(getContext(), "서버와의 통신이 불안정합니다.").show();
                 Log.e("팔로우 리스트 불러오기 에러", t.getMessage());
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
@@ -195,13 +196,13 @@ public class FragFollowing extends Fragment {
                             .show();
                 }
                 else{
-                    Toast.makeText(getContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(getContext(), "서버와의 통신이 불안정합니다.").show();
                 }
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Toast.makeText(getContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(getContext(), "서버와의 통신이 불안정합니다.").show();
                 Log.e("사용자 팔로우 리스트 불러오기 에러", t.getMessage());
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }

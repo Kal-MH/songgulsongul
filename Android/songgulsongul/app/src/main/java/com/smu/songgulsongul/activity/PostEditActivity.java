@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -79,6 +81,9 @@ public class PostEditActivity extends AppCompatActivity {
 
     final int ON = 1;
     final int OFF = 0;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -179,7 +184,7 @@ public class PostEditActivity extends AppCompatActivity {
                             int resultCode = result.getCode();
 
                             if (resultCode == StatusCode.RESULT_OK) {
-                                Toast toast = Toast.makeText(PostEditActivity.this, "게시물 수정 완료!", Toast.LENGTH_SHORT);
+                                Toast toast = Toasty.custom(PostEditActivity.this, "게시물 수정 완료!", null, BackColor, FontColor, 2000, false, true);
                                 toast.show();
                             Intent intent = new Intent(PostEditActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동 (게시글 id 넘기기)
                             intent.putExtra("post_id", post_id);
@@ -211,7 +216,7 @@ public class PostEditActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<CodeResponse> call, Throwable t) {
-                        Toast.makeText(PostEditActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.normal(PostEditActivity.this, "서버와의 통신이 불안정합니다").show();
                         Log.e("게시글 업로드 에러", t.getMessage());
                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                     }
@@ -240,19 +245,19 @@ public class PostEditActivity extends AppCompatActivity {
 
                 }
                 else if(resultCode == statusCode.RESULT_SERVER_ERR){
-                    Toast.makeText(PostEditActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(PostEditActivity.this, "서버와의 통신이 불안정합니다").show();
                     // 빈화면 말고 다른행동..
 
                 }
                 else {
-                    Toast.makeText(PostEditActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(PostEditActivity.this, "잘못된 접근입니다").show();
 
                 }
             }
 
             @Override
             public void onFailure(Call<PostResponse> call, Throwable t) {
-                Toast.makeText(PostEditActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(PostEditActivity.this, "서버와의 통신이 불안정합니다").show();
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });

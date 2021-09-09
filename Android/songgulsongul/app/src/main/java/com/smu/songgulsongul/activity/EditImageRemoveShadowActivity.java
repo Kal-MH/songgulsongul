@@ -1,6 +1,7 @@
 package com.smu.songgulsongul.activity;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,8 @@ import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
 import com.smu.songgulsongul.R;
+
+import es.dmoral.toasty.Toasty;
 
 public class EditImageRemoveShadowActivity extends AppCompatActivity {
     long first_time = 0;
@@ -36,6 +39,8 @@ public class EditImageRemoveShadowActivity extends AppCompatActivity {
 
     SeekBar seekBarAlpha;
 
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     public native void getShadowRemovedImage(long inputAdd, long outputAdd);
 
@@ -138,7 +143,7 @@ public class EditImageRemoveShadowActivity extends AppCompatActivity {
             finish();
         }
         else{
-            Toast.makeText(this,"한번 더 누르면 적용을 취소합니다", Toast.LENGTH_SHORT).show();
+            Toasty.custom(this, "한번 더 누르면 적용을 취소합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
     }

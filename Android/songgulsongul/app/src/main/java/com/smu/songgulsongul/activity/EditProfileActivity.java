@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -69,6 +71,9 @@ public class EditProfileActivity extends AppCompatActivity {
     private int profile_modify_check;
     private int NO = 0;
     private int YES = 1;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +153,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                         int resultCode = result.getCode();
 
                                         if (resultCode == StatusCode.RESULT_OK) {
-                                            Toast.makeText(EditProfileActivity.this, "회원 탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                            Toasty.custom(EditProfileActivity.this, "회원 탈퇴가 완료되었습니다", null, BackColor, FontColor, 2000, false, true).show();
                                             LoginSharedPreference.clearLogin(EditProfileActivity.this);
                                             Intent intent3 = new Intent(EditProfileActivity.this, LoginActivity.class);
                                             intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -168,7 +173,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                        Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                        Toasty.normal(EditProfileActivity.this, "서버와의 통신이 불안정합니다").show();
                                         Log.e("회원탈퇴 에러", t.getMessage());
                                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                                     }
@@ -252,7 +257,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                 intent.putExtra("userId", login_id);
                                 startActivity(intent);
                                 finish();
-                                Toast.makeText(EditProfileActivity.this, "프로필 수정 완료!", Toast.LENGTH_SHORT).show();
+                                Toasty.custom(EditProfileActivity.this, "프로필 수정 완료!", null, BackColor, FontColor, 2000, false, true).show();
                             } else if (resultCode == StatusCode.RESULT_CLIENT_ERR) {
                                 new AlertDialog.Builder(EditProfileActivity.this)
                                         .setTitle("경고")
@@ -278,7 +283,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<CodeResponse> call, Throwable t) {
-                            Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(EditProfileActivity.this, "서버와의 통신이 불안정합니다.").show();
                             Log.e("프로필 수정 에러", t.getMessage());
                             t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                         }
@@ -341,7 +346,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ProfileResponse> call, Throwable t) {
-                Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(EditProfileActivity.this, "서버와의 통신이 불안정합니다.").show();
                 Log.e("프로필 데이터 불러오기 에러", t.getMessage());
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
