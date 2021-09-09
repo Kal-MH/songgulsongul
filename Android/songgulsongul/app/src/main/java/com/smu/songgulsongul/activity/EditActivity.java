@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -28,6 +29,8 @@ import java.io.IOException;
 import com.smu.songgulsongul.ImageUtil;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.songgul;
+
+import es.dmoral.toasty.Toasty;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -57,6 +60,9 @@ public class EditActivity extends AppCompatActivity {
 
     Mat editingImage;
     Bitmap editingImageBitmap;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     public void setImageViewFromMat(){
 
@@ -264,7 +270,7 @@ public class EditActivity extends AppCompatActivity {
             finish();
         }
         else{
-            Toast.makeText(this,"한번 더 누르면 편집을 종료합니다", Toast.LENGTH_SHORT).show();
+            Toasty.custom(this, "한번 더 누르면 편집을 종료합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
     }

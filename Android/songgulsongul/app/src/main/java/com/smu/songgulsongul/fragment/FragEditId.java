@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -162,7 +163,7 @@ public class FragEditId extends Fragment {
                         public void onFailure(Call<CodeResponse> call, Throwable t) {
                             id_check = NO;
                             id_modify_check = NO;
-                            Toast.makeText(getContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(getContext(), "서버와의 통신이 불안정합니다.").show();
                             Log.e("아이디 중복확인 에러", t.getMessage());
                             t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                         }

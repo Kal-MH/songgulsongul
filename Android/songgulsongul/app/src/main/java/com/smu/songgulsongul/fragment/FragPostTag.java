@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,7 +66,7 @@ public class FragPostTag extends Fragment {
                 PostListResponse result = response.body();
                 int resultCode = result.getCode();
                 if(resultCode == statusCode.RESULT_SERVER_ERR){
-                    Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                     // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
                 }
                 else if( resultCode == statusCode.RESULT_OK){
@@ -79,7 +80,7 @@ public class FragPostTag extends Fragment {
 
             @Override
             public void onFailure(Call<PostListResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                 tagData = null;
                 Log.d("feed" , "통신 실패");
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
@@ -98,7 +99,7 @@ public class FragPostTag extends Fragment {
                 PostListResponse result = response.body();
                 int resultCode = result.getCode();
                 if(resultCode == statusCode.RESULT_SERVER_ERR){
-                    Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                     // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
                 }
                 else if( resultCode == statusCode.RESULT_OK){
@@ -112,7 +113,7 @@ public class FragPostTag extends Fragment {
 
             @Override
             public void onFailure(Call<PostListResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                 tagData = null;
                 Log.d("feed" , "통신 실패");
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
