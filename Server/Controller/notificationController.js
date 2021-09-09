@@ -127,7 +127,7 @@ function sendNotiUserid (sender, loginid, mode, title, msg , res) {
 
                     }
                     res.json({
-                        'code': statusCode.SERVER_ERROR
+                        'code': statusCode.OK
                     })
                 }
             });
