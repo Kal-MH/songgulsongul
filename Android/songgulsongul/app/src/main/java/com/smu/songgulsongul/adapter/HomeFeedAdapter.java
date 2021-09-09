@@ -86,10 +86,10 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    @SuppressLint("RecyclerView")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-
         if (holder instanceof ItemViewHolder) {
 
             //post 가져옴
