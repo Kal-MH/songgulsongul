@@ -63,6 +63,9 @@ function sendNotiPostid (sender, postid, mode, title, msg , res) {
                                 console.log('Error Sending message!!! : ', err)
                             })
                     }
+                    res.json({
+                        'code': statusCode.OK
+                    })
                 }
             });
         }
@@ -123,6 +126,9 @@ function sendNotiUserid (sender, loginid, mode, title, msg , res) {
                             })
 
                     }
+                    res.json({
+                        'code': statusCode.SERVER_ERROR
+                    })
                 }
             });
         }
