@@ -68,8 +68,7 @@ public class EditDoneActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EditDoneActivity.this, MarketUploadActivity.class);
-                File file = new File(filePath);
-                intent.putExtra("path", Uri.fromFile(file));
+                intent.putExtra("path", filePath);
                 startActivity(intent);
                 finish();
             }
