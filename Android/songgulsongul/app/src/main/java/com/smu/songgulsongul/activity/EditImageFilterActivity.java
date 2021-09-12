@@ -1,6 +1,7 @@
 package com.smu.songgulsongul.activity;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,12 +17,16 @@ import org.opencv.core.Mat;
 import com.smu.songgulsongul.songgul;
 import com.smu.songgulsongul.R;
 
+import es.dmoral.toasty.Toasty;
+
 public class EditImageFilterActivity extends AppCompatActivity {
 
     public enum editFilter{
-        None, Gray, Test
+        None, Gray, Sharp,Test
     }
 
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     long first_time = 0;
     long second_time = 0;
@@ -36,6 +41,7 @@ public class EditImageFilterActivity extends AppCompatActivity {
 
     LinearLayout filterNone;
     LinearLayout filterGrey;
+    LinearLayout filterSharp;
     LinearLayout filterTest;
 
     Mat previewImage;
@@ -46,6 +52,9 @@ public class EditImageFilterActivity extends AppCompatActivity {
     public native void applyRGBMinGray(long imgInputAddress, long imgOutputAddress);
 
     public native void applyTestFilter(long imgInputAddress, long imgOutputAddress);
+
+    public native void applyFilterSharp(long imgInputAddress, long imgOutputAddress);
+
 
     public void updatePreviewImageView(){
         if(previewImageBitmap!=null)
@@ -72,6 +81,7 @@ public class EditImageFilterActivity extends AppCompatActivity {
 
         filterNone = findViewById(R.id.image_edit_filter_none);
         filterGrey = findViewById(R.id.image_edit_filter_gray);
+        filterSharp = findViewById(R.id.image_edit_filter_sharp);
         //filterTest = findViewById(R.id.image_edit_filter_test);
 
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
@@ -102,6 +112,17 @@ public class EditImageFilterActivity extends AppCompatActivity {
             }
         });
 
+        filterSharp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedFilter = editFilter.Sharp;
+                previewImage.release();
+                previewImage = new Mat(editingImageAddress).clone();
+                applyFilterSharp(editingImageAddress,previewImage.getNativeObjAddr());
+                updatePreviewImageView();
+            }
+        });
+
         /*
         filterTest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +148,9 @@ public class EditImageFilterActivity extends AppCompatActivity {
                         break;
                     case Gray: applyRGBMinGray(editingImageAddress,editingImageAddress);
                         break;
+                    case Sharp:
+                        applyFilterSharp(editingImageAddress,editingImageAddress);
+                        break;
                     case Test: //TODO
                         break;
                     default:
@@ -147,7 +171,7 @@ public class EditImageFilterActivity extends AppCompatActivity {
             finish();
         }
         else{
-            Toast.makeText(this,"한번 더 누르면 적용을 취소합니다", Toast.LENGTH_SHORT).show();
+            Toasty.custom(this, "한번 더 누르면 적용을 취소합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
     }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,14 +11,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
     Button login_btn;
     EditText login_username, login_pw;
 
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,62 +86,38 @@ public class LoginActivity extends AppCompatActivity {
                 login_id.trim();
                 passsword.trim();
 
+                //opencv Debug Pass code! need to remove
+                //Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                //startActivity(intent);
+                //finish();
+
 
                 // 입력한 아이디가 공백값일 경우 --> 서버 통신 x
                 if (login_id.getBytes().length <= 0) {
+                    new AlertDialog.Builder(LoginActivity.this)
+                            .setTitle("경고")
+                            .setMessage("아이디를 입력해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setView(dialogView);
-
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                    ImageView icon=dialogView.findViewById(R.id.warning);
-
-                    TextView txt=dialogView.findViewById(R.id.txtText);
-                    txt.setText("아이디를 입력해주세요.");
-
-                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                    ok_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
-
-                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                    cancel_btn.setVisibility(View.GONE);
+                                }
+                            });
 
                 }
 
                 // 입력한 비밀번호가 공백값일 경우 --> 서버 통신 x
                 else if (passsword.getBytes().length <= 0) {
+                    new AlertDialog.Builder(LoginActivity.this)
+                            .setTitle("경고")
+                            .setMessage("비밀번호를 입력해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setView(dialogView);
-
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                    ImageView icon=dialogView.findViewById(R.id.warning);
-
-                    TextView txt=dialogView.findViewById(R.id.txtText);
-                    txt.setText("비밀번호를 입력해주세요.");
-
-                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                    ok_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
-
-                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                    cancel_btn.setVisibility(View.GONE);
+                                }
+                            })
+                            .show();
                 }
 
                 // login_id, password 로 서버와 통신
@@ -159,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                                 int user_id = result.getId();
                                 LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
                                 setToken();
-                                Toast.makeText(LoginActivity.this, "출석체크 되었습니다!", Toast.LENGTH_SHORT).show();
+                                Toasty.custom(LoginActivity.this, "출석체크 되었습니다!", null, BackColor, FontColor, 2000, false, true).show();
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -168,49 +144,32 @@ public class LoginActivity extends AppCompatActivity {
                                 int user_id = result.getId();
                                 LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
                                 setToken();
-                                Toast.makeText(LoginActivity.this, "반갑습니다!", Toast.LENGTH_SHORT).show();
+                                Toasty.custom(LoginActivity.this, "반갑습니다!", null, BackColor, FontColor, 2000, false, true).show();
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
                             else if (resultCode == statusCode.RESULT_CLIENT_ERR) {
+                                new AlertDialog.Builder(LoginActivity.this)
+                                        .setMessage("아이디, 또는 패스워드가 잘못 입력되었습니다.")
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
 
-                                View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                builder.setView(dialogView);
-
-                                final AlertDialog alertDialog = builder.create();
-                                alertDialog.show();
-                                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                                ImageView icon=dialogView.findViewById(R.id.warning);
-                                icon.setVisibility(View.GONE);
-
-                                TextView txt=dialogView.findViewById(R.id.txtText);
-                                txt.setText("아이디, 또는 패스워드가 잘못 입력되었습니다.");
-
-                                Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                                ok_btn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        alertDialog.dismiss();
-                                    }
-                                });
-
-                                Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                                cancel_btn.setVisibility(View.GONE);
-
+                                            }
+                                        })
+                                        .show();
                                 login_username.setText(null);
                                 login_pw.setText(null);
                             }
                             else {
-                                Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                Toasty.normal(LoginActivity.this, "서버와의 통신이 불안정합니다").show();
                             }
                         }
 
                         @Override
                         public void onFailure(Call<LoginResponse> call, Throwable t) {
-                            Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(LoginActivity.this, "서버와의 통신이 불안정합니다").show();
                             Log.e("로그인 에러", t.getMessage());
                             t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                         }
@@ -263,13 +222,13 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
 
-                                    Toast.makeText(LoginActivity.this, "기기를 등록했습니다", Toast.LENGTH_SHORT).show();
+                                    Toasty.custom(LoginActivity.this, "기기를 등록했습니다", null, BackColor, FontColor, 2000, false, true).show();
 
                                 }
                                 @Override
                                 public void onFailure(Call<CodeResponse> call, Throwable t) {
 
-                                    Toast.makeText(LoginActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(LoginActivity.this, "서버와의 통신이 불안정합니다").show();
                                     Log.e("Token" , "등록 실패");
                                 }
 

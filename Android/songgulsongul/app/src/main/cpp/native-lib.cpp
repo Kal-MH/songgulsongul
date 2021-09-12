@@ -145,7 +145,7 @@ void ResizeToCustom(Mat &img, Mat &out, int targetPixelSize){
         }
     }
     if(height>targetPixelSize){
-        resize(img,out,Size(int(height*targetPixelSize/(float)height),targetPixelSize),0, 0, INTER_LINEAR);
+        resize(img,out,Size(int(width*targetPixelSize/(float)height),targetPixelSize),0, 0, INTER_LINEAR);
         return;
     }
 
@@ -170,7 +170,7 @@ void ResizeTo2048(Mat &img, Mat &out){
         }
     }
     if(height>2048){
-        resize(img,out,Size(int(height*2048.0/height),2048),0, 0, INTER_LINEAR);
+        resize(img,out,Size(int(width*2048.0/height),2048),0, 0, INTER_LINEAR);
         return;
     }
 
@@ -815,12 +815,16 @@ JNIEXPORT void JNICALL
 Java_com_smu_songgulsongul_activity_EditImageHistogramActivity_equalizeHistogram(JNIEnv *env,
                                                                               jobject thiz,
                                                                               jlong input_img_address,
-                                                                              jlong output_img_address) {
+                                                                              jlong output_img_address,
+                                                                              jint alpha) {
     Mat &imgInput = *(Mat *) input_img_address;
     Mat &img_output = *(Mat *) output_img_address;
     //equalizeHist(imgInput,img_output);
 
     Mat ycrcb= imgInput.clone();
+
+    float f_alpha = alpha/100.0;
+    float f_beta = 1.0-f_alpha;
 
     cvtColor(imgInput,ycrcb,COLOR_RGB2YCrCb);//BGR 대신 RGB
 
@@ -834,6 +838,8 @@ Java_com_smu_songgulsongul_activity_EditImageHistogramActivity_equalizeHistogram
 
     cvtColor(ycrcb,result,COLOR_YCrCb2RGB);
 
+    addWeighted(imgInput,f_beta,result,f_alpha,0,result);
+
     img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = result;
     ycrcb.release();
@@ -844,12 +850,17 @@ JNIEXPORT void JNICALL
 Java_com_smu_songgulsongul_activity_EditImageHistogramActivity_equalizeHistogramClahe(JNIEnv *env,
                                                                                    jobject thiz,
                                                                                    jlong input_img_address,
-                                                                                   jlong output_img_address) {
+                                                                                   jlong output_img_address,
+                                                                                   jint alpha) {
     Mat &imgInput = *(Mat *) input_img_address;
     Mat &img_output = *(Mat *) output_img_address;
 
     //Mat img_clahe;
     Mat ycrcb= imgInput.clone();
+
+    float f_alpha = alpha/100.0;
+    float f_beta = 1.0-f_alpha;
+
 
     cvtColor(imgInput,ycrcb,COLOR_RGB2YCrCb);//BGR 대신 RGB
 
@@ -865,6 +876,9 @@ Java_com_smu_songgulsongul_activity_EditImageHistogramActivity_equalizeHistogram
     merge(channels,ycrcb);
 
     cvtColor(ycrcb,result,COLOR_YCrCb2RGB);
+
+
+    addWeighted(imgInput,f_beta,result,f_alpha,0,result);
 
     img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = result;
@@ -979,7 +993,34 @@ Java_com_smu_songgulsongul_activity_EditImageFilterActivity_applyRGBMinGray(JNIE
         img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = locMat;
 
-}extern "C"
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_smu_songgulsongul_activity_EditImageFilterActivity_applyFilterSharp(JNIEnv *env,
+                                                                             jobject thiz,
+                                                                             jlong img_input_address,
+                                                                             jlong img_output_address) {
+    Mat &imgInput = *(Mat *) img_input_address;
+    Mat &img_output = *(Mat *) img_output_address;
+
+    Mat locMat =  imgInput.clone();
+
+    Mat sharpening_kernel = (Mat_<double>(3, 3) << -1, -1, -1,
+            -1, 9, -1,
+            -1, -1, -1);
+    filter2D(imgInput, locMat, -1, sharpening_kernel);
+
+    if(img_output.data != nullptr)
+        img_output.release();//TODO input이랑 output이 같을경우 위험
+    img_output = locMat;
+
+}
+
+
+
+
+
+extern "C"
 JNIEXPORT void JNICALL
 Java_com_smu_songgulsongul_activity_EditImageDenoiseActivity_denoiseColorImage(JNIEnv *env,
                                                                             jobject thiz,
@@ -997,7 +1038,50 @@ Java_com_smu_songgulsongul_activity_EditImageDenoiseActivity_denoiseColorImage(J
     if(img_output.data != nullptr)
         img_output.release();//TODO input이랑 output이 같을경우 위험
     img_output = locMat;
-}extern "C"
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_smu_songgulsongul_activity_EditImageDenoiseActivity_denoiseColorImageMedianFiltering(
+        JNIEnv *env, jobject thiz, jlong input_image_address, jlong output_image_address,
+        jint luminance_progress, jint color_progress) {
+    Mat &imgInput = *(Mat *) input_image_address;
+    Mat &img_output = *(Mat *) output_image_address;
+
+    Mat locMat = Mat();
+    int ksize = luminance_progress/2;
+    if(ksize%2 != 1)
+        ksize += 1;
+    medianBlur(imgInput,locMat,ksize);
+
+
+    if(img_output.data != nullptr)
+        img_output.release();//TODO input이랑 output이 같을경우 위험
+    img_output = locMat;
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_smu_songgulsongul_activity_EditImageDenoiseActivity_denoiseColorImageGaussian(JNIEnv *env,
+                                                                                       jobject thiz,
+                                                                                       jlong input_image_address,
+                                                                                       jlong output_image_address,
+                                                                                       jint luminance_progress,
+                                                                                       jint color_progress) {
+    Mat &imgInput = *(Mat *) input_image_address;
+    Mat &img_output = *(Mat *) output_image_address;
+
+    Mat locMat = Mat();
+
+    int ksize = luminance_progress/2;
+    if(ksize%2 != 1)
+        ksize += 1;
+    GaussianBlur(imgInput,locMat,Size(ksize,ksize),1.5);
+
+    if(img_output.data != nullptr)
+        img_output.release();//TODO input이랑 output이 같을경우 위험
+    img_output = locMat;
+}
+
+extern "C"
 JNIEXPORT void JNICALL
 Java_com_smu_songgulsongul_ImageUtil_maxSize2048(JNIEnv *env, jclass clazz, jlong input_image_address,
                                               jlong output_image_address) {
@@ -1016,4 +1100,68 @@ Java_com_smu_songgulsongul_ImageUtil_maxSizeCustom(JNIEnv *env, jclass clazz,
     Mat &img_output = *(Mat *) output_image_address;
 
     ResizeToCustom(imgInput,img_output,max_pixel_size);
+}
+
+
+
+
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_smu_songgulsongul_activity_EditImageRemoveShadowActivity_getShadowRemovedImage(JNIEnv *env,
+                                                                                        jobject thiz,
+                                                                                        jlong input_add,
+                                                                                        jlong output_add) {
+
+    Mat &imgInput = *(Mat *) input_add;
+    Mat &img_output = *(Mat *) output_add;
+
+    if(img_output.data != nullptr)
+        img_output.release();//TODO input이랑 output이 같을경우 위험
+
+    img_output = imgInput.clone();
+
+    Mat img_YCbCr = RGB2YCbCr(imgInput);
+    //vector<int> compression_params; //vector that stores the compression parameters of the image
+    Mat chan[3];
+    split(img_YCbCr, chan);
+
+    Mat G_ = water_filling(chan[2]);
+    G_ = incre_filling(G_, chan[2]);
+
+    vector<Mat> channels_(3);
+    channels_[0] = chan[0];
+    channels_[1] = chan[1];
+    channels_[2] = G_;
+    Mat img_YCbCr_rec;
+    merge(channels_, img_YCbCr_rec);
+    Mat rec_img = YCbCr2RGB(img_YCbCr_rec);
+
+    img_output = rec_img;
+
+    img_YCbCr.release();
+    chan->release();
+    G_.release();
+
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_smu_songgulsongul_activity_EditImageRemoveShadowActivity_lerpShadowRemovedImage(
+        JNIEnv *env, jobject thiz, jlong input_add_origin, jlong input_add_shadow_removed,
+        jlong output_add, jint progress) {
+
+
+    Mat &imgInput = *(Mat *) input_add_origin;
+    Mat &imgInput2 = *(Mat *) input_add_shadow_removed;
+    Mat &img_output = *(Mat *) output_add;
+
+
+    img_output = imgInput.clone();
+
+    float f_alpha = progress/100.0;
+    float f_beta = 1.0-f_alpha;
+
+    addWeighted(imgInput,f_beta,imgInput2,f_alpha,0,img_output);
+
 }

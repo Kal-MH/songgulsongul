@@ -74,17 +74,16 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/edit_image_histograms"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/edit_image_histograms"
-            android:layout_margin = "@dimen/common_margin"
-            app:layout_constraintTop_toBottomOf="@+id/edit_progress"
+            android:layout_margin="@dimen/common_margin"
             app:layout_constraintBottom_toTopOf="@id/edit_done"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/edit_progress"
+            tools:layout_editor_absoluteX="15dp">
 
 
-
-        <LinearLayout
+            <LinearLayout
                 android:id="@+id/histogramNone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -92,16 +91,16 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="@dimen/icon_size_large"
-                android:layout_height="@dimen/icon_size_large"
-                app:srcCompat="@drawable/originalcaligra"
-                tools:ignore="VectorDrawableCompat" />
+                <ImageView
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
+                    app:srcCompat="@drawable/originalcaligra"
+                    tools:ignore="VectorDrawableCompat" />
 
                 <TextView
+                    style="@style/Text.textStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Text.textStyle"
                     android:text="없음" />
             </LinearLayout>
 
@@ -125,9 +124,9 @@
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView
+                    style="@style/Text.textStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Text.textStyle"
                     android:text="기본 보정" />
             </LinearLayout>
 
@@ -151,9 +150,9 @@
                     tools:ignore="VectorDrawableCompat" />
 
                 <TextView
+                    style="@style/Text.textStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Text.textStyle"
                     android:text="적응형 보정" />
             </LinearLayout>
 
@@ -171,6 +170,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <LinearLayout
+            android:layout_width="342dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="37dp"
+            android:layout_marginBottom="11dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/edit_image_histograms"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_progress">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="효과 강도" />
+
+            <SeekBar
+                android:id="@+id/seekBarAlpha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="100"
+                android:progress="50" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

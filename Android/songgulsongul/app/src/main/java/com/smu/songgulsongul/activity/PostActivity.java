@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +44,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -97,6 +97,8 @@ public class PostActivity extends AppCompatActivity {
     final int YES = 1;
     final int NO = 0;
 
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     int user_id, post_id, share_flag;
     String login_id, p_user_id, img_path, post_image;
@@ -205,83 +207,53 @@ public class PostActivity extends AppCompatActivity {
                                 startActivity(intent2);
                                 break;
                             case R.id.post_delete:
-
-                                View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
-                                builder.setView(dialogView);
-
-                                final AlertDialog alertDialog = builder.create();
-                                alertDialog.show();
-                                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                                ImageView icon=dialogView.findViewById(R.id.warning);
-                                icon.setVisibility(View.GONE);
-
-                                TextView txt=dialogView.findViewById(R.id.txtText);
-                                txt.setText("게시물을 삭제하시겠습니까?");
-
-                                Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                                ok_btn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        serviceApi.PostDelete(user_id, post_id).enqueue(new Callback<CodeResponse>() {
+                                new AlertDialog.Builder(PostActivity.this)
+                                        .setMessage("게시물을 삭제 하시겠습니까?")
+                                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
                                             @Override
-                                            public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                                                try {
-                                                    CodeResponse result = response.body();
-                                                    int resultCode = result.getCode();
+                                            public void onClick(DialogInterface dialog, int which) {
 
-                                                    if (resultCode == StatusCode.RESULT_OK) {
-                                                        Toast.makeText(getApplicationContext(), "게시글 삭제 완료!", Toast.LENGTH_SHORT).show();
-                                                        onBackPressed();
-                                                        finish();
-                                                    } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
-                                                        Toast.makeText(getApplicationContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                } catch (NullPointerException e){
-                                                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                                                    AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
-                                                    builder.setView(dialogView);
+                                            }
+                                        })
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                serviceApi.PostDelete(user_id, post_id).enqueue(new Callback<CodeResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
+                                                        try {
+                                                            CodeResponse result = response.body();
+                                                            int resultCode = result.getCode();
 
-                                                    final AlertDialog alertDialog = builder.create();
-                                                    alertDialog.show();
-                                                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                                            if (resultCode == StatusCode.RESULT_OK) {
+                                                                Toasty.custom(getApplicationContext(), "게시글 삭제 완료!", null, BackColor, FontColor, 2000, false, true).show();
+                                                                onBackPressed();
+                                                                finish();
+                                                            } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
+                                                                Toasty.normal(getApplicationContext(), "서버와의 통신이 불안정합니다").show();
+                                                            }
+                                                        } catch (NullPointerException e){
+                                                            new AlertDialog.Builder(PostActivity.this)
+                                                                    .setMessage("에러발생!")
+                                                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                                        @Override
+                                                                        public void onClick(DialogInterface dialog, int which) {
 
-                                                    ImageView icon=dialogView.findViewById(R.id.warning);
-                                                    icon.setVisibility(View.GONE);
-
-                                                    TextView txt=dialogView.findViewById(R.id.txtText);
-                                                    txt.setText("에러발생!");
-
-                                                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                                                    ok_btn.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
-                                                            alertDialog.dismiss();
+                                                                        }
+                                                                    })
+                                                                    .show();
                                                         }
-                                                    });
+                                                    }
 
-                                                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                                                    cancel_btn.setVisibility(View.GONE);
-                                                }
+                                                    @Override
+                                                    public void onFailure(Call<CodeResponse> call, Throwable t) {
+                                                        Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
+                                                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                                                    }
+                                                });
                                             }
-
-                                            @Override
-                                            public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                                Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                                                t.printStackTrace(); // 에러 발생 원인 단계별로 출력
-                                            }
-                                        });
-                                    }
-                                });
-
-                                Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                                cancel_btn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        alertDialog.dismiss();
-                                    }
-                                });
+                                        })
+                                        .show();
                                 break;
                             default:
                                 break;
@@ -320,16 +292,16 @@ public class PostActivity extends AppCompatActivity {
                             post_like_btn.setSelected(!post_like_btn.isSelected()); //버튼 반대로 체크
                         }
                         else if( resultCode == statusCode.RESULT_CLIENT_ERR){
-                            Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(PostActivity.this, "잘못된 접근입니다").show();
                         }
                         else if( resultCode == statusCode.RESULT_SERVER_ERR){
-                            Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<CodeResponse> call, Throwable t) {
-                        Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                     }
                 });
@@ -350,25 +322,25 @@ public class PostActivity extends AppCompatActivity {
                                     keep = (keep==1)? 0 : 1;
                                     data.setKeepOnset(keep);
                                     if( keep == 1)
-                                        Toast.makeText(PostActivity.this, "보관함에 저장 되었습니다", Toast.LENGTH_SHORT).show();
+                                        Toasty.custom(PostActivity.this, "보관함에 저장 되었습니다", null, BackColor, FontColor, 2000, false, true).show();
                                     else
-                                        Toast.makeText(PostActivity.this, "보관함에서 삭제 되었습니다", Toast.LENGTH_SHORT).show();
+                                        Toasty.custom(PostActivity.this, "보관함에서 삭제 되었습니다", null, BackColor, FontColor, 2000, false, true).show();
 
 
                                     post_keep_btn.setSelected(!post_keep_btn.isSelected());
 
                                 }
                                 else if( resultCode == statusCode.RESULT_CLIENT_ERR){
-                                    Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(PostActivity.this, "잘못된 접근입니다").show();
                                 }
                                 else if( resultCode == statusCode.RESULT_SERVER_ERR){
-                                    Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                             }
                         });
@@ -429,16 +401,16 @@ public class PostActivity extends AppCompatActivity {
                             sendCommentNoti();
                         }
                         else if( resultCode == statusCode.RESULT_CLIENT_ERR){
-                            Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(PostActivity.this, "잘못된 접근입니다").show();
                         }
                         else if( resultCode == statusCode.RESULT_SERVER_ERR){
-                            Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<CodeResponse> call, Throwable t) {
-                        Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                     }
                 });
@@ -494,12 +466,12 @@ public class PostActivity extends AppCompatActivity {
 
                 }
                 else if(resultCode == statusCode.RESULT_SERVER_ERR){
-                    Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                     // 빈화면 말고 다른행동..
 
                 }
                 else {
-                    Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(PostActivity.this, "잘못된 접근입니다").show();
 
                 }
             }
@@ -508,7 +480,7 @@ public class PostActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PostResponse> call, Throwable t) {
-                Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
@@ -768,36 +740,23 @@ public class PostActivity extends AppCompatActivity {
                 if( CommentsData.get(a_position).getUser_id() == LoginSharedPreference.getUserId(PostActivity.this) ){
                     //댓글 삭제 알림 팝업
                     Log.d("comment", "삭제해보자요");
+                    new AlertDialog.Builder(PostActivity.this)
+                            .setTitle("경고")
+                            .setMessage("댓글을 삭제하시겠습니까?")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    deleteComment(CommentsData.get(a_position).getId());
+                                }
+                            })
+                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
-                    builder.setView(dialogView);
-
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                    ImageView icon=dialogView.findViewById(R.id.warning);
-
-                    TextView txt=dialogView.findViewById(R.id.txtText);
-                    txt.setText("댓글을 삭제하시겠습니까?");
-
-                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                    ok_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            deleteComment(CommentsData.get(a_position).getId());
-                            alertDialog.dismiss();
-                        }
-                    });
-
-                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                    cancel_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
+                                        }
+                                    }
+                            )
+                            .show();
                 }
             }
         });
@@ -845,20 +804,20 @@ public class PostActivity extends AppCompatActivity {
                 int resultCode = response.body().getCode();
                 if( resultCode == statusCode.RESULT_OK){
                     //다시 불러오기.. 아니면 댓글만 가져오는 코드 짜야함!
-                    Toast.makeText(PostActivity.this, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.custom(PostActivity.this, "댓글이 삭제되었습니다", null, BackColor, FontColor, 2000, false, true).show();
                     getData();
                 }
                 else if( resultCode == statusCode.RESULT_CLIENT_ERR){
-                    Toast.makeText(PostActivity.this, "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(PostActivity.this, "잘못된 접근입니다").show();
                 }
                 else if( resultCode == statusCode.RESULT_SERVER_ERR){
-                    Toast.makeText(PostActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                 }
             }
 
             @Override
             public void onFailure(Call<CodeResponse> call, Throwable t) {
-                Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
@@ -877,12 +836,12 @@ public class PostActivity extends AppCompatActivity {
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                Toast.makeText(PostActivity.this, "성공!!", Toast.LENGTH_SHORT).show();
+                Toasty.custom(PostActivity.this, "성공!!", null, BackColor, FontColor, 2000, false, true).show();
             }
 
             @Override
             public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(PostActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
+                Toasty.normal(PostActivity.this, "onFailure").show();
             }
         });
 
@@ -900,12 +859,12 @@ public class PostActivity extends AppCompatActivity {
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                Toast.makeText(PostActivity.this, "성공!!", Toast.LENGTH_SHORT).show();
+                Toasty.custom(PostActivity.this, "성공!!", null, BackColor, FontColor, 2000, false, true).show();
             }
 
             @Override
             public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(PostActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
+                Toasty.normal(PostActivity.this, "onFailure").show();
             }
         });
     }

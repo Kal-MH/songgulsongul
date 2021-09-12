@@ -30,28 +30,26 @@
         android:background="@color/purpleGray">
 
         <HorizontalScrollView
+            android:id="@+id/edit_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/edit_scroll"
-            android:layout_margin = "@dimen/common_margin"
-            app:layout_constraintTop_toBottomOf="@+id/edit_progress"
+            android:layout_margin="@dimen/common_margin"
             app:layout_constraintBottom_toTopOf="@id/edit_done"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/edit_progress">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/edit_image_ratio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/common_margin"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_marginRight="@dimen/common_margin"
                     android:orientation="vertical">
 
                     <ImageView
@@ -61,21 +59,20 @@
                         tools:ignore="VectorDrawableCompat" />
 
                     <TextView
+                        style="@style/Text.textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Text.textStyle"
                         android:text="비율 변경" />
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:id="@+id/edit_image_colors"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/common_margin"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_marginRight="@dimen/common_margin">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="@dimen/icon_size_large"
@@ -84,22 +81,43 @@
                         tools:ignore="VectorDrawableCompat" />
 
                     <TextView
+                        style="@style/Text.textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Text.textStyle"
                         android:text="색상 보정" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/edit_image_shadow"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/common_margin"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
+                    <ImageView
+                        android:layout_width="@dimen/icon_size_large"
+                        android:layout_height="@dimen/icon_size_large"
+                        app:srcCompat="@drawable/remove_shadow_icon"
+                        tools:ignore="VectorDrawableCompat"
+                        tools:srcCompat="@drawable/remove_shadow_icon" />
+
+                    <TextView
+                        style="@style/Text.textStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="그림자 제거" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/edit_image_histogram"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/common_margin"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_marginRight="@dimen/common_margin">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="@dimen/icon_size_large"
@@ -108,12 +126,13 @@
                         tools:ignore="VectorDrawableCompat" />
 
                     <TextView
+                        style="@style/Text.textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Text.textStyle"
                         android:text="색상 균형" />
 
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:id="@+id/edit_image_denoise"
@@ -131,9 +150,9 @@
                         tools:ignore="VectorDrawableCompat" />
 
                     <TextView
+                        style="@style/Text.textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Text.textStyle"
                         android:text="노이즈 제거" />
 
                 </LinearLayout>
@@ -142,9 +161,9 @@
                     android:id="@+id/edit_image_filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/common_margin"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_marginRight="@dimen/common_margin"
                     android:orientation="vertical">
 
                     <ImageView
@@ -154,9 +173,9 @@
                         tools:ignore="VectorDrawableCompat" />
 
                     <TextView
+                        style="@style/Text.textStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Text.textStyle"
                         android:text="필터" />
 
                 </LinearLayout>
@@ -170,27 +189,27 @@
             android:id="@+id/edit_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin = "@dimen/common_margin"
+            android:layout_margin="@dimen/common_margin"
             android:gravity="center"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/edit_scroll"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/edit_scroll">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:layout_width="@dimen/Dot"
                 android:layout_height="@dimen/Dot"
-                app:tint= "@color/inkLightGrey"
                 app:srcCompat="@drawable/ic_baseline_dot"
+                app:tint="@color/inkLightGrey"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
                 android:layout_width="@dimen/Dot"
                 android:layout_height="@dimen/Dot"
                 app:srcCompat="@drawable/ic_baseline_dot"
-                app:tint= "@color/inkLightGrey"
+                app:tint="@color/inkLightGrey"
                 tools:ignore="VectorDrawableCompat" />
 
             <ImageView
@@ -203,17 +222,16 @@
 
         <Button
             android:id="@+id/edit_done"
+            style="@style/Text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/common_margin"
-            android:text="편집 완료"
             android:background="@drawable/border"
-            style="@style/Text.medium"
+            android:text="편집 완료"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

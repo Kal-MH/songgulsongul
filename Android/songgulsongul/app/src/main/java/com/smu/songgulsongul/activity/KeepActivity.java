@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -145,14 +146,14 @@ public class KeepActivity extends AppCompatActivity {
                     cancel_btn.setVisibility(View.GONE);
                 }
                 else{
-                    Toast.makeText(KeepActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(KeepActivity.this, "서버와의 통신이 불안정합니다").show();
                 }
 
             }
 
             @Override
             public void onFailure(Call<KeepResponse> call, Throwable t) {
-                Toast.makeText(KeepActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(KeepActivity.this, "서버와의 통신이 불안정합니다").show();
                 Log.e("보관함 데이터 불러오기 에러", t.getMessage());
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }

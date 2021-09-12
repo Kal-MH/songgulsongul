@@ -63,4 +63,10 @@ dependencies {
     //fire base
     implementation platform('com.google.firebase:firebase-bom:27.1.0')
     implementation 'com.google.firebase:firebase-messaging'
+
+    //Toasty
+    implementation 'com.github.GrenderG:Toasty:1.5.2'
+
+    //ReadMoreTextView
+    implementation 'kr.co.prnd:readmore-textview:1.0.0'
 }

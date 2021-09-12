@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,6 +29,8 @@ import java.io.IOException;
 import com.smu.songgulsongul.ImageUtil;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.songgul;
+
+import es.dmoral.toasty.Toasty;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -43,6 +47,9 @@ public class EditActivity extends AppCompatActivity {
     LinearLayout editDenoise;
     LinearLayout editFilter;
     LinearLayout editTransparency;
+    LinearLayout editShadowRemove;
+    LinearLayout editAddWeight;
+
 
     long first_time = 0;
     long second_time = 0;
@@ -53,6 +60,9 @@ public class EditActivity extends AppCompatActivity {
 
     Mat editingImage;
     Bitmap editingImageBitmap;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     public void setImageViewFromMat(){
 
@@ -87,7 +97,7 @@ public class EditActivity extends AppCompatActivity {
 
         File tempFile = null;
         try {
-            tempFile = File.createTempFile(name, null, getCacheDir());
+            tempFile = File.createTempFile(name, ".jpeg", getCacheDir());
 
             FileOutputStream out = new FileOutputStream(tempFile);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
@@ -123,6 +133,8 @@ public class EditActivity extends AppCompatActivity {
         editFilter = findViewById(R.id.edit_image_filter);
         editHistogram = findViewById(R.id.edit_image_histogram);
         editDenoise = findViewById(R.id.edit_image_denoise);
+        editShadowRemove = findViewById(R.id.edit_image_shadow);
+        //editAddWeight = findViewById(R.idksg.edit_image_addWeight);
 
         filePath = getIntent().getStringExtra("path");
         sourceFilePath = getIntent().getStringExtra("sourceFilePath");
@@ -134,6 +146,13 @@ public class EditActivity extends AppCompatActivity {
         croppedImageAddress = getIntent().getLongExtra("croppedImageAddress", 0x00);
         //editingImage = new Mat(croppedImageAddress).clone();
         editingImage =  ((songgul)getApplication()).getCroppedMat().clone();
+
+
+        //fix many channel issues
+        Imgproc.cvtColor(editingImage,editingImage,Imgproc.COLOR_RGB2HSV);
+        Imgproc.cvtColor(editingImage,editingImage,Imgproc.COLOR_HSV2RGB);
+
+
         ((songgul)getApplication()).setEditingMat(editingImage);
         setImageViewFromMat();
 
@@ -217,6 +236,26 @@ public class EditActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        /*
+        editAddWeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent( EditActivity.this , EditImageAddWeightActivity.class);
+                intent.putExtra("path", filePath);
+                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                startActivity(intent);
+            }
+        });*/
+        editShadowRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent( EditActivity.this , EditImageRemoveShadowActivity.class);
+                intent.putExtra("path", filePath);
+                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                startActivity(intent);
+            }
+        });
+
 
 
 
@@ -231,7 +270,7 @@ public class EditActivity extends AppCompatActivity {
             finish();
         }
         else{
-            Toast.makeText(this,"한번 더 누르면 편집을 종료합니다", Toast.LENGTH_SHORT).show();
+            Toasty.custom(this, "한번 더 누르면 편집을 종료합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
     }

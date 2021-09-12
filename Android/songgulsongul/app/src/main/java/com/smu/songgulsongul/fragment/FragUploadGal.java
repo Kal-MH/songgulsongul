@@ -44,7 +44,7 @@ public class FragUploadGal extends Fragment {
     Cursor cursor;
     int columnIndex;
     int columnDisplayname;
-    int offset = 9;
+    int offset = 12;
 
 
     Display display;
@@ -68,10 +68,11 @@ public class FragUploadGal extends Fragment {
         recyclerView.setAdapter(galleryAdapter);
 
         initScroll();
-
-        //첫 사진을 메인으로띄움
-        Glide.with(view.getContext()).load(imageUrlList.get(0).getPath()).into(picked);
-        picked_path = imageUrlList.get(0).getPath();
+        if(!imageUrlList.isEmpty()){
+            //첫 사진을 메인으로띄움
+            Glide.with(view.getContext()).load(imageUrlList.get(0).getPath()).into(picked);
+            picked_path = imageUrlList.get(0).getPath();
+        }
 
 
         //선택시 선택사진으로 전환환다

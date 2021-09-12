@@ -3,6 +3,7 @@ package com.smu.songgulsongul.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import com.smu.songgulsongul.activity.DetectPaperActivity;
 import com.smu.songgulsongul.activity.UploadDetailActivity;
 import com.smu.songgulsongul.layout.CameraSurfaceView;
 
+import es.dmoral.toasty.Toasty;
+
 public class FragUploadCam extends Fragment {
     private int RESULT_PERMISSIONS=100;
 
@@ -32,6 +35,9 @@ public class FragUploadCam extends Fragment {
     CameraSurfaceView surfaceView;
     ImageView imageView;
     boolean isQuick;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     public FragUploadCam(boolean isQuick) {
         this.isQuick = isQuick;
@@ -60,10 +66,10 @@ public class FragUploadCam extends Fragment {
                 surfaceView.camera.autoFocus (new Camera.AutoFocusCallback() {
                     public void onAutoFocus(boolean success, Camera camera) {
                         if(success){
-                            Toast.makeText(context,"Auto Focus Success",Toast.LENGTH_SHORT).show();
+                            Toasty.custom(context, "Auto Focus Success", null, BackColor, FontColor, 2000, false, true);
                         }
                         else{
-                            Toast.makeText(context,"Auto Focus Failed",Toast.LENGTH_SHORT).show();
+                            Toasty.normal(context, "Auto Focus Failed").show();
                         }
                     }
                 });

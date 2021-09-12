@@ -8,6 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -40,6 +41,8 @@ import org.opencv.core.Point;
 import org.opencv.core.MatOfPoint;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+
+import es.dmoral.toasty.Toasty;
 
 
 // 카메라 촬영및 갤러리에서 선택후 임시로 전달할 Activity
@@ -79,6 +82,8 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
     private boolean findPaperOnce = false;
 
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     public native void GetPaperPoints(long inputImage,long outputPoint, int th1, int th2);
 
@@ -192,7 +197,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
             finish();
         }
         else{
-            Toast.makeText(this,"한번 더 누르면 편집을 종료합니다", Toast.LENGTH_SHORT).show();
+            Toasty.custom(this, "한번 더 누르면 편집을 종료합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
     }

@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -224,13 +225,13 @@ public class ProfileActivity extends AppCompatActivity {
                             cancel_btn.setVisibility(View.GONE);
                         }
                         else {
-                            Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(ProfileActivity.this, "서버와의 통신이 불안정합니다").show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<CodeResponse> call, Throwable t) {
-                        Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.normal(ProfileActivity.this, "서버와의 통신이 불안정합니다").show();
                         Log.e("팔로우 하기 에러", t.getMessage());
                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                     }
@@ -283,13 +284,13 @@ public class ProfileActivity extends AppCompatActivity {
                             cancel_btn.setVisibility(View.GONE);
                         }
                         else {
-                            Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(ProfileActivity.this, "서버와의 통신이 불안정합니다").show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<CodeResponse> call, Throwable t) {
-                        Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.normal(ProfileActivity.this, "서버와의 통신이 불안정합니다").show();
                         Log.e("언팔로우 하기 에러", t.getMessage());
                         t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                     }
@@ -348,7 +349,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ProfileResponse> call, Throwable t) {
-                Toast.makeText(ProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(ProfileActivity.this, "서버와의 통신이 불안정합니다").show();
                 Log.e("프로필 데이터 불러오기 에러", t.getMessage());
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }

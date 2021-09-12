@@ -3,18 +3,14 @@ package com.smu.songgulsongul.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -23,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +49,9 @@ public class EditAccountActivity extends AppCompatActivity {
     int id_check, id_modify_check, pw_check, pw_check_flag;
     private int NO = 0;
     private int YES = 1;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,59 +114,28 @@ public class EditAccountActivity extends AppCompatActivity {
                         new_id = account_newid.getText().toString().trim();
 
                         if(new_id.getBytes().length <= 0){
-                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                            AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
-                            builder.setView(dialogView);
+                            new AlertDialog.Builder(EditAccountActivity.this)
+                                    .setTitle("경고")
+                                    .setMessage("변경할 아이디를 입력해주세요.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                            final AlertDialog alertDialog = builder.create();
-                            WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
-                            params.width = 280;
-                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            alertDialog.show();
-
-                            ImageView icon=dialogView.findViewById(R.id.warning);
-
-                            TextView txt=dialogView.findViewById(R.id.txtText);
-                            txt.setText("변경할 아이디를 입력해주세요.");
-
-                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                            ok_btn.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    alertDialog.dismiss();
-                                }
-                            });
-
-                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                            cancel_btn.setVisibility(View.GONE);
-
+                                        }
+                                    })
+                                    .show();
                         }
 
                         else if(id_check == NO){
-                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                            AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
-                            builder.setView(dialogView);
+                            new AlertDialog.Builder(EditAccountActivity.this)
+                                    .setMessage("아이디 중복확인을 완료해주세요.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                            final AlertDialog alertDialog = builder.create();
-                            alertDialog.show();
-                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                            ImageView icon=dialogView.findViewById(R.id.warning);
-                            icon.setVisibility(View.GONE);
-
-                            TextView txt=dialogView.findViewById(R.id.txtText);
-                            txt.setText("아이디 중복확인을 완료해주세요.");
-
-                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                            ok_btn.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    alertDialog.dismiss();
-                                }
-                            });
-
-                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                            cancel_btn.setVisibility(View.GONE);
+                                        }
+                                    })
+                                    .show();
                         }
 
                         else if(id_check == YES){
@@ -180,42 +149,28 @@ public class EditAccountActivity extends AppCompatActivity {
                                         Intent intent = new Intent(EditAccountActivity.this, ProfileActivity.class);
                                         LoginSharedPreference.changeLoginId(EditAccountActivity.this, new_id);
 
-                                        Toast.makeText(EditAccountActivity.this, "아이디 변경 완료!", Toast.LENGTH_SHORT).show();
+                                        Toasty.custom(EditAccountActivity.this, "아이디 변경 완료!", null, BackColor, FontColor, 2000, false, true).show();
                                         intent.putExtra("userId", new_id);
                                         startActivity(intent);
                                         finish();
                                     }
 
                                     else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                                        View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
-                                        builder.setView(dialogView);
-
-                                        final AlertDialog alertDialog = builder.create();
-                                        alertDialog.show();
-                                        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                                        ImageView icon=dialogView.findViewById(R.id.warning);
-
-                                        TextView txt=dialogView.findViewById(R.id.txtText);
-                                        txt.setText("Server Err."+"\n"+"다시 시도해주세요.");
-
-                                        Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                                        ok_btn.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                alertDialog.dismiss();
-                                            }
-                                        });
-
-                                        Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                                        cancel_btn.setVisibility(View.GONE);
+                                        new AlertDialog.Builder(EditAccountActivity.this)
+                                                .setTitle("경고")
+                                                .setMessage("Server Err."+"\n"+"다시 시도해주세요.")
+                                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                    }
+                                                })
+                                                .show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                    Toast.makeText(EditAccountActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(EditAccountActivity.this, "서버와의 통신이 불안정합니다").show();
                                     Log.e("아이디 변경 에러", t.getMessage());
                                     t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                                 }
@@ -229,82 +184,41 @@ public class EditAccountActivity extends AppCompatActivity {
                         account_pw = findViewById(R.id.account_pw);
                         pw = account_pw.getText().toString().trim();
                         if(pw.getBytes().length <= 0){
-                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                            AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
-                            builder.setView(dialogView);
+                            new AlertDialog.Builder(EditAccountActivity.this)
+                                    .setTitle("경고")
+                                    .setMessage("현재 비밀번호를 입력해주세요.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                            final AlertDialog alertDialog = builder.create();
-                            alertDialog.show();
-                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                            ImageView icon=dialogView.findViewById(R.id.warning);
-
-                            TextView txt=dialogView.findViewById(R.id.txtText);
-                            txt.setText("현재 비밀번호를 입력해주세요.");
-
-                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                            ok_btn.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    alertDialog.dismiss();
-                                }
-                            });
-
-                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                            cancel_btn.setVisibility(View.GONE);
+                                        }
+                                    })
+                                    .show();
                         }
 
                         else if(pw_check == NO){
-                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                            AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
-                            builder.setView(dialogView);
+                            new AlertDialog.Builder(EditAccountActivity.this)
+                                    .setMessage("현재 비밀번호를 확인해주세요.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                            final AlertDialog alertDialog = builder.create();
-                            alertDialog.show();
-                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                            ImageView icon=dialogView.findViewById(R.id.warning);
-                            icon.setVisibility(View.GONE);
-
-                            TextView txt=dialogView.findViewById(R.id.txtText);
-                            txt.setText("현재 비밀번호를 확인해주세요.");
-
-                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                            ok_btn.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    alertDialog.dismiss();
-                                }
-                            });
-
-                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                            cancel_btn.setVisibility(View.GONE);
+                                        }
+                                    })
+                                    .show();
                         }
 
                         else if(pw_check_flag == NO){
-                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                            AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
-                            builder.setView(dialogView);
+                            new AlertDialog.Builder(EditAccountActivity.this)
+                                    .setTitle("경고")
+                                    .setMessage("새 비밀번호 확인을 완료해주세요.")
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                            final AlertDialog alertDialog = builder.create();
-                            alertDialog.show();
-                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                            ImageView icon=dialogView.findViewById(R.id.warning);
-
-                            TextView txt=dialogView.findViewById(R.id.txtText);
-                            txt.setText("새 비밀번호 확인을 완료해주세요.");
-
-                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                            ok_btn.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    alertDialog.dismiss();
-                                }
-                            });
-
-                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                            cancel_btn.setVisibility(View.GONE);
+                                        }
+                                    })
+                                    .show();
                         }
 
                         else{
@@ -322,13 +236,13 @@ public class EditAccountActivity extends AppCompatActivity {
                                         Intent intent = new Intent(EditAccountActivity.this, LoginActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
-                                        Toast.makeText(EditAccountActivity.this, "비밀번호 변경 완료!" + "\n"+"재로그인이 필요합니다.", Toast.LENGTH_LONG).show();
+                                        Toasty.custom(EditAccountActivity.this, "비밀번호 변경 완료!" + "\n"+"재로그인이 필요합니다.", null, BackColor, FontColor, 2000, false, true).show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                    Toast.makeText(EditAccountActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                                    Toasty.normal(EditAccountActivity.this, "서버와의 통신이 불안정합니다").show();
                                     Log.e("비밀번호 변경 에러", t.getMessage());
                                     t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                                 }
@@ -342,7 +256,6 @@ public class EditAccountActivity extends AppCompatActivity {
         });
 
     }
-
 
     @Override
     public void onBackPressed(){

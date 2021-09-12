@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,6 +29,8 @@ import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
 
 public class FirstAuthActivity extends AppCompatActivity {
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     // ServiceApi 객체 생성
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
@@ -77,25 +81,25 @@ public class FirstAuthActivity extends AppCompatActivity {
                     CodeResponse result = response.body();
                     int resultCode = result.getCode();
                     if (resultCode == statusCode.RESULT_OK) { //첫출석이고 포인트올렸음
-                        Toast.makeText(FirstAuthActivity.this, "출석체크 되었습니다!", Toast.LENGTH_SHORT).show();
+                        Toasty.custom(FirstAuthActivity.this, "출석체크 되었습니다!", null, BackColor, FontColor, 2000, false, true).show();
                     }
                     else if(resultCode == statusCode.RESULT_NO){ //첫출석아님
-                        Toast.makeText(FirstAuthActivity.this, "반갑습니다!", Toast.LENGTH_SHORT).show();
+                        Toasty.custom(FirstAuthActivity.this, "반갑습니다!", null, BackColor, FontColor, 2000, false, true).show();
                     }
                     else if(resultCode == statusCode.RESULT_CLIENT_ERR){
                         // 없는 아이디가 저장됐다는것 만료된 아이디?.. 이럴일은 없지만그래두
-                        Toast.makeText(FirstAuthActivity.this, "만료된 아이디입니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.normal(FirstAuthActivity.this, "만료된 아이디입니다").show();
                         LoginSharedPreference.clearLogin(FirstAuthActivity.this); //로그아웃시키고
                         intent = new Intent(FirstAuthActivity.this, LoginActivity.class);//로그인창으로
                     }
                     else {
-                        Toast.makeText(FirstAuthActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.normal(FirstAuthActivity.this, "서버와의 통신이 불안정합니다").show();
                     }
 
                 }
                 @Override
                 public void onFailure(Call<CodeResponse> call, Throwable t) {
-                    Toast.makeText(FirstAuthActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                    Toasty.normal(FirstAuthActivity.this, "서버와의 통신이 불안정합니다").show();
                     Log.e("로그인 에러", t.getMessage());
                     t.printStackTrace(); // 에러 발생 원인 단계별로 출력
 

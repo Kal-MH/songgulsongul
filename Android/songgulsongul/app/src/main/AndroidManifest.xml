@@ -50,6 +50,12 @@
         <activity
             android:name=".activity.EditImageDenoiseActivity"
             android:parentActivityName=".activity.EditActivity" />
+        <activity
+            android:name=".activity.EditImageRemoveShadowActivity"
+            android:parentActivityName=".activity.EditActivity" />
+        <activity
+            android:name=".activity.EditImageAddWeightActivity"
+            android:parentActivityName=".activity.EditActivity" />
         <activity android:name=".activity.FirstAuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -89,6 +95,16 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.smu.songgulsongul.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepath" />
+        </provider>
     </application>
 
 </manifest>

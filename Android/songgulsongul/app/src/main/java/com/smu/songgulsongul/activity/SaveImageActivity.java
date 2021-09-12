@@ -1,12 +1,12 @@
 package com.smu.songgulsongul.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,10 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 
@@ -29,6 +26,8 @@ import java.io.File;
 
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.server.RetrofitClient;
+
+import es.dmoral.toasty.Toasty;
 
 public class SaveImageActivity extends Activity {
     boolean size_check;
@@ -38,6 +37,8 @@ public class SaveImageActivity extends Activity {
     private File file, dir;
     private String fileName;
 
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class SaveImageActivity extends Activity {
                 //Toast.makeText(SaveImageActivity.this, position+"번", Toast.LENGTH_SHORT).show();
                 if(position>0){
                     if(image.getWidth()<image_size[position-1]||image.getHeight()<image_size[position-1]){
-                        Toast.makeText(SaveImageActivity.this, "저장된 이미지의 화질이 저하될 수 있습니다.", Toast.LENGTH_SHORT).show();
+                        Toasty.custom(SaveImageActivity.this, "저장된 이미지의 화질이 저하될 수 있습니다", null, BackColor, FontColor, 2000, false, true).show();
                         size_check = false;
                     }
                     else{
@@ -89,40 +90,31 @@ public class SaveImageActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!size_check) {
-
-                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(SaveImageActivity.this);
-                    builder.setView(dialogView);
-
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                    ImageView icon=dialogView.findViewById(R.id.warning);
-
-                    TextView txt=dialogView.findViewById(R.id.txtText);
-                    txt.setText("선택한 규격이 원본의 사이즈보다 크기 때문에 이미지 저장 시 화질이 저하될 수 있습니다. 계속 하시겠습니까?");
-
-                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                    ok_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                    AlertDialog.Builder myAlertBuilder = new AlertDialog.Builder(SaveImageActivity.this);
+                    // alert의 title과 Messege 세팅
+                    myAlertBuilder.setTitle("경고");
+                    myAlertBuilder.setMessage("선택한 규격이 원본의 사이즈보다 크기 때문에 이미지 저장 시 화질 저하가 될 수 있습니다. 계속 하시겠습니까?");
+                    // 버튼 추가 (확인 버튼과 취소 버튼 )
+                    myAlertBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // 확인 버튼을 눌렸을 경우
                             DownloadImage();
-                            Toast.makeText(getApplicationContext(), "저장 성공!", Toast.LENGTH_LONG).show();
-                            alertDialog.dismiss();
+                            Toasty.custom(getApplicationContext(), "저장 성공!", null, BackColor, FontColor, 2000, false, true).show();
+                            finish();
                         }
                     });
-
-                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                    cancel_btn.setOnClickListener(new View.OnClickListener() {
+                    myAlertBuilder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
+                        public void onClick(DialogInterface dialog, int which) {
+                            // 취소 버튼을 눌렸을 경우
+                            Toasty.custom(getApplicationContext(), "Pressed Cancel", null, BackColor, FontColor, 2000, false, true).show();
                         }
                     });
+                    // Alert를 생성해주고 보여주는 메소드(show를 선언해야 Alert가 생성됨)
+                    myAlertBuilder.show();
                 } else {
                     DownloadImage();
-                    Toast.makeText(SaveImageActivity.this, "저장 성공!", Toast.LENGTH_SHORT).show();
+                    Toasty.custom(SaveImageActivity.this, "저장 성공!", null, BackColor, FontColor, 2000, false, true).show();
                     finish();
                 }
             }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,6 +26,7 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +48,9 @@ public class StickerDetailActivity extends AppCompatActivity {
     ImageView sticker_img, sticker_profile;
     TextView sticker_name, sticker_price, sticker_com, sticker_seller;
     String file_name, img_path, seller_id;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,125 +94,80 @@ public class StickerDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (user_point < price) { // 사용자 보유 포인트 부족시, 서버 통신 X
+                    new AlertDialog.Builder(StickerDetailActivity.this)
+                            .setMessage("포인트가 부족합니다." + "\n(보유 포인트: " + user_point + "p)")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(StickerDetailActivity.this);
-                    builder.setView(dialogView);
-
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                    ImageView icon=dialogView.findViewById(R.id.warning);
-                    icon.setVisibility(View.GONE);
-
-                    TextView txt=dialogView.findViewById(R.id.txtText);
-                    txt.setText("포인트가 부족합니다."+"\n(보유 포인트: "+ user_point+"p)");
-
-                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                    ok_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
-
-                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                    cancel_btn.setVisibility(View.GONE);
+                                }
+                            })
+                            .show();
                 } else {
-
-                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(StickerDetailActivity.this);
-                    builder.setView(dialogView);
-
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                    ImageView icon=dialogView.findViewById(R.id.warning);
-                    icon.setVisibility(View.GONE);
-
-                    TextView txt=dialogView.findViewById(R.id.txtText);
-                    txt.setText("이미지를 구매할까요?");
-
-                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                    ok_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            serviceApi.StickerBuy(sticker_id, user_id).enqueue(new Callback<JsonObject>() {
+                    new AlertDialog.Builder(StickerDetailActivity.this)
+                            .setMessage("이미지를 구매 할까요?")
+                            .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                    JsonObject result = response.body();
-                                    int resultCode = result.get("code").getAsInt();
+                                public void onClick(DialogInterface dialog, int which) {
+                                    serviceApi.StickerBuy(sticker_id, user_id).enqueue(new Callback<JsonObject>() {
+                                        @Override
+                                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                                            JsonObject result = response.body();
+                                            int resultCode = result.get("code").getAsInt();
 
-                                    if(resultCode == StatusCode.RESULT_OK){
-                                        String image = result.get("image").getAsString();
-                                        Log.d("image_path", image);
+                                            if(resultCode == StatusCode.RESULT_OK){
+                                                String image = result.get("image").getAsString();
+                                                Log.d("image_path", image);
 
-                                        // 이미지 저장
-                                        file_name = img_path.substring(img_path.lastIndexOf('/') + 1, img_path.length());
-                                        DownloadManager mgr = (DownloadManager)StickerDetailActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
+                                                // 이미지 저장
+                                                file_name = img_path.substring(img_path.lastIndexOf('/') + 1, img_path.length());
+                                                DownloadManager mgr = (DownloadManager)StickerDetailActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
 
-                                        Uri uri = Uri.parse(img_path);
-                                        DownloadManager.Request request = new DownloadManager.Request(uri);
-                                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                                                .setAllowedOverRoaming(false)
-                                                .setTitle("MARKET IMAGE")
-                                                .setDescription("market image download..")
-                                                .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, file_name);
-                                        mgr.enqueue(request);
+                                                Uri uri = Uri.parse(img_path);
+                                                DownloadManager.Request request = new DownloadManager.Request(uri);
+                                                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                                                        .setAllowedOverRoaming(false)
+                                                        .setTitle("MARKET IMAGE")
+                                                        .setDescription("market image download..")
+                                                        .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, file_name);
+                                                mgr.enqueue(request);
 
-                                        Toast.makeText(StickerDetailActivity.this, "구매 완료!", Toast.LENGTH_SHORT).show();
+                                                Toasty.custom(StickerDetailActivity.this, "구매 완료!", null, BackColor, FontColor, 2000, false, true).show();
 
-                                        // 포인트가 차감 되었으므로 새로고침
-                                        Intent intent = getIntent();
-                                        finish();
-                                        startActivity(intent);
-                                    }
-                                    else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                                        View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(StickerDetailActivity.this);
-                                        builder.setView(dialogView);
-
-                                        final AlertDialog alertDialog = builder.create();
-                                        alertDialog.show();
-                                        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                                        ImageView icon=dialogView.findViewById(R.id.warning);
-
-                                        TextView txt=dialogView.findViewById(R.id.txtText);
-                                        txt.setText("구매에 실패했습니다!"+"\n"+"다시 시도해주세요.");
-
-                                        Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                                        ok_btn.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                alertDialog.dismiss();
+                                                // 포인트가 차감 되었으므로 새로고침
+                                                Intent intent = getIntent();
+                                                finish();
+                                                startActivity(intent);
                                             }
-                                        });
+                                            else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                                                new AlertDialog.Builder(StickerDetailActivity.this)
+                                                        .setTitle("경고")
+                                                        .setMessage("구매에 실패했습니다!"+"\n"+"다시 시도해주세요..")
+                                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                            }
+                                                        })
+                                                        .show();
+                                            }
+                                        }
 
-                                        Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                                        cancel_btn.setVisibility(View.GONE);
-                                    }
+                                        @Override
+                                        public void onFailure(Call<JsonObject> call, Throwable t) {
+                                            Toasty.normal(StickerDetailActivity.this, "서버와의 통신이 불안정합니다").show();
+                                            Log.e("스티커 구매 에러", t.getMessage());
+                                            t.printStackTrace(); // 에러 발생 원인 단계별로 출력
+                                        }
+                                    });
                                 }
-
+                            })
+                            .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onFailure(Call<JsonObject> call, Throwable t) {
-                                    Toast.makeText(StickerDetailActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                                    Log.e("스티커 구매 에러", t.getMessage());
-                                    t.printStackTrace(); // 에러 발생 원인 단계별로 출력
-                                }
-                            });
-                        }
-                    });
+                                public void onClick(DialogInterface dialog, int which) {
 
-                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                    cancel_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
+                                }
+                            })
+                            .show();
                 }
             }
         });
@@ -255,39 +213,25 @@ public class StickerDetailActivity extends AppCompatActivity {
                     setStickerData();
                 }
                 else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-
-                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(StickerDetailActivity.this);
-                    builder.setView(dialogView);
-
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                    ImageView icon=dialogView.findViewById(R.id.warning);
-
-                    TextView txt=dialogView.findViewById(R.id.txtText);
-                    txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
-
-                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                    ok_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //에러 발생 시 새로고침
-                            Intent intent = getIntent();
-                            finish();
-                            startActivity(intent);
-                        }
-                    });
-
-                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                    cancel_btn.setVisibility(View.GONE);
+                    new AlertDialog.Builder(StickerDetailActivity.this)
+                            .setTitle("경고")
+                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 에러 발생 시 새로고침
+                                    Intent intent = getIntent();
+                                    finish();
+                                    startActivity(intent);
+                                }
+                            })
+                            .show();
                 }
             }
 
             @Override
             public void onFailure(Call<MarketDetailResponse> call, Throwable t) {
-                Toast.makeText(StickerDetailActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                Toasty.normal(StickerDetailActivity.this, "서버와의 통신이 불안정합니다").show();
                 Log.e("스티커 상세 보기에러", t.getMessage());
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }

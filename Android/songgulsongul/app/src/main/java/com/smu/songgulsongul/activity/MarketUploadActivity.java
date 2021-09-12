@@ -3,7 +3,6 @@ package com.smu.songgulsongul.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +10,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,6 +34,7 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -57,6 +55,9 @@ public class MarketUploadActivity extends AppCompatActivity {
 
     long first_time = 0;
     long second_time = 0;
+
+    int BackColor = Color.parseColor("#BFB1D8");
+    int FontColor = Color.parseColor("#000000");
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -126,7 +127,7 @@ public class MarketUploadActivity extends AppCompatActivity {
             finish();
         }
         else{
-            Toast.makeText(this,"한번 더 누르면 업로드를 종료합니다", Toast.LENGTH_SHORT).show();
+            Toasty.custom(this, "한번 더 누르면 업로드를 종료합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
     }
@@ -145,55 +146,27 @@ public class MarketUploadActivity extends AppCompatActivity {
                 String price = market_upload_price.getText().toString().trim();
 
                 if (name.getBytes().length <= 0) {
+                    new AlertDialog.Builder(MarketUploadActivity.this)
+                            .setTitle("경고")
+                            .setMessage("제품명을 입력해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MarketUploadActivity.this);
-                    builder.setView(dialogView);
-
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                    ImageView icon=dialogView.findViewById(R.id.warning);
-
-                    TextView txt=dialogView.findViewById(R.id.txtText);
-                    txt.setText("제품명을 입력해주세요.");
-
-                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                    ok_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
-
-                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                    cancel_btn.setVisibility(View.GONE);
+                                }
+                            })
+                            .show();
                 } else if (price.getBytes().length <= 0) {
+                    new AlertDialog.Builder(MarketUploadActivity.this)
+                            .setTitle("경고")
+                            .setMessage("판매 가격을 입력해주세요.")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MarketUploadActivity.this);
-                    builder.setView(dialogView);
-
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                    ImageView icon=dialogView.findViewById(R.id.warning);
-
-                    TextView txt=dialogView.findViewById(R.id.txtText);
-                    txt.setText("판매 가격을 입력해주세요.");
-
-                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                    ok_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.dismiss();
-                        }
-                    });
-
-                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                    cancel_btn.setVisibility(View.GONE);
+                                }
+                            })
+                            .show();
                 }
 
                 else {
@@ -206,43 +179,29 @@ public class MarketUploadActivity extends AppCompatActivity {
                             int sticker_id = result.get("market_id").getAsInt();
 
                             if (resultCode == StatusCode.RESULT_OK) {
-                                Toast toast = Toast.makeText(MarketUploadActivity.this, "업로드 완료", Toast.LENGTH_SHORT);
+                                Toast toast = Toasty.custom(MarketUploadActivity.this, "업로드 완료", null, BackColor, FontColor, 2000, false, true);
                                 toast.show();
                                 Intent intent = new Intent(MarketUploadActivity.this, StickerDetailActivity.class);
                                 intent.putExtra("sticker_id", sticker_id);
                                 startActivity(intent);
                                 finish();
                             } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
+                                new AlertDialog.Builder(MarketUploadActivity.this)
+                                        .setTitle("경고")
+                                        .setMessage("에러가 발생했습니다." + "\n" + "다시 시도해주세요.")
+                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
 
-                                View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(MarketUploadActivity.this);
-                                builder.setView(dialogView);
-
-                                final AlertDialog alertDialog = builder.create();
-                                alertDialog.show();
-                                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                                ImageView icon=dialogView.findViewById(R.id.warning);
-
-                                TextView txt=dialogView.findViewById(R.id.txtText);
-                                txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
-
-                                Button ok_btn = dialogView.findViewById(R.id.okBtn);
-                                ok_btn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        alertDialog.dismiss();
-                                    }
-                                });
-
-                                Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
-                                cancel_btn.setVisibility(View.GONE);
+                                            }
+                                        })
+                                        .show();
                             }
                         }
 
                         @Override
                         public void onFailure(Call<JsonObject> call, Throwable t) {
-                            Toast.makeText(MarketUploadActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
+                            Toasty.normal(MarketUploadActivity.this, "서버와의 통신이 불안정합니다").show();
                             Log.e("마켓 업로드 에러", t.getMessage());
                             t.printStackTrace(); // 에러 발생 원인 단계별로 출력
                         }
