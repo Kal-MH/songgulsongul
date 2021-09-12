@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -151,15 +152,7 @@ public class FragFollower extends Fragment {
                     rv.setAdapter(adapter);
                 }
                 else if(resultCode == statusCode.RESULT_CLIENT_ERR){
-                    /*new AlertDialog.Builder(getContext())
-                            .setTitle("경고")
-                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .show();*/
+
 
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     Context context = getActivity();
@@ -170,8 +163,7 @@ public class FragFollower extends Fragment {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setText("경고");
+                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("변경할 아이디를 입력해주세요.");

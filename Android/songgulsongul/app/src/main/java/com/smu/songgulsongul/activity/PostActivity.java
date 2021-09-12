@@ -205,53 +205,7 @@ public class PostActivity extends AppCompatActivity {
                                 startActivity(intent2);
                                 break;
                             case R.id.post_delete:
-                                /*new AlertDialog.Builder(PostActivity.this)
-                                        .setMessage("게시물을 삭제 하시겠습니까?")
-                                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
 
-                                            }
-                                        })
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                serviceApi.PostDelete(user_id, post_id).enqueue(new Callback<CodeResponse>() {
-                                                    @Override
-                                                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                                                        try {
-                                                            CodeResponse result = response.body();
-                                                            int resultCode = result.getCode();
-
-                                                            if (resultCode == StatusCode.RESULT_OK) {
-                                                                Toast.makeText(getApplicationContext(), "게시글 삭제 완료!", Toast.LENGTH_SHORT).show();
-                                                                onBackPressed();
-                                                                finish();
-                                                            } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
-                                                                Toast.makeText(getApplicationContext(), "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        } catch (NullPointerException e){
-                                                            new AlertDialog.Builder(PostActivity.this)
-                                                                    .setMessage("에러발생!")
-                                                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                                                        @Override
-                                                                        public void onClick(DialogInterface dialog, int which) {
-
-                                                                        }
-                                                                    })
-                                                                    .show();
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                                        Toast.makeText(PostActivity.this,  "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                                                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
-                                                    }
-                                                });
-                                            }
-                                        })
-                                        .show();*/
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
                                 builder.setView(dialogView);
@@ -260,8 +214,8 @@ public class PostActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setVisibility(View.GONE);
+                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                icon.setVisibility(View.GONE);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("게시물을 삭제하시겠습니까?");
@@ -293,8 +247,8 @@ public class PostActivity extends AppCompatActivity {
                                                     alertDialog.show();
                                                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                                    TextView title=dialogView.findViewById(R.id.titleTV);
-                                                    title.setVisibility(View.GONE);
+                                                    ImageView icon=dialogView.findViewById(R.id.warning);
+                                                    icon.setVisibility(View.GONE);
 
                                                     TextView txt=dialogView.findViewById(R.id.txtText);
                                                     txt.setText("에러발생!");
@@ -814,23 +768,7 @@ public class PostActivity extends AppCompatActivity {
                 if( CommentsData.get(a_position).getUser_id() == LoginSharedPreference.getUserId(PostActivity.this) ){
                     //댓글 삭제 알림 팝업
                     Log.d("comment", "삭제해보자요");
-                    /*new AlertDialog.Builder(PostActivity.this)
-                            .setTitle("경고")
-                            .setMessage("댓글을 삭제하시겠습니까?")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    deleteComment(CommentsData.get(a_position).getId());
-                                }
-                            })
-                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                                        }
-                                    }
-                            )
-                            .show();*/
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
                     builder.setView(dialogView);
@@ -839,8 +777,7 @@ public class PostActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setText("경고");
+                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("댓글을 삭제하시겠습니까?");

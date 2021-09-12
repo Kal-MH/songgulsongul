@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -140,16 +141,7 @@ public class FragEditPw extends Fragment {
             public void onClick(View v) {
                 pw = account_pw.getText().toString().trim();
                 if(pw.getBytes().length <= 0){
-                    /*new AlertDialog.Builder(getContext())
-                            .setTitle("경고")
-                            .setMessage("비밀번호를 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();*/
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     Context context = container.getContext();
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -159,8 +151,7 @@ public class FragEditPw extends Fragment {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setText("경고");
+                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("비밀번호를 입력해주세요.");
@@ -188,15 +179,7 @@ public class FragEditPw extends Fragment {
 
                             if(resultCode == StatusCode.RESULT_OK){
                                 pw_check = YES;
-                                /*new AlertDialog.Builder(getContext())
-                                        .setMessage("비밀번호가 일치합니다.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
 
-                                            }
-                                        })
-                                        .show();*/
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 Context context = container.getContext();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -206,8 +189,7 @@ public class FragEditPw extends Fragment {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setVisibility(View.GONE);
+                                ImageView icon=dialogView.findViewById(R.id.warning);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("비밀번호가 일치합니다.");
@@ -226,16 +208,7 @@ public class FragEditPw extends Fragment {
 
                             else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
                                 pw_check = NO;
-                                /*new AlertDialog.Builder(getContext())
-                                        .setTitle("경고")
-                                        .setMessage("비밀번호가 일치하지 않습니다.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
 
-                                            }
-                                        })
-                                        .show();*/
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 Context context = container.getContext();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -245,8 +218,7 @@ public class FragEditPw extends Fragment {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setText("경고");
+                                ImageView icon=dialogView.findViewById(R.id.warning);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("비밀번호가 일치하지 않습니다.");
@@ -264,15 +236,7 @@ public class FragEditPw extends Fragment {
                             }
 
                             else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                                /*new AlertDialog.Builder(getContext())
-                                        .setTitle("경고")
-                                        .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                            }
-                                        })
-                                        .show();*/
+
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 Context context = container.getContext();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -282,8 +246,7 @@ public class FragEditPw extends Fragment {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setText("경고");
+                                ImageView icon=dialogView.findViewById(R.id.warning);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");

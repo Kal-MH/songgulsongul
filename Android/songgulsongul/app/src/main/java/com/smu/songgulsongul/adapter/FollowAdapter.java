@@ -162,8 +162,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.ViewHolder
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            TextView title=dialogView.findViewById(R.id.titleTV);
-                            title.setText("경고");
+                            ImageView icon=dialogView.findViewById(R.id.warning);
 
                             TextView txt=dialogView.findViewById(R.id.txtText);
                             txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");

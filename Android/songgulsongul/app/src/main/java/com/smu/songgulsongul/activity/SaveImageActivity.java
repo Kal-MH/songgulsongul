@@ -89,29 +89,7 @@ public class SaveImageActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!size_check) {
-                    /*AlertDialog.Builder myAlertBuilder = new AlertDialog.Builder(SaveImageActivity.this);
-                    // alert의 title과 Messege 세팅
-                    myAlertBuilder.setTitle("경고");
-                    myAlertBuilder.setMessage("선택한 규격이 원본의 사이즈보다 크기 때문에 이미지 저장 시 화질 저하가 될 수 있습니다. 계속 하시겠습니까?");
-                    // 버튼 추가 (확인 버튼과 취소 버튼 )
-                    myAlertBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // 확인 버튼을 눌렸을 경우
-                            DownloadImage();
-                            Toast.makeText(getApplicationContext(), "저장 성공!", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    });
-                    myAlertBuilder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // 취소 버튼을 눌렸을 경우
-                            Toast.makeText(getApplicationContext(), "Pressed Cancle",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    // Alert를 생성해주고 보여주는 메소드(show를 선언해야 Alert가 생성됨)
-                    myAlertBuilder.show();*/
+
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(SaveImageActivity.this);
                     builder.setView(dialogView);
@@ -120,8 +98,7 @@ public class SaveImageActivity extends Activity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setText("경고");
+                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("선택한 규격이 원본의 사이즈보다 크기 때문에 이미지 저장 시 화질이 저하될 수 있습니다. 계속 하시겠습니까?");

@@ -116,19 +116,7 @@ public class KeepActivity extends AppCompatActivity {
                     setKeepData(result);
                 }
                 else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                    /*new AlertDialog.Builder(KeepActivity.this)
-                            .setTitle("경고")
-                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 에러 발생 시 새로고침
-                                    Intent intent = getIntent();
-                                    finish();
-                                    startActivity(intent);
-                                }
-                            })
-                            .show();*/
+
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(KeepActivity.this);
                     builder.setView(dialogView);
@@ -137,8 +125,7 @@ public class KeepActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setText("경고");
+                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");

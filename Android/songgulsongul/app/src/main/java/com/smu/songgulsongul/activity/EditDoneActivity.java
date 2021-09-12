@@ -3,6 +3,7 @@ package com.smu.songgulsongul.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import com.smu.songgulsongul.R;
+
+import java.io.File;
 
 public class EditDoneActivity extends AppCompatActivity {
     Button upload, back, market_upload, share;
@@ -67,8 +70,8 @@ public class EditDoneActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, filePath);
-                shareIntent.setType("image/jpeg");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(filePath));
+                shareIntent.setType("image/*");
                 startActivity(Intent.createChooser(shareIntent, "공유하기"));
             }
         });

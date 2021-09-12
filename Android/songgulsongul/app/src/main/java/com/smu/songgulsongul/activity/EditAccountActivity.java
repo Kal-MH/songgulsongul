@@ -10,8 +10,10 @@ import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,26 +114,17 @@ public class EditAccountActivity extends AppCompatActivity {
                         new_id = account_newid.getText().toString().trim();
 
                         if(new_id.getBytes().length <= 0){
-                            /*new AlertDialog.Builder(EditAccountActivity.this)
-                                    .setTitle("경고")
-                                    .setMessage("변경할 아이디를 입력해주세요.")
-                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                        }
-                                    })
-                                    .show();*/
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
                             builder.setView(dialogView);
 
                             final AlertDialog alertDialog = builder.create();
-                            alertDialog.show();
+                            WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
+                            params.width = 280;
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alertDialog.show();
 
-                            TextView title=dialogView.findViewById(R.id.titleTV);
-                            title.setText("경고");
+                            ImageView icon=dialogView.findViewById(R.id.warning);
 
                             TextView txt=dialogView.findViewById(R.id.txtText);
                             txt.setText("변경할 아이디를 입력해주세요.");
@@ -146,24 +139,10 @@ public class EditAccountActivity extends AppCompatActivity {
 
                             Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
                             cancel_btn.setVisibility(View.GONE);
-                            /*cancle_btn.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    alertDialog.dismiss();
-                                }
-                            });*/
+
                         }
 
                         else if(id_check == NO){
-                            /*new AlertDialog.Builder(EditAccountActivity.this)
-                                    .setMessage("아이디 중복확인을 완료해주세요.")
-                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                        }
-                                    })
-                                    .show();*/
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
                             builder.setView(dialogView);
@@ -172,8 +151,8 @@ public class EditAccountActivity extends AppCompatActivity {
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            TextView title=dialogView.findViewById(R.id.titleTV);
-                            title.setVisibility(View.GONE);
+                            ImageView icon=dialogView.findViewById(R.id.warning);
+                            icon.setVisibility(View.GONE);
 
                             TextView txt=dialogView.findViewById(R.id.txtText);
                             txt.setText("아이디 중복확인을 완료해주세요.");
@@ -208,15 +187,6 @@ public class EditAccountActivity extends AppCompatActivity {
                                     }
 
                                     else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                                        /*new AlertDialog.Builder(EditAccountActivity.this)
-                                                .setTitle("경고")
-                                                .setMessage("Server Err."+"\n"+"다시 시도해주세요.")
-                                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                    }
-                                                })
-                                                .show();*/
                                         View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                         AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
                                         builder.setView(dialogView);
@@ -225,8 +195,7 @@ public class EditAccountActivity extends AppCompatActivity {
                                         alertDialog.show();
                                         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                        TextView title=dialogView.findViewById(R.id.titleTV);
-                                        title.setText("경고");
+                                        ImageView icon=dialogView.findViewById(R.id.warning);
 
                                         TextView txt=dialogView.findViewById(R.id.txtText);
                                         txt.setText("Server Err."+"\n"+"다시 시도해주세요.");
@@ -260,16 +229,6 @@ public class EditAccountActivity extends AppCompatActivity {
                         account_pw = findViewById(R.id.account_pw);
                         pw = account_pw.getText().toString().trim();
                         if(pw.getBytes().length <= 0){
-                            /*new AlertDialog.Builder(EditAccountActivity.this)
-                                    .setTitle("경고")
-                                    .setMessage("현재 비밀번호를 입력해주세요.")
-                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                        }
-                                    })
-                                    .show();*/
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
                             builder.setView(dialogView);
@@ -278,8 +237,7 @@ public class EditAccountActivity extends AppCompatActivity {
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            TextView title=dialogView.findViewById(R.id.titleTV);
-                            title.setText("경고");
+                            ImageView icon=dialogView.findViewById(R.id.warning);
 
                             TextView txt=dialogView.findViewById(R.id.txtText);
                             txt.setText("현재 비밀번호를 입력해주세요.");
@@ -297,15 +255,6 @@ public class EditAccountActivity extends AppCompatActivity {
                         }
 
                         else if(pw_check == NO){
-                            /*new AlertDialog.Builder(EditAccountActivity.this)
-                                    .setMessage("현재 비밀번호를 확인해주세요.")
-                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                        }
-                                    })
-                                    .show();*/
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
                             builder.setView(dialogView);
@@ -314,8 +263,8 @@ public class EditAccountActivity extends AppCompatActivity {
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            TextView title=dialogView.findViewById(R.id.titleTV);
-                            title.setVisibility(View.GONE);
+                            ImageView icon=dialogView.findViewById(R.id.warning);
+                            icon.setVisibility(View.GONE);
 
                             TextView txt=dialogView.findViewById(R.id.txtText);
                             txt.setText("현재 비밀번호를 확인해주세요.");
@@ -333,16 +282,6 @@ public class EditAccountActivity extends AppCompatActivity {
                         }
 
                         else if(pw_check_flag == NO){
-                            /*new AlertDialog.Builder(EditAccountActivity.this)
-                                    .setTitle("경고")
-                                    .setMessage("새 비밀번호 확인을 완료해주세요.")
-                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                        }
-                                    })
-                                    .show();*/
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
                             builder.setView(dialogView);
@@ -351,8 +290,7 @@ public class EditAccountActivity extends AppCompatActivity {
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            TextView title=dialogView.findViewById(R.id.titleTV);
-                            title.setText("경고");
+                            ImageView icon=dialogView.findViewById(R.id.warning);
 
                             TextView txt=dialogView.findViewById(R.id.txtText);
                             txt.setText("새 비밀번호 확인을 완료해주세요.");

@@ -325,15 +325,7 @@ public class UploadDetailActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
-                                /*new AlertDialog.Builder(UploadDetailActivity.this)
-                                        .setMessage("업로드에 실패했습니다." + "\n" + "다시 시도해주세요..")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
 
-                                            }
-                                        })
-                                        .show();*/
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(UploadDetailActivity.this);
                                 builder.setView(dialogView);
@@ -342,8 +334,8 @@ public class UploadDetailActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setVisibility(View.GONE);
+                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                icon.setVisibility(View.GONE);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("업로드에 실패했습니다."+"\n"+"다시 시도해주세요.");
@@ -360,15 +352,7 @@ public class UploadDetailActivity extends AppCompatActivity {
                                 cancel_btn.setVisibility(View.GONE);
                             }
                         } catch (NullPointerException e){
-                            /*new AlertDialog.Builder(UploadDetailActivity.this)
-                                    .setMessage("에러발생!")
-                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
 
-                                        }
-                                    })
-                                    .show();*/
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(UploadDetailActivity.this);
                             builder.setView(dialogView);
@@ -377,8 +361,8 @@ public class UploadDetailActivity extends AppCompatActivity {
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            TextView title=dialogView.findViewById(R.id.titleTV);
-                            title.setVisibility(View.GONE);
+                            ImageView icon=dialogView.findViewById(R.id.warning);
+                            icon.setVisibility(View.GONE);
 
                             TextView txt=dialogView.findViewById(R.id.txtText);
                             txt.setText("에러발생!");

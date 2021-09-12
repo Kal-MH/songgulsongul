@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,15 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 // 입력한 아이디가 공백값일 경우 --> 서버 통신 x
                 if (login_id.getBytes().length <= 0) {
-                    /*new AlertDialog.Builder(LoginActivity.this)
-                            .setTitle("경고")
-                            .setMessage("아이디를 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            });*/
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                     builder.setView(dialogView);
@@ -105,8 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setText("경고");
+                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("아이디를 입력해주세요.");
@@ -126,16 +118,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 // 입력한 비밀번호가 공백값일 경우 --> 서버 통신 x
                 else if (passsword.getBytes().length <= 0) {
-                    /*new AlertDialog.Builder(LoginActivity.this)
-                            .setTitle("경고")
-                            .setMessage("비밀번호를 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();*/
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                     builder.setView(dialogView);
@@ -144,8 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setText("경고");
+                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("비밀번호를 입력해주세요.");
@@ -192,15 +174,7 @@ public class LoginActivity extends AppCompatActivity {
                                 finish();
                             }
                             else if (resultCode == statusCode.RESULT_CLIENT_ERR) {
-                                /*new AlertDialog.Builder(LoginActivity.this)
-                                        .setMessage("아이디, 또는 패스워드가 잘못 입력되었습니다.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
 
-                                            }
-                                        })
-                                        .show();*/
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                 builder.setView(dialogView);
@@ -209,8 +183,8 @@ public class LoginActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setVisibility(View.GONE);
+                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                icon.setVisibility(View.GONE);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("아이디, 또는 패스워드가 잘못 입력되었습니다.");

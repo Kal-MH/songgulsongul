@@ -145,16 +145,7 @@ public class MarketUploadActivity extends AppCompatActivity {
                 String price = market_upload_price.getText().toString().trim();
 
                 if (name.getBytes().length <= 0) {
-                    /*new AlertDialog.Builder(MarketUploadActivity.this)
-                            .setTitle("경고")
-                            .setMessage("제품명을 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();*/
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(MarketUploadActivity.this);
                     builder.setView(dialogView);
@@ -163,8 +154,7 @@ public class MarketUploadActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setText("경고");
+                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("제품명을 입력해주세요.");
@@ -180,16 +170,7 @@ public class MarketUploadActivity extends AppCompatActivity {
                     Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
                     cancel_btn.setVisibility(View.GONE);
                 } else if (price.getBytes().length <= 0) {
-                    /*new AlertDialog.Builder(MarketUploadActivity.this)
-                            .setTitle("경고")
-                            .setMessage("판매 가격을 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();*/
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(MarketUploadActivity.this);
                     builder.setView(dialogView);
@@ -198,8 +179,7 @@ public class MarketUploadActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setText("경고");
+                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("판매 가격을 입력해주세요.");
@@ -233,16 +213,7 @@ public class MarketUploadActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
-                                /*new AlertDialog.Builder(MarketUploadActivity.this)
-                                        .setTitle("경고")
-                                        .setMessage("에러가 발생했습니다." + "\n" + "다시 시도해주세요.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
 
-                                            }
-                                        })
-                                        .show();*/
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(MarketUploadActivity.this);
                                 builder.setView(dialogView);
@@ -251,8 +222,7 @@ public class MarketUploadActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setText("경고");
+                                ImageView icon=dialogView.findViewById(R.id.warning);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");

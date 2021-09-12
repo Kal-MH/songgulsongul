@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,16 +87,7 @@ public class FragEditId extends Fragment {
                 if(new_id.getBytes().length <= 0){
                     id_check = NO;
                     id_modify_check = NO;
-                    /*new AlertDialog.Builder(getContext())
-                            .setTitle("경고")
-                            .setMessage("변경할 아이디를 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();*/
 
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     Context context = getActivity();
@@ -106,8 +98,7 @@ public class FragEditId extends Fragment {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setText("경고");
+                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("변경할 아이디를 입력해주세요.");
@@ -128,14 +119,7 @@ public class FragEditId extends Fragment {
                 else if (login_id.equals(new_id)){
                     id_check = NO;
                     id_modify_check = NO;
-                    /*new AlertDialog.Builder(getContext())
-                            .setMessage("현재 아이디와 동일한 아이디입니다.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .show();*/
+
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     Context context = getActivity();
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -145,8 +129,8 @@ public class FragEditId extends Fragment {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setVisibility(View.GONE);
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    icon.setVisibility(View.GONE);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("현재 아이디와 동일한 아이디입니다.");
@@ -172,15 +156,7 @@ public class FragEditId extends Fragment {
                             int resultCode = result.getCode();
 
                             if(resultCode == StatusCode.RESULT_OK){
-                                /*new AlertDialog.Builder(getContext())
-                                        .setMessage("사용할 수 있는 아이디입니다.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
 
-                                            }
-                                        })
-                                        .show();*/
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 Context context = getActivity();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -190,8 +166,8 @@ public class FragEditId extends Fragment {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setVisibility(View.GONE);
+                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                icon.setVisibility(View.GONE);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("사용할 수 있는 아이디입니다.");
@@ -214,16 +190,7 @@ public class FragEditId extends Fragment {
                             else if (resultCode == StatusCode.RESULT_CLIENT_ERR){
                                 id_check = NO;
                                 id_modify_check = NO;
-                                /*new AlertDialog.Builder(getContext())
-                                        .setTitle("경고")
-                                        .setMessage("이미 사용중인 아이디입니다."+"\n"+"다시 입력해 주세요.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                account_newid.setText(null);
-                                            }
-                                        })
-                                        .show();*/
+
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 Context context = getActivity();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -233,8 +200,7 @@ public class FragEditId extends Fragment {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setText("경고");
+                                ImageView icon=dialogView.findViewById(R.id.warning);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("이미 사용중인 아이디입니다."+"\n"+"다시 입력해주세요.");
@@ -256,15 +222,7 @@ public class FragEditId extends Fragment {
                             else if (resultCode == StatusCode.RESULT_SERVER_ERR){
                                 id_check = NO;
                                 id_modify_check = NO;
-                                /*new AlertDialog.Builder(getContext())
-                                        .setTitle("경고")
-                                        .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                            }
-                                        })
-                                        .show();*/
+
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 Context context = getActivity();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -274,8 +232,7 @@ public class FragEditId extends Fragment {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setText("경고");
+                                ImageView icon=dialogView.findViewById(R.id.warning);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");

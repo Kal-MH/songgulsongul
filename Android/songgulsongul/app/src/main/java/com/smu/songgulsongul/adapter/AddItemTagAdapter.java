@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -101,8 +102,8 @@ public class AddItemTagAdapter extends ItemTagAdapter {
                 alertDialog.show();
                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                TextView title=dialogView.findViewById(R.id.titleTV);
-                title.setVisibility(View.GONE);
+                ImageView icon=dialogView.findViewById(R.id.warning);
+                icon.setVisibility(View.GONE);
 
                 TextView txt=dialogView.findViewById(R.id.txtText);
                 txt.setText("삭제하시겠습니까?");

@@ -131,52 +131,6 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final UserData data = new UserData(login_id, 1);
 
-                /*new AlertDialog.Builder(EditProfileActivity.this)
-                        .setMessage("정말 탈퇴 하시겠습니까?")
-                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                serviceApi.DeleteAccount(data).enqueue(new Callback<CodeResponse>() {
-                                    @Override
-                                    public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
-                                        CodeResponse result = response.body();
-                                        int resultCode = result.getCode();
-
-                                        if(resultCode == StatusCode.RESULT_OK){
-                                            Toast.makeText(EditProfileActivity.this, "회원 탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                                            LoginSharedPreference.clearLogin(EditProfileActivity.this);
-                                            Intent intent3 = new Intent(EditProfileActivity.this, LoginActivity.class);
-                                            intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(intent3);
-                                        }
-                                        else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                                            new AlertDialog.Builder(EditProfileActivity.this)
-                                                    .setTitle("경고")
-                                                    .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                        }
-                                                    })
-                                                    .show();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<CodeResponse> call, Throwable t) {
-                                        Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
-                                        Log.e("회원탈퇴 에러", t.getMessage());
-                                        t.printStackTrace(); // 에러 발생 원인 단계별로 출력
-                                    }
-                                });
-                            }
-                        })
-                        .show();*/
                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
                 builder.setView(dialogView);
@@ -185,8 +139,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 alertDialog.show();
                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                TextView title=dialogView.findViewById(R.id.titleTV);
-                title.setVisibility(View.GONE);
+                ImageView icon=dialogView.findViewById(R.id.warning);
+                icon.setVisibility(View.GONE);
 
                 TextView txt=dialogView.findViewById(R.id.txtText);
                 txt.setText("정말 탈퇴하시겠습니까?");
@@ -217,8 +171,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                     alertDialog.show();
                                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                    TextView title=dialogView.findViewById(R.id.titleTV);
-                                    title.setText("경고");
+                                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                                     TextView txt=dialogView.findViewById(R.id.txtText);
                                     txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
@@ -311,15 +264,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
 
                 if(profile_sns_check == YES && new_sns.getBytes().length <= 0){
-                        /*new AlertDialog.Builder(EditProfileActivity.this)
-                                .setMessage("SNS계정을 입력해주세요.")
-                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
 
-                                    }
-                                })
-                                .show();*/
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
                     builder.setView(dialogView);
@@ -328,8 +273,8 @@ public class EditProfileActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setVisibility(View.GONE);
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    icon.setVisibility(View.GONE);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("SNS계정을 입력해주세요.");
@@ -361,15 +306,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                 Toast.makeText(EditProfileActivity.this, "프로필 수정 완료!", Toast.LENGTH_SHORT).show();
                             }
                             else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
-                                /*new AlertDialog.Builder(EditProfileActivity.this)
-                                        .setTitle("경고")
-                                        .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                            }
-                                        })
-                                        .show();*/
+
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
                                 builder.setView(dialogView);
@@ -378,8 +315,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setText("경고");
+                                ImageView icon=dialogView.findViewById(R.id.warning);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("에러가 발생했습니다"+"\n"+"다시 시도해주세요.");
@@ -396,15 +332,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                 cancel_btn.setVisibility(View.GONE);
                             }
                             else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                                /*new AlertDialog.Builder(EditProfileActivity.this)
-                                        .setTitle("경고")
-                                        .setMessage("Server Err."+"\n"+"다시 시도해주세요.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                            }
-                                        })
-                                        .show();*/
+
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
                                 builder.setView(dialogView);
@@ -413,8 +341,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                TextView title=dialogView.findViewById(R.id.titleTV);
-                                title.setText("경고");
+                                ImageView icon=dialogView.findViewById(R.id.warning);
 
                                 TextView txt=dialogView.findViewById(R.id.txtText);
                                 txt.setText("Server Err."+"\n"+"다시 시도해주세요.");
@@ -480,19 +407,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     setProfileData(result);
                 }
                 else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                    /*new AlertDialog.Builder(EditProfileActivity.this)
-                            .setTitle("경고")
-                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 에러 발생 시 새로고침
-                                    Intent intent = getIntent();
-                                    finish();
-                                    startActivity(intent);
-                                }
-                            })
-                            .show();*/
+
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
                     builder.setView(dialogView);
@@ -501,8 +416,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    TextView title=dialogView.findViewById(R.id.titleTV);
-                    title.setText("경고");
+                    ImageView icon=dialogView.findViewById(R.id.warning);
 
                     TextView txt=dialogView.findViewById(R.id.txtText);
                     txt.setText("에러가 발생했습니다"+"\n"+"다시 시도해주세요.");
