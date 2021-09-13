@@ -22,6 +22,7 @@ import java.io.OutputStream;
 
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.DetectPaperActivity;
+import com.smu.songgulsongul.activity.EditDoneActivity;
 import com.smu.songgulsongul.activity.UploadDetailActivity;
 import com.smu.songgulsongul.layout.CameraSurfaceView;
 
@@ -99,7 +100,7 @@ public class FragUploadCam extends Fragment {
                     String filePath= tempFile.getAbsolutePath();
 
                     if(isQuick){
-                        Intent intent = new Intent(context, UploadDetailActivity.class);
+                        Intent intent = new Intent(context, EditDoneActivity.class);
                         intent.putExtra("path", filePath);
                         startActivity(intent);
                         getActivity().finish();

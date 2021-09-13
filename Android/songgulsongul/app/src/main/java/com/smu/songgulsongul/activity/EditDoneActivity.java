@@ -58,8 +58,6 @@ public class EditDoneActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EditDoneActivity.this, UploadActivity.class);
-                startActivity(intent);
                 finish();
             }
         });

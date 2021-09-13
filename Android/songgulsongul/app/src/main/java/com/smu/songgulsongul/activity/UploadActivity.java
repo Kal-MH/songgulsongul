@@ -135,7 +135,7 @@ public class UploadActivity extends AppCompatActivity {
                     String filePath= fragUploadGal.getPicked_path();
                     Intent intent;
                     if(isQuick)
-                        intent = new Intent(this, UploadDetailActivity.class);
+                        intent = new Intent(this, EditDoneActivity.class);
 
                     else
                         intent = new Intent(this, DetectPaperActivity.class);
