@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -197,15 +199,30 @@ public class ProfileActivity extends AppCompatActivity {
 
                         }
                         else if(resultCode == statusCode.RESULT_CLIENT_ERR){
-                            new AlertDialog.Builder(ProfileActivity.this)
-                                    .setTitle("경고")
-                                    .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                        }
-                                    })
-                                    .show();
+
+                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                            builder.setView(dialogView);
+
+                            final AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                            ImageView icon=dialogView.findViewById(R.id.warning);
+
+                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+
+                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                            cancel_btn.setVisibility(View.GONE);
                         }
                         else {
                             Toasty.normal(ProfileActivity.this, "서버와의 통신이 불안정합니다").show();
@@ -241,15 +258,30 @@ public class ProfileActivity extends AppCompatActivity {
                             follower_count_tv.setText(follower_cnt+"");
                         }
                         else if(resultCode == statusCode.RESULT_SERVER_ERR){
-                            new AlertDialog.Builder(ProfileActivity.this)
-                                    .setTitle("경고")
-                                    .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                        }
-                                    })
-                                    .show();
+
+                            View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                            builder.setView(dialogView);
+
+                            final AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                            ImageView icon=dialogView.findViewById(R.id.warning);
+
+                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                            Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                            ok_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+
+                            Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                            cancel_btn.setVisibility(View.GONE);
                         }
                         else {
                             Toasty.normal(ProfileActivity.this, "서버와의 통신이 불안정합니다").show();
@@ -285,19 +317,33 @@ public class ProfileActivity extends AppCompatActivity {
                     setProfileData(result);
                 }
                 else if(resultCode == statusCode.RESULT_CLIENT_ERR){
-                    new AlertDialog.Builder(ProfileActivity.this)
-                            .setTitle("경고")
-                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 에러 발생 시 새로고침
-                                    Intent intent = getIntent();
-                                    finish();
-                                    startActivity(intent);
-                                }
-                            })
-                            .show();
+
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //에러 발생 시 새로고침
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
             }
 

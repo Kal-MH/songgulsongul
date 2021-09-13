@@ -3,6 +3,8 @@ package com.smu.songgulsongul.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -101,16 +104,30 @@ public  class JoinActivity extends AppCompatActivity {
                 login_id = login_id.trim();
                 if(login_id.getBytes().length <= 0){
                     id_check_flag = 0;
-                    new AlertDialog.Builder(JoinActivity.this)
-                            .setTitle("경고")
-                            .setMessage("아이디를 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("아이디를 입력해주세요.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
 
                 else {
@@ -126,44 +143,89 @@ public  class JoinActivity extends AppCompatActivity {
 
                                 if (resultCode == RESULT_OK) {
                                     id_check_flag = 1;
-                                    new AlertDialog.Builder(JoinActivity.this)
-                                            .setMessage("사용할 수 있는 아이디입니다.")
-                                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
 
-                                                }
-                                            })
-                                            .show();
+                                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                                    builder.setView(dialogView);
+
+                                    final AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+                                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                    ImageView icon=dialogView.findViewById(R.id.warning);
+                                    icon.setVisibility(View.GONE);
+
+                                    TextView txt=dialogView.findViewById(R.id.txtText);
+                                    txt.setText("사용할 수 있는 아이디입니다.");
+
+                                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            alertDialog.dismiss();
+                                        }
+                                    });
+
+                                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                    cancel_btn.setVisibility(View.GONE);
                                 }
 
                                 else if (resultCode == RESULT_CLIENT_ERR){
                                     id_check_flag = 0;
-                                    new AlertDialog.Builder(JoinActivity.this)
-                                            .setTitle("경고")
-                                            .setMessage("이미 사용중인 아이디입니다."+"\n"+"다시 입력해 주세요.")
-                                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
 
-                                                }
-                                            })
-                                            .show();
+                                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                                    builder.setView(dialogView);
+
+                                    final AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+                                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                                    TextView txt=dialogView.findViewById(R.id.txtText);
+                                    txt.setText("이미 사용중인 아이디입니다."+"\n"+"다시 입력해주세요.");
+
+                                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            alertDialog.dismiss();
+                                        }
+                                    });
+
+                                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                    cancel_btn.setVisibility(View.GONE);
+
                                     join_id_text.setText(null);
                                 }
 
                                 else if (resultCode == RESULT_SERVER_ERR){
                                     id_check_flag = 0;
-                                    new AlertDialog.Builder(JoinActivity.this)
-                                            .setTitle("경고")
-                                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
 
-                                                }
-                                            })
-                                            .show();
+                                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                                    builder.setView(dialogView);
+
+                                    final AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+                                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                                    TextView txt=dialogView.findViewById(R.id.txtText);
+                                    txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            alertDialog.dismiss();
+                                        }
+                                    });
+
+                                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                    cancel_btn.setVisibility(View.GONE);
                                 }
 
                                 else{
@@ -249,31 +311,59 @@ public  class JoinActivity extends AppCompatActivity {
                 // 입력한 이메일이 공백값일 경우 --> 서버 통신 x
                 if(email.getBytes().length <= 0){
                     email_check_flag = 0;
-                    new AlertDialog.Builder(JoinActivity.this)
-                            .setTitle("경고")
-                            .setMessage("이메일을 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("이메일을 입력해주세요.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
 
                 // 입력한 이메일이 형식에서 벗어날 경우 --> 서버 통신x
                 else if(!email_pattern.matcher(email).matches()){
                     email_check_flag = 0;
-                    new AlertDialog.Builder(JoinActivity.this)
-                            .setTitle("경고")
-                            .setMessage("올바른 이메일 형식이 아닙니다.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("올바른 이메일 형식이 아닙니다.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
 
                 else {
@@ -283,7 +373,9 @@ public  class JoinActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                                 JsonObject result = response.body();
-                                auth = result.get("authNumber").getAsString();
+                                if(result!=null) {
+                                    auth = result.get("authNumber").getAsString();
+                                }
                                 int resultCode = result.get("code").getAsInt();
 
                                 if(resultCode == RESULT_OK) {
@@ -292,16 +384,29 @@ public  class JoinActivity extends AppCompatActivity {
                                     countDownTimer(); // 타이머 작동
                                 }
                                 else if(resultCode == RESULT_SERVER_ERR){
-                                    new AlertDialog.Builder(JoinActivity.this)
-                                            .setTitle("경고")
-                                            .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
+                                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                                    builder.setView(dialogView);
 
-                                                }
-                                            })
-                                            .show();
+                                    final AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+                                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                                    TextView txt=dialogView.findViewById(R.id.txtText);
+                                    txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            alertDialog.dismiss();
+                                        }
+                                    });
+
+                                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                    cancel_btn.setVisibility(View.GONE);
                                 }
                                 else{
                                     Toasty.normal(JoinActivity.this, "서버와의 통신이 불안정합니다").show();
@@ -330,43 +435,90 @@ public  class JoinActivity extends AppCompatActivity {
                 // 인증번호 입력이 공백값일 경우
                 if(inputAuth.getBytes().length <= 0){
                     email_check_flag = 0;
-                    new AlertDialog.Builder(JoinActivity.this)
-                            .setTitle("경고")
-                            .setMessage("인증번호를 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("인증번호를 입력해주세요.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
                 else {
                     countDownTimer.cancel(); // 타이머 종료
 
                     if(inputAuth.equals(auth)){
                         email_check_flag = 1;
-                        new AlertDialog.Builder(JoinActivity.this)
-                                .setMessage("인증되었습니다.")
-                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
 
-                                    }
-                                })
-                                .show();
+                        View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                        builder.setView(dialogView);
+
+                        final AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                        ImageView icon=dialogView.findViewById(R.id.warning);
+                        icon.setVisibility(View.GONE);
+
+                        TextView txt=dialogView.findViewById(R.id.txtText);
+                        txt.setText("인증되었습니다.");
+
+                        Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                        ok_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
+                        Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                        cancel_btn.setVisibility(View.GONE);
                     }
                     else{
                         email_check_flag = 0;
-                        new AlertDialog.Builder(JoinActivity.this)
-                                .setMessage("인증실패!"+"\n"+"다시 시도해주세요.")
-                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
 
-                                    }
-                                })
-                                .show();
+                        View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                        builder.setView(dialogView);
+
+                        final AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                        ImageView icon=dialogView.findViewById(R.id.warning);
+                        icon.setVisibility(View.GONE);
+
+                        TextView txt=dialogView.findViewById(R.id.txtText);
+                        txt.setText("인증실패!"+"\n"+"다시 시도해주세요.");
+
+                        Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                        ok_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
+                        Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                        cancel_btn.setVisibility(View.GONE);
+
                         join_email_text.setText(null);
                         join_.setText(null);
                         join_check_key.setEnabled(false);
@@ -420,72 +572,142 @@ public  class JoinActivity extends AppCompatActivity {
 
                 // sns계정 유 선택 --> 값 입력x 경우 --> 서버 통신x
                 if(sns_check_flag == 1 && sns_url_num <= 0 ){
-                        new AlertDialog.Builder(JoinActivity.this)
-                                .setTitle("경고")
-                                .setMessage("sns계정 입력을 완료해주세요.")
-                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
 
-                                    }
-                                })
-                                .show();
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("sns계정 입력을 완료해주세요.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
 
                 // 미입력한 값이 있을 경우 --> 서버 통신x
                 if(email_num <= 0 || password_num <= 0 || login_id_num <= 0){
-                    new AlertDialog.Builder(JoinActivity.this)
-                            .setTitle("경고")
-                            .setMessage("항목을 모두 입력해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("항목을 모두 입력해주세요.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
 
                 // 아이디 중복확인 완료x --> 서버 통신x
                 else if(id_check_flag == 0){
-                    new AlertDialog.Builder(JoinActivity.this)
-                            .setTitle("경고")
-                            .setMessage("아이디 중복확인을 완료해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("아이디 중복확인을 완료해주세요.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
 
                 // 이메일 인증 완료x --> 서버 통신x
                 else if(email_check_flag == 0){
-                    new AlertDialog.Builder(JoinActivity.this)
-                            .setTitle("경고")
-                            .setMessage("이메일 인증을 완료해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("이메일 인증을 완료해주세요.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
 
                 // 비밀번호 일치 여부 확인x --> 서버 통신x
                 else if(password_check_flag == 0){
-                    new AlertDialog.Builder(JoinActivity.this)
-                            .setTitle("경고")
-                            .setMessage("비밀번호 확인을 완료해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .show();
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("비밀번호 확인을 완료해주세요.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
 
                 else {
@@ -498,44 +720,89 @@ public  class JoinActivity extends AppCompatActivity {
                                 CodeResponse result = response.body();
                                 int resultCode = result.getCode();
                                 if (resultCode == RESULT_OK) {
-                                    new AlertDialog.Builder(JoinActivity.this)
-                                            .setMessage("회원가입 완료!")
-                                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    // 회원가입 성공시 로그인 화면으로 전환
-                                                    Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
-                                                    startActivity(intent);
-                                                }
-                                            })
-                                            .show();
+
+                                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                                    builder.setView(dialogView);
+
+                                    final AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+                                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                    ImageView icon=dialogView.findViewById(R.id.warning);
+                                    icon.setVisibility(View.GONE);
+
+                                    TextView txt=dialogView.findViewById(R.id.txtText);
+                                    txt.setText("회원가입 완료!");
+
+                                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            //회원가입 성공시 로그인 화면으로 전환
+                                            Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
+                                        }
+                                    });
+
+                                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                    cancel_btn.setVisibility(View.GONE);
                                 } else if (resultCode == RESULT_CLIENT_ERR) {
-                                    new AlertDialog.Builder(JoinActivity.this)
-                                            .setMessage("회원가입 실패" + "\n" + "다시 시도해주세요.")
-                                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    // 회원가입 실패시 화면 새로고침 --> 처음부터 재시도
-                                                    Intent intent = getIntent();
-                                                    finish();
-                                                    startActivity(intent);
-                                                }
-                                            })
-                                            .show();
+
+                                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                                    builder.setView(dialogView);
+
+                                    final AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+                                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                    ImageView icon=dialogView.findViewById(R.id.warning);
+                                    icon.setVisibility(View.GONE);
+
+                                    TextView txt=dialogView.findViewById(R.id.txtText);
+                                    txt.setText("회원가입 실패"+"\n"+"다시 시도해주세요.");
+
+                                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            //회원가입 실패시 화면 새로고침 --> 처음부터 재시도
+                                            Intent intent = getIntent();
+                                            finish();
+                                            startActivity(intent);
+                                        }
+                                    });
+
+                                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                    cancel_btn.setVisibility(View.GONE);
                                 } else {
                                     Toasty.normal(JoinActivity.this, "서버와의 통신이 불안정합니다").show();
                                 }
                             } catch (NullPointerException e){
-                                new AlertDialog.Builder(JoinActivity.this)
-                                        .setTitle("경고")
-                                        .setMessage("에러가 발생했습니다."+"\n"+"다시 시도해주세요.")
-                                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
 
-                                            }
-                                        })
-                                        .show();
+                                View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(JoinActivity.this);
+                                builder.setView(dialogView);
+
+                                final AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                ImageView icon=dialogView.findViewById(R.id.warning);
+
+                                TextView txt=dialogView.findViewById(R.id.txtText);
+                                txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+
+                                Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                                ok_btn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        alertDialog.dismiss();
+                                    }
+                                });
+
+                                Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                                cancel_btn.setVisibility(View.GONE);
                             }
                         }
 

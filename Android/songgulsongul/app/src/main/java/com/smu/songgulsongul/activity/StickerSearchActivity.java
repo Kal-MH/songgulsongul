@@ -2,11 +2,15 @@ package com.smu.songgulsongul.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -143,18 +147,34 @@ public class StickerSearchActivity extends AppCompatActivity {
                 }
 
                 else if(resultCode == StatusCode.RESULT_SERVER_ERR){
-                    new AlertDialog.Builder(StickerSearchActivity.this)
-                            .setMessage("서버 에러!" + "\n" + "다시 시도해주세요.")
-                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 화면 새로고침
-                                    Intent intent = getIntent();
-                                    finish();
-                                    startActivity(intent);
-                                }
-                            })
-                            .show();
+
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(StickerSearchActivity.this);
+                    builder.setView(dialogView);
+
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    icon.setVisibility(View.GONE);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("서버 에러!"+"\n"+"다시 시도해주세요.");
+
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //화면 새로고침
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
+                        }
+                    });
+
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setVisibility(View.GONE);
                 }
             }
 

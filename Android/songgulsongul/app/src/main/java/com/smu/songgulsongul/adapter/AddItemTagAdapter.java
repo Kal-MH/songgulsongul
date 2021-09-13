@@ -1,23 +1,35 @@
 package com.smu.songgulsongul.adapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+import java.util.zip.Inflater;
 
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.AddItemtagActivity;
+import com.smu.songgulsongul.activity.EditAccountActivity;
 import com.smu.songgulsongul.activity.ItemDetailActivity;
 import com.smu.songgulsongul.responseData.ItemTag;
 
@@ -65,7 +77,7 @@ public class AddItemTagAdapter extends ItemTagAdapter {
         holder.pic.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                new AlertDialog.Builder(context)
+                /*new AlertDialog.Builder(context)
                         .setMessage("삭제하시겠습니까?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
@@ -80,12 +92,47 @@ public class AddItemTagAdapter extends ItemTagAdapter {
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         })
-                        .show();
+                        .show();*/
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View dialogView = inflater.inflate(R.layout.activity_popup,null);
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+                builder.setView(dialogView);
+
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                ImageView icon=dialogView.findViewById(R.id.warning);
+                icon.setVisibility(View.GONE);
+
+                TextView txt=dialogView.findViewById(R.id.txtText);
+                txt.setText("삭제하시겠습니까?");
+
+                Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                ok_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //삭제하는 코드
+                        dataList.remove(position);
+                        notifyDataSetChanged();
+                        alertDialog.dismiss();
+                    }
+                });
+
+                Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                cancel_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
 
                 return false;
             }
         });
     }
+
+
     //item 클릭 리스너 인터페이스
     public interface OnItemClickListener{
         void onItemClick(View v);

@@ -3,6 +3,7 @@ package com.smu.songgulsongul.fragment;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +53,7 @@ public class FragUploadGal extends Fragment {
     Point point = new Point();
 
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         display = getContext().getDisplay();
         display.getRealSize(point);

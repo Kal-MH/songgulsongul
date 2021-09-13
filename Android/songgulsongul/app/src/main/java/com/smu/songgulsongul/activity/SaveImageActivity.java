@@ -1,12 +1,12 @@
 package com.smu.songgulsongul.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,7 +18,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 
@@ -90,28 +93,35 @@ public class SaveImageActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!size_check) {
-                    AlertDialog.Builder myAlertBuilder = new AlertDialog.Builder(SaveImageActivity.this);
-                    // alert의 title과 Messege 세팅
-                    myAlertBuilder.setTitle("경고");
-                    myAlertBuilder.setMessage("선택한 규격이 원본의 사이즈보다 크기 때문에 이미지 저장 시 화질 저하가 될 수 있습니다. 계속 하시겠습니까?");
-                    // 버튼 추가 (확인 버튼과 취소 버튼 )
-                    myAlertBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // 확인 버튼을 눌렸을 경우
+
+                    View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
+                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(SaveImageActivity.this);
+                    builder.setView(dialogView);
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    ImageView icon=dialogView.findViewById(R.id.warning);
+
+                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    txt.setText("선택한 규격이 원본의 사이즈보다 크기 때문에 이미지 저장 시 화질이 저하될 수 있습니다. 계속 하시겠습니까?");
+                    Button ok_btn = dialogView.findViewById(R.id.okBtn);
+                    ok_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                             DownloadImage();
                             Toasty.custom(getApplicationContext(), "저장 성공!", null, BackColor, FontColor, 2000, false, true).show();
-                            finish();
+                            alertDialog.dismiss();
                         }
                     });
-                    myAlertBuilder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
+                    cancel_btn.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // 취소 버튼을 눌렸을 경우
+                        public void onClick(View v) {
                             Toasty.custom(getApplicationContext(), "Pressed Cancel", null, BackColor, FontColor, 2000, false, true).show();
+                            alertDialog.dismiss();
                         }
                     });
-                    // Alert를 생성해주고 보여주는 메소드(show를 선언해야 Alert가 생성됨)
-                    myAlertBuilder.show();
                 } else {
                     DownloadImage();
                     Toasty.custom(SaveImageActivity.this, "저장 성공!", null, BackColor, FontColor, 2000, false, true).show();
