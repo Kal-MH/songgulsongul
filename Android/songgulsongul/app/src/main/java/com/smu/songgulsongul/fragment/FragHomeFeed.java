@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.recycler_adapter.HomeFeedAdapter;
@@ -35,18 +37,16 @@ import com.smu.songgulsongul.server.StatusCode;
 public class FragHomeFeed extends Fragment {
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
+    ImageView background;
     HomeFeedAdapter adapter;
 
     int user_id;
     int lastId;
 
-
     Boolean isLoading = false;
 
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
-
     StatusCode statusCode;
-
     List<PostFeed> feeds;
 
     @Nullable
@@ -56,9 +56,7 @@ public class FragHomeFeed extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.frag_home_feed, container, false);
         //id 세팅
         user_id = LoginSharedPreference.getUserId(getActivity());
-
-
-
+        background = rootView.findViewById(R.id.feed_recycler_background);
         recyclerView = rootView.findViewById(R.id.feed_recycler);
 
         //refresh
@@ -86,32 +84,30 @@ public class FragHomeFeed extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void setData(){
-       if(feeds.size() == 0){
-           recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
-       }
-       adapter = new HomeFeedAdapter(getContext(), feeds);
-       recyclerView.setAdapter(adapter);
+    public void setData() {
+        if (feeds.size() == 0) {
+            background.setImageDrawable(getActivity().getDrawable(R.drawable.no_post));
+        }
+        adapter = new HomeFeedAdapter(getContext(), feeds);
+        recyclerView.setAdapter(adapter);
     }
 
     // server 에서 data 전달
-    public void GetFeedData(){
-        serviceApi.GetFeed(user_id,null ).enqueue(new Callback<PostFeedResponse>() {
+    public void GetFeedData() {
+        serviceApi.GetFeed(user_id, null).enqueue(new Callback<PostFeedResponse>() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onResponse(Call<PostFeedResponse> call, Response<PostFeedResponse> response) {
                 PostFeedResponse result = response.body();
 
                 int resultCode = result.getCode();
-                if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                     Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                     // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
-                }
-                else if( resultCode == StatusCode.RESULT_OK){
+                } else if (resultCode == StatusCode.RESULT_OK) {
                     feeds = result.getData();
-                }
-                else {
-                    feeds=result.getData();
+                } else {
+                    feeds = result.getData();
                 }
                 setData();
             }
@@ -120,7 +116,7 @@ public class FragHomeFeed extends Fragment {
             public void onFailure(Call<PostFeedResponse> call, Throwable t) {
                 Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                 feeds = null;
-                Log.d("feed" , "통신 실패");
+                Log.d("feed", "통신 실패");
                 t.printStackTrace(); // 에러 발생 원인 단계별로 출력
             }
         });
@@ -128,7 +124,7 @@ public class FragHomeFeed extends Fragment {
 
 
     public void GetFeedDataMore() {
-        lastId = feeds.get(feeds.size()-1).getPost().getId();
+        lastId = feeds.get(feeds.size() - 1).getPost().getId();
         feeds.add(null);
         adapter.notifyItemInserted(feeds.size() - 1);
 
@@ -139,7 +135,7 @@ public class FragHomeFeed extends Fragment {
                 serviceApi.GetFeed(user_id, lastId).enqueue(new Callback<PostFeedResponse>() {
                     @Override
                     public void onResponse(Call<PostFeedResponse> call, Response<PostFeedResponse> response) {
-                        feeds.remove(feeds.size()-1);
+                        feeds.remove(feeds.size() - 1);
                         adapter.notifyItemRemoved(feeds.size());
 
                         PostFeedResponse result = response.body();
@@ -183,13 +179,13 @@ public class FragHomeFeed extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                Log.d("scroll" , layoutManager.findLastVisibleItemPosition() +" | " + ( adapter.getItemCount()  -1 ) );
+                Log.d("scroll", layoutManager.findLastVisibleItemPosition() + " | " + (adapter.getItemCount() - 1));
                 if (!isLoading) {
-                    if (layoutManager != null && layoutManager.findLastVisibleItemPosition()== adapter.getItemCount() - 1) {
+                    if (layoutManager != null && layoutManager.findLastVisibleItemPosition() == adapter.getItemCount() - 1) {
                         //리스트 마지막
                         GetFeedDataMore();
                         isLoading = true;
-                        Log.d("home" ,"마지막!");
+                        Log.d("home", "마지막!");
                     }
                 }
             }

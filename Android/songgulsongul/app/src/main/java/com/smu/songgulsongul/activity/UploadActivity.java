@@ -22,6 +22,8 @@ import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.fragment.FragUploadCam;
 import com.smu.songgulsongul.fragment.FragUploadGal;
 
+import es.dmoral.toasty.Toasty;
+
 public class UploadActivity extends AppCompatActivity {
 
     final private int GALLERY = 123;
@@ -45,7 +47,7 @@ public class UploadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_upload);
 
         //편집모드 체킹
-        isQuick = getIntent().getBooleanExtra("isQuick",false);
+        isQuick = getIntent().getBooleanExtra("isQuick", false);
 
 
         //툴바 세팅
@@ -54,7 +56,6 @@ public class UploadActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
-
 
 
         //프레그먼트 세팅
@@ -66,7 +67,7 @@ public class UploadActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.upload_cam:
                         setFrag(CAMERA);
                         break;
@@ -79,12 +80,11 @@ public class UploadActivity extends AppCompatActivity {
         });
 
 
-
         setFrag(CAMERA);
 
     }
 
-    private void setFrag(int n){
+    private void setFrag(int n) {
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
         switch (n) {
@@ -98,7 +98,7 @@ public class UploadActivity extends AppCompatActivity {
             case GALLERY:
                 ft.replace(R.id.upload_frame, fragUploadGal);
                 ft.commit();
-                frag_status = GALLERY ;
+                frag_status = GALLERY;
                 invalidateOptionsMenu();
                 break;
 
@@ -119,35 +119,38 @@ public class UploadActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
 
-            case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
+            case android.R.id.home: { // 뒤로가기 버튼 눌렀을 때
                 finish();
                 return true;
             }
 
             case R.id.toolbar_next:
-                if( frag_status == GALLERY){
+                if (frag_status == GALLERY) {
 
-                    String filePath= fragUploadGal.getPicked_path();
-                    Intent intent;
-                    if(isQuick)
-                        intent = new Intent(this, EditDoneActivity.class);
+                    String filePath = fragUploadGal.getPicked_path();
+                    if (filePath != null) {
+                        Intent intent;
+                        if (isQuick)
+                            intent = new Intent(this, EditDoneActivity.class);
 
-                    else
-                        intent = new Intent(this, DetectPaperActivity.class);
+                        else
+                            intent = new Intent(this, DetectPaperActivity.class);
 
 
-                    intent.putExtra("path", filePath);
-                    startActivity(intent);
-                    finish();
-                }
-                else if( frag_status == CAMERA){
+                        intent.putExtra("path", filePath);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toasty.normal(this, "선택된 사진이 없습니다").show();
+                    }
+
+                } else if (frag_status == CAMERA) {
                     //  Not happened!
-
                 }
                 return true;
 
         }
-        return  true;
+        return true;
     }
 
 }

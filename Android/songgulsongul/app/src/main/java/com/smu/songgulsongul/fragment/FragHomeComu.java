@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ public class FragHomeComu extends Fragment {
     private SearchView searchView;
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
+    ImageView background;
 
     PostImageRVAdapter adapter;
     List<Post> postData;
@@ -62,6 +64,7 @@ public class FragHomeComu extends Fragment {
 
         // id 세팅
         recyclerView = view.findViewById(R.id.comu_rv);
+        background = view.findViewById(R.id.comu_rv_background);
         searchView = view.findViewById(R.id.comu_search);
         swipeRefreshLayout = view.findViewById(R.id.comu_refresh_layout);
         loadlayout = view.findViewById(R.id.load_layout);
@@ -222,7 +225,7 @@ public class FragHomeComu extends Fragment {
     public  void setData(){
 
         if(postData.size() == 0){
-            recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
+            background.setImageDrawable( getActivity().getDrawable(R.drawable.no_post) );
         }
         adapter = new PostImageRVAdapter(getContext(), postData);
 
