@@ -7,7 +7,7 @@ public class ProfileData {
     Bitmap profile_image;
     private int feed_counter;
     private int follow_counter;
-    private int follower_counter;
+    private final int follower_counter;
     private String intro;
     private String url;
     private int point;

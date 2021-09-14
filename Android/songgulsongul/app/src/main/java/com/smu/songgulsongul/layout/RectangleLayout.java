@@ -31,8 +31,8 @@ class RectangleLayout extends RelativeLayout {
     }
 
     @Override
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
-        super.setMeasuredDimension(widthMeasureSpec, widthMeasureSpec/2);
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.setMeasuredDimension(widthMeasureSpec, widthMeasureSpec / 2);
     }
 
 }

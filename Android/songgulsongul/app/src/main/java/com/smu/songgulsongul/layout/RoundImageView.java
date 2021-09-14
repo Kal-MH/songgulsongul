@@ -24,7 +24,7 @@ public class RoundImageView extends androidx.appcompat.widget.AppCompatImageView
     }
 
     public void setRectRadius(Float radius){
-        this.radius = radius;
+        RoundImageView.radius = radius;
         invalidate();
     }
 

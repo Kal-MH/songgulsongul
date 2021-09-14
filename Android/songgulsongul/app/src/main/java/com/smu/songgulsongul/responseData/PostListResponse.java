@@ -19,7 +19,7 @@ public class PostListResponse {
         return data;
     }
 
-    public void addData(List<Post> p){
+    public void addData(List<Post> p) {
         for (Post post : p)
             data.add(post);
     }

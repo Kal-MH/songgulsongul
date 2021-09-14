@@ -12,7 +12,7 @@ public class PostFeedResponse {
     @SerializedName("data")
     private List<PostFeed> data;
 
-    public void addData(List<PostFeed> p){
+    public void addData(List<PostFeed> p) {
         for (PostFeed postFeed : p)
             data.add(postFeed);
     }

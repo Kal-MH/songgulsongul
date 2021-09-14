@@ -6,7 +6,7 @@ public class EmailData {
     @SerializedName("email")
     String email;
 
-    public EmailData(String email){
+    public EmailData(String email) {
         this.email = email;
     }
 }

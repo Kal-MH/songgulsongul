@@ -1,7 +1,7 @@
 package com.smu.songgulsongul.responseData;
 
 public class Sticker {
-    public Sticker(int id, String image, String name, int price){
+    public Sticker(int id, String image, String name, int price) {
         this.id = id;
         this.image = image;
         this.name = name;

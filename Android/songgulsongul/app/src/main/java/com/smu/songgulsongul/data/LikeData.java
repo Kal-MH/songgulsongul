@@ -14,7 +14,7 @@ public class LikeData {
     @SerializedName("likeTime")
     Date date;
 
-    public LikeData(String loginId, int postId, Date date){
+    public LikeData(String loginId, int postId, Date date) {
         this.loginId = loginId;
         this.postId = postId;
         this.date = date;

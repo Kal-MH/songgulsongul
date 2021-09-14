@@ -12,12 +12,12 @@ public class UserData {
     @SerializedName("status")
     int status;
 
-    public UserData(String id, int status){
+    public UserData(String id, int status) {
         this.id = id;
         this.status = status;
     }
 
-    public void SetUserId(String user_id){
+    public void SetUserId(String user_id) {
         this.user_id = user_id;
     }
 }

@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,7 +21,7 @@ import es.dmoral.toasty.Toasty;
 
 public class EditImageDenoiseActivity extends AppCompatActivity {
 
-    public enum denoiseMethod{
+    public enum denoiseMethod {
         None, Gaussian, MedianFiltering, FastNlMeans
     }
 
@@ -56,45 +55,48 @@ public class EditImageDenoiseActivity extends AppCompatActivity {
     denoiseMethod selectedDenoiseMethod = denoiseMethod.MedianFiltering;
 
     public native void denoiseColorImage(long inputImageAddress, long outputImageAddress, int luminanceProgress, int colorProgress);
+
     public native void denoiseColorImageGaussian(long inputImageAddress, long outputImageAddress, int luminanceProgress, int colorProgress);
+
     public native void denoiseColorImageMedianFiltering(long inputImageAddress, long outputImageAddress, int luminanceProgress, int colorProgress);
 
 
-    public void updatePreviewDenoise(){
+    public void updatePreviewDenoise() {
         Mat locMat = new Mat();
         previewImage.release();
-        updateDenoise(editingImageAddress,locMat.getNativeObjAddr());
+        updateDenoise(editingImageAddress, locMat.getNativeObjAddr());
         //updateDenoise(editingImageResized.getNativeObjAddr(),locMat.getNativeObjAddr());
         previewImage = locMat;
     }
 
-    public void updateDenoise(long inputImageAddress, long outputImageAddress){
+    public void updateDenoise(long inputImageAddress, long outputImageAddress) {
         //denoiseColorImage(inputImageAddress,outputImageAddress, seekBarLuminance.getProgress(),seekBarColor.getProgress());
         //denoiseColorImageMedianFiltering(inputImageAddress,outputImageAddress, seekBarLuminance.getProgress(),seekBarColor.getProgress());
         //denoiseColorImageGaussian(inputImageAddress,outputImageAddress, seekBarLuminance.getProgress(),seekBarColor.getProgress());
-        switch (selectedDenoiseMethod){
+        switch (selectedDenoiseMethod) {
             case None:
                 break;
             case Gaussian:
-                denoiseColorImageGaussian(inputImageAddress,outputImageAddress, seekBarLuminance.getProgress(),seekBarColor.getProgress());
+                denoiseColorImageGaussian(inputImageAddress, outputImageAddress, seekBarLuminance.getProgress(), seekBarColor.getProgress());
                 break;
             case MedianFiltering:
-                denoiseColorImageMedianFiltering(inputImageAddress,outputImageAddress, seekBarLuminance.getProgress(),seekBarColor.getProgress());
+                denoiseColorImageMedianFiltering(inputImageAddress, outputImageAddress, seekBarLuminance.getProgress(), seekBarColor.getProgress());
                 break;
             case FastNlMeans:
-                denoiseColorImage(inputImageAddress,outputImageAddress, seekBarLuminance.getProgress(),seekBarColor.getProgress());
+                denoiseColorImage(inputImageAddress, outputImageAddress, seekBarLuminance.getProgress(), seekBarColor.getProgress());
                 break;
             default:
                 break;
         }
     }
-    public void updatePreviewImageView(){
-        if(previewImageBitmap!=null)
+
+    public void updatePreviewImageView() {
+        if (previewImageBitmap != null)
             previewImageBitmap.recycle();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(), previewImage.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(previewImage, previewImageBitmap);
                 editPreview.setImageBitmap(previewImageBitmap);
             }
@@ -117,8 +119,8 @@ public class EditImageDenoiseActivity extends AppCompatActivity {
         editPreview = findViewById(R.id.editPreview);
 
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
-        editingImageAddress = ((songgul)getApplication()).getEditingMat().getNativeObjAddr();
-        previewImage = ((songgul)getApplication()).getEditingMat().clone();
+        editingImageAddress = ((songgul) getApplication()).getEditingMat().getNativeObjAddr();
+        previewImage = ((songgul) getApplication()).getEditingMat().clone();
         updatePreviewDenoise();
         updatePreviewImageView();
 
@@ -131,9 +133,9 @@ public class EditImageDenoiseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectedDenoiseMethod = denoiseMethod.None;
-                if(previewImage != null)
+                if (previewImage != null)
                     previewImage.release();
-                previewImage = ((songgul)getApplication()).getEditingMat().clone();
+                previewImage = ((songgul) getApplication()).getEditingMat().clone();
                 updatePreviewImageView();
             }
         });
@@ -165,7 +167,6 @@ public class EditImageDenoiseActivity extends AppCompatActivity {
                 updatePreviewImageView();
             }
         });
-
 
 
         seekBarLuminance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -244,12 +245,11 @@ public class EditImageDenoiseActivity extends AppCompatActivity {
                 //TODO: 네이티브 어드레스로 접근한 Mat 객체도 double free 이슈가 발생하는가?
                 //Mat locMat = new Mat();
                 //Mat oldEditingMat = new Mat(editingImageAddress);
-                updateDenoise(editingImageAddress,editingImageAddress);
+                updateDenoise(editingImageAddress, editingImageAddress);
 
                 finish();
             }
         });
-
 
 
     }
@@ -257,11 +257,10 @@ public class EditImageDenoiseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         second_time = System.currentTimeMillis();
-        if(second_time-first_time <2000){
+        if (second_time - first_time < 2000) {
             super.onBackPressed();
             finish();
-        }
-        else{
+        } else {
             Toasty.custom(this, "한번 더 누르면 적용을 취소합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }

@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -70,8 +69,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private int profile_sns_check;
     private String login_id, profile_img_old, profile_img_path;
     private int profile_modify_check;
-    private int NO = 0;
-    private int YES = 1;
+    private final int NO = 0;
+    private final int YES = 1;
 
     int BackColor = Color.parseColor("#BFB1D8");
     int FontColor = Color.parseColor("#000000");
@@ -143,10 +142,10 @@ public class EditProfileActivity extends AppCompatActivity {
                 final AlertDialog alertDialog = builder.create();
                 alertDialog.show();
                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                ImageView icon=dialogView.findViewById(R.id.warning);
+                ImageView icon = dialogView.findViewById(R.id.warning);
                 icon.setVisibility(View.GONE);
 
-                TextView txt=dialogView.findViewById(R.id.txtText);
+                TextView txt = dialogView.findViewById(R.id.txtText);
                 txt.setText("정말 탈퇴하시겠습니까?");
                 Button ok_btn = dialogView.findViewById(R.id.okBtn);
                 ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -157,24 +156,23 @@ public class EditProfileActivity extends AppCompatActivity {
                             public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                                 CodeResponse result = response.body();
                                 int resultCode = result.getCode();
-                                if(resultCode == StatusCode.RESULT_OK){
+                                if (resultCode == StatusCode.RESULT_OK) {
                                     Toast.makeText(EditProfileActivity.this, "회원 탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show();
                                     LoginSharedPreference.clearLogin(EditProfileActivity.this);
                                     Intent intent3 = new Intent(EditProfileActivity.this, LoginActivity.class);
                                     intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent3);
-                                }
-                                else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                                } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                     AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
                                     builder.setView(dialogView);
                                     final AlertDialog alertDialog = builder.create();
                                     alertDialog.show();
                                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                    ImageView icon=dialogView.findViewById(R.id.warning);
+                                    ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                    TextView txt=dialogView.findViewById(R.id.txtText);
-                                    txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+                                    TextView txt = dialogView.findViewById(R.id.txtText);
+                                    txt.setText("에러가 발생했습니다." + "\n" + "다시 시도해주세요.");
                                     Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                     ok_btn.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -186,6 +184,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                     cancel_btn.setVisibility(View.GONE);
                                 }
                             }
+
                             @Override
                             public void onFailure(Call<CodeResponse> call, Throwable t) {
                                 Toast.makeText(EditProfileActivity.this, "서버와의 통신이 불안정합니다.", Toast.LENGTH_SHORT).show();
@@ -264,10 +263,10 @@ public class EditProfileActivity extends AppCompatActivity {
                     final AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    ImageView icon = dialogView.findViewById(R.id.warning);
                     icon.setVisibility(View.GONE);
 
-                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    TextView txt = dialogView.findViewById(R.id.txtText);
                     txt.setText("SNS계정을 입력해주세요.");
                     Button ok_btn = dialogView.findViewById(R.id.okBtn);
                     ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -299,10 +298,10 @@ public class EditProfileActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                TextView txt=dialogView.findViewById(R.id.txtText);
-                                txt.setText("에러가 발생했습니다"+"\n"+"다시 시도해주세요.");
+                                TextView txt = dialogView.findViewById(R.id.txtText);
+                                txt.setText("에러가 발생했습니다" + "\n" + "다시 시도해주세요.");
                                 Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                 ok_btn.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -320,10 +319,10 @@ public class EditProfileActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                TextView txt=dialogView.findViewById(R.id.txtText);
-                                txt.setText("Server Err."+"\n"+"다시 시도해주세요.");
+                                TextView txt = dialogView.findViewById(R.id.txtText);
+                                txt.setText("Server Err." + "\n" + "다시 시도해주세요.");
                                 Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                 ok_btn.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -390,10 +389,10 @@ public class EditProfileActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    ImageView icon = dialogView.findViewById(R.id.warning);
 
-                    TextView txt=dialogView.findViewById(R.id.txtText);
-                    txt.setText("에러가 발생했습니다"+"\n"+"다시 시도해주세요.");
+                    TextView txt = dialogView.findViewById(R.id.txtText);
+                    txt.setText("에러가 발생했습니다" + "\n" + "다시 시도해주세요.");
                     Button ok_btn = dialogView.findViewById(R.id.okBtn);
                     ok_btn.setOnClickListener(new View.OnClickListener() {
                         @Override

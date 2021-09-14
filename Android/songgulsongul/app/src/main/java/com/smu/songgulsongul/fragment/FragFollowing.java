@@ -118,14 +118,14 @@ public class FragFollowing extends Fragment {
                 JsonObject result = response.body();
                 int resultCode = result.get("code").getAsInt();
 
-                if(resultCode == statusCode.RESULT_OK){
+                if(resultCode == StatusCode.RESULT_OK){
                     login_following_list.add("data", result.getAsJsonArray("followinfo"));
                     if(status == MY) {
                         adapter = new FollowAdapter(getContext(), login_following_list, status);
                         rv.setAdapter(adapter);
                     }
                 }
-                else if(resultCode == statusCode.RESULT_CLIENT_ERR){
+                else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
 
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     Context context = getActivity();
@@ -176,7 +176,7 @@ public class FragFollowing extends Fragment {
                 JsonObject result = response.body();
                 int resultCode = result.get("code").getAsInt();
 
-                if(resultCode == statusCode.RESULT_OK){
+                if(resultCode == StatusCode.RESULT_OK){
                     JsonArray login_list = result.getAsJsonArray("loginFollowInfo");
                     JsonArray user_list = result.getAsJsonArray("userFollowInfo");
                     // 선택한 사용자의 팔로우 리스트에 있는 사용자를 팔로우 했는지 체크
@@ -207,7 +207,7 @@ public class FragFollowing extends Fragment {
                     rv.setAdapter(adapter);
 
                 }
-                else if(resultCode == statusCode.RESULT_CLIENT_ERR){
+                else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
 
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     Context context = getActivity();

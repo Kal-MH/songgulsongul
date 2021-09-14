@@ -49,9 +49,10 @@ public class PostFeed {
         return keepOnset;
     }
 
-    public PostFeed(){
+    public PostFeed() {
 
     }
+
     public PostFeed(Post post, User user, int commentsNum, int likeNum, int likeOnset, int keepOnset) {
         this.post = post;
         this.user = user;

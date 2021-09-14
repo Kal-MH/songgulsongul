@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
@@ -64,29 +63,28 @@ public class EditActivity extends AppCompatActivity {
     int BackColor = Color.parseColor("#BFB1D8");
     int FontColor = Color.parseColor("#000000");
 
-    public void setImageViewFromMat(){
+    public void setImageViewFromMat() {
 
-        if(editingImage != null){
-            if(editingImageBitmap !=null)
+        if (editingImage != null) {
+            if (editingImageBitmap != null)
                 editingImageBitmap.recycle();
 
             //최대 픽셀 제한
             //ImageUtil.maxSize2048(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr());
-            ImageUtil.maxSizeCustom(editingImage.getNativeObjAddr(),editingImage.getNativeObjAddr(),512);
+            ImageUtil.maxSizeCustom(editingImage.getNativeObjAddr(), editingImage.getNativeObjAddr(), 512);
 
-            Log.i("EditImageSize",String.valueOf(editingImage.rows())+", " + String.valueOf(editingImage.cols()));
+            Log.i("EditImageSize", editingImage.rows() + ", " + editingImage.cols());
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    editingImageBitmap = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
-                    Utils.matToBitmap(editingImage,editingImageBitmap);
+                    editingImageBitmap = Bitmap.createBitmap(editingImage.cols(), editingImage.rows(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(editingImage, editingImageBitmap);
                     edit_iv.setImageBitmap(editingImageBitmap);
                 }
             });
 
 
-        }
-        else{
+        } else {
             // TODO: Mat 채우기
 
         }
@@ -142,39 +140,38 @@ public class EditActivity extends AppCompatActivity {
         //Glide.with(this).load(filePath).into(edit_iv);
 
 
-        paperImageAddress = getIntent().getLongExtra("paperImageAddress",0);
+        paperImageAddress = getIntent().getLongExtra("paperImageAddress", 0);
         croppedImageAddress = getIntent().getLongExtra("croppedImageAddress", 0x00);
         //editingImage = new Mat(croppedImageAddress).clone();
-        editingImage =  ((songgul)getApplication()).getCroppedMat().clone();
+        editingImage = ((songgul) getApplication()).getCroppedMat().clone();
 
 
         //fix many channel issues
-        Imgproc.cvtColor(editingImage,editingImage,Imgproc.COLOR_RGB2HSV);
-        Imgproc.cvtColor(editingImage,editingImage,Imgproc.COLOR_HSV2RGB);
+        Imgproc.cvtColor(editingImage, editingImage, Imgproc.COLOR_RGB2HSV);
+        Imgproc.cvtColor(editingImage, editingImage, Imgproc.COLOR_HSV2RGB);
 
 
-        ((songgul)getApplication()).setEditingMat(editingImage);
+        ((songgul) getApplication()).setEditingMat(editingImage);
         setImageViewFromMat();
 
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bitmap edited = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(editingImage,edited);
-                File temp = (File)saveBitmapToCache(edited,"edit_temp");
-                String filePath= temp.getAbsolutePath();
-                Intent intent = new Intent( EditActivity.this , EditDoneActivity.class);
+                Bitmap edited = Bitmap.createBitmap(editingImage.cols(), editingImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(editingImage, edited);
+                File temp = (File) saveBitmapToCache(edited, "edit_temp");
+                String filePath = temp.getAbsolutePath();
+                Intent intent = new Intent(EditActivity.this, EditDoneActivity.class);
                 intent.putExtra("path", filePath);
-                intent.putExtra("editedImageAddress",editingImage.getNativeObjAddr());
+                intent.putExtra("editedImageAddress", editingImage.getNativeObjAddr());
                 startActivity(intent);
 
-                ((songgul)getApplication()).releaseAllMat();
+                ((songgul) getApplication()).releaseAllMat();
                 //Edit Done 할시 되돌아 갈 수 없음! 이전 작업 정리해도 안전!
                 //메모리 정리하기
                 //new Mat(croppedImageAddress).release();
                 //new Mat(paperImageAddress).release();
-
 
 
                 finish();
@@ -184,14 +181,14 @@ public class EditActivity extends AppCompatActivity {
 
         editRatio.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 //Bitmap edited = Bitmap.createBitmap(editingImage.cols(),editingImage.rows(), Bitmap.Config.ARGB_8888);
                 //Utils.matToBitmap(editingImage,edited);
                 //File temp = (File)saveBitmapToCache(edited,"edit_temp");
                 //String filePath= temp.getAbsolutePath();
-                Intent intent = new Intent( EditActivity.this , EditImageRatioActivity.class);
+                Intent intent = new Intent(EditActivity.this, EditImageRatioActivity.class);
                 intent.putExtra("path", filePath);
-                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                intent.putExtra("editingImageAddress", editingImage.getNativeObjAddr());
                 startActivity(intent);
                 //finish();//test
             }
@@ -199,10 +196,10 @@ public class EditActivity extends AppCompatActivity {
 
         editColors.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                Intent intent = new Intent( EditActivity.this , EditImageColorActivity.class);
+            public void onClick(View view) {
+                Intent intent = new Intent(EditActivity.this, EditImageColorActivity.class);
                 intent.putExtra("path", filePath);
-                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                intent.putExtra("editingImageAddress", editingImage.getNativeObjAddr());
                 startActivity(intent);
             }
         });
@@ -210,29 +207,29 @@ public class EditActivity extends AppCompatActivity {
 
         editHistogram.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                Intent intent = new Intent( EditActivity.this , EditImageHistogramActivity.class);
+            public void onClick(View view) {
+                Intent intent = new Intent(EditActivity.this, EditImageHistogramActivity.class);
                 intent.putExtra("path", filePath);
-                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                intent.putExtra("editingImageAddress", editingImage.getNativeObjAddr());
                 startActivity(intent);
             }
         });
 
         editFilter.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                Intent intent = new Intent( EditActivity.this , EditImageFilterActivity.class);
+            public void onClick(View view) {
+                Intent intent = new Intent(EditActivity.this, EditImageFilterActivity.class);
                 intent.putExtra("path", filePath);
-                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                intent.putExtra("editingImageAddress", editingImage.getNativeObjAddr());
                 startActivity(intent);
             }
         });
         editDenoise.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                Intent intent = new Intent( EditActivity.this , EditImageDenoiseActivity.class);
+            public void onClick(View view) {
+                Intent intent = new Intent(EditActivity.this, EditImageDenoiseActivity.class);
                 intent.putExtra("path", filePath);
-                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                intent.putExtra("editingImageAddress", editingImage.getNativeObjAddr());
                 startActivity(intent);
             }
         });
@@ -248,16 +245,13 @@ public class EditActivity extends AppCompatActivity {
         });*/
         editShadowRemove.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                Intent intent = new Intent( EditActivity.this , EditImageRemoveShadowActivity.class);
+            public void onClick(View view) {
+                Intent intent = new Intent(EditActivity.this, EditImageRemoveShadowActivity.class);
                 intent.putExtra("path", filePath);
-                intent.putExtra("editingImageAddress",editingImage.getNativeObjAddr());
+                intent.putExtra("editingImageAddress", editingImage.getNativeObjAddr());
                 startActivity(intent);
             }
         });
-
-
-
 
 
     }
@@ -265,11 +259,10 @@ public class EditActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         second_time = System.currentTimeMillis();
-        if(second_time-first_time <2000){
+        if (second_time - first_time < 2000) {
             super.onBackPressed();
             finish();
-        }
-        else{
+        } else {
             Toasty.custom(this, "한번 더 누르면 편집을 종료합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
@@ -293,7 +286,7 @@ public class EditActivity extends AppCompatActivity {
                 return true;
 
 
-            case R.id.toolbar_before:{
+            case R.id.toolbar_before: {
                 Intent intent = new Intent(EditActivity.this, DetectPicActivity.class);
                 intent.putExtra("path", filePath);
                 intent.putExtra("imgInputAddress", paperImageAddress);
@@ -304,32 +297,29 @@ public class EditActivity extends AppCompatActivity {
                 return true;
             }
 
-            case R.id.toolbar_undo : // 원본으로 복구
+            case R.id.toolbar_undo: // 원본으로 복구
 
                 //editingImage.release();
                 //editingImage = new Mat(croppedImageAddress).clone();
-                editingImage = ((songgul)getApplication()).getCroppedMat();
+                editingImage = ((songgul) getApplication()).getCroppedMat();
                 setImageViewFromMat();
 
 
                 return true;
 
 
-
-
         }
-        return  true;
+        return true;
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        if(hasFocus){
+        if (hasFocus) {
             setImageViewFromMat();
         }
 
 
     }
-
 
 
     @Override

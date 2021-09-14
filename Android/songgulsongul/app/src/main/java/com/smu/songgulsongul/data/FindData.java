@@ -9,7 +9,7 @@ public class FindData {
     @SerializedName("login_id")
     String login_id;
 
-    public FindData(String email, String login_id){
+    public FindData(String email, String login_id) {
         this.email = email;
         this.login_id = login_id;
     }

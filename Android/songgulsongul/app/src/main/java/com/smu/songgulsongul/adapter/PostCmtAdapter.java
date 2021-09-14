@@ -26,9 +26,7 @@ import com.smu.songgulsongul.responseData.Comment;
 import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 
-import org.opencv.engine.OpenCVEngineInterface;
-
-public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHolder>  {
+public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHolder> {
 
     final Context context;
     List<Comment> dataList;
@@ -43,17 +41,19 @@ public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHold
     public interface OnItemLongClickEventListener {
         void onItemLongClick(View a_view, int a_position);
     }
+
     public void setOnItemLongClickListener(OnItemLongClickEventListener a_listener) {
         mItemLongClickListener = a_listener;
     }
 
-    public PostCmtAdapter (Context context, List<Comment>  obj )  {
+    public PostCmtAdapter(Context context, List<Comment> obj) {
         this.context = context;
         dataList = obj;
         cmtCnt = dataList.size();
     }
 
-    @Override public long getItemId(int position) {
+    @Override
+    public long getItemId(int position) {
         return dataList.get(position).getId();
     }
 
@@ -68,7 +68,7 @@ public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.post_cmt_item, parent, false);
-        return new PostCmtAdapter.ViewHolder(itemView,mItemLongClickListener);
+        return new PostCmtAdapter.ViewHolder(itemView, mItemLongClickListener);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -79,25 +79,23 @@ public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHold
         holder.userId.setText(item.getLogin_id());
         holder.cmt.setText(item.getText());
 
-        if( date.format(today).equals((item.getC_date()))) {
-            int hour = Integer.parseInt(item.getC_time().substring(0,2));
-            if( hour != rightNow.get(Calendar.HOUR_OF_DAY) ){
-                holder.date.setText((rightNow.get(Calendar.HOUR_OF_DAY) - hour)+"시간 전");
-            }
-            else {
-                int min = Integer.parseInt(item.getC_time().substring(3,5));
-                if( min == rightNow.get(Calendar.MINUTE) )
+        if (date.format(today).equals((item.getC_date()))) {
+            int hour = Integer.parseInt(item.getC_time().substring(0, 2));
+            if (hour != rightNow.get(Calendar.HOUR_OF_DAY)) {
+                holder.date.setText((rightNow.get(Calendar.HOUR_OF_DAY) - hour) + "시간 전");
+            } else {
+                int min = Integer.parseInt(item.getC_time().substring(3, 5));
+                if (min == rightNow.get(Calendar.MINUTE))
                     holder.date.setText("방금 게시됨");
                 else
                     holder.date.setText((rightNow.get(Calendar.MINUTE) - min) + "분 전");
             }
-        }
-        else
-            holder.date.setText( item.getC_date()); //게시 날짜
+        } else
+            holder.date.setText(item.getC_date()); //게시 날짜
 
         String pro_img = item.getImg_profile();
         String img_addr;
-        if(pro_img.equals(DefaultImage.DEFAULT_IMAGE))
+        if (pro_img.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = RetrofitClient.getBaseUrl() + pro_img;
         else
             img_addr = pro_img;
@@ -109,7 +107,7 @@ public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHold
             public void onClick(View view) {
                 Intent intent = new Intent(context, ProfileActivity.class);
                 // 게시글 사용자 id 전달
-                intent.putExtra("userId",item.getLogin_id());
+                intent.putExtra("userId", item.getLogin_id());
                 context.startActivity(intent);
             }
         });
@@ -118,16 +116,15 @@ public class PostCmtAdapter extends RecyclerView.Adapter<PostCmtAdapter.ViewHold
             public void onClick(View view) {
                 Intent intent = new Intent(context, ProfileActivity.class);
                 // 게시글 사용자 id 전달
-                intent.putExtra("userId",item.getLogin_id());
+                intent.putExtra("userId", item.getLogin_id());
                 context.startActivity(intent);
             }
         });
 
 
-
     }
 
-        static class ViewHolder extends   RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView userId;
         TextView cmt;
         ImageView profile;

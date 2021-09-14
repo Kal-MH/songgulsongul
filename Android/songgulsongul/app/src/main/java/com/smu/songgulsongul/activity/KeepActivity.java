@@ -8,7 +8,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,7 +18,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -29,6 +27,7 @@ import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.adapter.PostImageRVAdapter;
@@ -76,7 +75,7 @@ public class KeepActivity extends AppCompatActivity {
 
     }
 
-    public void setKeepData( KeepResponse data){
+    public void setKeepData(KeepResponse data) {
 
 
         // 로그인한 Id로 셋팅
@@ -85,7 +84,7 @@ public class KeepActivity extends AppCompatActivity {
         // 프로필 이미지 셋팅
         String profile_image = data.getProfileImg();
         String img_addr;
-        if(profile_image.equals(DefaultImage.DEFAULT_IMAGE))
+        if (profile_image.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = RetrofitClient.getBaseUrl() + profile_image;
         else
             img_addr = profile_image;
@@ -97,7 +96,7 @@ public class KeepActivity extends AppCompatActivity {
 
         // 어뎁터 적용
 
-        adapter = new PostImageRVAdapter(this, data.getKeepinfo() );
+        adapter = new PostImageRVAdapter(this, data.getKeepinfo());
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -105,7 +104,7 @@ public class KeepActivity extends AppCompatActivity {
     }
 
     //server에서 data전달
-    public void getKeepData(){
+    public void getKeepData() {
         KeepData data = new KeepData(login_id);
         serviceApi.Keep(data).enqueue(new Callback<KeepResponse>() {
             @Override
@@ -113,10 +112,9 @@ public class KeepActivity extends AppCompatActivity {
                 KeepResponse result = response.body();
                 keep_data = result.getKeepinfo();
                 int resultCode = result.getCode();
-                if(resultCode == StatusCode.RESULT_OK){
+                if (resultCode == StatusCode.RESULT_OK) {
                     setKeepData(result);
-                }
-                else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
 
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(KeepActivity.this);
@@ -126,10 +124,10 @@ public class KeepActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    ImageView icon = dialogView.findViewById(R.id.warning);
 
-                    TextView txt=dialogView.findViewById(R.id.txtText);
-                    txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+                    TextView txt = dialogView.findViewById(R.id.txtText);
+                    txt.setText("에러가 발생했습니다." + "\n" + "다시 시도해주세요.");
 
                     Button ok_btn = dialogView.findViewById(R.id.okBtn);
                     ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -144,8 +142,7 @@ public class KeepActivity extends AppCompatActivity {
 
                     Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
                     cancel_btn.setVisibility(View.GONE);
-                }
-                else{
+                } else {
                     Toasty.normal(KeepActivity.this, "서버와의 통신이 불안정합니다").show();
                 }
 
@@ -163,7 +160,7 @@ public class KeepActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home: // 뒤로가기 버튼 눌렀을 때
                 Log.d("TAG", "뒤로,,,");
                 finish();

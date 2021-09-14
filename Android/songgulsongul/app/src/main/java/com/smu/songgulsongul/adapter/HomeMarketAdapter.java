@@ -19,9 +19,8 @@ import java.util.List;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.StickerDetailActivity;
 import com.smu.songgulsongul.responseData.Sticker;
-import com.smu.songgulsongul.server.RetrofitClient;
 
-public class HomeMarketAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HomeMarketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     private final int VIEW_TYPE_ITEM = 0;
@@ -29,9 +28,9 @@ public class HomeMarketAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     List<Sticker> items;
-    private Context context;
+    private final Context context;
 
-    public void addItem(List<Sticker> stickers){
+    public void addItem(List<Sticker> stickers) {
         items.addAll(stickers);
     }
 
@@ -44,11 +43,10 @@ public class HomeMarketAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == VIEW_TYPE_ITEM){
+        if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.market_item, parent, false);
             return new HomeMarketAdapter.ItemViewHolder(view);
-        }
-        else {
+        } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
             return new HomeMarketAdapter.LoadingViewHolder(view);
         }
@@ -67,11 +65,10 @@ public class HomeMarketAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
             Glide.with(context).load(items.get(position).getImage())
                     .into(((HomeMarketAdapter.ItemViewHolder) holder).img);
             ((ItemViewHolder) holder).name.setText(items.get(position).getName());
-            ((ItemViewHolder) holder).cost.setText(items.get(position).getPrice() + "p") ;
+            ((ItemViewHolder) holder).cost.setText(items.get(position).getPrice() + "p");
 
 
-        }
-        else {//가독성을 위해 적어놓음?..
+        } else {//가독성을 위해 적어놓음?..
             showLoadingView((HomeMarketAdapter.LoadingViewHolder) holder, position);
         }
     }
@@ -92,9 +89,10 @@ public class HomeMarketAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
     private class ItemViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
         TextView name, cost;
-        public ItemViewHolder(@NonNull View itemView){
+
+        public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            img= itemView.findViewById(R.id.market_item_img);
+            img = itemView.findViewById(R.id.market_item_img);
             name = itemView.findViewById(R.id.market_item_name);
             cost = itemView.findViewById(R.id.market_item_cost);
 
@@ -102,7 +100,7 @@ public class HomeMarketAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
-                    if(position != RecyclerView.NO_POSITION){
+                    if (position != RecyclerView.NO_POSITION) {
                         Intent intent = new Intent(context, StickerDetailActivity.class);
                         intent.putExtra("sticker_id", items.get(position).getId());
                         context.startActivity(intent);
@@ -114,7 +112,7 @@ public class HomeMarketAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
-        private ProgressBar progressBar;
+        private final ProgressBar progressBar;
 
         public LoadingViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -42,8 +42,8 @@ public class ImageUtil {
         int imgViewW = imageView.getWidth();
         int imgViewH = imageView.getHeight();
 
-        int top = (int) (imgViewH - actH)/2;
-        int left = (int) (imgViewW - actW)/2;
+        int top = (int) (imgViewH - actH) / 2;
+        int left = (int) (imgViewW - actW) / 2;
 
         ret[0] = left;
         ret[1] = top;
@@ -51,8 +51,7 @@ public class ImageUtil {
         return ret;
     }
 
-    public static int[] ImagePointToImageView(ImageView imageView, int pointX, int pointY)
-    {
+    public static int[] ImagePointToImageView(ImageView imageView, int pointX, int pointY) {
         int[] point = new int[2];
 
         if (imageView == null || imageView.getDrawable() == null)
@@ -74,21 +73,22 @@ public class ImageUtil {
         int imgViewW = imageView.getWidth();
         int imgViewH = imageView.getHeight();
 
-        int top = (int) (imgViewH - actH)/2;
-        int left = (int) (imgViewW - actW)/2;
+        int top = (int) (imgViewH - actH) / 2;
+        int left = (int) (imgViewW - actW) / 2;
 
         point[0] = left + Math.round(pointX * scaleX);
-        point[1] = top + Math.round(pointY  * scaleY);
+        point[1] = top + Math.round(pointY * scaleY);
 
         point[0] = Math.max(0, point[0]);
         point[0] = Math.min(imgViewW, point[0]);
         point[1] = Math.max(0, point[1]);
         point[1] = Math.min(imgViewH, point[1]);
 
-        return  point;
+        return point;
 
     }
-    public static int[] ImageViewPointToImage(ImageView imageView, int pointX, int pointY){
+
+    public static int[] ImageViewPointToImage(ImageView imageView, int pointX, int pointY) {
 
         int[] point = new int[2];
 
@@ -111,13 +111,11 @@ public class ImageUtil {
         int imgViewW = imageView.getWidth();
         int imgViewH = imageView.getHeight();
 
-        int top = (int) (imgViewH - actH)/2;
-        int left = (int) (imgViewW - actW)/2;
+        int top = (int) (imgViewH - actH) / 2;
+        int left = (int) (imgViewW - actW) / 2;
 
         point[0] = Math.round((pointX - left) / scaleX);
         point[1] = Math.round((pointY - top) / scaleY);
-
-
 
 
         point[0] = Math.max(0, point[0]);
@@ -125,7 +123,7 @@ public class ImageUtil {
         point[1] = Math.max(0, point[1]);
         point[1] = Math.min(origH, point[1]);
 
-        return  point;
+        return point;
 
 
     }

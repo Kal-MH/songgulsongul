@@ -14,69 +14,71 @@ public class songgul extends Application {
 
     @Override
     public void onCreate() {
-    //변수 초기화
+        //변수 초기화
         super.onCreate();
     }
 
 
-    public void setPaperMat(Mat mat){
-        if(paperMat!=null)
-            if(!paperMat.empty())
+    public void setPaperMat(Mat mat) {
+        if (paperMat != null)
+            if (!paperMat.empty())
                 paperMat.release();
         paperMat = mat;
     }
-    public Mat getPaperMat(){
+
+    public Mat getPaperMat() {
         return paperMat;
     }
 
-    public void setCroppedMat(Mat mat){
-        if(croppedMat!=null)
-            if(!croppedMat.empty())
+    public void setCroppedMat(Mat mat) {
+        if (croppedMat != null)
+            if (!croppedMat.empty())
                 croppedMat.release();
         croppedMat = mat;
     }
-    public Mat getCroppedMat(){
+
+    public Mat getCroppedMat() {
         return croppedMat;
     }
 
-    public void setEditingMat(Mat mat){
-        if(editingMat!=null)
-            if(!editingMat.empty())
+    public void setEditingMat(Mat mat) {
+        if (editingMat != null)
+            if (!editingMat.empty())
                 editingMat.release();
         editingMat = mat;
     }
-    public Mat getEditingMat(){
+
+    public Mat getEditingMat() {
         return editingMat;
     }
 
 
-
-    public void releaseAllMat(){
-        if(sourceMat!=null)
-            if(!sourceMat.empty())
+    public void releaseAllMat() {
+        if (sourceMat != null)
+            if (!sourceMat.empty())
                 sourceMat.release();
 
-        if(paperMat!=null)
-            if(!paperMat.empty())
+        if (paperMat != null)
+            if (!paperMat.empty())
                 paperMat.release();
 
-        if(croppedMat!=null)
-            if(!croppedMat.empty())
+        if (croppedMat != null)
+            if (!croppedMat.empty())
                 croppedMat.release();
 
-        if(preEditingMat!=null)
-            if(!preEditingMat.empty())
+        if (preEditingMat != null)
+            if (!preEditingMat.empty())
                 preEditingMat.release();
 
-        if(editingMat!=null)
-            if(!editingMat.empty())
+        if (editingMat != null)
+            if (!editingMat.empty())
                 editingMat.release();
     }
 
 
     @Override
     public void onTerminate() {
-    //프로세스 소멸 시 호출
+        //프로세스 소멸 시 호출
         super.onTerminate();
     }
 

@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.item.ItemSearchItem;
 
-public class ItemSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private ArrayList<ItemSearchItem> data;
+public class ItemSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final ArrayList<ItemSearchItem> data;
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
     Context context;
 
-    public ItemSearchAdapter(Context context,ArrayList<ItemSearchItem> list) {
+    public ItemSearchAdapter(Context context, ArrayList<ItemSearchItem> list) {
         this.context = context;
         data = list;
     }
@@ -36,16 +36,14 @@ public class ItemSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == VIEW_TYPE_ITEM){
+        if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.itemsearch_item, parent, false);
             return new ItemSearchAdapter.ItemViewHolder(view);
-        }
-        else{
+        } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
             return new ItemSearchAdapter.LoadingViewHolder(view);
         }
     }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -55,26 +53,26 @@ public class ItemSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             ItemSearchItem item = data.get(position);
 
-            Glide.with(context).load( item.getImg() ).into(((ItemViewHolder) holder).picurl); // 제품 사진
+            Glide.with(context).load(item.getImg()).into(((ItemViewHolder) holder).picurl); // 제품 사진
             String name = item.getTitle();
-            name = name.replaceAll("<b>","");
-            name = name.replaceAll("<b>","");
-            name = name.replaceAll("</b>","");
-            name = name.replaceAll("&lt;","<");
-            name = name.replaceAll("&gt;",">");
-            name = name.replaceAll("&amp;","&");
+            name = name.replaceAll("<b>", "");
+            name = name.replaceAll("<b>", "");
+            name = name.replaceAll("</b>", "");
+            name = name.replaceAll("&lt;", "<");
+            name = name.replaceAll("&gt;", ">");
+            name = name.replaceAll("&amp;", "&");
             ((ItemViewHolder) holder).name.setText(name); //제품 이름
 
-            if( name.length() >15)
-                name = name.substring(0,15);
+            if (name.length() > 15)
+                name = name.substring(0, 15);
 
             ((ItemViewHolder) holder).lprice.setText(item.getLprice()); //제품 최저가
             ((ItemViewHolder) holder).hprice.setText(item.getHprice()); //제품 최고가
-        }
-        else if (holder instanceof ItemSearchAdapter.LoadingViewHolder) {
+        } else if (holder instanceof ItemSearchAdapter.LoadingViewHolder) {
             showLoadingView((ItemSearchAdapter.LoadingViewHolder) holder, position);
         }
     }
+
     @Override
     public int getItemViewType(int position) {
         return data.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
@@ -96,7 +94,7 @@ public class ItemSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView lprice;
         TextView hprice;
 
-        ItemViewHolder(@NonNull View itemView){
+        ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             picurl = itemView.findViewById(R.id.itemseach_item_img);
@@ -109,9 +107,9 @@ public class ItemSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
 
-                    if(pos != RecyclerView.NO_POSITION){
-                        if(mListener != null){
-                            mListener.onItemClick(v,pos);
+                    if (pos != RecyclerView.NO_POSITION) {
+                        if (mListener != null) {
+                            mListener.onItemClick(v, pos);
                         }
                     }
                 }
@@ -120,7 +118,7 @@ public class ItemSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
-        private ProgressBar progressBar;
+        private final ProgressBar progressBar;
 
         public LoadingViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -129,13 +127,13 @@ public class ItemSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     //item 클릭 리스너 인터페이스
-    public interface OnItemClickListener{
-        void onItemClick (View v, int pos);
+    public interface OnItemClickListener {
+        void onItemClick(View v, int pos);
     }
 
     private ItemSearchAdapter.OnItemClickListener mListener = null;
 
-    public void setOnItemClickListener(ItemSearchAdapter.OnItemClickListener listener){
+    public void setOnItemClickListener(ItemSearchAdapter.OnItemClickListener listener) {
         this.mListener = listener;
     }
 }

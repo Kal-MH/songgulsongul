@@ -170,7 +170,7 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                         CodeResponse result = response.body();
                         int resultCode = result.getCode();
-                        if(resultCode == statusCode.RESULT_OK){
+                        if(resultCode == StatusCode.RESULT_OK){
                             follow_btn.setVisibility(View.INVISIBLE);
                             unfollow_btn.setVisibility(View.VISIBLE);
                             unfollow_btn.setEnabled(true);
@@ -198,7 +198,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                         }
-                        else if(resultCode == statusCode.RESULT_CLIENT_ERR){
+                        else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
 
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
@@ -257,7 +257,7 @@ public class ProfileActivity extends AppCompatActivity {
                             follower_cnt--;
                             follower_count_tv.setText(follower_cnt+"");
                         }
-                        else if(resultCode == statusCode.RESULT_SERVER_ERR){
+                        else if(resultCode == StatusCode.RESULT_SERVER_ERR){
 
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
@@ -313,10 +313,10 @@ public class ProfileActivity extends AppCompatActivity {
                 ProfileResponse result = response.body();
                 int resultCode = result.getCode();
 
-                if(resultCode == statusCode.RESULT_OK){
+                if(resultCode == StatusCode.RESULT_OK){
                     setProfileData(result);
                 }
-                else if(resultCode == statusCode.RESULT_CLIENT_ERR){
+                else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
 
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);

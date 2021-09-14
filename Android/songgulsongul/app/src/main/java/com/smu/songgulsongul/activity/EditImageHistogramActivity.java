@@ -8,11 +8,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.smu.songgulsongul.songgul;
+
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
@@ -22,7 +22,7 @@ import es.dmoral.toasty.Toasty;
 
 public class EditImageHistogramActivity extends AppCompatActivity {
 
-    public enum editHistogramMod{
+    public enum editHistogramMod {
         None, Default, CLAHE
     }
 
@@ -53,28 +53,30 @@ public class EditImageHistogramActivity extends AppCompatActivity {
 
     // 기본히스토그램 평활화
     public native void equalizeHistogram(long inputImgAddress, long outputImgAddress, int progress);
+
     // CLAHE(구역별) 히스토그램 평활화
     public native void equalizeHistogramClahe(long inputImgAddress, long outputImgAddress, int progress);
 
-    public void updatePreviewImageView(){
-        if(previewImageBitmap!=null)
+    public void updatePreviewImageView() {
+        if (previewImageBitmap != null)
             previewImageBitmap.recycle();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(), previewImage.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(previewImage, previewImageBitmap);
                 editPreview.setImageBitmap(previewImageBitmap);
             }
         });
     }
-    public void updatePreviewImageView(final Mat mat){
-        if(previewImageBitmap!=null)
+
+    public void updatePreviewImageView(final Mat mat) {
+        if (previewImageBitmap != null)
             previewImageBitmap.recycle();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(), previewImage.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(mat, previewImageBitmap);
                 editPreview.setImageBitmap(previewImageBitmap);
             }
@@ -99,8 +101,8 @@ public class EditImageHistogramActivity extends AppCompatActivity {
 
 
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
-        editingImageAddress = ((songgul)getApplication()).getEditingMat().getNativeObjAddr();
-        previewImage = ((songgul)getApplication()).getEditingMat().clone();
+        editingImageAddress = ((songgul) getApplication()).getEditingMat().getNativeObjAddr();
+        previewImage = ((songgul) getApplication()).getEditingMat().clone();
         updatePreviewImageView();
 
 
@@ -142,7 +144,7 @@ public class EditImageHistogramActivity extends AppCompatActivity {
                 locMat.release();*/
                 previewImage.release();
                 previewImage = new Mat(editingImageAddress).clone();
-                equalizeHistogram(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr(), alpha.getProgress());
+                equalizeHistogram(previewImage.getNativeObjAddr(), previewImage.getNativeObjAddr(), alpha.getProgress());
                 updatePreviewImageView();
             }
         });
@@ -166,7 +168,7 @@ public class EditImageHistogramActivity extends AppCompatActivity {
                 selectedHistogramMod = editHistogramMod.CLAHE;
                 previewImage.release();
                 previewImage = new Mat(editingImageAddress).clone();
-                equalizeHistogramClahe(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr(), alpha.getProgress());
+                equalizeHistogramClahe(previewImage.getNativeObjAddr(), previewImage.getNativeObjAddr(), alpha.getProgress());
                 updatePreviewImageView();
             }
         });
@@ -176,12 +178,14 @@ public class EditImageHistogramActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 previewImage.release();
                 previewImage = new Mat(editingImageAddress).clone();
-                switch (selectedHistogramMod){
+                switch (selectedHistogramMod) {
                     case None: //do nothing
                         break;
-                    case Default: equalizeHistogram(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr(), progress);
+                    case Default:
+                        equalizeHistogram(previewImage.getNativeObjAddr(), previewImage.getNativeObjAddr(), progress);
                         break;
-                    case CLAHE: equalizeHistogramClahe(previewImage.getNativeObjAddr(),previewImage.getNativeObjAddr(), progress);
+                    case CLAHE:
+                        equalizeHistogramClahe(previewImage.getNativeObjAddr(), previewImage.getNativeObjAddr(), progress);
                         break;
                     default:
                         break;
@@ -206,12 +210,14 @@ public class EditImageHistogramActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO: 프리뷰 Mat을 그대로 옮길지 아니면 프리뷰 연산 크기를 줄이고 별도로 둘지 선택할것
-                switch (selectedHistogramMod){
+                switch (selectedHistogramMod) {
                     case None: //do nothing
                         break;
-                    case Default: equalizeHistogram(editingImageAddress,editingImageAddress,alpha.getProgress());
+                    case Default:
+                        equalizeHistogram(editingImageAddress, editingImageAddress, alpha.getProgress());
                         break;
-                    case CLAHE: equalizeHistogramClahe(editingImageAddress,editingImageAddress,alpha.getProgress());
+                    case CLAHE:
+                        equalizeHistogramClahe(editingImageAddress, editingImageAddress, alpha.getProgress());
                         break;
                     default:
                         break;
@@ -225,11 +231,10 @@ public class EditImageHistogramActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         second_time = System.currentTimeMillis();
-        if(second_time-first_time <2000){
+        if (second_time - first_time < 2000) {
             super.onBackPressed();
             finish();
-        }
-        else{
+        } else {
             Toasty.custom(this, "한번 더 누르면 적용을 취소합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }

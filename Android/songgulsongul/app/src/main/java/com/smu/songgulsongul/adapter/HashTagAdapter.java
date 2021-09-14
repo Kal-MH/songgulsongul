@@ -16,7 +16,7 @@ import java.util.List;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.responseData.HashTag;
 
-public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHolder>{
+public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHolder> {
     Context context;
     List<HashTag> dataList;
     LayoutInflater inf;
@@ -24,7 +24,7 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHold
     int layout;
 
 
-    public HashTagAdapter(Context context, List<HashTag>  obj){
+    public HashTagAdapter(Context context, List<HashTag> obj) {
         this.context = context;
         dataList = obj;
         hashCnt = dataList.size();
@@ -42,7 +42,7 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull HashTagAdapter.ViewHolder holder, final int position) {
         HashTag item = dataList.get(position);
-        holder.content.setText("#"+item.getText() +" ");
+        holder.content.setText("#" + item.getText() + " ");
         holder.content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,11 +58,12 @@ public class HashTagAdapter extends RecyclerView.Adapter<HashTagAdapter.ViewHold
     }
 
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView content;
-        public ViewHolder(@NonNull View itemView){
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            content = (TextView)itemView.findViewById(R.id.hash_tag_content);
+            content = (TextView) itemView.findViewById(R.id.hash_tag_content);
         }
     }
 }

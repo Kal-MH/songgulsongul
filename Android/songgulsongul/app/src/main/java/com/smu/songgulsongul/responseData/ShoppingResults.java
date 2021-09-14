@@ -10,13 +10,13 @@ public class ShoppingResults {
     String title = "";
 
     @SerializedName("link")
-    String link= "";
+    String link = "";
 
     @SerializedName("description")
-    String description= "";
+    String description = "";
 
     @SerializedName("lastBuildDate")
-    String lastBuildDate= "";
+    String lastBuildDate = "";
 
     @SerializedName("total")
     String total;
@@ -25,11 +25,10 @@ public class ShoppingResults {
     Integer start = 0;
 
     @SerializedName("display")
-    String display ;
+    String display;
 
     @SerializedName("items")
-    List<ItemSearchItem> items ;
-
+    List<ItemSearchItem> items;
 
 
     public List<ItemSearchItem> getItems() {
@@ -39,11 +38,11 @@ public class ShoppingResults {
     @Override
     public String toString() {
         String str = "";
-        for(ItemSearchItem data : items)
+        for (ItemSearchItem data : items)
             str += data.toString();
         return "ShoppingResults{" +
-                "items=" + items.toString() +"\n" +
-                str +"\n"+
+                "items=" + items.toString() + "\n" +
+                str + "\n" +
                 '}';
     }
 }

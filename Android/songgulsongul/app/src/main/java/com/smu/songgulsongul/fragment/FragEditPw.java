@@ -1,7 +1,6 @@
 package com.smu.songgulsongul.fragment;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +24,7 @@ import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.data.PwEditData;
@@ -40,8 +39,8 @@ public class FragEditPw extends Fragment {
 
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
 
-    private int YES = 1;
-    private int NO = 0;
+    private final int YES = 1;
+    private final int NO = 0;
 
     EditText account_pw, account_newpw, account_newpw_check;
     TextView pw_check_text;
@@ -56,12 +55,12 @@ public class FragEditPw extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.frag_edit_pw, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.frag_edit_pw, container, false);
 
-        account_pw = (EditText)rootView.findViewById(R.id.account_pw);
-        account_newpw = (EditText)rootView.findViewById(R.id.account_newpw);
-        account_newpw_check = (EditText)rootView.findViewById(R.id.account_newpw_check);
-        pw_check_text = (TextView)rootView.findViewById(R.id.edit_account_pw_correct);
+        account_pw = (EditText) rootView.findViewById(R.id.account_pw);
+        account_newpw = (EditText) rootView.findViewById(R.id.account_newpw);
+        account_newpw_check = (EditText) rootView.findViewById(R.id.account_newpw_check);
+        pw_check_text = (TextView) rootView.findViewById(R.id.edit_account_pw_correct);
         account_pw_check = rootView.findViewById(R.id.edit_account_pw_check);
         user_id = LoginSharedPreference.getUserId(getContext());
         pw_check_text.setVisibility(View.INVISIBLE);
@@ -97,7 +96,7 @@ public class FragEditPw extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(account_newpw_check.getText().toString().trim().length() > 0) {
+                if (account_newpw_check.getText().toString().trim().length() > 0) {
                     if (s.toString().equals(account_newpw_check.getText().toString())) {
                         pw_check_text.setText("비밀번호가 일치합니다.");
                         pw_check_text.setVisibility(View.VISIBLE);
@@ -123,12 +122,11 @@ public class FragEditPw extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().equals(account_newpw.getText().toString())) {
+                if (s.toString().equals(account_newpw.getText().toString())) {
                     pw_check_text.setText("비밀번호가 일치합니다.");
                     pw_check_text.setVisibility(View.VISIBLE);
                     pw_check_flag = 1;
-                }
-                else {
+                } else {
                     pw_check_text.setText("비밀번호가 일치하지 않습니다.");
                     pw_check_text.setVisibility(View.VISIBLE);
                     pw_check_flag = 0;
@@ -141,7 +139,7 @@ public class FragEditPw extends Fragment {
             @Override
             public void onClick(View v) {
                 pw = account_pw.getText().toString().trim();
-                if(pw.getBytes().length <= 0){
+                if (pw.getBytes().length <= 0) {
 
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     Context context = container.getContext();
@@ -152,9 +150,9 @@ public class FragEditPw extends Fragment {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    ImageView icon = dialogView.findViewById(R.id.warning);
 
-                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    TextView txt = dialogView.findViewById(R.id.txtText);
                     txt.setText("비밀번호를 입력해주세요.");
 
                     Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -169,8 +167,7 @@ public class FragEditPw extends Fragment {
                     cancel_btn.setVisibility(View.GONE);
 
                     pw_check = NO;
-                }
-                else{
+                } else {
                     PwEditData data = new PwEditData(user_id, pw);
                     serviceApi.PwCheck(data).enqueue(new Callback<CodeResponse>() {
                         @Override
@@ -178,7 +175,7 @@ public class FragEditPw extends Fragment {
                             CodeResponse result = response.body();
                             int resultCode = result.getCode();
 
-                            if(resultCode == StatusCode.RESULT_OK){
+                            if (resultCode == StatusCode.RESULT_OK) {
                                 pw_check = YES;
 
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
@@ -190,9 +187,9 @@ public class FragEditPw extends Fragment {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                TextView txt=dialogView.findViewById(R.id.txtText);
+                                TextView txt = dialogView.findViewById(R.id.txtText);
                                 txt.setText("비밀번호가 일치합니다.");
 
                                 Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -205,9 +202,7 @@ public class FragEditPw extends Fragment {
 
                                 Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
                                 cancel_btn.setVisibility(View.GONE);
-                            }
-
-                            else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
+                            } else if (resultCode == StatusCode.RESULT_CLIENT_ERR) {
                                 pw_check = NO;
 
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
@@ -219,9 +214,9 @@ public class FragEditPw extends Fragment {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                TextView txt=dialogView.findViewById(R.id.txtText);
+                                TextView txt = dialogView.findViewById(R.id.txtText);
                                 txt.setText("비밀번호가 일치하지 않습니다.");
 
                                 Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -234,9 +229,7 @@ public class FragEditPw extends Fragment {
 
                                 Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
                                 cancel_btn.setVisibility(View.GONE);
-                            }
-
-                            else if(resultCode == StatusCode.RESULT_SERVER_ERR){
+                            } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
 
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 Context context = container.getContext();
@@ -247,10 +240,10 @@ public class FragEditPw extends Fragment {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                TextView txt=dialogView.findViewById(R.id.txtText);
-                                txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+                                TextView txt = dialogView.findViewById(R.id.txtText);
+                                txt.setText("에러가 발생했습니다." + "\n" + "다시 시도해주세요.");
 
                                 Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                 ok_btn.setOnClickListener(new View.OnClickListener() {

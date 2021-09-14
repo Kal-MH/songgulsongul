@@ -104,11 +104,11 @@ public class FragHomeFeed extends Fragment {
                 PostFeedResponse result = response.body();
 
                 int resultCode = result.getCode();
-                if(resultCode == statusCode.RESULT_SERVER_ERR){
+                if(resultCode == StatusCode.RESULT_SERVER_ERR){
                     Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                     // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
                 }
-                else if( resultCode == statusCode.RESULT_OK){
+                else if( resultCode == StatusCode.RESULT_OK){
                     feeds = result.getData();
                 }
                 else {
@@ -145,10 +145,10 @@ public class FragHomeFeed extends Fragment {
 
                         PostFeedResponse result = response.body();
                         int resultCode = result.getCode();
-                        if (resultCode == statusCode.RESULT_SERVER_ERR) {
+                        if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                             Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                             // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
-                        } else if (resultCode == statusCode.RESULT_OK) {
+                        } else if (resultCode == StatusCode.RESULT_OK) {
                             adapter.addItem(result.getData());
                             adapter.notifyDataSetChanged();
                         } else {

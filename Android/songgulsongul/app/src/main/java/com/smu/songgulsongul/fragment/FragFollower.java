@@ -32,6 +32,7 @@ import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.EditAccountActivity;
@@ -76,11 +77,10 @@ public class FragFollower extends Fragment {
 
 
         Bundle bundle = getArguments();
-        if(!login_id.equals(bundle.getString("userId"))) {
+        if (!login_id.equals(bundle.getString("userId"))) {
             user_id = bundle.getString("userId");
             status = OTHER;
-        }
-        else {
+        } else {
             status = MY;
         }
 
@@ -109,10 +109,10 @@ public class FragFollower extends Fragment {
     }
 
     // server에서 data전달
-    public void getFollowerData(){
+    public void getFollowerData() {
         FollowListData data = new FollowListData(login_id);
         data.addStatus(status);
-        if(status == OTHER ){
+        if (status == OTHER) {
             data.addUserId(user_id);
         }
         serviceApi.FollowerList(data).enqueue(new Callback<JsonObject>() {
@@ -121,13 +121,13 @@ public class FragFollower extends Fragment {
                 JsonObject result = response.body();
                 int resultCode = result.get("code").getAsInt();
 
-                if(resultCode == statusCode.RESULT_OK){
+                if (resultCode == StatusCode.RESULT_OK) {
                     JsonArray following_list = result.getAsJsonArray("followingInfo");
                     JsonArray follower_list = result.getAsJsonArray("followerInfo");
 
                     // 팔로워 리스트에 있는 사용자를 팔로우 했는지 체크
                     for (int i = 0; i < follower_list.size(); i++) {
-                        if(following_list.size() == 0) {
+                        if (following_list.size() == 0) {
                             follower_list.get(i).getAsJsonObject().addProperty("flag", false);
                             continue;
                         }
@@ -151,8 +151,7 @@ public class FragFollower extends Fragment {
                     obj.add("data", follower_list);
                     adapter = new FollowAdapter(getContext(), obj, sflag);
                     rv.setAdapter(adapter);
-                }
-                else if(resultCode == statusCode.RESULT_CLIENT_ERR){
+                } else if (resultCode == StatusCode.RESULT_CLIENT_ERR) {
 
 
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
@@ -164,9 +163,9 @@ public class FragFollower extends Fragment {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    ImageView icon = dialogView.findViewById(R.id.warning);
 
-                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    TextView txt = dialogView.findViewById(R.id.txtText);
                     txt.setText("변경할 아이디를 입력해주세요.");
 
                     Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -180,8 +179,7 @@ public class FragFollower extends Fragment {
                     Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
                     cancel_btn.setVisibility(View.GONE);
 
-                }
-                else{
+                } else {
                     Toasty.normal(getContext(), "서버와의 통신이 불안정합니다.").show();
                 }
             }

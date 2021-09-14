@@ -29,6 +29,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.PostActivity;
@@ -44,7 +45,7 @@ import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
 
-public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
@@ -61,7 +62,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
     StatusCode statusCode;
 
-    public HomeFeedAdapter (Context context, List<PostFeed> items)  {
+    public HomeFeedAdapter(Context context, List<PostFeed> items) {
         this.context = context;
         this.items = items;
         itemCnt = items.size();
@@ -70,11 +71,10 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == VIEW_TYPE_ITEM){
+        if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.feed_item, parent, false);
             return new ItemViewHolder(view);
-        }
-        else{
+        } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
             return new LoadingViewHolder(view);
         }
@@ -95,29 +95,28 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((ItemViewHolder) holder).favorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    serviceApi.Like(LoginSharedPreference.getUserId(context),postId)
+                    serviceApi.Like(LoginSharedPreference.getUserId(context), postId)
                             .enqueue(new Callback<CodeResponse>() {
                                 @Override
                                 public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                                     int like = item.getLikeOnset();
                                     int resultCode = response.body().getCode();
-                                    if( resultCode == statusCode.RESULT_OK){
+                                    if (resultCode == StatusCode.RESULT_OK) {
 
                                         int likeNum = item.getLikeNum();
-                                        if( like == 1){ //좋아요 취소하기
+                                        if (like == 1) { //좋아요 취소하기
                                             like = 0;
-                                            item.setLikeNum(likeNum-1);
-                                        }
-                                        else{
+                                            item.setLikeNum(likeNum - 1);
+                                        } else {
                                             like = 1;
-                                            item.setLikeNum(likeNum+1);
+                                            item.setLikeNum(likeNum + 1);
 
                                             String loginid = LoginSharedPreference.getLoginId(context);
-                                            NotificationData notificationData = new NotificationData(loginid+ context.getString(R.string.like_noti), context.getString(R.string.like_title));
+                                            NotificationData notificationData = new NotificationData(loginid + context.getString(R.string.like_noti), context.getString(R.string.like_title));
                                             RequestNotification requestNotification = new RequestNotification();
                                             requestNotification.setSendNotificationModel(notificationData);
                                             requestNotification.setMode(2);
-                                            requestNotification.setSender( LoginSharedPreference.getUserId(context));
+                                            requestNotification.setSender(LoginSharedPreference.getUserId(context));
                                             requestNotification.setPostid(postId);
 
                                             retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
@@ -137,11 +136,9 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         }
                                         item.setLikeOnset(like);
                                         notifyItemChanged(position);
-                                    }
-                                    else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                                    } else if (resultCode == StatusCode.RESULT_CLIENT_ERR) {
                                         Toasty.normal(context, "잘못된 접근입니다.").show();
-                                    }
-                                    else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                                    } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                         Toasty.normal(context, "서버와의 통신이 불안정합니다.").show();
                                     }
                                 }
@@ -159,27 +156,25 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((ItemViewHolder) holder).keep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    serviceApi.Keep(LoginSharedPreference.getUserId(context),postId)
+                    serviceApi.Keep(LoginSharedPreference.getUserId(context), postId)
                             .enqueue(new Callback<CodeResponse>() {
                                 @Override
                                 public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                                     int keep = item.getKeepOnset();
                                     int resultCode = response.body().getCode();
-                                    if( resultCode == statusCode.RESULT_OK){
-                                        keep = (keep==1)? 0 : 1;
+                                    if (resultCode == StatusCode.RESULT_OK) {
+                                        keep = (keep == 1) ? 0 : 1;
 
                                         item.setKeepOnset(keep);
                                         notifyItemChanged(position);
-                                        if( keep == 1)
+                                        if (keep == 1)
                                             Toasty.custom(context, "보관함에 저장 되었습니다", null, Color.parseColor("#BFB1D8"), Color.parseColor("#000000"), 2000, false, true);
                                         else
                                             Toasty.custom(context, "보관함에서 삭제 되었습니다", null, Color.parseColor("#BFB1D8"), Color.parseColor("#000000"), 2000, false, true);
-                                    }
-                                    else if( resultCode == statusCode.RESULT_CLIENT_ERR){
+                                    } else if (resultCode == StatusCode.RESULT_CLIENT_ERR) {
                                         Toasty.normal(context, "잘못된 접근입니다.").show();
 
-                                    }
-                                    else if( resultCode == statusCode.RESULT_SERVER_ERR){
+                                    } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                         Toasty.normal(context, "서버와의 통신이 불안정합니다.").show();
                                     }
                                 }
@@ -203,7 +198,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     context.startActivity(intent);
                 }
             };
-            View.OnClickListener goProfile = new View.OnClickListener(){
+            View.OnClickListener goProfile = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, ProfileActivity.class);
@@ -220,11 +215,11 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((ItemViewHolder) holder).profile_image.setOnClickListener(goProfile);
 
 
-        }
-        else if (holder instanceof LoadingViewHolder) {
+        } else if (holder instanceof LoadingViewHolder) {
             showLoadingView((LoadingViewHolder) holder, position);
         }
     }
+
     @Override
     public int getItemViewType(int position) {
         return items.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
@@ -242,7 +237,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void setItem(@NonNull ItemViewHolder holder, int position){
+    public void setItem(@NonNull ItemViewHolder holder, int position) {
 
         Post post = items.get(position).getPost();
         User user = items.get(position).getUser();
@@ -251,23 +246,21 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         String text = post.getText();
         holder.text.setText(text);
 
-        if( date.format(today).equals((post.getPost_date()))) {
-            int hour = Integer.parseInt(post.getPost_time().substring(0,2));
-            if( hour != rightNow.get(Calendar.HOUR_OF_DAY) ){
-                holder.timestamp.setText((rightNow.get(Calendar.HOUR_OF_DAY) - hour)+"시간 전");
-            }
-            else {
-                int min = Integer.parseInt(post.getPost_time().substring(3,5));
-                if( min == rightNow.get(Calendar.MINUTE) )
+        if (date.format(today).equals((post.getPost_date()))) {
+            int hour = Integer.parseInt(post.getPost_time().substring(0, 2));
+            if (hour != rightNow.get(Calendar.HOUR_OF_DAY)) {
+                holder.timestamp.setText((rightNow.get(Calendar.HOUR_OF_DAY) - hour) + "시간 전");
+            } else {
+                int min = Integer.parseInt(post.getPost_time().substring(3, 5));
+                if (min == rightNow.get(Calendar.MINUTE))
                     holder.timestamp.setText("방금 게시됨");
                 else
                     holder.timestamp.setText((rightNow.get(Calendar.MINUTE) - min) + "분 전");
             }
-        }
-        else
-            holder.timestamp.setText( post.getPost_date()); //게시 날짜
+        } else
+            holder.timestamp.setText(post.getPost_date()); //게시 날짜
 
-        Glide.with(context).load(post.getImage() ).into(holder.picture); // 게시물 사진
+        Glide.with(context).load(post.getImage()).into(holder.picture); // 게시물 사진
         holder.comment_counter.setText("댓글 " + items.get(position).getCommentsNum()); // 댓글 수
         holder.favorite_counter.setText("좋아요 " + items.get(position).getLikeNum()); // 좋아요 수
 
@@ -275,20 +268,20 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         String img_addr;
         String pro_img = user.getImg_profile();
-        if(pro_img.equals(DefaultImage.DEFAULT_IMAGE))
+        if (pro_img.equals(DefaultImage.DEFAULT_IMAGE))
             img_addr = RetrofitClient.getBaseUrl() + pro_img;
         else
             img_addr = pro_img;
         Glide.with(context).load(img_addr).into(holder.profile_image); // 게시자 프로필 사진
 
 
-        if(items.get(position).getLikeOnset()== 0)
+        if (items.get(position).getLikeOnset() == 0)
             holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_border));
         else
             holder.favorite.setImageDrawable(context.getDrawable(R.drawable.ic_favorite));
 
 
-        if(items.get(position).getKeepOnset() == 0)
+        if (items.get(position).getKeepOnset() == 0)
             holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_border_24));
         else
             holder.keep.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_bookmark_24));
@@ -296,7 +289,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
-    public void addItem( List<PostFeed> posts){
+    public void addItem(List<PostFeed> posts) {
         items.addAll(posts);
     }
 
@@ -312,18 +305,18 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView keep;
         ImageView comment;
 
-        public ItemViewHolder(@NonNull View itemView){
+        public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            profile_image=(ImageView)itemView.findViewById(R.id.feed_item_profile_img);
-            user_id=(TextView)itemView.findViewById(R.id.feed_item_id);
-            timestamp=(TextView)itemView.findViewById(R.id.feed_item_time);
-            picture=(ImageView)itemView.findViewById(R.id.feed_item_pic);
-            favorite_counter=(TextView)itemView.findViewById(R.id.feed_item_like_cnt);
-            comment_counter=(TextView)itemView.findViewById(R.id.feed_item_com_cnt);
-            text=(ReadMoreTextView)itemView.findViewById(R.id.feed_item_text);
-            favorite = (ImageView)itemView.findViewById(R.id.feed_item_like);
-            keep = (ImageView)itemView.findViewById(R.id.feed_item_keep);
-            comment = (ImageView)itemView.findViewById(R.id.feed_item_com);
+            profile_image = (ImageView) itemView.findViewById(R.id.feed_item_profile_img);
+            user_id = (TextView) itemView.findViewById(R.id.feed_item_id);
+            timestamp = (TextView) itemView.findViewById(R.id.feed_item_time);
+            picture = (ImageView) itemView.findViewById(R.id.feed_item_pic);
+            favorite_counter = (TextView) itemView.findViewById(R.id.feed_item_like_cnt);
+            comment_counter = (TextView) itemView.findViewById(R.id.feed_item_com_cnt);
+            text = (ReadMoreTextView) itemView.findViewById(R.id.feed_item_text);
+            favorite = (ImageView) itemView.findViewById(R.id.feed_item_like);
+            keep = (ImageView) itemView.findViewById(R.id.feed_item_keep);
+            comment = (ImageView) itemView.findViewById(R.id.feed_item_com);
 
         }
 /*
@@ -333,7 +326,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
-        private ProgressBar progressBar;
+        private final ProgressBar progressBar;
 
         public LoadingViewHolder(@NonNull View itemView) {
             super(itemView);

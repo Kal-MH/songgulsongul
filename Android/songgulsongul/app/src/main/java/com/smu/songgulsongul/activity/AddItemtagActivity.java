@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -38,7 +36,7 @@ public class AddItemtagActivity extends Activity {
     RecyclerView recyclerView = null;
     ItemSearchAdapter adapter = null;
 
-    private ArrayList<ItemSearchItem> mlist = new ArrayList<ItemSearchItem>();
+    private final ArrayList<ItemSearchItem> mlist = new ArrayList<ItemSearchItem>();
 
     int position = -1;
     String key;
@@ -49,21 +47,20 @@ public class AddItemtagActivity extends Activity {
 
     NaverApi naverApi = RetrofitNaver.getClient().create(NaverApi.class);
 
-    private final static String CLIENT_ID ="vzYQ1acA6vGEyvjeQHAB";
+    private final static String CLIENT_ID = "vzYQ1acA6vGEyvjeQHAB";
     private final static String CLIENT_PW = "cg4YKUanSV";
 
 
     int idx = 1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_add_itemtag);
 
         searchView = findViewById(R.id.itemtag_search);
         recyclerView = findViewById(R.id.itemtag_list);
-
 
 
         //검색창 전체 영역 터치 가능
@@ -90,29 +87,28 @@ public class AddItemtagActivity extends Activity {
         });
 
 
-
         //윈도우 크기 설정
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        int width = (int)(display.getWidth()* 0.98);
-        int height = (int)(display.getHeight() * 0.98);
+        int width = (int) (display.getWidth() * 0.98);
+        int height = (int) (display.getHeight() * 0.98);
         getWindow().getAttributes().width = width;
         getWindow().getAttributes().height = height;
 
     }
 
-    private void resultData(){
+    private void resultData() {
         Intent intent = new Intent();
 
         ItemSearchItem item = mlist.get(position);
 
         //UploadDetailActivity로 보낼 데이터
         String name = item.getTitle();
-        name = name.replaceAll("<b>","");
-        name = name.replaceAll("<b>","");
-        name = name.replaceAll("</b>","");
-        name = name.replaceAll("&lt;","<");
-        name = name.replaceAll("&gt;",">");
-        name = name.replaceAll("&amp;","&");
+        name = name.replaceAll("<b>", "");
+        name = name.replaceAll("<b>", "");
+        name = name.replaceAll("</b>", "");
+        name = name.replaceAll("&lt;", "<");
+        name = name.replaceAll("&gt;", ">");
+        name = name.replaceAll("&amp;", "&");
 
         intent.putExtra("name", name);
         intent.putExtra("hprice", item.getHprice());
@@ -123,13 +119,13 @@ public class AddItemtagActivity extends Activity {
         intent.putExtra("category1", item.getCategory3());
         intent.putExtra("category2", item.getCategory4());
 
-        setResult(RESULT_OK,intent);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
     // server에서 data전달
-    public void SearchRetrofit(final String keyword){
-        naverApi.search(CLIENT_ID,CLIENT_PW, keyword,10,1).enqueue(new Callback<ShoppingResults>() {
+    public void SearchRetrofit(final String keyword) {
+        naverApi.search(CLIENT_ID, CLIENT_PW, keyword, 10, 1).enqueue(new Callback<ShoppingResults>() {
             @Override
             public void onResponse(Call<ShoppingResults> call, Response<ShoppingResults> response) {
                 Log.d("item", response.toString());
@@ -143,7 +139,7 @@ public class AddItemtagActivity extends Activity {
                     mlist.addAll(result.getItems());
 
                     //어뎁터 초기화
-                    adapter = new ItemSearchAdapter(AddItemtagActivity.this,mlist);
+                    adapter = new ItemSearchAdapter(AddItemtagActivity.this, mlist);
                     adapter.setOnItemClickListener(new ItemSearchAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View v, int pos) {
@@ -171,14 +167,14 @@ public class AddItemtagActivity extends Activity {
         });
     }
 
-    public void SearchRetrofitMore(final String keyword){
+    public void SearchRetrofitMore(final String keyword) {
         mlist.add(null);
         adapter.notifyItemInserted(mlist.size() - 1);
 
-        naverApi.search(CLIENT_ID,CLIENT_PW, keyword,10, idx).enqueue(new Callback<ShoppingResults>() {
+        naverApi.search(CLIENT_ID, CLIENT_PW, keyword, 10, idx).enqueue(new Callback<ShoppingResults>() {
             @Override
             public void onResponse(Call<ShoppingResults> call, Response<ShoppingResults> response) {
-                mlist.remove(mlist.size()-1);
+                mlist.remove(mlist.size() - 1);
                 adapter.notifyItemRemoved(mlist.size());
 
                 ShoppingResults result = response.body();
@@ -205,7 +201,7 @@ public class AddItemtagActivity extends Activity {
 
     }
 
-    public void initScroll(){
+    public void initScroll() {
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -219,9 +215,9 @@ public class AddItemtagActivity extends Activity {
                 super.onScrolled(recyclerView, dx, dy);
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                Log.d("scroll" , layoutManager.findLastVisibleItemPosition() +" | " + ( adapter.getItemCount()  -1 ) );
+                Log.d("scroll", layoutManager.findLastVisibleItemPosition() + " | " + (adapter.getItemCount() - 1));
                 if (!isLoading) {
-                    if (layoutManager != null && layoutManager.findLastVisibleItemPosition()== adapter.getItemCount() - 1) {
+                    if (layoutManager != null && layoutManager.findLastVisibleItemPosition() == adapter.getItemCount() - 1) {
                         //리스트 마지막
                         SearchRetrofitMore(key);
                         isLoading = true;

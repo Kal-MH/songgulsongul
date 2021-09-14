@@ -13,23 +13,23 @@ public class PostEditData {
     @SerializedName("post_id")
     int post_id;
 
-    @SerializedName("text") // 글 내용
-    String text;
+    @SerializedName("text")
+    String text;// 글 내용
 
-    @SerializedName("hash_tag") // 해쉬태그
-    List<String> hash_tag;
 
-    @SerializedName("item_tag") // 아이템태그
-    List<ItemTag> item_tag;
+    @SerializedName("hash_tag")
+    List<String> hash_tag;// 해쉬태그
 
-    @SerializedName("ccl") // ccl설정값
-    int ccl[];
 
-    public PostEditData(){
+    @SerializedName("item_tag")
+    List<ItemTag> item_tag;// 아이템태그
 
-    }
 
-    public PostEditData(int user_id, int post_id, String text, List<String> hash_tag, int ccl[], List<ItemTag> item_tag){
+    @SerializedName("ccl")
+    int[] ccl; // ccl설정값
+
+
+    public PostEditData(int user_id, int post_id, String text, List<String> hash_tag, int[] ccl, List<ItemTag> item_tag) {
         this.user_id = user_id;
         this.post_id = post_id;
         this.text = text;

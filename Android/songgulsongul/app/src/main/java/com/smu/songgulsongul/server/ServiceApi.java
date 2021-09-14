@@ -18,6 +18,7 @@ import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+
 import com.smu.songgulsongul.data.PostEditData;
 import com.smu.songgulsongul.data.PwEditData;
 import com.smu.songgulsongul.data.RequestNotification;
@@ -82,12 +83,12 @@ public interface ServiceApi {
 
     //댓글 삭제
     @GET("/api/comment/delete")
-    Call<CodeResponse> DeleteComment(@Query("postid") int postid, @Query("commentid") int commentid );
+    Call<CodeResponse> DeleteComment(@Query("postid") int postid, @Query("commentid") int commentid);
 
     // 회원가입
     @POST("/join")
     Call<CodeResponse> Join(@Body JoinData data);
-  
+
     // 팔로우하기
     @POST("/user/follow")
     Call<CodeResponse> Follow(@Body FollowData data);
@@ -130,8 +131,8 @@ public interface ServiceApi {
 
     //피드 게시글 가져오기
     @GET("/post/feeds")
-    Call<PostFeedResponse> GetFeed(@Query("userid") int id, @Query("offset") Integer offset );
- 
+    Call<PostFeedResponse> GetFeed(@Query("userid") int id, @Query("offset") Integer offset);
+
     // 프로필
     @POST("/user/profile")
     Call<ProfileResponse> Profile(@Body UserData data);
@@ -156,10 +157,10 @@ public interface ServiceApi {
 
     // 검색
     @GET("/post/search/id")
-    Call<SearchIdResponse> SearchPostId(@Query("keyword") String keyword , @Query("offset") int offset);
+    Call<SearchIdResponse> SearchPostId(@Query("keyword") String keyword, @Query("offset") int offset);
 
     @GET("/post/search/tag")
-    Call<PostListResponse> SearchPostTag(@Query("keyword") String keyword , @Query("offset") int offset);
+    Call<PostListResponse> SearchPostTag(@Query("keyword") String keyword, @Query("offset") int offset);
 
     // 게시글 업로드
     @Multipart

@@ -1,9 +1,6 @@
 package com.smu.songgulsongul.adapter;
 
-import android.app.Activity;
-import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -12,11 +9,9 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -25,17 +20,14 @@ import androidx.core.content.res.ResourcesCompat;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.activity.AddItemtagActivity;
-import com.smu.songgulsongul.activity.EditAccountActivity;
 import com.smu.songgulsongul.activity.ItemDetailActivity;
 import com.smu.songgulsongul.responseData.ItemTag;
 
 
 public class AddItemTagAdapter extends ItemTagAdapter {
-    public AddItemTagAdapter(Context context, List<ItemTag> obj)  {
+    public AddItemTagAdapter(Context context, List<ItemTag> obj) {
         super(context, obj);
     }
 
@@ -43,24 +35,22 @@ public class AddItemTagAdapter extends ItemTagAdapter {
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
         final ItemTag item = dataList.get(position);
-        if(item.getId() == -1 ){
+        if (item.getId() == -1) {
             Resources res = context.getResources();
             Drawable myImage = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_add_24, null);
             holder.pic.setImageDrawable(myImage);
-        }
-        else
+        } else
             //Glide.with(context).load(RetrofitClient.getBaseUrl() + item.getPicture() ).into(holder.pic); // 게시물 사진
             // item tag 추가의 경우 naver api 이용한 http 이미지 링크 받아오므로 baseUrl 제거 --> 실제 이 코드 사용
-            Glide.with(context).load(item.getPicture() ).into(holder.pic); // 게시물 사진
+            Glide.with(context).load(item.getPicture()).into(holder.pic); // 게시물 사진
 
         holder.pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if( dataList.get(position).getId()== -1){
-                    Log.d("TAG","add action");
+                if (dataList.get(position).getId() == -1) {
+                    Log.d("TAG", "add action");
                     mListener.onItemClick(v);
-                }
-                else{
+                } else {
                     Intent intent = new Intent(context, ItemDetailActivity.class);
                     intent.putExtra("id", item.getId());
                     intent.putExtra("name", item.getName());
@@ -94,7 +84,7 @@ public class AddItemTagAdapter extends ItemTagAdapter {
                         })
                         .show();*/
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View dialogView = inflater.inflate(R.layout.activity_popup,null);
+                View dialogView = inflater.inflate(R.layout.activity_popup, null);
                 androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
                 builder.setView(dialogView);
 
@@ -102,10 +92,10 @@ public class AddItemTagAdapter extends ItemTagAdapter {
                 alertDialog.show();
                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                ImageView icon=dialogView.findViewById(R.id.warning);
+                ImageView icon = dialogView.findViewById(R.id.warning);
                 icon.setVisibility(View.GONE);
 
-                TextView txt=dialogView.findViewById(R.id.txtText);
+                TextView txt = dialogView.findViewById(R.id.txtText);
                 txt.setText("삭제하시겠습니까?");
 
                 Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -134,13 +124,13 @@ public class AddItemTagAdapter extends ItemTagAdapter {
 
 
     //item 클릭 리스너 인터페이스
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(View v);
     }
 
     private AddItemTagAdapter.OnItemClickListener mListener = null;
 
-    public void setOnItemClickListener(AddItemTagAdapter.OnItemClickListener listener){
+    public void setOnItemClickListener(AddItemTagAdapter.OnItemClickListener listener) {
         this.mListener = listener;
     }
 }

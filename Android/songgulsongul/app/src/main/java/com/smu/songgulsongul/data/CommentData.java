@@ -2,7 +2,7 @@ package com.smu.songgulsongul.data;
 
 import com.google.gson.annotations.SerializedName;
 
-public class CommentData  {
+public class CommentData {
 
     @SerializedName("userid")
     int userid;

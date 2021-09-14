@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.server.RetrofitClient;
 
 public class ItemDetailActivity extends Activity {
 

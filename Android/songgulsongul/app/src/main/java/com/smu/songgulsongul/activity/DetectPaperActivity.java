@@ -25,7 +25,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -46,18 +45,20 @@ import es.dmoral.toasty.Toasty;
 
 
 // 카메라 촬영및 갤러리에서 선택후 임시로 전달할 Activity
-public class DetectPaperActivity extends AppCompatActivity implements View.OnTouchListener  {
-    ImageView zoom_background , help;
+public class DetectPaperActivity extends AppCompatActivity implements View.OnTouchListener {
+    ImageView zoom_background, help;
+
     static {
         System.loadLibrary("opencv_java4");
         System.loadLibrary("native-lib");
     }
+
     String filePath;
     String sourceFilePath;
-    FrameLayout zoomFrame , dots ;
+    FrameLayout zoomFrame, dots;
     ZoomView zoomView;
     Toolbar toolbar;
-    ImageView dot1,dot2,dot3, dot4 ;
+    ImageView dot1, dot2, dot3, dot4;
     Rect rect;
     DrawRect drawRect;
     float oldXvalue;
@@ -85,9 +86,10 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     int BackColor = Color.parseColor("#BFB1D8");
     int FontColor = Color.parseColor("#000000");
 
-    public native void GetPaperPoints(long inputImage,long outputPoint, int th1, int th2);
+    public native void GetPaperPoints(long inputImage, long outputPoint, int th1, int th2);
 
-    public native void PaperProcessing(long inputImage, long outputImage, long inputPoints, int offsetX, int offsetY, float scaleFactor ,int th1, int th2);
+    public native void PaperProcessing(long inputImage, long outputImage, long inputPoints, int offsetX, int offsetY, float scaleFactor, int th1, int th2);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,11 +97,11 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         //gets the file path
         filePath = getIntent().getStringExtra("path");
         sourceFilePath = filePath;
-        Log.i("imread",filePath);
+        Log.i("imread", filePath);
 
         //imgInput = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
         imgInput = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
-        Imgproc.cvtColor(imgInput,imgInput, Imgproc.COLOR_BGR2RGB);//RGB BGR 채널 뒤밖임 수정
+        Imgproc.cvtColor(imgInput, imgInput, Imgproc.COLOR_BGR2RGB);//RGB BGR 채널 뒤밖임 수정
         paperPoints = new MatOfPoint();
 
 
@@ -108,27 +110,27 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         View view = inflater.inflate(R.layout.zoom_item, null, false);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        zoomView = new ZoomView((Context)this);
+        zoomView = new ZoomView((Context) this);
         zoomView.addView(view);
-        zoomView.setLayoutParams((ViewGroup.LayoutParams)layoutParams);
+        zoomView.setLayoutParams((ViewGroup.LayoutParams) layoutParams);
         zoomView.setMaxZoom(4.0F);
 
-        zoomFrame = findViewById(R.id.detect_paper_frame) ;
+        zoomFrame = findViewById(R.id.detect_paper_frame);
         zoomFrame.addView(zoomView);
         zoom_background = findViewById(R.id.zoom_background);
 
         //대상 이미지 동기 로딩
-        imgInputBitmap= Bitmap.createBitmap(imgInput.cols(),imgInput.rows(), Bitmap.Config.ARGB_8888);
+        imgInputBitmap = Bitmap.createBitmap(imgInput.cols(), imgInput.rows(), Bitmap.Config.ARGB_8888);
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 //이미지뷰 비트맵 설정
-                Utils.matToBitmap(imgInput,imgInputBitmap);
+                Utils.matToBitmap(imgInput, imgInputBitmap);
                 zoom_background.setImageBitmap(imgInputBitmap);
             }
         });
-        
+
 
         //툴바 세팅
         toolbar = findViewById(R.id.detect_paper_toolbar);
@@ -157,10 +159,6 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         //setDots(); /// OnCreate에서 ImageView의 크기를 가져올 수 없어서 스케일 조절이 되지 않음.
 
 
-
-
-
-
         dot1.setOnTouchListener(this);
         dot2.setOnTouchListener(this);
         dot3.setOnTouchListener(this);
@@ -171,15 +169,15 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DetectPaperActivity.this , DetectPicActivity.class);
+                Intent intent = new Intent(DetectPaperActivity.this, DetectPicActivity.class);
                 // 이미지 편집 후 임시파일로 저장, 인텐트에는 url로 전달
                 intent.putExtra("path", filePath);
                 intent.putExtra("sourceFilePath", sourceFilePath);
                 imgOutput = new Mat();
-                PaperProcessing(imgInput.getNativeObjAddr(),imgOutput.getNativeObjAddr(),paperPoints.getNativeObjAddr(),pivotOffsetX,pivotOffsetY,scaleFactor,th1,th2);
+                PaperProcessing(imgInput.getNativeObjAddr(), imgOutput.getNativeObjAddr(), paperPoints.getNativeObjAddr(), pivotOffsetX, pivotOffsetY, scaleFactor, th1, th2);
                 //Log.w("DetectPaper", "paperImage Address: "+ String.valueOf(imgOutput.getNativeObjAddr()));
                 intent.putExtra("imgInputAddress", imgOutput.getNativeObjAddr());
-                ((songgul)getApplication()).setPaperMat(imgOutput);
+                ((songgul) getApplication()).setPaperMat(imgOutput);
                 startActivity(intent);
                 finish();
             }
@@ -191,20 +189,19 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     @Override
     public void onBackPressed() {
         second_time = System.currentTimeMillis();
-        if(second_time-first_time <2000){
+        if (second_time - first_time < 2000) {
             super.onBackPressed();
-            ((songgul)getApplication()).releaseAllMat();
+            ((songgul) getApplication()).releaseAllMat();
             finish();
-        }
-        else{
+        } else {
             Toasty.custom(this, "한번 더 누르면 편집을 종료합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
     }
 
-    ArrayList<int[]>getPos(){
+    ArrayList<int[]> getPos() {
 
-        ArrayList<int[]> arrayList= new ArrayList<>();
+        ArrayList<int[]> arrayList = new ArrayList<>();
         arrayList.add(new int[]{300, 300});
         arrayList.add(new int[]{300, 600});
         arrayList.add(new int[]{600, 300});
@@ -213,9 +210,9 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         return arrayList;
     }
 
-    ArrayList<int[]>get0Pos(){
+    ArrayList<int[]> get0Pos() {
 
-        ArrayList<int[]> arrayList= new ArrayList<>();
+        ArrayList<int[]> arrayList = new ArrayList<>();
         arrayList.add(new int[]{0, 0});
         arrayList.add(new int[]{0, 0});
         arrayList.add(new int[]{0, 0});
@@ -225,7 +222,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     }
 
 
-    void setDots(){
+    void setDots() {
 
         ///opencv로 종이 찾기
         //BitmapDrawable targetDrawable = (BitmapDrawable) zoom_background.getDrawable();
@@ -235,7 +232,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
         GetPaperPoints(imgInput.getNativeObjAddr(), paperPoints.getNativeObjAddr(), th1, th2);
         boolean canUsePoints = true;
-        
+
         //비동기 이미지 로드용 코드
         /*
         originalRatio = imgInput.height()/(float)imgInput.width();
@@ -329,7 +326,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
         //동기 이미지로드용 코드
         ArrayList<int[]> tempPos = new ArrayList<int[]>();
-        if(paperPoints.toList().size() ==4) {
+        if (paperPoints.toList().size() == 4) {
             //pos.clear();
 
 
@@ -337,7 +334,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
             zoom_background.getImageMatrix().getValues(imageValues);
             float scaleX = imageValues[Matrix.MSCALE_X];
             float scaleY = imageValues[Matrix.MSCALE_Y];
-            Drawable backgroundDrawable= zoom_background.getDrawable();
+            Drawable backgroundDrawable = zoom_background.getDrawable();
             final int origW = backgroundDrawable.getIntrinsicWidth();
             final int origH = backgroundDrawable.getIntrinsicHeight();
             final int actW = Math.round(origW * scaleX);
@@ -364,7 +361,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 minX = Math.min(minX, (int) p.x);
                 minY = Math.min(minY, (int) p.y);
 
-                int[] locReturnP = ImageUtil.ImagePointToImageView(zoom_background, (int)p.x, (int)p.y);
+                int[] locReturnP = ImageUtil.ImagePointToImageView(zoom_background, (int) p.x, (int) p.y);
                 tempPos.add(new int[]{locReturnP[0], locReturnP[1]});
 
                 //tempPos.add(new int[]{(int) (p.x / scaleFactor) + pivotOffsetX, (int) (p.y / scaleFactor) + pivotOffsetY});
@@ -372,28 +369,27 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 //Log.i("PaperDetect", String.valueOf((p.x / scaleFactor)) + ", " + String.valueOf((p.y / scaleFactor)));
 
             }
-            if((maxX-minX)*(maxY-minY)/(actW*actH)<0.5){
+            if ((maxX - minX) * (maxY - minY) / (actW * actH) < 0.5) {
                 Log.w("PaperDetect", "Detected paper size is too small! use default points");
                 canUsePoints = false;
             }
         }
-        if(canUsePoints){
+        if (canUsePoints) {
             pos = tempPos;
-        }
-        else{
+        } else {
             pos = getPos();
             //pos = get0Pos();
             Log.w("PaperDetect", "Cant find 4 points of paper! use default points");
 
             ArrayList<Point> tempPoint = new ArrayList<Point>();
-            for (int[] p: pos) {
+            for (int[] p : pos) {
                 int[] locReturnP = ImageUtil.ImagePointToImageView(zoom_background, p[0], p[1]);
                 tempPos.add(new int[]{locReturnP[0], locReturnP[1]});
             }
             paperPoints.fromList(tempPoint);
         }
-        
-        
+
+
         dot1.setX(pos.get(0)[0]);
         dot1.setY(pos.get(0)[1]);
 
@@ -410,12 +406,11 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
         dot4.setY(pos.get(3)[1]);
 
 
-
-        Log.i("DetectPaper", "dot1 pos: " + String.valueOf(dot1.getX()) + ", "+String.valueOf(dot1.getY()));
+        Log.i("DetectPaper", "dot1 pos: " + dot1.getX() + ", " + dot1.getY());
 
     }
 
-    void draw(){
+    void draw() {
         pos.get(0)[0] = (int) dot1.getX();
         pos.get(0)[1] = (int) dot1.getY();
 
@@ -430,18 +425,17 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
 
         dots.removeAllViews();
-        if(dots != null){
+        if (dots != null) {
             rect = new Rect(
                     0, 0,
                     dots.getMeasuredWidth(), dots.getMeasuredHeight()
             );
 
 
-        }
-        else
+        } else
             dots = findViewById(R.id.dot_draw);
 
-        drawRect = new DrawRect(this, pos,dot1.getWidth()/2);
+        drawRect = new DrawRect(this, pos, dot1.getWidth() / 2);
         dots.addView(drawRect);
 
     }
@@ -449,13 +443,13 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         //이미지 배경화면세팅
-        if(hasFocus){
-            if(!findPaperOnce){///최초 1회 실행
+        if (hasFocus) {
+            if (!findPaperOnce) {///최초 1회 실행
                 //Glide.with(this).load(filePath).into(zoom_background);//비동기 이미지 로드
 
                 setDots();
                 dots = findViewById(R.id.dot_draw);
-                if(dots != null){
+                if (dots != null) {
                     rect = new Rect(
                             0, 0,
                             dots.getMeasuredWidth(), dots.getMeasuredHeight()
@@ -463,7 +457,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 }
                 findPaperOnce = true;
 
-                drawRect = new DrawRect(this, pos,dot1.getWidth()/2);
+                drawRect = new DrawRect(this, pos, dot1.getWidth() / 2);
                 dots.addView(drawRect);
             }
         }
@@ -474,27 +468,26 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        int width = ((ViewGroup) v.getParent()).getWidth() ;
+        int width = ((ViewGroup) v.getParent()).getWidth();
         int height = ((ViewGroup) v.getParent()).getHeight();
         int tb_height = toolbar.getHeight();
-        int dot_size = dot1.getWidth()/2 ;
+        int dot_size = dot1.getWidth() / 2;
         int zero = -1 * dot_size;
 
         float zoom = zoomView.getZoom();
 
-        float startX = zoomView.getSmoothZoomX() - width/zoom*0.5f ;
-        float startY =zoomView.getSmoothZoomY() - height/zoom*0.5f;
+        float startX = zoomView.getSmoothZoomX() - width / zoom * 0.5f;
+        float startY = zoomView.getSmoothZoomY() - height / zoom * 0.5f;
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             zoomView.setDotmove(true);
             oldXvalue = event.getX();
             oldYvalue = event.getY();
 
-        }
-        else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 
-            v.setX( startX + (event.getRawX()/zoom) - oldXvalue);
-            v.setY( startY + ((event.getRawY()-tb_height)/zoom) - (oldYvalue + v.getHeight()/zoom )   );
+            v.setX(startX + (event.getRawX() / zoom) - oldXvalue);
+            v.setY(startY + ((event.getRawY() - tb_height) / zoom) - (oldYvalue + v.getHeight() / zoom));
             /*
             if(v.getId() == dot1.getId()){
                 pos.set(0, new int[]{(int) (startX + (event.getRawX()/zoom)-oldXvalue),
@@ -530,7 +523,7 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
             pos.get(3)[1] = (int) dot4.getY();
 
             ArrayList<Point> tempPoint = new ArrayList<Point>();
-            for (int[] p: pos) {
+            for (int[] p : pos) {
                 //비동기 이미지 로드용 코드
                 /*
                 int locX = Math.max((int)((p[0]-pivotOffsetX)*scaleFactor), 0);
@@ -540,57 +533,50 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
                 tempPoint.add(new Point(locX, locY));
                 */
                 //동기 이미지 로드용 코드
-                int[]loc = ImageUtil.ImageViewPointToImage(zoom_background,p[0],p[1]);
+                int[] loc = ImageUtil.ImageViewPointToImage(zoom_background, p[0], p[1]);
                 tempPoint.add(new Point(loc[0], loc[1]));
                 //Log.i("PaperDetect", String.valueOf(p[0])+", "+String.valueOf(p[0]));
             }
-            Log.i("DetectPaper", "dot1 pos: " + String.valueOf(dot1.getX()) + ", "+String.valueOf(dot1.getY()));
+            Log.i("DetectPaper", "dot1 pos: " + dot1.getX() + ", " + dot1.getY());
             paperPoints.fromList(tempPoint);
 
-        }
-        else if (event.getAction() == MotionEvent.ACTION_UP) {
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
 
             zoomView.setDotmove(false);
             if (v.getX() > width + dot_size && v.getY() > height + dot_size) {
                 v.setX(width - dot_size);
                 v.setY(height - dot_size);
                 Log.d("out", "case 1");
-            }
-            else if (v.getX() < zero && v.getY() > height + dot_size) {
+            } else if (v.getX() < zero && v.getY() > height + dot_size) {
                 v.setX(zero);
-                v.setY(height-dot_size);
+                v.setY(height - dot_size);
                 Log.d("out", "case 2");
-            }
-            else if (v.getX() > width + dot_size && v.getY() < zero) {
-                v.setX(width-dot_size);
+            } else if (v.getX() > width + dot_size && v.getY() < zero) {
+                v.setX(width - dot_size);
                 v.setY(-1 * dot_size);
                 Log.d("out", "case 3");
-            }
-            else if (v.getX() < zero && v.getY() < zero) {
+            } else if (v.getX() < zero && v.getY() < zero) {
                 v.setX(zero);
                 v.setY(zero);
                 Log.d("out", "case 4");
-            }
-            else if (v.getX() < zero || v.getX() > width + dot_size) {
-                if (v.getX() < zero ) {
-                    v.setX( zero );
-                    v.setY( startY + ((event.getRawY()-tb_height)/zoom) - (oldYvalue + v.getHeight()/zoom )   );
+            } else if (v.getX() < zero || v.getX() > width + dot_size) {
+                if (v.getX() < zero) {
+                    v.setX(zero);
+                    v.setY(startY + ((event.getRawY() - tb_height) / zoom) - (oldYvalue + v.getHeight() / zoom));
                     Log.d("out", "case 5");
                 } else {
-                    v.setX( width-dot_size );
-                    v.setY( startY + ((event.getRawY()-tb_height)/zoom) - (oldYvalue + v.getHeight()/zoom )   );
+                    v.setX(width - dot_size);
+                    v.setY(startY + ((event.getRawY() - tb_height) / zoom) - (oldYvalue + v.getHeight() / zoom));
                     Log.d("out", "case 6");
                 }
-            }
-            else if (v.getY() < zero || v.getY() > height + dot_size) {
-                if (v.getY() < zero ) {
-                    v.setX( startX + (event.getRawX()/zoom) - oldXvalue);
-                    v.setY( zero );
+            } else if (v.getY() < zero || v.getY() > height + dot_size) {
+                if (v.getY() < zero) {
+                    v.setX(startX + (event.getRawX() / zoom) - oldXvalue);
+                    v.setY(zero);
                     Log.d("out", "case 7");
-                }
-                else {
-                    v.setX( startX + (event.getRawX()/zoom) - oldXvalue);
-                    v.setY(height- dot_size );
+                } else {
+                    v.setX(startX + (event.getRawX() / zoom) - oldXvalue);
+                    v.setY(height - dot_size);
                     Log.d("out", "case 8");
                 }
             }
@@ -611,25 +597,25 @@ public class DetectPaperActivity extends AppCompatActivity implements View.OnTou
 
         switch (item.getItemId()) {
 
-            case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
+            case android.R.id.home: { // 뒤로가기 버튼 눌렀을 때
                 // 알림팝업
                 return true;
             }
 
             case R.id.toolbar_skip:// 건너뛰기
 
-                Intent intent = new Intent(DetectPaperActivity.this , DetectPicActivity.class);
+                Intent intent = new Intent(DetectPaperActivity.this, DetectPicActivity.class);
                 intent.putExtra("path", filePath);
                 intent.putExtra("sourceFilePath", sourceFilePath);
                 imgOutput = imgInput.clone();
                 intent.putExtra("imgInputAddress", imgOutput.getNativeObjAddr());
-                ((songgul)getApplication()).setPaperMat(imgOutput);
+                ((songgul) getApplication()).setPaperMat(imgOutput);
                 startActivity(intent);
                 finish();
                 return true;
 
         }
-        return  true;
+        return true;
     }
 
     @Override

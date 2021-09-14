@@ -18,7 +18,6 @@ import java.util.List;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.PostActivity;
 import com.smu.songgulsongul.responseData.Post;
-import com.smu.songgulsongul.server.RetrofitClient;
 
 public class PostImageRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -29,23 +28,22 @@ public class PostImageRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     Context context;
     List<Post> items;
 
-    public PostImageRVAdapter(Context context, List<Post> items){
+    public PostImageRVAdapter(Context context, List<Post> items) {
         this.context = context;
         this.items = items;
     }
 
-    public void addItem( List<Post> posts){
+    public void addItem(List<Post> posts) {
         items.addAll(posts);
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == VIEW_TYPE_ITEM){
+        if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_image_item, parent, false);
             return new PostImageRVAdapter.ItemViewHolder(view);
-        }
-        else {
+        } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
             return new PostImageRVAdapter.LoadingViewHolder(view);
         }
@@ -73,8 +71,7 @@ public class PostImageRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     context.startActivity(intent);
                 }
             });
-        }
-        else {//가독성을 위해 적어놓음?..
+        } else {//가독성을 위해 적어놓음?..
             showLoadingView((PostImageRVAdapter.LoadingViewHolder) holder, position);
         }
     }
@@ -89,17 +86,15 @@ public class PostImageRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
-
-
     // Item Holders
 
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
 
-        public ItemViewHolder(@NonNull View itemView){
+        public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            img=(ImageView)itemView.findViewById(R.id.post_image_iv);
+            img = (ImageView) itemView.findViewById(R.id.post_image_iv);
 
 
         }
@@ -107,7 +102,7 @@ public class PostImageRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
-        private ProgressBar progressBar;
+        private final ProgressBar progressBar;
 
         public LoadingViewHolder(@NonNull View itemView) {
             super(itemView);

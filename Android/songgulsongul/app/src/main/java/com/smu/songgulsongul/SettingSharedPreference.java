@@ -13,7 +13,7 @@ public class SettingSharedPreference {
     // 정보 저장
     public static void setSetting(Context ctx, String key, boolean value) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
-        editor.putBoolean(key,value);
+        editor.putBoolean(key, value);
         editor.commit();
     }
 

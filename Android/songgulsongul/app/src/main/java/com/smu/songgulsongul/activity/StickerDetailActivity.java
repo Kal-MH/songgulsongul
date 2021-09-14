@@ -144,7 +144,7 @@ public class StickerDetailActivity extends AppCompatActivity {
                                         String image = result.get("image").getAsString();
                                         Log.d("image_path", image);
                                         // 이미지 저장
-                                        file_name = img_path.substring(img_path.lastIndexOf('/') + 1, img_path.length());
+                                        file_name = img_path.substring(img_path.lastIndexOf('/') + 1);
                                         DownloadManager mgr = (DownloadManager)StickerDetailActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
                                         Uri uri = Uri.parse(img_path);
                                         DownloadManager.Request request = new DownloadManager.Request(uri);

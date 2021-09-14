@@ -20,10 +20,9 @@ import java.util.List;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.StickerDetailActivity;
 import com.smu.songgulsongul.responseData.Sticker;
-import com.smu.songgulsongul.server.RetrofitClient;
 
 public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdapter.ViewHolder> {
-    private Context context;
+    private final Context context;
     List<Sticker> items;
     int itemCnt;
 
@@ -34,7 +33,7 @@ public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdap
     }
 
     // 받아온 데이터로 스티커 내용 셋팅
-    public void setItem(@NonNull StickerSearchAdapter.ViewHolder holder, Sticker sticker){
+    public void setItem(@NonNull StickerSearchAdapter.ViewHolder holder, Sticker sticker) {
         holder.sticker_price.setText(sticker.getPrice() + "p");
         holder.sticker_name.setText(sticker.getName());
         Glide.with(context).load(sticker.getImage()).into(holder.sticker_image);
@@ -65,11 +64,11 @@ public class StickerSearchAdapter extends RecyclerView.Adapter<StickerSearchAdap
         TextView sticker_name;
         TextView sticker_price;
 
-        public ViewHolder(@NonNull View itemView){
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            sticker_image = (ImageView)itemView.findViewById(R.id.stk_sitem_image);
-            sticker_name = (TextView)itemView.findViewById(R.id.stk_sitem_name);
-            sticker_price = (TextView)itemView.findViewById(R.id.stk_sitem_price);
+            sticker_image = (ImageView) itemView.findViewById(R.id.stk_sitem_image);
+            sticker_name = (TextView) itemView.findViewById(R.id.stk_sitem_name);
+            sticker_price = (TextView) itemView.findViewById(R.id.stk_sitem_price);
 
             itemView.setClickable(true);
             itemView.setOnClickListener(new View.OnClickListener() {

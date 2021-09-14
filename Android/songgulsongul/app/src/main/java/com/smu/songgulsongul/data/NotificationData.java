@@ -1,7 +1,7 @@
 package com.smu.songgulsongul.data;
 
-public class NotificationData   {
-    private String message,title;
+public class NotificationData {
+    private String message, title;
 
     public NotificationData(String message, String title) {
         this.message = message;

@@ -16,8 +16,8 @@ import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.item.GalleryItem;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
-    private List<GalleryItem> galleryItems;
-    private Context context;
+    private final List<GalleryItem> galleryItems;
+    private final Context context;
     private OnItemsClickListener listener;
 
     public GalleryAdapter(Context context, List<GalleryItem> galleryItems) {
@@ -25,12 +25,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         this.galleryItems = galleryItems;
     }
 
-    public boolean addItem( List<GalleryItem> galleryItem){
+    public boolean addItem(List<GalleryItem> galleryItem) {
         galleryItems.addAll(galleryItem);
         return true;
     }
 
-    public void setWhenClickListener(OnItemsClickListener listener){
+    public void setWhenClickListener(OnItemsClickListener listener) {
         this.listener = listener;
     }
 
@@ -49,7 +49,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         viewHolder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener != null){
+                if (listener != null) {
                     listener.onItemClick(galleryItem);
                 }
             }
@@ -72,7 +72,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     }
 
     // Interface to perform events on Main-List item click
-    public interface OnItemsClickListener{
+    public interface OnItemsClickListener {
         void onItemClick(GalleryItem galleryItem);
     }
 

@@ -12,7 +12,7 @@ public class RequestNotification {
     private String loginid;
 
     @SerializedName("postid") //알림 받을 사람의 postid
-    private  int postid;
+    private int postid;
 
     public int getPostid() {
         return postid;
@@ -26,9 +26,7 @@ public class RequestNotification {
     private NotificationData notification;
 
 
-    private  int mode;
-
-
+    private int mode;
 
 
     public NotificationData getNotification() {

@@ -3,7 +3,6 @@ package com.smu.songgulsongul.layout;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
@@ -16,13 +15,14 @@ public class DrawRect extends View {
     float lineThickness = 7.0f;
     ArrayList<int[]> pos;
     int gap;
+
     public DrawRect(Context context) {
         super(context);
         paint = new Paint();
         gap = 100;
     }
 
-    public DrawRect(Context context, ArrayList<int[]> pos){
+    public DrawRect(Context context, ArrayList<int[]> pos) {
         super(context);
         paint = new Paint();
         this.pos = pos;
@@ -30,7 +30,7 @@ public class DrawRect extends View {
     }
 
     @SuppressLint("ResourceAsColor")
-    public DrawRect(Context context, ArrayList<int[]> pos, int gap){
+    public DrawRect(Context context, ArrayList<int[]> pos, int gap) {
         super(context);
         paint = new Paint();
         this.pos = pos;
@@ -85,10 +85,10 @@ public class DrawRect extends View {
         canvas.drawLine(pos.get(2)[0] +gap , pos.get(2)[1] +gap ,  pos.get(3)[0]+gap , pos.get(3)[1] +gap , paint);
         */
 
-        canvas.drawLine(pos.get(0)[0] +gap , pos.get(0)[1] +gap ,  pos.get(1)[0]+gap , pos.get(1)[1] +gap , paint);
-        canvas.drawLine(pos.get(1)[0] +gap , pos.get(1)[1]+gap  ,  pos.get(3)[0]+gap , pos.get(3)[1] +gap , paint);
-        canvas.drawLine(pos.get(0)[0] +gap , pos.get(0)[1] +gap ,  pos.get(2)[0]+gap , pos.get(2)[1] +gap , paint);
-        canvas.drawLine(pos.get(2)[0] +gap , pos.get(2)[1] +gap ,  pos.get(3)[0]+gap , pos.get(3)[1] +gap , paint);
+        canvas.drawLine(pos.get(0)[0] + gap, pos.get(0)[1] + gap, pos.get(1)[0] + gap, pos.get(1)[1] + gap, paint);
+        canvas.drawLine(pos.get(1)[0] + gap, pos.get(1)[1] + gap, pos.get(3)[0] + gap, pos.get(3)[1] + gap, paint);
+        canvas.drawLine(pos.get(0)[0] + gap, pos.get(0)[1] + gap, pos.get(2)[0] + gap, pos.get(2)[1] + gap, paint);
+        canvas.drawLine(pos.get(2)[0] + gap, pos.get(2)[1] + gap, pos.get(3)[0] + gap, pos.get(3)[1] + gap, paint);
 
     }
 }
