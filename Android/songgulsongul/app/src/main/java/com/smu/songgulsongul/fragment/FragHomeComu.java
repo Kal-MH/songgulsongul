@@ -109,9 +109,6 @@ public class FragHomeComu extends Fragment {
         searchText.setTypeface(tf);
 
 
-
-        GetCommunityData();
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -122,10 +119,17 @@ public class FragHomeComu extends Fragment {
             }
         });
 
-        initScroll();
-        GetCommunityData();
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+        GetCommunityData();
+        initScroll();
+
     }
 
     //server에서 data전달

@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -30,6 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -111,7 +113,9 @@ public class PostActivity extends AppCompatActivity {
     List<HashTag> hashTagsData;
     List<ItemTag> itemTagData;
     List<Comment> CommentsData;
+    NestedScrollView scrollView;
     Ccl ccl;
+    Boolean scrollDown;
 
 
     Typeface typeface;
@@ -124,6 +128,7 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
 
         {
+            scrollView = (NestedScrollView) findViewById(R.id.post_nest_scroll_view);
             typeface = ResourcesCompat.getFont(this, R.font.ibm_plex_sans_light);
             post_write = (Button) findViewById(R.id.post_write);
             post_keep_btn = (ImageButton) findViewById(R.id.post_keep_btn);
@@ -163,6 +168,7 @@ public class PostActivity extends AppCompatActivity {
         Intent intent = getIntent();
         user_id = LoginSharedPreference.getUserId(PostActivity.this);
         post_id = intent.getIntExtra("post_id", -1);
+        scrollDown = intent.getBooleanExtra("comment", false);
         login_id = LoginSharedPreference.getLoginId(PostActivity.this);
         share_flag = NO;
 
@@ -523,6 +529,15 @@ public class PostActivity extends AppCompatActivity {
                     setItemTagData();
                     setCommentsData();
                     setStatusData();
+
+                    if (scrollDown) {
+                        scrollView.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                            }
+                        }, 300);
+                    }
 
                 } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                     Toasty.normal(PostActivity.this, "서버와의 통신이 불안정합니다").show();

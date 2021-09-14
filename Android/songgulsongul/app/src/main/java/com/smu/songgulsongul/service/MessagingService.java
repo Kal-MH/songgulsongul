@@ -89,6 +89,9 @@ public class MessagingService extends FirebaseMessagingService {
             int postId = Integer.parseInt(postid);
             intent = new Intent(this, PostActivity.class);
             intent.putExtra("post_id", postId);
+            if(mode.equals("2")) {
+                intent.putExtra("comment", true);
+            }
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
             pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         }

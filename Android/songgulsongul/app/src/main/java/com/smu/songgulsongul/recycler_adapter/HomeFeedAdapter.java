@@ -198,6 +198,18 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     context.startActivity(intent);
                 }
             };
+
+            View.OnClickListener goPostActivityWithComment = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, PostActivity.class);
+                    // 게시글 id 전달
+                    intent.putExtra("comment",true);
+                    intent.putExtra("post_id", postId);
+                    context.startActivity(intent);
+                }
+            };
+
             View.OnClickListener goProfile = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -208,7 +220,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             };
 
-            ((ItemViewHolder) holder).comment.setOnClickListener(goPostActivity);
+            ((ItemViewHolder) holder).comment.setOnClickListener(goPostActivityWithComment);
             ((ItemViewHolder) holder).picture.setOnClickListener(goPostActivity);
 
             ((ItemViewHolder) holder).user_id.setOnClickListener(goProfile);

@@ -76,11 +76,17 @@ public class FragHomeFeed extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
         initScrollListener();
         GetFeedData();
 
-
-        return rootView;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
