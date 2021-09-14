@@ -50,7 +50,7 @@ public class EditImageFilterActivity extends AppCompatActivity {
 
     public native void applyRGBMinGray(long imgInputAddress, long imgOutputAddress);
 
-    public native void applyTestFilter(long imgInputAddress, long imgOutputAddress);
+  //  public native void applyTestFilter(long imgInputAddress, long imgOutputAddress);
 
     public native void applyFilterSharp(long imgInputAddress, long imgOutputAddress);
 
