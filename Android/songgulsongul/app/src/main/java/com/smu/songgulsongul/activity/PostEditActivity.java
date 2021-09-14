@@ -45,17 +45,17 @@ import retrofit2.Response;
 
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.adapter.AddItemTagAdapter;
-import com.smu.songgulsongul.data.PostEditData;
-import com.smu.songgulsongul.responseData.Ccl;
-import com.smu.songgulsongul.responseData.CodeResponse;
-import com.smu.songgulsongul.responseData.Comment;
-import com.smu.songgulsongul.responseData.HashTag;
-import com.smu.songgulsongul.responseData.ItemTag;
-import com.smu.songgulsongul.responseData.Post;
-import com.smu.songgulsongul.responseData.PostDetail;
-import com.smu.songgulsongul.responseData.PostResponse;
-import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.recycler_adapter.AddItemTagAdapter;
+import com.smu.songgulsongul.data.post.PostEditData;
+import com.smu.songgulsongul.data.post.Ccl;
+import com.smu.songgulsongul.data.CodeResponse;
+import com.smu.songgulsongul.recycler_item.Comment;
+import com.smu.songgulsongul.recycler_item.HashTag;
+import com.smu.songgulsongul.recycler_item.ItemTag;
+import com.smu.songgulsongul.recycler_item.Post;
+import com.smu.songgulsongul.data.post.PostDetail;
+import com.smu.songgulsongul.data.post.Response.PostResponse;
+import com.smu.songgulsongul.recycler_item.User;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -295,11 +295,11 @@ public class PostEditActivity extends AppCompatActivity {
 
 
         //CCL 세팅
-        ccl_cc = ccl.getCcl_cc();
-        ccl_a = ccl.getCcl_a();
-        ccl_nc = ccl.getCcl_nc();
-        ccl_nd = ccl.getCcl_nd();
-        ccl_sa = ccl.getCcl_sa();
+        ccl_cc = ccl.getCc();
+        ccl_a = ccl.getA();
+        ccl_nc = ccl.getNc();
+        ccl_nd = ccl.getNd();
+        ccl_sa = ccl.getSa();
         post_edit_ccl_1.setChecked(ccl_cc == 1);
         post_edit_ccl_2.setChecked(ccl_a == 1);
         post_edit_ccl_3.setChecked(ccl_nc == 1);

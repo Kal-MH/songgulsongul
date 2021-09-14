@@ -46,10 +46,10 @@ import retrofit2.Response;
 
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.data.UserData;
-import com.smu.songgulsongul.responseData.CodeResponse;
-import com.smu.songgulsongul.responseData.ProfileResponse;
-import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.data.user.UserData;
+import com.smu.songgulsongul.data.CodeResponse;
+import com.smu.songgulsongul.data.user.response.ProfileResponse;
+import com.smu.songgulsongul.recycler_item.User;
 import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;

@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.layout.ZoomView;
+import com.smu.songgulsongul.customlayout.ZoomView;
 
 public class ZoomActivity extends AppCompatActivity {
 

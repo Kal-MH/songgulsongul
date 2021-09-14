@@ -1,7 +1,6 @@
 package com.smu.songgulsongul.server;
 
-import com.google.gson.JsonObject;
-import com.smu.songgulsongul.responseData.ShoppingResults;
+import com.smu.songgulsongul.data.shoppingapi.ShoppingResults;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

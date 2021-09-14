@@ -1,7 +1,6 @@
 package com.smu.songgulsongul.fragment;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -35,9 +33,8 @@ import retrofit2.Response;
 
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.activity.EditAccountActivity;
-import com.smu.songgulsongul.adapter.FollowAdapter;
-import com.smu.songgulsongul.data.FollowListData;
+import com.smu.songgulsongul.recycler_adapter.FollowAdapter;
+import com.smu.songgulsongul.data.user.FollowListData;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;

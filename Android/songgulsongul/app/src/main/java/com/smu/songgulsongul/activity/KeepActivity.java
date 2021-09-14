@@ -30,10 +30,10 @@ import retrofit2.Response;
 
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.adapter.PostImageRVAdapter;
-import com.smu.songgulsongul.data.KeepData;
-import com.smu.songgulsongul.responseData.KeepResponse;
-import com.smu.songgulsongul.responseData.Post;
+import com.smu.songgulsongul.recycler_adapter.PostImageRVAdapter;
+import com.smu.songgulsongul.data.post.KeepData;
+import com.smu.songgulsongul.data.post.Response.KeepResponse;
+import com.smu.songgulsongul.recycler_item.Post;
 import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;

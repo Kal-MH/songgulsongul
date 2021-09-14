@@ -17,20 +17,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.data.NotificationData;
-import com.smu.songgulsongul.data.RequestNotification;
 import com.smu.songgulsongul.fragment.FragHomeComu;
 import com.smu.songgulsongul.fragment.FragHomeFeed;
 import com.smu.songgulsongul.fragment.FragHomeMarket;
-import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;

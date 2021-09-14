@@ -28,10 +28,10 @@ import retrofit2.Response;
 
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.data.PwEditData;
+import com.smu.songgulsongul.data.user.PwEditData;
 import com.smu.songgulsongul.fragment.FragEditId;
 import com.smu.songgulsongul.fragment.FragEditPw;
-import com.smu.songgulsongul.responseData.CodeResponse;
+import com.smu.songgulsongul.data.CodeResponse;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;

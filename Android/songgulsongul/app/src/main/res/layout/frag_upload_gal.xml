@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.smu.songgulsongul.layout.SquareImageView
+    <com.smu.songgulsongul.customlayout.SquareImageView
         android:id="@+id/upload_gal_pick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

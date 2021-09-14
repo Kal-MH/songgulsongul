@@ -51,21 +51,21 @@ import retrofit2.Response;
 
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.adapter.HashTagAdapter;
-import com.smu.songgulsongul.adapter.ItemTagAdapter;
-import com.smu.songgulsongul.adapter.PostCmtAdapter;
-import com.smu.songgulsongul.data.NotificationData;
-import com.smu.songgulsongul.data.RequestNotification;
-import com.smu.songgulsongul.responseData.Ccl;
-import com.smu.songgulsongul.responseData.CodeResponse;
-import com.smu.songgulsongul.data.CommentData;
-import com.smu.songgulsongul.responseData.Comment;
-import com.smu.songgulsongul.responseData.HashTag;
-import com.smu.songgulsongul.responseData.ItemTag;
-import com.smu.songgulsongul.responseData.Post;
-import com.smu.songgulsongul.responseData.PostDetail;
-import com.smu.songgulsongul.responseData.PostResponse;
-import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.recycler_adapter.HashTagAdapter;
+import com.smu.songgulsongul.recycler_adapter.ItemTagAdapter;
+import com.smu.songgulsongul.recycler_adapter.PostCmtAdapter;
+import com.smu.songgulsongul.data.notification.NotificationData;
+import com.smu.songgulsongul.data.notification.RequestNotification;
+import com.smu.songgulsongul.data.post.Ccl;
+import com.smu.songgulsongul.data.CodeResponse;
+import com.smu.songgulsongul.data.comment.CommentData;
+import com.smu.songgulsongul.recycler_item.Comment;
+import com.smu.songgulsongul.recycler_item.HashTag;
+import com.smu.songgulsongul.recycler_item.ItemTag;
+import com.smu.songgulsongul.recycler_item.Post;
+import com.smu.songgulsongul.data.post.PostDetail;
+import com.smu.songgulsongul.data.post.Response.PostResponse;
+import com.smu.songgulsongul.recycler_item.User;
 import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
@@ -726,24 +726,24 @@ public class PostActivity extends AppCompatActivity {
         post_keep_btn.setSelected(data.getKeepOnset() == 1);
 
 
-        if (ccl.getCcl_cc() == 1) {
+        if (ccl.getCc() == 1) {
             share_flag = YES;
             post_ccl_cc.setImageResource(R.drawable.ccl_cc_fill);
             post_ccl_cc.setColorFilter(R.color.inkGrey, PorterDuff.Mode.SRC_IN);
         }
-        if (ccl.getCcl_a() == 1) {
+        if (ccl.getA() == 1) {
             post_ccl_a.setImageResource(R.drawable.ccl_attribution_fill);
             post_ccl_a.setColorFilter(R.color.inkGrey, PorterDuff.Mode.SRC_IN);
         }
-        if (ccl.getCcl_nc() == 1) {
+        if (ccl.getNc() == 1) {
             post_ccl_nc.setImageResource(R.drawable.ccl_noncommercial_fill);
             post_ccl_nc.setColorFilter(R.color.inkGrey, PorterDuff.Mode.SRC_IN);
         }
-        if (ccl.getCcl_nd() == 1) {
+        if (ccl.getNd() == 1) {
             post_ccl_nd.setImageResource(R.drawable.ccl_no_derivative_fill);
             post_ccl_nd.setColorFilter(R.color.inkGrey, PorterDuff.Mode.SRC_IN);
         }
-        if (ccl.getCcl_sa() == 1) {
+        if (ccl.getSa() == 1) {
             post_ccl_sa.setImageResource(R.drawable.ccl_share_alike_fill);
             post_ccl_sa.setColorFilter(R.color.inkGrey, PorterDuff.Mode.SRC_IN);
         }
@@ -890,7 +890,7 @@ public class PostActivity extends AppCompatActivity {
         requestNotification.setSendNotificationModel(notificationData);
         requestNotification.setMode(2);
         requestNotification.setSender(LoginSharedPreference.getUserId(this));
-        requestNotification.setPostid(postData.getId());
+        requestNotification.setPostId(postData.getId());
 
         retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
@@ -914,7 +914,7 @@ public class PostActivity extends AppCompatActivity {
         requestNotification.setSendNotificationModel(notificationData);
         requestNotification.setMode(3);
         requestNotification.setSender(LoginSharedPreference.getUserId(this));
-        requestNotification.setPostid(postData.getId());
+        requestNotification.setPostId(postData.getId());
 
         retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
         responseBodyCall.enqueue(new Callback<ResponseBody>() {

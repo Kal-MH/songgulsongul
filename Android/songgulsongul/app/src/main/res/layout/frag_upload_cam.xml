@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.smu.songgulsongul.layout.CameraSurfaceView
+    <com.smu.songgulsongul.customlayout.CameraSurfaceView
         android:id="@+id/upload_camview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -55,9 +55,9 @@ import retrofit2.Response;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.SettingSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.adapter.AddItemTagAdapter;
+import com.smu.songgulsongul.recycler_adapter.AddItemTagAdapter;
 
-import com.smu.songgulsongul.responseData.ItemTag;
+import com.smu.songgulsongul.recycler_item.ItemTag;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;

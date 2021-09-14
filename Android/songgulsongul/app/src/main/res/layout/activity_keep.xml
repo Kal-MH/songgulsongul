@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
-        <com.smu.songgulsongul.layout.RoundImageView
+        <com.smu.songgulsongul.customlayout.RoundImageView
             android:id="@+id/keep_imae"
             android:layout_width="@dimen/icon_size_large"
             android:layout_height="@dimen/icon_size_large"

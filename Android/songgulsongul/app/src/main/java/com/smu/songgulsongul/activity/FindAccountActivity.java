@@ -28,9 +28,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.responseData.CodeResponse;
-import com.smu.songgulsongul.data.EmailData;
-import com.smu.songgulsongul.data.FindData;
+import com.smu.songgulsongul.data.CodeResponse;
+import com.smu.songgulsongul.data.user.EmailData;
+import com.smu.songgulsongul.data.user.FindData;
 import com.smu.songgulsongul.fragment.FragFindId;
 import com.smu.songgulsongul.fragment.FragFindPw;
 import com.smu.songgulsongul.server.RetrofitClient;

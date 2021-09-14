@@ -22,7 +22,7 @@ import java.io.OutputStream;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.DetectPaperActivity;
 import com.smu.songgulsongul.activity.EditDoneActivity;
-import com.smu.songgulsongul.layout.CameraSurfaceView;
+import com.smu.songgulsongul.customlayout.CameraSurfaceView;
 
 import es.dmoral.toasty.Toasty;
 

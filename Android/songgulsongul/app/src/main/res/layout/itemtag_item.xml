@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.smu.songgulsongul.layout.SquareImageView
+    <com.smu.songgulsongul.customlayout.SquareImageView
         android:id="@+id/item_tag_img"
         android:layout_width="@dimen/icon_size_large"
         android:layout_height="@dimen/icon_size_large"

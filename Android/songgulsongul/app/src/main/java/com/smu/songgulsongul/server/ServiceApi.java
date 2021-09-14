@@ -19,34 +19,34 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-import com.smu.songgulsongul.data.PostEditData;
-import com.smu.songgulsongul.data.PwEditData;
-import com.smu.songgulsongul.data.RequestNotification;
-import com.smu.songgulsongul.data.TokenData;
-import com.smu.songgulsongul.responseData.CodeResponse;
+import com.smu.songgulsongul.data.post.PostEditData;
+import com.smu.songgulsongul.data.user.PwEditData;
+import com.smu.songgulsongul.data.notification.RequestNotification;
+import com.smu.songgulsongul.data.user.TokenData;
+import com.smu.songgulsongul.data.CodeResponse;
 
-import com.smu.songgulsongul.data.CommentData;
-import com.smu.songgulsongul.data.FollowData;
-import com.smu.songgulsongul.data.FollowListData;
-import com.smu.songgulsongul.data.EmailData;
-import com.smu.songgulsongul.data.FindData;
-import com.smu.songgulsongul.data.IdCheckData;
-import com.smu.songgulsongul.data.IdData;
-import com.smu.songgulsongul.data.JoinData;
-import com.smu.songgulsongul.data.KeepData;
-import com.smu.songgulsongul.data.LoginData;
+import com.smu.songgulsongul.data.comment.CommentData;
+import com.smu.songgulsongul.data.user.FollowData;
+import com.smu.songgulsongul.data.user.FollowListData;
+import com.smu.songgulsongul.data.user.EmailData;
+import com.smu.songgulsongul.data.user.FindData;
+import com.smu.songgulsongul.data.user.IdCheckData;
+import com.smu.songgulsongul.data.user.IdData;
+import com.smu.songgulsongul.data.user.JoinData;
+import com.smu.songgulsongul.data.post.KeepData;
+import com.smu.songgulsongul.data.user.LoginData;
 
-import com.smu.songgulsongul.responseData.KeepResponse;
-import com.smu.songgulsongul.responseData.MarketDetailResponse;
-import com.smu.songgulsongul.responseData.MarketResponse;
-import com.smu.songgulsongul.responseData.PostListResponse;
-import com.smu.songgulsongul.responseData.PostFeedResponse;
+import com.smu.songgulsongul.data.post.Response.KeepResponse;
+import com.smu.songgulsongul.data.market.MarketDetailResponse;
+import com.smu.songgulsongul.data.market.MarketResponse;
+import com.smu.songgulsongul.data.post.Response.PostListResponse;
+import com.smu.songgulsongul.data.post.Response.PostFeedResponse;
 
-import com.smu.songgulsongul.data.UserData;
-import com.smu.songgulsongul.responseData.LoginResponse;
-import com.smu.songgulsongul.responseData.PostResponse;
-import com.smu.songgulsongul.responseData.ProfileResponse;
-import com.smu.songgulsongul.responseData.SearchIdResponse;
+import com.smu.songgulsongul.data.user.UserData;
+import com.smu.songgulsongul.data.user.response.LoginResponse;
+import com.smu.songgulsongul.data.post.Response.PostResponse;
+import com.smu.songgulsongul.data.user.response.ProfileResponse;
+import com.smu.songgulsongul.data.user.response.SearchIdResponse;
 
 public interface ServiceApi {
     // 아이디 중복체크

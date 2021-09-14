@@ -19,9 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.adapter.ItemSearchAdapter;
-import com.smu.songgulsongul.responseData.ShoppingResults;
-import com.smu.songgulsongul.item.ItemSearchItem;
+import com.smu.songgulsongul.recycler_adapter.ItemSearchAdapter;
+import com.smu.songgulsongul.data.shoppingapi.ShoppingResults;
+import com.smu.songgulsongul.recycler_item.ItemSearchItem;
 import com.smu.songgulsongul.server.NaverApi;
 import com.smu.songgulsongul.server.RetrofitNaver;
 

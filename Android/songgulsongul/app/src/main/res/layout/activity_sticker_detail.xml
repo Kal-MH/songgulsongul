@@ -35,7 +35,7 @@
                 android:background="@drawable/border"
                 android:orientation="horizontal">
 
-                <com.smu.songgulsongul.layout.RoundImageView
+                <com.smu.songgulsongul.customlayout.RoundImageView
                     android:id="@+id/sticker_d_profile"
                     android:layout_width="@dimen/profile_pic"
                     android:layout_height="@dimen/profile_pic"
@@ -65,7 +65,7 @@
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <com.smu.songgulsongul.layout.SquareImageView
+            <com.smu.songgulsongul.customlayout.SquareImageView
                 android:id="@+id/sticker_d_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

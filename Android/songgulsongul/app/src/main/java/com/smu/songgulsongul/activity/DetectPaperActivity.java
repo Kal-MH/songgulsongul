@@ -30,8 +30,8 @@ import java.util.ArrayList;
 
 import com.smu.songgulsongul.ImageUtil;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.layout.DrawRect;
-import com.smu.songgulsongul.layout.ZoomView;
+import com.smu.songgulsongul.customlayout.DrawRect;
+import com.smu.songgulsongul.customlayout.ZoomView;
 import com.smu.songgulsongul.songgul;
 
 import org.opencv.android.Utils;
