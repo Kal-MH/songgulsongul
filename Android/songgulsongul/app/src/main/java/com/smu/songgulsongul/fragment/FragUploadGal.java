@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.adapter.GalleryAdapter;
-import com.smu.songgulsongul.item.GalleryItem;
+import com.smu.songgulsongul.recycler_adapter.GalleryAdapter;
+import com.smu.songgulsongul.recycler_item.GalleryItem;
 
 public class FragUploadGal extends Fragment {
 

@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 public class LoginSharedPreference {
 
     static final String PREF_LOGIN_ID = "login_id";
-    static final String PREF_USER_ID = "user_id" ;
+    static final String PREF_USER_ID = "user_id";
     static final String PREF_TOKEN = "device_token";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
@@ -15,33 +15,36 @@ public class LoginSharedPreference {
     }
 
     // 계정 정보 저장
-    public static void setLogin(Context ctx, int userId , String login_id) {
+    public static void setLogin(Context ctx, int userId, String login_id) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putInt(PREF_USER_ID, userId);
-        editor.putString(PREF_LOGIN_ID,login_id);
+        editor.putString(PREF_LOGIN_ID, login_id);
         editor.commit();
     }
+
     public static void setLoginId(Context ctx, String login_id) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
-        editor.putString(PREF_LOGIN_ID,login_id);
+        editor.putString(PREF_LOGIN_ID, login_id);
         editor.commit();
     }
-    public static void setUserId(Context ctx, int userId){
+
+    public static void setUserId(Context ctx, int userId) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putInt(PREF_USER_ID, userId);
         editor.commit();
     }
-    public static void setToken(Context ctx, String token){
+
+    public static void setToken(Context ctx, String token) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(PREF_TOKEN, token);
         editor.commit();
     }
 
 
-    public static void changeLoginId(Context ctx , String login_id){
+    public static void changeLoginId(Context ctx, String login_id) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.remove(PREF_LOGIN_ID);
-        editor.putString(PREF_LOGIN_ID,login_id);
+        editor.putString(PREF_LOGIN_ID, login_id);
 
         editor.commit();
     }
@@ -50,12 +53,15 @@ public class LoginSharedPreference {
     public static String getLoginId(Context ctx) {
         return getSharedPreferences(ctx).getString(PREF_LOGIN_ID, "");
     }
-    public static int getUserId(Context ctx){
-        return getSharedPreferences(ctx).getInt(PREF_USER_ID,-1);
+
+    public static int getUserId(Context ctx) {
+        return getSharedPreferences(ctx).getInt(PREF_USER_ID, -1);
     }
+
     public static String getToken(Context ctx) {
         return getSharedPreferences(ctx).getString(PREF_TOKEN, "");
     }
+
     // 로그아웃
     public static void clearLogin(Context ctx) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();

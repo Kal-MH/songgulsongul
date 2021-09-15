@@ -6,7 +6,7 @@
     android:layout_height="wrap_content" >
 
 
-    <com.smu.songgulsongul.layout.SquareImageView
+    <com.smu.songgulsongul.customlayout.SquareImageView
         android:layout_margin="5dp"
         android:id="@+id/gal_item_img"
         android:layout_width="match_parent"

@@ -9,10 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,9 +32,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.PostSearchActivity;
-import com.smu.songgulsongul.adapter.PostImageRVAdapter;
-import com.smu.songgulsongul.responseData.Post;
-import com.smu.songgulsongul.responseData.PostListResponse;
+import com.smu.songgulsongul.recycler_adapter.PostImageRVAdapter;
+import com.smu.songgulsongul.recycler_item.Post;
+import com.smu.songgulsongul.data.post.Response.PostListResponse;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -44,6 +44,7 @@ public class FragHomeComu extends Fragment {
     private SearchView searchView;
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
+    ImageView background;
 
     PostImageRVAdapter adapter;
     List<Post> postData;
@@ -63,6 +64,7 @@ public class FragHomeComu extends Fragment {
 
         // id 세팅
         recyclerView = view.findViewById(R.id.comu_rv);
+        background = view.findViewById(R.id.comu_rv_background);
         searchView = view.findViewById(R.id.comu_search);
         swipeRefreshLayout = view.findViewById(R.id.comu_refresh_layout);
         loadlayout = view.findViewById(R.id.load_layout);
@@ -107,9 +109,6 @@ public class FragHomeComu extends Fragment {
         searchText.setTypeface(tf);
 
 
-
-        GetCommunityData();
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -120,10 +119,17 @@ public class FragHomeComu extends Fragment {
             }
         });
 
-        initScroll();
-        GetCommunityData();
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+        GetCommunityData();
+        initScroll();
+
     }
 
     //server에서 data전달
@@ -135,11 +141,11 @@ public class FragHomeComu extends Fragment {
                 PostListResponse result = response.body();
 
                 int resultCode = result.getCode();
-                if(resultCode == statusCode.RESULT_SERVER_ERR){
+                if(resultCode == StatusCode.RESULT_SERVER_ERR){
                     Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                     // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
                 }
-                else if( resultCode == statusCode.RESULT_OK){
+                else if( resultCode == StatusCode.RESULT_OK){
                     postData = result.getData();
                 }
                 else {
@@ -180,11 +186,11 @@ public class FragHomeComu extends Fragment {
 
                         final PostListResponse result = response.body();
                         int resultCode = result.getCode();
-                        if(resultCode == statusCode.RESULT_SERVER_ERR){
+                        if(resultCode == StatusCode.RESULT_SERVER_ERR){
                             Toasty.normal(getActivity(), "서버와의 통신이 불안정합니다.").show();
                             // 빈 화면 보여주지말고 무슨액션을 취해야할듯함!
                         }
-                        else if( resultCode == statusCode.RESULT_OK){
+                        else if( resultCode == StatusCode.RESULT_OK){
 
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
@@ -223,7 +229,7 @@ public class FragHomeComu extends Fragment {
     public  void setData(){
 
         if(postData.size() == 0){
-            recyclerView.setBackground( getActivity().getDrawable(R.drawable.no_post) );
+            background.setImageDrawable( getActivity().getDrawable(R.drawable.no_post) );
         }
         adapter = new PostImageRVAdapter(getContext(), postData);
 

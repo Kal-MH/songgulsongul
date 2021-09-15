@@ -34,7 +34,7 @@
                 android:background="@drawable/rocket_4973"
                 android:backgroundTint="@color/inkGrey"
                 android:scaleType="fitCenter"
-                android:tint="@color/inkGrey" />
+                app:tint="@color/inkGrey" />
 
             <TextView
                 android:id="@+id/upload_mode_quick_t"
@@ -63,7 +63,7 @@
                 android:background="@drawable/stage_process_icon"
                 android:backgroundTint="@color/inkGrey"
                 android:scaleType="fitCenter"
-                android:tint="@color/inkGrey" />
+                app:tint="@color/inkGrey" />
 
             <TextView
                 android:id="@+id/upload_mode_normal_t"

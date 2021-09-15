@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -28,7 +27,8 @@ import java.io.IOException;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
-import com.smu.songgulsongul.ImageUtil;import com.smu.songgulsongul.R;
+import com.smu.songgulsongul.ImageUtil;
+import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.songgul;
 
 import es.dmoral.toasty.Toasty;
@@ -53,11 +53,12 @@ public class DetectPicActivity extends AppCompatActivity {
     Mat paperImage;
     Mat croppedImage = new Mat();
     //MatOfPoint picPoints;
-    int[] picRectFromOpencv = new int[]{400,400,800,500};
+    int[] picRectFromOpencv = new int[]{400, 400, 800, 500};
     Bitmap imgInputBitmap;
     Rect cropRect = new Rect(400, 400, 800, 500);
 
     public native int[] DetectPic(long imgInput, int th1, int th2);
+
     //public native void ProcessPic();    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,34 +78,32 @@ public class DetectPicActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼 만들기
 
 
-
         cropImageView = (CropImageView) findViewById(R.id.cropImageView);
 
 
-
-                // 가져온 이미지 세팅
+        // 가져온 이미지 세팅
         //cropImageView.setImageUriAsync(imageUri);
         imgInputAddress = getIntent().getLongExtra("imgInputAddress", 0);
         //paperImage = new Mat(imgInputAddress).clone();
 
-        paperImage = ((songgul)getApplication()).getPaperMat();
+        paperImage = ((songgul) getApplication()).getPaperMat();
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 //다른 쓰레드에서 비트맵 세팅
-                imgInputBitmap = Bitmap.createBitmap(paperImage.cols(),paperImage.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(paperImage,imgInputBitmap);
+                imgInputBitmap = Bitmap.createBitmap(paperImage.cols(), paperImage.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(paperImage, imgInputBitmap);
                 cropImageView.setImageBitmap(imgInputBitmap);
                 //paperImage = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
 
                 picRectFromOpencv = DetectPic(paperImage.getNativeObjAddr(), th1, th2);
                 detect_pic_imageView = findViewById(R.id.ImageView_image);
-                int[] loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[0],picRectFromOpencv[1]);
+                int[] loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[0], picRectFromOpencv[1]);
 
                 picRectFromOpencv[0] = loc[0];
                 picRectFromOpencv[1] = loc[1];
-                loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[2],picRectFromOpencv[3]);
+                loc = ImageUtil.ImagePointToImageView(detect_pic_imageView, picRectFromOpencv[2], picRectFromOpencv[3]);
                 picRectFromOpencv[2] = loc[0];
                 picRectFromOpencv[3] = loc[1];
 
@@ -112,10 +111,10 @@ public class DetectPicActivity extends AppCompatActivity {
                 cropRect.top = picRectFromOpencv[1];
                 cropRect.right = picRectFromOpencv[2];
                 cropRect.bottom = picRectFromOpencv[3];
-                Log.i("DetectPic",String.valueOf(cropRect.left));
-                Log.i("DetectPic",String.valueOf(cropRect.top));
-                Log.i("DetectPic",String.valueOf(cropRect.right));
-                Log.i("DetectPic",String.valueOf(cropRect.bottom));
+                Log.i("DetectPic", String.valueOf(cropRect.left));
+                Log.i("DetectPic", String.valueOf(cropRect.top));
+                Log.i("DetectPic", String.valueOf(cropRect.right));
+                Log.i("DetectPic", String.valueOf(cropRect.bottom));
 
 
             }
@@ -127,22 +126,20 @@ public class DetectPicActivity extends AppCompatActivity {
         cropImageView.setCropRect(cropRect);
 
 
-
-
         okbtn = findViewById(R.id.detect_pic_btn);
         okbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bitmap cropped = cropImageView.getCroppedImage();
-                Utils.bitmapToMat(cropped,croppedImage);
-                File temp = (File)saveBitmapToCache(cropped,"crop_temp");
-                String filePath= temp.getAbsolutePath();
+                Utils.bitmapToMat(cropped, croppedImage);
+                File temp = (File) saveBitmapToCache(cropped, "crop_temp");
+                String filePath = temp.getAbsolutePath();
                 Intent intent = new Intent(DetectPicActivity.this, EditActivity.class);
                 intent.putExtra("path", filePath);
                 intent.putExtra("sourceFilePath", sourceFilePath);
-                intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
+                intent.putExtra("croppedImageAddress", croppedImage.getNativeObjAddr());
                 intent.putExtra("paperImageAddress", paperImage.getNativeObjAddr());
-                ((songgul)getApplication()).setCroppedMat(croppedImage.clone());
+                ((songgul) getApplication()).setCroppedMat(croppedImage.clone());
                 startActivity(intent);
                 croppedImage.release();
                 finish();
@@ -156,7 +153,6 @@ public class DetectPicActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     private Object saveBitmapToCache(Bitmap bitmap, String name) {
@@ -185,32 +181,31 @@ public class DetectPicActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onBackPressed() {
         second_time = System.currentTimeMillis();
-        if(second_time-first_time <2000){
+        if (second_time - first_time < 2000) {
             super.onBackPressed();
             //new Mat(imgInputAddress).release();
             finish();
-        }
-        else{
+        } else {
             Toasty.custom(this, "한번 더 누르면 편집을 종료합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
 
-            case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
+            case android.R.id.home: { // 뒤로가기 버튼 눌렀을 때
                 // TODO:알림팝업
 
                 return true;
             }
 
-            case R.id.toolbar_before:{
+            case R.id.toolbar_before: {
                 Intent intent = new Intent(DetectPicActivity.this, DetectPaperActivity.class);
                 intent.putExtra("path", sourceFilePath);
                 //paperImage.release();
@@ -224,15 +219,15 @@ public class DetectPicActivity extends AppCompatActivity {
                 intent.putExtra("path", filePath);
                 intent.putExtra("sourceFilePath", sourceFilePath);
                 croppedImage = paperImage;
-                intent.putExtra("croppedImageAddress",croppedImage.getNativeObjAddr());
+                intent.putExtra("croppedImageAddress", croppedImage.getNativeObjAddr());
                 intent.putExtra("paperImageAddress", paperImage.getNativeObjAddr());
-                ((songgul)getApplication()).setCroppedMat(croppedImage.clone());
+                ((songgul) getApplication()).setCroppedMat(croppedImage.clone());
                 startActivity(intent);
                 finish();
                 return true;
 
         }
-        return  true;
+        return true;
     }
 
     @Override

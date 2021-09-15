@@ -25,7 +25,6 @@ import com.bumptech.glide.Glide;
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.fragment.FragFollower;
 import com.smu.songgulsongul.fragment.FragFollowing;
-import com.smu.songgulsongul.server.RetrofitClient;
 
 public class FollowActivity extends AppCompatActivity {
     private FragmentManager fm;
@@ -41,20 +40,18 @@ public class FollowActivity extends AppCompatActivity {
     private TextView follow_intro;
 
     String user_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follow);
 
 
-
-
         follow_intro = findViewById(R.id.follow_intro);
         follow_img = findViewById(R.id.follow_image);
         follow_follow = findViewById(R.id.follow_follow); // 내가 팔로잉 하는사람
         follow_follower = findViewById(R.id.follow_follower); // 나를 팔로잉 하는사람들
-                                            //나의 팔로워
-
+        //나의 팔로워
 
 
         fragFollower = new FragFollower();
@@ -78,12 +75,13 @@ public class FollowActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24); //뒤로가기 버튼 이미지 지정
 
         final Bundle bundle = new Bundle();
-        bundle.putString("userId",user_id);
+        bundle.putString("userId", user_id);
 
 
         //팔로우에 밑줄 긋고 팔로우창띄움
         SpannableString content = new SpannableString("팔로우");
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0); follow_follow.setText(content);
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        follow_follow.setText(content);
 
         fm = getSupportFragmentManager();
 
@@ -93,14 +91,14 @@ public class FollowActivity extends AppCompatActivity {
         fragFollowing.setArguments(bundle);
 
 
-
         follow_follow.setOnClickListener(new View.OnClickListener() { // 나를 팔로잉 하는 사람들 보여줌
             @Override
             public void onClick(View view) {
 
                 //팔로우에 밑줄 긋고 팔로우창띄움
                 SpannableString content = new SpannableString("팔로우");
-                content.setSpan(new UnderlineSpan(), 0, content.length(), 0); follow_follow.setText(content);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                follow_follow.setText(content);
                 follow_follower.setText("팔로워");
 
                 ft = fm.beginTransaction();
@@ -117,7 +115,8 @@ public class FollowActivity extends AppCompatActivity {
                 //팔로우에 밑줄 긋고 팔로우창띄움
                 follow_follow.setText("팔로우");
                 SpannableString content = new SpannableString("팔로워");
-                content.setSpan(new UnderlineSpan(), 0, content.length(), 0); follow_follower.setText(content);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                follow_follower.setText(content);
 
                 ft = fm.beginTransaction();
                 ft.replace(R.id.follow_frag, fragFollower);
@@ -128,15 +127,15 @@ public class FollowActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRestart(){
+    public void onRestart() {
         super.onRestart();
         finish();
         startActivity(getIntent());
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
+        switch (item.getItemId()) {
+            case android.R.id.home: { // 뒤로가기 버튼 눌렀을 때
                 finish();
                 return true;
             }

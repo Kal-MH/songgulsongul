@@ -2,7 +2,6 @@ package com.smu.songgulsongul.activity;
 
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -33,9 +31,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.responseData.MarketDetailResponse;
-import com.smu.songgulsongul.responseData.Sticker;
-import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.data.market.MarketDetailResponse;
+import com.smu.songgulsongul.recycler_item.Sticker;
+import com.smu.songgulsongul.recycler_item.User;
 import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
@@ -144,7 +142,7 @@ public class StickerDetailActivity extends AppCompatActivity {
                                         String image = result.get("image").getAsString();
                                         Log.d("image_path", image);
                                         // 이미지 저장
-                                        file_name = img_path.substring(img_path.lastIndexOf('/') + 1, img_path.length());
+                                        file_name = img_path.substring(img_path.lastIndexOf('/') + 1);
                                         DownloadManager mgr = (DownloadManager)StickerDetailActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
                                         Uri uri = Uri.parse(img_path);
                                         DownloadManager.Request request = new DownloadManager.Request(uri);

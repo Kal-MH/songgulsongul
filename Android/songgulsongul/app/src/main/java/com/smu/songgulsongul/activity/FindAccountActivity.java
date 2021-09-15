@@ -1,6 +1,5 @@
 package com.smu.songgulsongul.activity;
 
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -28,17 +26,16 @@ import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.responseData.CodeResponse;
-import com.smu.songgulsongul.data.EmailData;
-import com.smu.songgulsongul.data.FindData;
+import com.smu.songgulsongul.data.CodeResponse;
+import com.smu.songgulsongul.data.user.EmailData;
+import com.smu.songgulsongul.data.user.FindData;
 import com.smu.songgulsongul.fragment.FragFindId;
 import com.smu.songgulsongul.fragment.FragFindPw;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
-
-import javax.net.ssl.SSLEngineResult;
 
 public class FindAccountActivity extends AppCompatActivity {
     // ServiceApi 객체 생성
@@ -52,9 +49,9 @@ public class FindAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_account);
 
-        find_id_btn = (Button)findViewById(R.id.find_id_btn);
-        find_pw_btn = (Button)findViewById(R.id.find_pw_btn);
-        find_account_btn = (Button)findViewById(R.id.find_account_btn);
+        find_id_btn = (Button) findViewById(R.id.find_id_btn);
+        find_pw_btn = (Button) findViewById(R.id.find_pw_btn);
+        find_account_btn = (Button) findViewById(R.id.find_account_btn);
 
         find_id_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +59,8 @@ public class FindAccountActivity extends AppCompatActivity {
                 flag = 1; // 아이디 찾기 mode
 
                 SpannableString content = new SpannableString("ID 찾기");
-                content.setSpan(new UnderlineSpan(), 0, content.length(), 0); find_id_btn.setText(content);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                find_id_btn.setText(content);
                 find_pw_btn.setText("비밀번호 찾기");
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -79,7 +77,8 @@ public class FindAccountActivity extends AppCompatActivity {
 
 
                 SpannableString content = new SpannableString("비밀번호 찾기");
-                content.setSpan(new UnderlineSpan(), 0, content.length(), 0); find_pw_btn.setText(content);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                find_pw_btn.setText(content);
                 find_id_btn.setText("ID 찾기");
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -104,7 +103,8 @@ public class FindAccountActivity extends AppCompatActivity {
         transaction.commit();
 
         SpannableString content = new SpannableString("ID 찾기");
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0); find_id_btn.setText(content);
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        find_id_btn.setText(content);
         find_pw_btn.setText("비밀번호 찾기");
 
 
@@ -112,7 +112,7 @@ public class FindAccountActivity extends AppCompatActivity {
         find_account_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (flag){
+                switch (flag) {
                     case 1: // 아이디 찾기 mode
                         final EditText find_id_email = findViewById(R.id.find_id_email);
                         String email = find_id_email.getText().toString();
@@ -120,7 +120,7 @@ public class FindAccountActivity extends AppCompatActivity {
                         Pattern email_pattern = Patterns.EMAIL_ADDRESS;
 
                         // 입력한 이메일이 공백값일 경우 --> 서버 통신x
-                        if(email.getBytes().length <= 0){
+                        if (email.getBytes().length <= 0) {
 
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
@@ -130,9 +130,9 @@ public class FindAccountActivity extends AppCompatActivity {
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            ImageView icon=dialogView.findViewById(R.id.warning);
+                            ImageView icon = dialogView.findViewById(R.id.warning);
 
-                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            TextView txt = dialogView.findViewById(R.id.txtText);
                             txt.setText("이메일을 입력해주세요.");
 
                             Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -148,7 +148,7 @@ public class FindAccountActivity extends AppCompatActivity {
                         }
 
                         // 입력한 이메일이 형식에서 벗어날 경우 --> 서버 통신x
-                        else if(!email_pattern.matcher(email).matches()){
+                        else if (!email_pattern.matcher(email).matches()) {
 
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
@@ -158,9 +158,9 @@ public class FindAccountActivity extends AppCompatActivity {
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            ImageView icon=dialogView.findViewById(R.id.warning);
+                            ImageView icon = dialogView.findViewById(R.id.warning);
 
-                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            TextView txt = dialogView.findViewById(R.id.txtText);
                             txt.setText("올바른 이메일 형식이 아닙니다.");
 
                             Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -173,9 +173,7 @@ public class FindAccountActivity extends AppCompatActivity {
 
                             Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
                             cancel_btn.setVisibility(View.GONE);
-                        }
-
-                        else{
+                        } else {
                             // 입력한 email로 server통신
                             EmailData data = new EmailData(email);
                             serviceApi.FindId(data).enqueue(new Callback<CodeResponse>() {
@@ -196,10 +194,10 @@ public class FindAccountActivity extends AppCompatActivity {
                                             alertDialog.show();
                                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                            ImageView icon=dialogView.findViewById(R.id.warning);
+                                            ImageView icon = dialogView.findViewById(R.id.warning);
                                             icon.setVisibility(View.GONE);
 
-                                            TextView txt=dialogView.findViewById(R.id.txtText);
+                                            TextView txt = dialogView.findViewById(R.id.txtText);
                                             txt.setText("이메일로 아이디를 전송하였습니다.");
 
                                             Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -224,9 +222,9 @@ public class FindAccountActivity extends AppCompatActivity {
                                             alertDialog.show();
                                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                            ImageView icon=dialogView.findViewById(R.id.warning);
+                                            ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                            TextView txt=dialogView.findViewById(R.id.txtText);
+                                            TextView txt = dialogView.findViewById(R.id.txtText);
                                             txt.setText("가입되지 않은 이메일입니다.");
 
                                             Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -250,10 +248,10 @@ public class FindAccountActivity extends AppCompatActivity {
                                             alertDialog.show();
                                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                            ImageView icon=dialogView.findViewById(R.id.warning);
+                                            ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                            TextView txt=dialogView.findViewById(R.id.txtText);
-                                            txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+                                            TextView txt = dialogView.findViewById(R.id.txtText);
+                                            txt.setText("에러가 발생했습니다." + "\n" + "다시 시도해주세요.");
 
                                             Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                             ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -269,7 +267,7 @@ public class FindAccountActivity extends AppCompatActivity {
                                         } else {
                                             Toasty.normal(FindAccountActivity.this, "서버와의 통신이 불안정합니다").show();
                                         }
-                                    }catch (NullPointerException e){
+                                    } catch (NullPointerException e) {
 
                                         View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                         AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
@@ -279,10 +277,10 @@ public class FindAccountActivity extends AppCompatActivity {
                                         alertDialog.show();
                                         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                        ImageView icon=dialogView.findViewById(R.id.warning);
+                                        ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                        TextView txt=dialogView.findViewById(R.id.txtText);
-                                        txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+                                        TextView txt = dialogView.findViewById(R.id.txtText);
+                                        txt.setText("에러가 발생했습니다." + "\n" + "다시 시도해주세요.");
 
                                         Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                         ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -307,8 +305,8 @@ public class FindAccountActivity extends AppCompatActivity {
                         }
                         break;
                     case 2: // 비밀번호 찾기 mode
-                        final EditText find_pw_id = (EditText)findViewById(R.id.find_pw_id);
-                        final EditText find_pw_email = (EditText)findViewById(R.id.find_pw_email);
+                        final EditText find_pw_id = (EditText) findViewById(R.id.find_pw_id);
+                        final EditText find_pw_email = (EditText) findViewById(R.id.find_pw_email);
                         String id = find_pw_id.getText().toString();
                         String pw_email = find_pw_email.getText().toString();
                         id = id.trim();
@@ -316,7 +314,7 @@ public class FindAccountActivity extends AppCompatActivity {
                         Pattern pw_email_pattern = Patterns.EMAIL_ADDRESS;
 
                         // 입력한 이메일 또는 아이디가 공백값일 경우 --> 서버 통신x
-                        if(id.getBytes().length <= 0 || pw_email.getBytes().length <= 0){
+                        if (id.getBytes().length <= 0 || pw_email.getBytes().length <= 0) {
 
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
@@ -326,9 +324,9 @@ public class FindAccountActivity extends AppCompatActivity {
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            ImageView icon=dialogView.findViewById(R.id.warning);
+                            ImageView icon = dialogView.findViewById(R.id.warning);
 
-                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            TextView txt = dialogView.findViewById(R.id.txtText);
                             txt.setText("미입력된 값을 입력해주세요.");
 
                             Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -344,7 +342,7 @@ public class FindAccountActivity extends AppCompatActivity {
                         }
 
                         // 입력한 이메일이 형식에서 벗어날 경우 --> 서버 통신x
-                        else if(!pw_email_pattern.matcher(pw_email).matches()){
+                        else if (!pw_email_pattern.matcher(pw_email).matches()) {
 
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
@@ -354,9 +352,9 @@ public class FindAccountActivity extends AppCompatActivity {
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            ImageView icon=dialogView.findViewById(R.id.warning);
+                            ImageView icon = dialogView.findViewById(R.id.warning);
 
-                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            TextView txt = dialogView.findViewById(R.id.txtText);
                             txt.setText("올바른 이메일 형식이 아닙니다.");
 
                             Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -369,9 +367,7 @@ public class FindAccountActivity extends AppCompatActivity {
 
                             Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
                             cancel_btn.setVisibility(View.GONE);
-                        }
-
-                        else{
+                        } else {
                             // id, email로 서버와 통신
                             FindData data = new FindData(pw_email, id);
                             serviceApi.FindPw(data).enqueue(new Callback<CodeResponse>() {
@@ -391,10 +387,10 @@ public class FindAccountActivity extends AppCompatActivity {
                                             alertDialog.show();
                                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                            ImageView icon=dialogView.findViewById(R.id.warning);
+                                            ImageView icon = dialogView.findViewById(R.id.warning);
                                             icon.setVisibility(View.GONE);
 
-                                            TextView txt=dialogView.findViewById(R.id.txtText);
+                                            TextView txt = dialogView.findViewById(R.id.txtText);
                                             txt.setText("이메일로 임시 비밀번호를 전송하였습니다.");
 
                                             Button ok_btn = dialogView.findViewById(R.id.okBtn);
@@ -416,10 +412,10 @@ public class FindAccountActivity extends AppCompatActivity {
                                             alertDialog.show();
                                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                            ImageView icon=dialogView.findViewById(R.id.warning);
+                                            ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                            TextView txt=dialogView.findViewById(R.id.txtText);
-                                            txt.setText("존재하지 않는 정보입니다."+"\n"+"이메일 또는 아이디를 확인해주세요.");
+                                            TextView txt = dialogView.findViewById(R.id.txtText);
+                                            txt.setText("존재하지 않는 정보입니다." + "\n" + "이메일 또는 아이디를 확인해주세요.");
 
                                             Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                             ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -443,10 +439,10 @@ public class FindAccountActivity extends AppCompatActivity {
                                             alertDialog.show();
                                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                            ImageView icon=dialogView.findViewById(R.id.warning);
+                                            ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                            TextView txt=dialogView.findViewById(R.id.txtText);
-                                            txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+                                            TextView txt = dialogView.findViewById(R.id.txtText);
+                                            txt.setText("에러가 발생했습니다." + "\n" + "다시 시도해주세요.");
 
                                             Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                             ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -463,7 +459,7 @@ public class FindAccountActivity extends AppCompatActivity {
                                         } else {
                                             Toasty.normal(FindAccountActivity.this, "서버와의 통신이 불안정합니다").show();
                                         }
-                                    } catch (NullPointerException e){
+                                    } catch (NullPointerException e) {
 
                                         View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                         AlertDialog.Builder builder = new AlertDialog.Builder(FindAccountActivity.this);
@@ -473,10 +469,10 @@ public class FindAccountActivity extends AppCompatActivity {
                                         alertDialog.show();
                                         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                        ImageView icon=dialogView.findViewById(R.id.warning);
+                                        ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                        TextView txt=dialogView.findViewById(R.id.txtText);
-                                        txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+                                        TextView txt = dialogView.findViewById(R.id.txtText);
+                                        txt.setText("에러가 발생했습니다." + "\n" + "다시 시도해주세요.");
 
                                         Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                         ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -504,10 +500,11 @@ public class FindAccountActivity extends AppCompatActivity {
         });
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:{ // 뒤로가기 버튼 눌렀을 때
+        switch (item.getItemId()) {
+            case android.R.id.home: { // 뒤로가기 버튼 눌렀을 때
                 finish();
                 return true;
             }

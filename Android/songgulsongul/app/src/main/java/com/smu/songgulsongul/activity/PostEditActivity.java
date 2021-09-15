@@ -11,7 +11,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -43,19 +42,20 @@ import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.adapter.AddItemTagAdapter;
-import com.smu.songgulsongul.data.PostEditData;
-import com.smu.songgulsongul.responseData.Ccl;
-import com.smu.songgulsongul.responseData.CodeResponse;
-import com.smu.songgulsongul.responseData.Comment;
-import com.smu.songgulsongul.responseData.HashTag;
-import com.smu.songgulsongul.responseData.ItemTag;
-import com.smu.songgulsongul.responseData.Post;
-import com.smu.songgulsongul.responseData.PostDetail;
-import com.smu.songgulsongul.responseData.PostResponse;
-import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.recycler_adapter.AddItemTagAdapter;
+import com.smu.songgulsongul.data.post.PostEditData;
+import com.smu.songgulsongul.data.post.Ccl;
+import com.smu.songgulsongul.data.CodeResponse;
+import com.smu.songgulsongul.recycler_item.Comment;
+import com.smu.songgulsongul.recycler_item.HashTag;
+import com.smu.songgulsongul.recycler_item.ItemTag;
+import com.smu.songgulsongul.recycler_item.Post;
+import com.smu.songgulsongul.data.post.PostDetail;
+import com.smu.songgulsongul.data.post.Response.PostResponse;
+import com.smu.songgulsongul.recycler_item.User;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -67,7 +67,7 @@ public class PostEditActivity extends AppCompatActivity {
     EditText hashtagText, post_edit_text;
     ImageView post_edit_pic;
     SwitchCompat post_edit_ccl_1, post_edit_ccl_2, post_edit_ccl_3, post_edit_ccl_4, post_edit_ccl_5;
-    int ccl_cc,ccl_a,ccl_nc,ccl_nd,ccl_sa;
+    int ccl_cc, ccl_a, ccl_nc, ccl_nd, ccl_sa;
 
     int post_id, user_id;
     ServiceApi serviceApi = RetrofitClient.getClient().create(ServiceApi.class);
@@ -124,11 +124,6 @@ public class PostEditActivity extends AppCompatActivity {
         getData();
 
 
-
-
-
-
-
     }
 
     public PostEditData makeEditData() {
@@ -140,7 +135,7 @@ public class PostEditActivity extends AppCompatActivity {
         Pattern pattern = Pattern.compile("[#](.*?)[ ]");
         Matcher matcher = pattern.matcher(hashTag);
         ArrayList<String> hash_tags = new ArrayList<>();
-        while(matcher.find()){
+        while (matcher.find()) {
             hash_tags.add(matcher.group(1));
         }
 
@@ -172,12 +167,12 @@ public class PostEditActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home: // 뒤로가기 버튼 눌렀을 때
                 finish();
                 break;
 
-            case R.id.toolbar_done : // 확인 버튼 눌렀을 때
+            case R.id.toolbar_done: // 확인 버튼 눌렀을 때
                 PostEditData data = makeEditData();
                 serviceApi.PostUpdate(data).enqueue(new Callback<CodeResponse>() {
                     @Override
@@ -189,10 +184,10 @@ public class PostEditActivity extends AppCompatActivity {
                             if (resultCode == StatusCode.RESULT_OK) {
                                 Toast toast = Toasty.custom(PostEditActivity.this, "게시물 수정 완료!", null, BackColor, FontColor, 2000, false, true);
                                 toast.show();
-                            Intent intent = new Intent(PostEditActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동 (게시글 id 넘기기)
-                            intent.putExtra("post_id", post_id);
-                            startActivity(intent);
-                            finish();
+                                Intent intent = new Intent(PostEditActivity.this, PostActivity.class); // 업데이트 된 게시물로 다시 이동 (게시글 id 넘기기)
+                                intent.putExtra("post_id", post_id);
+                                startActivity(intent);
+                                finish();
                             } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(PostEditActivity.this);
@@ -201,11 +196,11 @@ public class PostEditActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                ImageView icon = dialogView.findViewById(R.id.warning);
                                 icon.setVisibility(View.GONE);
 
-                                TextView txt=dialogView.findViewById(R.id.txtText);
-                                txt.setText("게시물 수정에 실패했습니다."+"\n"+"다시 시도해주세요.");
+                                TextView txt = dialogView.findViewById(R.id.txtText);
+                                txt.setText("게시물 수정에 실패했습니다." + "\n" + "다시 시도해주세요.");
                                 Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                 ok_btn.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -216,7 +211,7 @@ public class PostEditActivity extends AppCompatActivity {
                                 Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
                                 cancel_btn.setVisibility(View.GONE);
                             }
-                        } catch (NullPointerException e){
+                        } catch (NullPointerException e) {
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(PostEditActivity.this);
                             builder.setView(dialogView);
@@ -224,10 +219,10 @@ public class PostEditActivity extends AppCompatActivity {
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            ImageView icon=dialogView.findViewById(R.id.warning);
+                            ImageView icon = dialogView.findViewById(R.id.warning);
                             icon.setVisibility(View.GONE);
 
-                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            TextView txt = dialogView.findViewById(R.id.txtText);
                             txt.setText("에러발생!");
                             Button ok_btn = dialogView.findViewById(R.id.okBtn);
                             ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -256,27 +251,24 @@ public class PostEditActivity extends AppCompatActivity {
     }
 
 
-
-    public void getData(){
+    public void getData() {
         serviceApi.GetDetailPost(post_id, user_id).enqueue(new Callback<PostResponse>() {
             @Override
             public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                 PostResponse result = response.body();
                 int resultCode = result.getCode();
 
-                if( resultCode == statusCode.RESULT_OK){
+                if (resultCode == StatusCode.RESULT_OK) {
                     data = result.getData();
                     setPostData();
                     setHashTagData();
                     setItemTagData();
 
-                }
-                else if(resultCode == statusCode.RESULT_SERVER_ERR){
+                } else if (resultCode == StatusCode.RESULT_SERVER_ERR) {
                     Toasty.normal(PostEditActivity.this, "서버와의 통신이 불안정합니다").show();
                     // 빈화면 말고 다른행동..
 
-                }
-                else {
+                } else {
                     Toasty.normal(PostEditActivity.this, "잘못된 접근입니다").show();
 
                 }
@@ -292,7 +284,7 @@ public class PostEditActivity extends AppCompatActivity {
 
     }
 
-    public boolean setPostData(){
+    public boolean setPostData() {
         postData = data.getPost();
         userData = data.getUser();
         ccl = postData.getCcl();
@@ -303,30 +295,31 @@ public class PostEditActivity extends AppCompatActivity {
 
 
         //CCL 세팅
-        ccl_cc = ccl.getCcl_cc();
-        ccl_a  = ccl.getCcl_a();
-        ccl_nc =ccl.getCcl_nc();
-        ccl_nd = ccl.getCcl_nd();
-        ccl_sa = ccl.getCcl_sa();
-        post_edit_ccl_1.setChecked(ccl_cc==1);
-        post_edit_ccl_2.setChecked(ccl_a==1);
-        post_edit_ccl_3.setChecked(ccl_nc==1);
-        post_edit_ccl_4.setChecked(ccl_nd==1);
-        post_edit_ccl_5.setChecked(ccl_sa==1);
+        ccl_cc = ccl.getCc();
+        ccl_a = ccl.getA();
+        ccl_nc = ccl.getNc();
+        ccl_nd = ccl.getNd();
+        ccl_sa = ccl.getSa();
+        post_edit_ccl_1.setChecked(ccl_cc == 1);
+        post_edit_ccl_2.setChecked(ccl_a == 1);
+        post_edit_ccl_3.setChecked(ccl_nc == 1);
+        post_edit_ccl_4.setChecked(ccl_nd == 1);
+        post_edit_ccl_5.setChecked(ccl_sa == 1);
 
         return true;
     }
-    public boolean setHashTagData(){
+
+    public boolean setHashTagData() {
 
         hashTagsData = data.getHashTags();
         //해쉬 태그 어뎁터 설정
 
         String hashtags = "";
-        for( HashTag h : hashTagsData){
-            String text = "#"+ h.getText()+" ";
+        for (HashTag h : hashTagsData) {
+            String text = "#" + h.getText() + " ";
             hashtags += text;
         }
-        hashtags +="#";
+        hashtags += "#";
         hashtagText.setText(hashtags);
         //해쉬태그 작성
 
@@ -334,9 +327,9 @@ public class PostEditActivity extends AppCompatActivity {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
                 for (int i = start; i < end; i++) {
-                    if(source.charAt(i) == ' ')
+                    if (source.charAt(i) == ' ')
                         return " #";
-                    else if(source.charAt(i) == '#')
+                    else if (source.charAt(i) == '#')
                         continue;
                     else if (!Character.isLetterOrDigit(source.charAt(i))) {
                         return "";
@@ -350,9 +343,10 @@ public class PostEditActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.length()==0)
+                if (charSequence.length() == 0)
                     hashtagText.append("#");
             }
 
@@ -365,7 +359,8 @@ public class PostEditActivity extends AppCompatActivity {
 
         return true;
     }
-    public boolean setItemTagData(){
+
+    public boolean setItemTagData() {
         itemTagData = data.getItemTags();
         itemTagData.add(0, new ItemTag(-1));
         adapter = new AddItemTagAdapter(itemtag_rv.getContext(), itemTagData); // 추가모드 어뎁터 세팅
@@ -373,7 +368,7 @@ public class PostEditActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View v) {
                 Intent intent = new Intent(PostEditActivity.this, AddItemtagActivity.class);
-                startActivityForResult(intent,1234);
+                startActivityForResult(intent, 1234);
             }
         });
 
@@ -381,12 +376,13 @@ public class PostEditActivity extends AppCompatActivity {
 
         return true;
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1234 && resultCode == RESULT_OK){
+        if (requestCode == 1234 && resultCode == RESULT_OK) {
             //AddItemtagActivity에서 받아온 데이터 처리
-            int id = data.getIntExtra("id",0);
+            int id = data.getIntExtra("id", 0);
             String name = data.getStringExtra("name");
             String hprice = data.getStringExtra("hprice");
             String lprice = data.getStringExtra("lprice");
@@ -397,9 +393,8 @@ public class PostEditActivity extends AppCompatActivity {
             String category2 = data.getStringExtra("category2");
 
             itemTagData.add(new ItemTag(name, hprice, lprice, url, picture, brand, category1, category2));
-            adapter.notifyItemChanged(itemTagData.size()-1);
-        }
-        else{
+            adapter.notifyItemChanged(itemTagData.size() - 1);
+        } else {
             System.out.println("there is no data");
         }
     }

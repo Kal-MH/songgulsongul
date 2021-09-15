@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,8 +20,8 @@ import es.dmoral.toasty.Toasty;
 
 public class EditImageFilterActivity extends AppCompatActivity {
 
-    public enum editFilter{
-        None, Gray, Sharp,Test
+    public enum editFilter {
+        None, Gray, Sharp, Test
     }
 
     int BackColor = Color.parseColor("#BFB1D8");
@@ -51,18 +50,18 @@ public class EditImageFilterActivity extends AppCompatActivity {
 
     public native void applyRGBMinGray(long imgInputAddress, long imgOutputAddress);
 
-    public native void applyTestFilter(long imgInputAddress, long imgOutputAddress);
+  //  public native void applyTestFilter(long imgInputAddress, long imgOutputAddress);
 
     public native void applyFilterSharp(long imgInputAddress, long imgOutputAddress);
 
 
-    public void updatePreviewImageView(){
-        if(previewImageBitmap!=null)
+    public void updatePreviewImageView() {
+        if (previewImageBitmap != null)
             previewImageBitmap.recycle();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(), previewImage.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(previewImage, previewImageBitmap);
                 editPreview.setImageBitmap(previewImageBitmap);
             }
@@ -85,10 +84,9 @@ public class EditImageFilterActivity extends AppCompatActivity {
         //filterTest = findViewById(R.id.image_edit_filter_test);
 
         editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
-        editingImageAddress = ((songgul)getApplication()).getEditingMat().getNativeObjAddr();
-        previewImage = ((songgul)getApplication()).getEditingMat().clone();
+        editingImageAddress = ((songgul) getApplication()).getEditingMat().getNativeObjAddr();
+        previewImage = ((songgul) getApplication()).getEditingMat().clone();
         updatePreviewImageView();
-
 
 
         filterNone.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +105,7 @@ public class EditImageFilterActivity extends AppCompatActivity {
                 selectedFilter = editFilter.Gray;
                 previewImage.release();
                 previewImage = new Mat(editingImageAddress).clone();
-                applyRGBMinGray(editingImageAddress,previewImage.getNativeObjAddr());
+                applyRGBMinGray(editingImageAddress, previewImage.getNativeObjAddr());
                 updatePreviewImageView();
             }
         });
@@ -118,7 +116,7 @@ public class EditImageFilterActivity extends AppCompatActivity {
                 selectedFilter = editFilter.Sharp;
                 previewImage.release();
                 previewImage = new Mat(editingImageAddress).clone();
-                applyFilterSharp(editingImageAddress,previewImage.getNativeObjAddr());
+                applyFilterSharp(editingImageAddress, previewImage.getNativeObjAddr());
                 updatePreviewImageView();
             }
         });
@@ -136,20 +134,19 @@ public class EditImageFilterActivity extends AppCompatActivity {
         });*/
 
 
-
-
         //편집 적용
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO: 프리뷰 Mat을 그대로 옮길지 아니면 프리뷰 연산 크기를 줄이고 별도로 둘지 선택할것
-                switch (selectedFilter){
+                switch (selectedFilter) {
                     case None: //do nothing
                         break;
-                    case Gray: applyRGBMinGray(editingImageAddress,editingImageAddress);
+                    case Gray:
+                        applyRGBMinGray(editingImageAddress, editingImageAddress);
                         break;
                     case Sharp:
-                        applyFilterSharp(editingImageAddress,editingImageAddress);
+                        applyFilterSharp(editingImageAddress, editingImageAddress);
                         break;
                     case Test: //TODO
                         break;
@@ -166,11 +163,10 @@ public class EditImageFilterActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         second_time = System.currentTimeMillis();
-        if(second_time-first_time <2000){
+        if (second_time - first_time < 2000) {
             super.onBackPressed();
             finish();
-        }
-        else{
+        } else {
             Toasty.custom(this, "한번 더 누르면 적용을 취소합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }

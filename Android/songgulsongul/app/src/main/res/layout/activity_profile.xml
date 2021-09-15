@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/narrow_margin">
 
-        <com.smu.songgulsongul.layout.RoundImageView
+        <com.smu.songgulsongul.customlayout.RoundImageView
             android:id="@+id/profile_userimage"
             android:layout_width="@dimen/icon_size_large"
             android:layout_height="@dimen/icon_size_large"

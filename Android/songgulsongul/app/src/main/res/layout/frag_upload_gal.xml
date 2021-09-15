@@ -7,11 +7,14 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.smu.songgulsongul.layout.SquareImageView
+    <com.smu.songgulsongul.customlayout.SquareImageView
         android:id="@+id/upload_gal_pick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purpleGray" />
+        android:background="@color/purpleGray"
+        android:src="@drawable/empty"
+        android:scaleType="fitCenter"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/upload_gal_grid"

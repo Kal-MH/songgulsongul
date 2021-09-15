@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -22,13 +21,13 @@ import java.io.OutputStream;
 
 import com.smu.songgulsongul.R;
 import com.smu.songgulsongul.activity.DetectPaperActivity;
-import com.smu.songgulsongul.activity.UploadDetailActivity;
-import com.smu.songgulsongul.layout.CameraSurfaceView;
+import com.smu.songgulsongul.activity.EditDoneActivity;
+import com.smu.songgulsongul.customlayout.CameraSurfaceView;
 
 import es.dmoral.toasty.Toasty;
 
 public class FragUploadCam extends Fragment {
-    private int RESULT_PERMISSIONS=100;
+    private final int RESULT_PERMISSIONS=100;
 
     private  View view;
     private  Context context;
@@ -63,7 +62,7 @@ public class FragUploadCam extends Fragment {
 
         surfaceView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                surfaceView.camera.autoFocus (new Camera.AutoFocusCallback() {
+                CameraSurfaceView.camera.autoFocus (new Camera.AutoFocusCallback() {
                     public void onAutoFocus(boolean success, Camera camera) {
                         if(success){
                             Toasty.custom(context, "Auto Focus Success", null, BackColor, FontColor, 2000, false, true);
@@ -99,7 +98,7 @@ public class FragUploadCam extends Fragment {
                     String filePath= tempFile.getAbsolutePath();
 
                     if(isQuick){
-                        Intent intent = new Intent(context, UploadDetailActivity.class);
+                        Intent intent = new Intent(context, EditDoneActivity.class);
                         intent.putExtra("path", filePath);
                         startActivity(intent);
                         getActivity().finish();

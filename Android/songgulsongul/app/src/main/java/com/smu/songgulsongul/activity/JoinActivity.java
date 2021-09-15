@@ -1,7 +1,6 @@
 package com.smu.songgulsongul.activity;
 
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -35,10 +33,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.responseData.CodeResponse;
-import com.smu.songgulsongul.data.EmailData;
-import com.smu.songgulsongul.data.IdCheckData;
-import com.smu.songgulsongul.data.JoinData;
+import com.smu.songgulsongul.data.CodeResponse;
+import com.smu.songgulsongul.data.user.EmailData;
+import com.smu.songgulsongul.data.user.IdCheckData;
+import com.smu.songgulsongul.data.user.JoinData;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 

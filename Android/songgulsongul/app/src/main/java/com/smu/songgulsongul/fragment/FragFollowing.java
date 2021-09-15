@@ -1,7 +1,6 @@
 package com.smu.songgulsongul.fragment;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -34,9 +32,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.activity.EditAccountActivity;
-import com.smu.songgulsongul.adapter.FollowAdapter;
-import com.smu.songgulsongul.data.FollowListData;
+import com.smu.songgulsongul.recycler_adapter.FollowAdapter;
+import com.smu.songgulsongul.data.user.FollowListData;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -118,14 +115,14 @@ public class FragFollowing extends Fragment {
                 JsonObject result = response.body();
                 int resultCode = result.get("code").getAsInt();
 
-                if(resultCode == statusCode.RESULT_OK){
+                if(resultCode == StatusCode.RESULT_OK){
                     login_following_list.add("data", result.getAsJsonArray("followinfo"));
                     if(status == MY) {
                         adapter = new FollowAdapter(getContext(), login_following_list, status);
                         rv.setAdapter(adapter);
                     }
                 }
-                else if(resultCode == statusCode.RESULT_CLIENT_ERR){
+                else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
 
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     Context context = getActivity();
@@ -176,7 +173,7 @@ public class FragFollowing extends Fragment {
                 JsonObject result = response.body();
                 int resultCode = result.get("code").getAsInt();
 
-                if(resultCode == statusCode.RESULT_OK){
+                if(resultCode == StatusCode.RESULT_OK){
                     JsonArray login_list = result.getAsJsonArray("loginFollowInfo");
                     JsonArray user_list = result.getAsJsonArray("userFollowInfo");
                     // 선택한 사용자의 팔로우 리스트에 있는 사용자를 팔로우 했는지 체크
@@ -207,7 +204,7 @@ public class FragFollowing extends Fragment {
                     rv.setAdapter(adapter);
 
                 }
-                else if(resultCode == statusCode.RESULT_CLIENT_ERR){
+                else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
 
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     Context context = getActivity();

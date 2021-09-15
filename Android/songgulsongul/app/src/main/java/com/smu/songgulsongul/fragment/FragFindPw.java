@@ -12,11 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.smu.songgulsongul.R;
 
 public class FragFindPw extends Fragment {
-
-    public FragFindPw() {
-
-    }
-
+    
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

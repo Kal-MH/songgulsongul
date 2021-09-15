@@ -1,6 +1,5 @@
 package com.smu.songgulsongul.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -28,14 +27,11 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.responseData.CodeResponse;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
 
 import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
@@ -125,21 +121,19 @@ public class MarketUploadActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         second_time = System.currentTimeMillis();
-        if(second_time-first_time <2000){
+        if (second_time - first_time < 2000) {
             super.onBackPressed();
             finish();
-        }
-        else{
+        } else {
             Toasty.custom(this, "한번 더 누르면 업로드를 종료합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case android.R.id.home: // 뒤로가기 버튼 눌렀을 때
                 // 알림 팝업
                 return true;
@@ -156,9 +150,9 @@ public class MarketUploadActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    ImageView icon = dialogView.findViewById(R.id.warning);
 
-                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    TextView txt = dialogView.findViewById(R.id.txtText);
                     txt.setText("제품명을 입력해주세요.");
                     Button ok_btn = dialogView.findViewById(R.id.okBtn);
                     ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -178,9 +172,9 @@ public class MarketUploadActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    ImageView icon = dialogView.findViewById(R.id.warning);
 
-                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    TextView txt = dialogView.findViewById(R.id.txtText);
                     txt.setText("판매 가격을 입력해주세요.");
                     Button ok_btn = dialogView.findViewById(R.id.okBtn);
                     ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -191,9 +185,7 @@ public class MarketUploadActivity extends AppCompatActivity {
                     });
                     Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
                     cancel_btn.setVisibility(View.GONE);
-                }
-
-                else {
+                } else {
                     makeUploadData();
                     serviceApi.MarketUpload(requestName, requestText, requestPrice, requestId, imageBody).enqueue(new Callback<JsonObject>() {
                         @Override
@@ -217,10 +209,10 @@ public class MarketUploadActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                ImageView icon = dialogView.findViewById(R.id.warning);
 
-                                TextView txt=dialogView.findViewById(R.id.txtText);
-                                txt.setText("에러가 발생했습니다."+"\n"+"다시 시도해주세요.");
+                                TextView txt = dialogView.findViewById(R.id.txtText);
+                                txt.setText("에러가 발생했습니다." + "\n" + "다시 시도해주세요.");
                                 Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                 ok_btn.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -241,7 +233,7 @@ public class MarketUploadActivity extends AppCompatActivity {
                         }
                     });
                 }
-                
+
                 return true;
 
         }

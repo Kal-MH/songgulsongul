@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp">
 
-    <com.smu.songgulsongul.layout.RoundImageView
+    <com.smu.songgulsongul.customlayout.RoundImageView
         android:id="@+id/follow_item_img"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"

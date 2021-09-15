@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content">
 
 
-                <com.smu.songgulsongul.layout.RoundImageView
+                <com.smu.songgulsongul.customlayout.RoundImageView
                     android:id="@+id/profile_set_img"
                     android:layout_width="@dimen/tab_size_large"
                     android:layout_height="@dimen/tab_size_large"
@@ -42,7 +42,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                </com.smu.songgulsongul.layout.RoundImageView>
+                </com.smu.songgulsongul.customlayout.RoundImageView>
 
                 <Button
                     android:id="@+id/profile_img_chnage"

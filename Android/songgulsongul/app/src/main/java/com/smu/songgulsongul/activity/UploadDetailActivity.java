@@ -11,7 +11,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -52,13 +51,13 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.SettingSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.adapter.AddItemTagAdapter;
-import com.smu.songgulsongul.adapter.ItemTagAdapter;
+import com.smu.songgulsongul.recycler_adapter.AddItemTagAdapter;
 
-import com.smu.songgulsongul.responseData.ItemTag;
+import com.smu.songgulsongul.recycler_item.ItemTag;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -73,7 +72,7 @@ public class UploadDetailActivity extends AppCompatActivity {
     AddItemTagAdapter adapter;
     List<ItemTag> itemTagData = new ArrayList<>();
     EditText hashtagText, uploadText;
-    SwitchCompat upload_detail_ccl_1, upload_detail_ccl_2, upload_detail_ccl_3 , upload_detail_ccl_4, upload_detail_ccl_5;
+    SwitchCompat upload_detail_ccl_1, upload_detail_ccl_2, upload_detail_ccl_3, upload_detail_ccl_4, upload_detail_ccl_5;
     ImageView upload_detail_img;
     int ccl1, ccl2, ccl3, ccl4, ccl5;
 
@@ -114,11 +113,11 @@ public class UploadDetailActivity extends AppCompatActivity {
         upload_detail_ccl_4 = findViewById(R.id.upload_detail_ccl_4);
         upload_detail_ccl_5 = findViewById(R.id.upload_detail_ccl_5);
 
-        upload_detail_ccl_1.setChecked(SettingSharedPreference.getSetting(this,"ccl1"));
-        upload_detail_ccl_2.setChecked(SettingSharedPreference.getSetting(this,"ccl2"));
-        upload_detail_ccl_3.setChecked(SettingSharedPreference.getSetting(this,"ccl3"));
-        upload_detail_ccl_4.setChecked(SettingSharedPreference.getSetting(this,"ccl4"));
-        upload_detail_ccl_5.setChecked(SettingSharedPreference.getSetting(this,"ccl5"));
+        upload_detail_ccl_1.setChecked(SettingSharedPreference.getSetting(this, "ccl1"));
+        upload_detail_ccl_2.setChecked(SettingSharedPreference.getSetting(this, "ccl2"));
+        upload_detail_ccl_3.setChecked(SettingSharedPreference.getSetting(this, "ccl3"));
+        upload_detail_ccl_4.setChecked(SettingSharedPreference.getSetting(this, "ccl4"));
+        upload_detail_ccl_5.setChecked(SettingSharedPreference.getSetting(this, "ccl5"));
 
         // 툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.upload_detail_toolbar);
@@ -136,9 +135,9 @@ public class UploadDetailActivity extends AppCompatActivity {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
                 for (int i = start; i < end; i++) {
-                    if(source.charAt(i) == ' ')
+                    if (source.charAt(i) == ' ')
                         return " #";
-                    else if(source.charAt(i) == '#')
+                    else if (source.charAt(i) == '#')
                         continue;
                     else if (!Character.isLetterOrDigit(source.charAt(i))) {
                         return "";
@@ -152,10 +151,11 @@ public class UploadDetailActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Log.d("TAG", charSequence.length() + ":" + charSequence+"");
-                if(charSequence.length()==0)
+                Log.d("TAG", charSequence.length() + ":" + charSequence + "");
+                if (charSequence.length() == 0)
                     hashtagText.append("#");
             }
 
@@ -173,7 +173,7 @@ public class UploadDetailActivity extends AppCompatActivity {
 
 
         itemTagData.add(new ItemTag(-1));
-        adapter = new AddItemTagAdapter(itemtag_rv.getContext(),itemTagData ); // 추가모드 어뎁터 세팅
+        adapter = new AddItemTagAdapter(itemtag_rv.getContext(), itemTagData); // 추가모드 어뎁터 세팅
 
         // 적용
         itemtag_rv.setAdapter(adapter);
@@ -183,7 +183,7 @@ public class UploadDetailActivity extends AppCompatActivity {
             public void onItemClick(View v) {
                 Intent intent = new Intent(UploadDetailActivity.this, AddItemtagActivity.class);
 
-                startActivityForResult(intent,1234);
+                startActivityForResult(intent, 1234);
             }
         });
     }
@@ -191,7 +191,7 @@ public class UploadDetailActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1234 && resultCode == RESULT_OK){
+        if (requestCode == 1234 && resultCode == RESULT_OK) {
             //AddItemtagActivity에서 받아온 데이터 처리
             String name = data.getStringExtra("name");
             String hprice = data.getStringExtra("hprice");
@@ -201,17 +201,16 @@ public class UploadDetailActivity extends AppCompatActivity {
             String brand = data.getStringExtra("brand");
             String category1 = data.getStringExtra("category1");
             String category2 = data.getStringExtra("category2");
-            Log.d("TAG", name+" " + hprice+" " + lprice+ url+" " + picture+ " " +brand+ " " +category1+ " " +category2);
-            itemTagData.add(new ItemTag( name, hprice, lprice, url, picture, brand, category1, category2));
-            adapter.notifyItemChanged(itemTagData.size()-1);
-        }
-        else{
+            Log.d("TAG", name + " " + hprice + " " + lprice + url + " " + picture + " " + brand + " " + category1 + " " + category2);
+            itemTagData.add(new ItemTag(name, hprice, lprice, url, picture, brand, category1, category2));
+            adapter.notifyItemChanged(itemTagData.size() - 1);
+        } else {
             System.out.println("there is no data");
         }
     }
 
     // 서버에 전송할 데이터 묶기
-    public void makeUploadData(){
+    public void makeUploadData() {
         hash_tags.clear();
         ccl_list.clear();
         item_tags.clear();
@@ -233,23 +232,23 @@ public class UploadDetailActivity extends AppCompatActivity {
         String hashTag = hashtagText.getText().toString() + " ";
         Pattern pattern = Pattern.compile("[#](.*?)[ ]");
         Matcher matcher = pattern.matcher(hashTag);
-        while(matcher.find()){
+        while (matcher.find()) {
             hash_tags.add(MultipartBody.Part.createFormData("hash_tag", matcher.group(1)));
 
-            if(matcher.group(1) == null)
+            if (matcher.group(1) == null)
                 break;
         }
 
         // ccl
-        if(upload_detail_ccl_1.isChecked())
+        if (upload_detail_ccl_1.isChecked())
             ccl1 = ON;
-        if(upload_detail_ccl_2.isChecked())
+        if (upload_detail_ccl_2.isChecked())
             ccl2 = ON;
-        if(upload_detail_ccl_3.isChecked())
+        if (upload_detail_ccl_3.isChecked())
             ccl3 = ON;
-        if(upload_detail_ccl_4.isChecked())
+        if (upload_detail_ccl_4.isChecked())
             ccl4 = ON;
-        if(upload_detail_ccl_5.isChecked())
+        if (upload_detail_ccl_5.isChecked())
             ccl5 = ON;
 
         ccl_list.add(MultipartBody.Part.createFormData("ccl", String.valueOf(ccl1)));
@@ -262,7 +261,7 @@ public class UploadDetailActivity extends AppCompatActivity {
         List<ItemTag> items = adapter.getDataList();
         Log.d("item_count", String.valueOf(items.size()));
 
-        if(items.size() > 1) {
+        if (items.size() > 1) {
             for (int i = 1; i < items.size(); i++) {
                 item_tags.add(MultipartBody.Part.createFormData("item_name",
                         items.get(i).getName() == null ? "" : items.get(i).getName()));
@@ -275,7 +274,7 @@ public class UploadDetailActivity extends AppCompatActivity {
                 item_tags.add(MultipartBody.Part.createFormData("item_img",
                         items.get(i).getPicture() == null ? "" : items.get(i).getPicture()));
                 item_tags.add(MultipartBody.Part.createFormData("item_brand",
-                        items.get(i).getBrand() == null ? "" :  items.get(i).getBrand()));
+                        items.get(i).getBrand() == null ? "" : items.get(i).getBrand()));
                 item_tags.add(MultipartBody.Part.createFormData("item_category1",
                         items.get(i).getCategory1() == null ? "" : items.get(i).getCategory1()));
                 item_tags.add(MultipartBody.Part.createFormData("item_category2",
@@ -287,11 +286,10 @@ public class UploadDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         second_time = System.currentTimeMillis();
-        if(second_time-first_time <2000){
+        if (second_time - first_time < 2000) {
             super.onBackPressed();
             finish();
-        }
-        else{
+        } else {
             Toasty.custom(this, "한번 더 누르면 업로드를 종료합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }
@@ -306,12 +304,12 @@ public class UploadDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home: // 뒤로가기 버튼 눌렀을 때
-               // 알림 팝업
+                // 알림 팝업
                 return true;
 
-            case R.id.toolbar_done :
+            case R.id.toolbar_done:
                 makeUploadData();
                 serviceApi.PostUpload(requestId, requestText, hash_tags, ccl_list, item_tags, imageBody).enqueue(new Callback<JsonObject>() {
                     @Override
@@ -338,11 +336,11 @@ public class UploadDetailActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                ImageView icon = dialogView.findViewById(R.id.warning);
                                 icon.setVisibility(View.GONE);
 
-                                TextView txt=dialogView.findViewById(R.id.txtText);
-                                txt.setText("업로드에 실패했습니다."+"\n"+"다시 시도해주세요.");
+                                TextView txt = dialogView.findViewById(R.id.txtText);
+                                txt.setText("업로드에 실패했습니다." + "\n" + "다시 시도해주세요.");
 
                                 Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                 ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -355,7 +353,7 @@ public class UploadDetailActivity extends AppCompatActivity {
                                 Button cancel_btn = dialogView.findViewById(R.id.cancelBtn);
                                 cancel_btn.setVisibility(View.GONE);
                             }
-                        } catch (NullPointerException e){
+                        } catch (NullPointerException e) {
 
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(UploadDetailActivity.this);
@@ -365,10 +363,10 @@ public class UploadDetailActivity extends AppCompatActivity {
                             alertDialog.show();
                             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                            ImageView icon=dialogView.findViewById(R.id.warning);
+                            ImageView icon = dialogView.findViewById(R.id.warning);
                             icon.setVisibility(View.GONE);
 
-                            TextView txt=dialogView.findViewById(R.id.txtText);
+                            TextView txt = dialogView.findViewById(R.id.txtText);
                             txt.setText("에러발생!");
 
                             Button ok_btn = dialogView.findViewById(R.id.okBtn);

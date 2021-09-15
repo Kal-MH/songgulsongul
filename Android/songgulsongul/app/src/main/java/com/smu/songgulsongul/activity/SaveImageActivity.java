@@ -139,7 +139,7 @@ public class SaveImageActivity extends Activity {
     }
 
     public void DownloadImage(){
-        fileName = post_image.substring(post_image.lastIndexOf('/') + 1, post_image.length());
+        fileName = post_image.substring(post_image.lastIndexOf('/') + 1);
         DownloadManager mgr = (DownloadManager)SaveImageActivity.this.getSystemService(Context.DOWNLOAD_SERVICE);
 
         Uri uri = Uri.parse(post_image);

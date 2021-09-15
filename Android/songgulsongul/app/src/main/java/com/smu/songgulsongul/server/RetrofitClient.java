@@ -10,7 +10,8 @@ public class RetrofitClient {
     private final static String BASE_URL = "http://ec2-3-34-42-7.ap-northeast-2.compute.amazonaws.com:3000"; //ec2로 작동시
 
     private static Retrofit retrofit = null;
-    private RetrofitClient(){
+
+    private RetrofitClient() {
 
     }
 
@@ -18,8 +19,8 @@ public class RetrofitClient {
         return BASE_URL;
     }
 
-    public static  Retrofit getClient(){
-        if(retrofit == null){
+    public static Retrofit getClient() {
+        if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create()) // JSON 파싱을 위한 추가

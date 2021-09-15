@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -24,7 +23,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -36,16 +35,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.adapter.PostImageRVAdapter;
-import com.smu.songgulsongul.data.NotificationData;
-import com.smu.songgulsongul.data.RequestNotification;
-import com.smu.songgulsongul.data.TokenData;
-import com.smu.songgulsongul.responseData.CodeResponse;
-import com.smu.songgulsongul.data.FollowData;
-import com.smu.songgulsongul.data.UserData;
-import com.smu.songgulsongul.responseData.Post;
-import com.smu.songgulsongul.responseData.ProfileResponse;
-import com.smu.songgulsongul.responseData.User;
+import com.smu.songgulsongul.recycler_adapter.PostImageRVAdapter;
+import com.smu.songgulsongul.data.notification.NotificationData;
+import com.smu.songgulsongul.data.notification.RequestNotification;
+import com.smu.songgulsongul.data.user.TokenData;
+import com.smu.songgulsongul.data.CodeResponse;
+import com.smu.songgulsongul.data.user.FollowData;
+import com.smu.songgulsongul.data.user.UserData;
+import com.smu.songgulsongul.recycler_item.Post;
+import com.smu.songgulsongul.data.user.response.ProfileResponse;
+import com.smu.songgulsongul.recycler_item.User;
 import com.smu.songgulsongul.server.DefaultImage;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
@@ -170,7 +169,7 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
                         CodeResponse result = response.body();
                         int resultCode = result.getCode();
-                        if(resultCode == statusCode.RESULT_OK){
+                        if(resultCode == StatusCode.RESULT_OK){
                             follow_btn.setVisibility(View.INVISIBLE);
                             unfollow_btn.setVisibility(View.VISIBLE);
                             unfollow_btn.setEnabled(true);
@@ -184,7 +183,7 @@ public class ProfileActivity extends AppCompatActivity {
                             RequestNotification requestNotification = new RequestNotification();
                             requestNotification.setSendNotificationModel(notificationData);
                             requestNotification.setMode(1);
-                            requestNotification.setLoginid(user_id);
+                            requestNotification.setLoginId(user_id);
                             requestNotification.setSender( LoginSharedPreference.getUserId(ProfileActivity.this));
                             retrofit2.Call<ResponseBody> responseBodyCall = serviceApi.sendChatNotification(requestNotification);
                             responseBodyCall.enqueue(new Callback<ResponseBody>() {
@@ -198,7 +197,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                         }
-                        else if(resultCode == statusCode.RESULT_CLIENT_ERR){
+                        else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
 
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
@@ -257,7 +256,7 @@ public class ProfileActivity extends AppCompatActivity {
                             follower_cnt--;
                             follower_count_tv.setText(follower_cnt+"");
                         }
-                        else if(resultCode == statusCode.RESULT_SERVER_ERR){
+                        else if(resultCode == StatusCode.RESULT_SERVER_ERR){
 
                             View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                             AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
@@ -313,10 +312,10 @@ public class ProfileActivity extends AppCompatActivity {
                 ProfileResponse result = response.body();
                 int resultCode = result.getCode();
 
-                if(resultCode == statusCode.RESULT_OK){
+                if(resultCode == StatusCode.RESULT_OK){
                     setProfileData(result);
                 }
-                else if(resultCode == statusCode.RESULT_CLIENT_ERR){
+                else if(resultCode == StatusCode.RESULT_CLIENT_ERR){
 
                     View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);

@@ -1,6 +1,5 @@
 package com.smu.songgulsongul.activity;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
@@ -8,9 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,8 +18,6 @@ import com.bumptech.glide.Glide;
 import com.smu.songgulsongul.R;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
 public class EditDoneActivity extends AppCompatActivity {
@@ -58,8 +53,6 @@ public class EditDoneActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EditDoneActivity.this, UploadActivity.class);
-                startActivity(intent);
                 finish();
             }
         });
@@ -87,7 +80,7 @@ public class EditDoneActivity extends AppCompatActivity {
                 shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 Intent chooser = Intent.createChooser(shareIntent, "Share File");
 
-                Log.d("TAG",filePath);
+                Log.d("TAG", filePath);
 
                 List<ResolveInfo> resInfoList = getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
                 for (ResolveInfo resolveInfo : resInfoList) {

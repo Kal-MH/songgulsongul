@@ -1,7 +1,6 @@
 package com.smu.songgulsongul.activity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -30,10 +28,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.smu.songgulsongul.LoginSharedPreference;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.data.LoginData;
-import com.smu.songgulsongul.data.TokenData;
-import com.smu.songgulsongul.responseData.CodeResponse;
-import com.smu.songgulsongul.responseData.LoginResponse;
+import com.smu.songgulsongul.data.user.LoginData;
+import com.smu.songgulsongul.data.user.TokenData;
+import com.smu.songgulsongul.data.CodeResponse;
+import com.smu.songgulsongul.data.user.response.LoginResponse;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;
@@ -104,9 +102,9 @@ public class LoginActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    ImageView icon = dialogView.findViewById(R.id.warning);
 
-                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    TextView txt = dialogView.findViewById(R.id.txtText);
                     txt.setText("아이디를 입력해주세요.");
                     Button ok_btn = dialogView.findViewById(R.id.okBtn);
                     ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -130,9 +128,9 @@ public class LoginActivity extends AppCompatActivity {
                     alertDialog.show();
                     alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    ImageView icon=dialogView.findViewById(R.id.warning);
+                    ImageView icon = dialogView.findViewById(R.id.warning);
 
-                    TextView txt=dialogView.findViewById(R.id.txtText);
+                    TextView txt = dialogView.findViewById(R.id.txtText);
                     txt.setText("비밀번호를 입력해주세요.");
                     Button ok_btn = dialogView.findViewById(R.id.okBtn);
                     ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                             int resultCode = result.getCode();
 
                             // 로그인 성공시 --> 로그인 기록 저장, home으로 전환
-                            if (resultCode == statusCode.RESULT_OK ) { // 로그인성공, 오늘의 첫로그인
+                            if (resultCode == StatusCode.RESULT_OK) { // 로그인성공, 오늘의 첫로그인
 
                                 int user_id = result.getId();
                                 LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
@@ -164,8 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
-                            }
-                            else if( resultCode == statusCode.RESULT_NO){ // 로그인 성공, 오늘의 첫로그인 아님
+                            } else if (resultCode == StatusCode.RESULT_NO) { // 로그인 성공, 오늘의 첫로그인 아님
                                 int user_id = result.getId();
                                 LoginSharedPreference.setLogin(LoginActivity.this, user_id, login_id);
                                 setToken();
@@ -173,8 +170,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
-                            }
-                            else if (resultCode == statusCode.RESULT_CLIENT_ERR) {
+                            } else if (resultCode == StatusCode.RESULT_CLIENT_ERR) {
                                 View dialogView = getLayoutInflater().inflate(R.layout.activity_popup, null);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                 builder.setView(dialogView);
@@ -182,10 +178,10 @@ public class LoginActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                ImageView icon=dialogView.findViewById(R.id.warning);
+                                ImageView icon = dialogView.findViewById(R.id.warning);
                                 icon.setVisibility(View.GONE);
 
-                                TextView txt=dialogView.findViewById(R.id.txtText);
+                                TextView txt = dialogView.findViewById(R.id.txtText);
                                 txt.setText("아이디, 또는 패스워드가 잘못 입력되었습니다.");
                                 Button ok_btn = dialogView.findViewById(R.id.okBtn);
                                 ok_btn.setOnClickListener(new View.OnClickListener() {
@@ -199,8 +195,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 login_username.setText(null);
                                 login_pw.setText(null);
-                            }
-                            else {
+                            } else {
                                 Toasty.normal(LoginActivity.this, "서버와의 통신이 불안정합니다").show();
                             }
                         }
@@ -218,7 +213,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-
         // 텍스트 입력시 로그인 버튼 활성화
         login_username.addTextChangedListener(new TextWatcher() {
             @Override
@@ -234,11 +228,10 @@ public class LoginActivity extends AppCompatActivity {
             @SuppressLint("ResourceAsColor")
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.length() > 0) {
+                if (s.length() > 0) {
                     login_btn.setClickable(true);
                     login_btn.setBackgroundResource(R.color.purpleGrayDark);
-                }
-                else{
+                } else {
                     login_btn.setClickable(false);
                     login_btn.setBackgroundResource(R.color.purpleGray);
                 }
@@ -246,16 +239,16 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void setToken(){
+    public void setToken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
-                if( task.isSuccessful()){
+                if (task.isSuccessful()) {
                     String token = task.getResult();
-                    LoginSharedPreference.setToken(LoginActivity.this,token);
+                    LoginSharedPreference.setToken(LoginActivity.this, token);
 
-                    TokenData tokenData = new TokenData(LoginSharedPreference.getUserId(LoginActivity.this), token) ;
-                    serviceApi.setToken(tokenData )
+                    TokenData tokenData = new TokenData(LoginSharedPreference.getUserId(LoginActivity.this), token);
+                    serviceApi.setToken(tokenData)
                             .enqueue(new Callback<CodeResponse>() {
                                 @Override
                                 public void onResponse(Call<CodeResponse> call, Response<CodeResponse> response) {
@@ -263,11 +256,12 @@ public class LoginActivity extends AppCompatActivity {
                                     Toasty.custom(LoginActivity.this, "기기를 등록했습니다", null, BackColor, FontColor, 2000, false, true).show();
 
                                 }
+
                                 @Override
                                 public void onFailure(Call<CodeResponse> call, Throwable t) {
 
                                     Toasty.normal(LoginActivity.this, "서버와의 통신이 불안정합니다").show();
-                                    Log.e("Token" , "등록 실패");
+                                    Log.e("Token", "등록 실패");
                                 }
 
                             });

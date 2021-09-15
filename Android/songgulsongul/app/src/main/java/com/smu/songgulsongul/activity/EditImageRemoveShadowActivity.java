@@ -7,12 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.smu.songgulsongul.songgul;
+
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
@@ -44,17 +44,17 @@ public class EditImageRemoveShadowActivity extends AppCompatActivity {
 
     public native void getShadowRemovedImage(long inputAdd, long outputAdd);
 
-    public native void lerpShadowRemovedImage(long inputAddOrigin,long inputAddShadowRemoved, long outputAdd, int progress);
+    public native void lerpShadowRemovedImage(long inputAddOrigin, long inputAddShadowRemoved, long outputAdd, int progress);
 
 
-    public void updatePreviewImageView(){
+    public void updatePreviewImageView() {
         /**/
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(previewImageBitmap!=null)
+                if (previewImageBitmap != null)
                     previewImageBitmap.recycle();
-                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                previewImageBitmap = Bitmap.createBitmap(previewImage.cols(), previewImage.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(previewImage, previewImageBitmap);
                 editPreview.setImageBitmap(previewImageBitmap);
             }
@@ -77,25 +77,20 @@ public class EditImageRemoveShadowActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_shadow_remove);
 
 
-
-
-
         done = findViewById(R.id.edit_done);
         seekBarAlpha = findViewById(R.id.seekBarAlpha);
         editPreview = findViewById(R.id.editPreview);
 
         //editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
-        editingImageAddress = ((songgul)getApplication()).getEditingMat().getNativeObjAddr();
-        previewImage = ((songgul)getApplication()).getEditingMat().clone();
-
-
+        editingImageAddress = ((songgul) getApplication()).getEditingMat().getNativeObjAddr();
+        previewImage = ((songgul) getApplication()).getEditingMat().clone();
 
 
         shadowRemovedImageCache = previewImage.clone();
         //shadowRemovedImageCache = new Mat();
 
-        getShadowRemovedImage(editingImageAddress,shadowRemovedImageCache.getNativeObjAddr());
-        lerpShadowRemovedImage(editingImageAddress,shadowRemovedImageCache.getNativeObjAddr(),previewImage.getNativeObjAddr(),seekBarAlpha.getProgress());
+        getShadowRemovedImage(editingImageAddress, shadowRemovedImageCache.getNativeObjAddr());
+        lerpShadowRemovedImage(editingImageAddress, shadowRemovedImageCache.getNativeObjAddr(), previewImage.getNativeObjAddr(), seekBarAlpha.getProgress());
 
 
         updatePreviewImageView();
@@ -104,7 +99,7 @@ public class EditImageRemoveShadowActivity extends AppCompatActivity {
         seekBarAlpha.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                lerpShadowRemovedImage(editingImageAddress,shadowRemovedImageCache.getNativeObjAddr(),previewImage.getNativeObjAddr(), progress);
+                lerpShadowRemovedImage(editingImageAddress, shadowRemovedImageCache.getNativeObjAddr(), previewImage.getNativeObjAddr(), progress);
                 updatePreviewImageView();
             }
 
@@ -120,29 +115,27 @@ public class EditImageRemoveShadowActivity extends AppCompatActivity {
         });
 
 
-
         //편집 적용
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                lerpShadowRemovedImage(editingImageAddress,shadowRemovedImageCache.getNativeObjAddr(),editingImageAddress,seekBarAlpha.getProgress());
+                lerpShadowRemovedImage(editingImageAddress, shadowRemovedImageCache.getNativeObjAddr(), editingImageAddress, seekBarAlpha.getProgress());
 
                 finish();
             }
         });
 
 
-
     }
+
     @Override
     public void onBackPressed() {
         second_time = System.currentTimeMillis();
-        if(second_time-first_time <2000){
+        if (second_time - first_time < 2000) {
             super.onBackPressed();
             finish();
-        }
-        else{
+        } else {
             Toasty.custom(this, "한번 더 누르면 적용을 취소합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }

@@ -17,7 +17,7 @@
         android:layout_marginTop="@dimen/narrow_margin"
         android:gravity="center_vertical">
 
-        <com.smu.songgulsongul.layout.RoundImageView
+        <com.smu.songgulsongul.customlayout.RoundImageView
             android:id="@+id/feed_item_profile_img"
             android:layout_width="@dimen/profile_pic"
             android:layout_height="@dimen/profile_pic"
@@ -53,14 +53,14 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <com.smu.songgulsongul.layout.SquareImageView
+    <com.smu.songgulsongul.customlayout.SquareImageView
         android:id="@+id/feed_item_pic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/narrow_margin"
-        android:background="@drawable/border"
+        android:background="@drawable/borderline"
         android:padding="2dp"
-        android:scaleType="fitXY" />
+        android:scaleType="fitCenter" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

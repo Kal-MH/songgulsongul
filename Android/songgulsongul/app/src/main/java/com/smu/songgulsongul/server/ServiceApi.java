@@ -18,34 +18,35 @@ import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import com.smu.songgulsongul.data.PostEditData;
-import com.smu.songgulsongul.data.PwEditData;
-import com.smu.songgulsongul.data.RequestNotification;
-import com.smu.songgulsongul.data.TokenData;
-import com.smu.songgulsongul.responseData.CodeResponse;
 
-import com.smu.songgulsongul.data.CommentData;
-import com.smu.songgulsongul.data.FollowData;
-import com.smu.songgulsongul.data.FollowListData;
-import com.smu.songgulsongul.data.EmailData;
-import com.smu.songgulsongul.data.FindData;
-import com.smu.songgulsongul.data.IdCheckData;
-import com.smu.songgulsongul.data.IdData;
-import com.smu.songgulsongul.data.JoinData;
-import com.smu.songgulsongul.data.KeepData;
-import com.smu.songgulsongul.data.LoginData;
+import com.smu.songgulsongul.data.post.PostEditData;
+import com.smu.songgulsongul.data.user.PwEditData;
+import com.smu.songgulsongul.data.notification.RequestNotification;
+import com.smu.songgulsongul.data.user.TokenData;
+import com.smu.songgulsongul.data.CodeResponse;
 
-import com.smu.songgulsongul.responseData.KeepResponse;
-import com.smu.songgulsongul.responseData.MarketDetailResponse;
-import com.smu.songgulsongul.responseData.MarketResponse;
-import com.smu.songgulsongul.responseData.PostListResponse;
-import com.smu.songgulsongul.responseData.PostFeedResponse;
+import com.smu.songgulsongul.data.comment.CommentData;
+import com.smu.songgulsongul.data.user.FollowData;
+import com.smu.songgulsongul.data.user.FollowListData;
+import com.smu.songgulsongul.data.user.EmailData;
+import com.smu.songgulsongul.data.user.FindData;
+import com.smu.songgulsongul.data.user.IdCheckData;
+import com.smu.songgulsongul.data.user.IdData;
+import com.smu.songgulsongul.data.user.JoinData;
+import com.smu.songgulsongul.data.post.KeepData;
+import com.smu.songgulsongul.data.user.LoginData;
 
-import com.smu.songgulsongul.data.UserData;
-import com.smu.songgulsongul.responseData.LoginResponse;
-import com.smu.songgulsongul.responseData.PostResponse;
-import com.smu.songgulsongul.responseData.ProfileResponse;
-import com.smu.songgulsongul.responseData.SearchIdResponse;
+import com.smu.songgulsongul.data.post.Response.KeepResponse;
+import com.smu.songgulsongul.data.market.MarketDetailResponse;
+import com.smu.songgulsongul.data.market.MarketResponse;
+import com.smu.songgulsongul.data.post.Response.PostListResponse;
+import com.smu.songgulsongul.data.post.Response.PostFeedResponse;
+
+import com.smu.songgulsongul.data.user.UserData;
+import com.smu.songgulsongul.data.user.response.LoginResponse;
+import com.smu.songgulsongul.data.post.Response.PostResponse;
+import com.smu.songgulsongul.data.user.response.ProfileResponse;
+import com.smu.songgulsongul.data.user.response.SearchIdResponse;
 
 public interface ServiceApi {
     // 아이디 중복체크
@@ -82,12 +83,12 @@ public interface ServiceApi {
 
     //댓글 삭제
     @GET("/api/comment/delete")
-    Call<CodeResponse> DeleteComment(@Query("postid") int postid, @Query("commentid") int commentid );
+    Call<CodeResponse> DeleteComment(@Query("postid") int postid, @Query("commentid") int commentid);
 
     // 회원가입
     @POST("/join")
     Call<CodeResponse> Join(@Body JoinData data);
-  
+
     // 팔로우하기
     @POST("/user/follow")
     Call<CodeResponse> Follow(@Body FollowData data);
@@ -130,8 +131,8 @@ public interface ServiceApi {
 
     //피드 게시글 가져오기
     @GET("/post/feeds")
-    Call<PostFeedResponse> GetFeed(@Query("userid") int id, @Query("offset") Integer offset );
- 
+    Call<PostFeedResponse> GetFeed(@Query("userid") int id, @Query("offset") Integer offset);
+
     // 프로필
     @POST("/user/profile")
     Call<ProfileResponse> Profile(@Body UserData data);
@@ -156,10 +157,10 @@ public interface ServiceApi {
 
     // 검색
     @GET("/post/search/id")
-    Call<SearchIdResponse> SearchPostId(@Query("keyword") String keyword , @Query("offset") int offset);
+    Call<SearchIdResponse> SearchPostId(@Query("keyword") String keyword, @Query("offset") int offset);
 
     @GET("/post/search/tag")
-    Call<PostListResponse> SearchPostTag(@Query("keyword") String keyword , @Query("offset") int offset);
+    Call<PostListResponse> SearchPostTag(@Query("keyword") String keyword, @Query("offset") int offset);
 
     // 게시글 업로드
     @Multipart

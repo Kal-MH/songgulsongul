@@ -7,12 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.smu.songgulsongul.songgul;
+
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
@@ -44,16 +44,16 @@ public class EditImageRatioActivity extends AppCompatActivity {
     ImageView editPreview;
     Bitmap editPreviewBitmap;
 
-    public native void changeImageRatio(long inputImgAddress, long outputImgAddress ,int seekBarProgress);
+    public native void changeImageRatio(long inputImgAddress, long outputImgAddress, int seekBarProgress);
 
-    public void updatePreviewImageView(){
+    public void updatePreviewImageView() {
         /**/
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(editPreviewBitmap!=null)
+                if (editPreviewBitmap != null)
                     editPreviewBitmap.recycle();
-                editPreviewBitmap = Bitmap.createBitmap(previewImage.cols(),previewImage.rows(), Bitmap.Config.ARGB_8888);
+                editPreviewBitmap = Bitmap.createBitmap(previewImage.cols(), previewImage.rows(), Bitmap.Config.ARGB_8888);
                 Utils.matToBitmap(previewImage, editPreviewBitmap);
                 editPreview.setImageBitmap(editPreviewBitmap);
             }
@@ -80,9 +80,9 @@ public class EditImageRatioActivity extends AppCompatActivity {
 
 
         //editingImageAddress = getIntent().getLongExtra("editingImageAddress", 0);
-        editingImageAddress = ((songgul)getApplication()).getEditingMat().getNativeObjAddr();
-        preEditImage = ((songgul)getApplication()).getEditingMat();
-        previewImage = ((songgul)getApplication()).getEditingMat().clone();
+        editingImageAddress = ((songgul) getApplication()).getEditingMat().getNativeObjAddr();
+        preEditImage = ((songgul) getApplication()).getEditingMat();
+        previewImage = ((songgul) getApplication()).getEditingMat().clone();
         updatePreviewImageView();
 
 
@@ -101,14 +101,14 @@ public class EditImageRatioActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                if(fromUser){
-                    if(previewImage==null)
+                if (fromUser) {
+                    if (previewImage == null)
                         previewImage = preEditImage.clone();
 
 
                     previewImage.release();
                     Mat locMat = new Mat();
-                    changeImageRatio(preEditImage.getNativeObjAddr(),locMat.getNativeObjAddr(),progress);
+                    changeImageRatio(preEditImage.getNativeObjAddr(), locMat.getNativeObjAddr(), progress);
                     previewImage = locMat;
 
 
@@ -135,21 +135,16 @@ public class EditImageRatioActivity extends AppCompatActivity {
         });
 
 
-
-
     }
-
-
 
 
     @Override
     public void onBackPressed() {
         second_time = System.currentTimeMillis();
-        if(second_time-first_time <2000){
+        if (second_time - first_time < 2000) {
             super.onBackPressed();
             finish();
-        }
-        else{
+        } else {
             Toasty.custom(this, "한번 더 누르면 적용을 취소합니다", null, BackColor, FontColor, 2000, false, true).show();
             first_time = System.currentTimeMillis();
         }

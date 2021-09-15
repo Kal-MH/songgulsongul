@@ -1,6 +1,5 @@
 package com.smu.songgulsongul.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
@@ -29,9 +27,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import com.smu.songgulsongul.R;
-import com.smu.songgulsongul.adapter.StickerSearchAdapter;
-import com.smu.songgulsongul.responseData.MarketResponse;
-import com.smu.songgulsongul.responseData.Sticker;
+import com.smu.songgulsongul.recycler_adapter.StickerSearchAdapter;
+import com.smu.songgulsongul.data.market.MarketResponse;
+import com.smu.songgulsongul.recycler_item.Sticker;
 import com.smu.songgulsongul.server.RetrofitClient;
 import com.smu.songgulsongul.server.ServiceApi;
 import com.smu.songgulsongul.server.StatusCode;

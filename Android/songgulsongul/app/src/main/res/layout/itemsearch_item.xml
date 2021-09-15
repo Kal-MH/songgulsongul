@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.smu.songgulsongul.layout.SquareLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.smu.songgulsongul.customlayout.SquareLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -11,7 +11,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <com.smu.songgulsongul.layout.SquareImageView
+    <com.smu.songgulsongul.customlayout.SquareImageView
         android:layout_margin="@dimen/narrow_margin"
         android:id="@+id/itemseach_item_img"
         android:layout_width="@dimen/icon_size_large"
@@ -56,4 +56,4 @@
     </LinearLayout>
 </LinearLayout>
 
-    </com.smu.songgulsongul.layout.SquareLayout>
+    </com.smu.songgulsongul.customlayout.SquareLayout>
