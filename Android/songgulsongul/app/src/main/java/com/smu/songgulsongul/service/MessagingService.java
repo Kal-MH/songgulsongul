@@ -38,7 +38,7 @@ public class MessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        if(!SettingSharedPreference.getSetting(this, "alert1")){ //수신거부
+        if (!SettingSharedPreference.getSetting(this, "alert1")) { //수신거부
             return;
         }
         if (remoteMessage != null && remoteMessage.getData().size() > 0) {
@@ -54,7 +54,7 @@ public class MessagingService extends FirebaseMessagingService {
         String sender = remoteMessage.getData().get("sender");
 
 
-        if( !SettingSharedPreference.getSetting(this, "alert"+mode ) ) //해당모드 false상태이면
+        if (!SettingSharedPreference.getSetting(this, "alert" + mode)) //해당모드 false상태이면
             return;
 
 
@@ -78,10 +78,10 @@ public class MessagingService extends FirebaseMessagingService {
 
         Intent intent;
         PendingIntent pendingIntent;
-        if(mode.equals("2") || mode.equals("3")){ // 댓글, 좋아요 --> 특정 게시글로 이동
+        if (mode.equals("2") || mode.equals("3")) { // 댓글, 좋아요 --> 특정 게시글로 이동
 
-            Log.d("alaert",  Integer.parseInt(sender) +", "+ LoginSharedPreference.getUserId(this) );
-            if( Integer.parseInt(sender) == LoginSharedPreference.getUserId(this) ) //셀프 좋아요, 댓글
+            Log.d("alaert", Integer.parseInt(sender) + ", " + LoginSharedPreference.getUserId(this));
+            if (Integer.parseInt(sender) == LoginSharedPreference.getUserId(this)) //셀프 좋아요, 댓글
                 return;
 
 
@@ -89,19 +89,17 @@ public class MessagingService extends FirebaseMessagingService {
             int postId = Integer.parseInt(postid);
             intent = new Intent(this, PostActivity.class);
             intent.putExtra("post_id", postId);
-            if(mode.equals("3")) {
+            if (mode.equals("3")) {
                 intent.putExtra("comment", true);
             }
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        }
-        else { //홈 화면으로 이동
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else { //홈 화면으로 이동
 
             intent = new Intent(this, FirstAuthActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         }
+        pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
         builder.setSmallIcon(R.drawable.ic_launcher_background);
@@ -126,7 +124,7 @@ public class MessagingService extends FirebaseMessagingService {
         sendRegistrationToServer(s);
     }
 
-    void sendRegistrationToServer(String token){
+    void sendRegistrationToServer(String token) {
         TokenData tokenData = new TokenData(LoginSharedPreference.getUserId(this), token);
         serviceApi.setToken(tokenData)
                 .enqueue(new Callback<CodeResponse>() {
@@ -135,11 +133,12 @@ public class MessagingService extends FirebaseMessagingService {
 
 
                     }
+
                     @Override
                     public void onFailure(Call<CodeResponse> call, Throwable t) {
-                        Log.e("Token" , "등록 실패");
+                        Log.e("Token", "등록 실패");
                     }
-         });
+                });
 
     }
 }

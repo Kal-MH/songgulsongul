@@ -535,6 +535,7 @@ public class PostActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                                Log.d("scroll", "comment");
                             }
                         }, 300);
                     }
