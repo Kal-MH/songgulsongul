@@ -1,12 +1,14 @@
 package com.smu.songgulsongul.data.post;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Ccl {
 
-    int cc;
-    int a;
-    int nc;
-    int nd;
-    int sa;
+    @SerializedName("ccl_cc") int cc;
+    @SerializedName("ccl_a") int a;
+    @SerializedName("ccl_nc") int nc;
+    @SerializedName("ccl_nd") int nd;
+    @SerializedName("ccl_sa") int sa;
 
     public int getCc() {
         return cc;
