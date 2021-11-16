@@ -25,23 +25,26 @@
 
 ### Structure
 
-- Controller(dic)
+- Controller
 
-  - 사용자 요청에 따라 실행되는 파일(함수)들을 모아놓은 폴더
-  - 컨트롤러 명명규칙(임의로 설정, 추후에 변경가능) : 분류 + 기능 + RESTful방식 ex) userJoinPost, userLoginPost
+  - 사용자 요청에 따라 실행되는 파일(함수)들을 모아놓은 디렉토리
+  - 컨트롤러 명명규칙(임의로 설정, 추후에 변경가능) : 분류 + 기능 + RESTful방식 ex) userJoinPost, userLoginPost
 
   ```
   현재 구현된 Controller
+  
   *) homeController.js : 기본기능에 관련된 컨트롤러 (ex) 회원가입, 로그인 , 비밀번호, 아이디 찾기)
   *) userController.js : 사용자 기능 (ex) 프로필, 팔로우, ...)
   *) postController.js : 게시글 기능 (ex) 게시글 불러오기, 검색하기, ...)
-  *) apiController.js : 위 컨트롤러 이외에 부수적인 기능들이 구현된 컨트롤러 (ex)아이디 중복체크, 좋아요, 보관하기,...)
+  *) apiController.js : 위 컨트롤러 이외에 부수적인 기능들이 구현된 컨트롤러 (ex)아이디 중복체크, 좋아요, 보관하기, ...)
+  *) marketContoller.js : 마켓 탭에서 필요한 기능 (ex) 작품 올리기, 작품 사기, 작품 팔기, ...)
+  *) notificationController.js : 알림 기능 (ex) 좋아요 알림, 댓글 알림, 팔로우 알림
 
   ```
 
 - db(dic)
 
-  - 데이터베이스 설정 및 sql문을 모아놓은 폴더
+  - 데이터베이스 설정 및 sql문을 모아놓은 디렉토리
 
   ```
   *) db.js : db설정
@@ -49,10 +52,20 @@
 
   ```
 
-- Router(dic)
-  - 라우터 폴더
-  - 각각의 경로에 따른 컨트롤러를 매칭해서 라우터에 달아줌.
-  - 라우터는 모듈로써 export되어 app.js에서 사용 (userRouter참고)
+- Router
+  - 라우터 디렉토리
+  - 각각의 경로에 따른 컨트롤러를 매칭해서 실행.
+  - 라우터는 모듈로써 export되어 app.js에서 사용 (ex) userRouter참고)
+
+- config
+  - 서버 상태 코드, 서버 config 및 s3 스토리지의 설정값 등을 저장해 놓은 디렉토리
+  ```
+  설정값 보안 처리
+  
+  - .env 파일을 통해서 서버 구동에 필요한 설정값 환경변수 등록
+  - .gitignore을 통해 .env파일을 깃헙에 등록하지 않으므로 보안성 향상
+  ```
+
 - routes.js
   - 모든 경로 기록하는 파일
   - 객체 형태로 export함
