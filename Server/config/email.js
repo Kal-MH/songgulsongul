@@ -1,10 +1,13 @@
 const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const smtpTransport = nodemailer.createTransport({
-    service : "gmail",
+    service : process.env.EMAIL_SERVICE,
     auth:{
-        user: "paper.pen.smu@gmail.com",
-        pass: "smu!cs2021"
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD
     },
     tls:{
         rejectUnauthorized : false
