@@ -74,7 +74,17 @@
   - 필요한 모듈, 미들웨어, 라우터설정등이 이뤄짐.
   - 마지막에 서버 가동
 
-## Api Controller
+## Api Docs
+
+```
+서버 상태 코드
+
+1. 200 : OK
+2. 400 : client error (입력값 유효성 오류, 공백 입력, ...)
+3. 500 : server error (서버 연결 오류, db 연결 오류 , ...)
+```
+
+### Api Controller
 
 1. 아이디 중복체크
 
@@ -86,7 +96,7 @@
 
      ```
      json = {
-     	'code' // 200, 400(중복, client error), 500(server error)
+     	 'code' // 200, 400(중복 || client error), 500(server error)
      }
 
      ```
@@ -196,7 +206,7 @@
 
      ```
      json = {
-     	'code' //200, 204, 500 -> 수정 예정
+     	'code' //200(첫 출석 & 포인트 반영), 201(출석 & 포인트 반영x), 400(client error), 500(server error)
      }
 
      ```
@@ -216,7 +226,7 @@
       }
       ```
 
-## Home Controller
+### Home Controller
 
 1. 회원가입
 
@@ -248,7 +258,7 @@
      ```
      json = {
      	'code' : 200, 201(첫출석 아님), 400(client error), 500(server error)
-       'id' : userid
+       'id'
      }
 
      ```
@@ -282,12 +292,12 @@
 
      ```
      json = {
-     	'code' : 200 or 400(일치하는 이메일, login_id 없음) or 500(서버에러)
+     	'code' : 200 or 400(일치하는 이메일x, login_id 없음) or 500(서버에러)
      }
 
      ```
 
-## User Router
+### User Router
 
 1. 프로필
 
@@ -479,21 +489,22 @@
 
       ```
 
-## Post Router
+### Post Router
 
 1. 게시판 게시글 불러오기
 
    - api : "/post/community?offset=?";
      - 처음 게시글을 불러오는 경우,
-       - /post/community
-       - 가장 최신 게시글을 20개씩 불러온다.
+       - api : /post/community
+       - 가장 최신 게시글을 10개씩 불러온다.
      - 이후에 게시글을 계속해서 불러오는 경우
        - /post/community?offset=?
-       - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
-       - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
+       - 게시글을 10개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset, db에서의 primary key)값이 필요
+       - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 10개의 게시글을 긁어온다.
+       - db limitation 설정값에 따라 10개 혹은 20개로 변경 가능.
    - method : GET
    - 전달받아야 하는 데이터
-     - 쿼리 offset값
+     - offset
    - 응답데이터
 
      ```
