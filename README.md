@@ -14,6 +14,7 @@
 
 ## 서버 구조
 ![server](https://user-images.githubusercontent.com/27190708/137101422-1870899f-9556-417a-bed4-cf03f8d5482f.png)
+-> [서버 README.md](https://github.com/Kal-MH/songgulsongul/blob/main/Server/README.md)
 
 ## OpenSource
 - [Image-Cropper](https://github.com/ArthurHub/Android-Image-Cropper)
