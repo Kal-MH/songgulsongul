@@ -96,7 +96,7 @@
 
      ```
      json = {
-     	 'code' // 200, 400(중복 || client error), 500(server error)
+      'code' // 200, 400(중복 || client error), 500(server error)
      }
 
      ```
@@ -111,8 +111,8 @@
 
      ```
      json = {
-     	'code' // 200, 400(client error), 500(server error)
-     	'authNumber' // 이메일 인증 번호
+      'code' // 200, 400(client error), 500(server error)
+      'authNumber' // 이메일 인증 번호
      }
 
      ```
@@ -130,7 +130,7 @@
 
        ```
        json = {
-       	'code' //200, 400(client error),  500(server error)
+        'code' //200, 400(client error),  500(server error)
        }
 
        ```
@@ -152,7 +152,7 @@
 
      ```
      json = {
-     	'code' //200, 400(client error),  500(server error)
+      'code' //200, 400(client error),  500(server error)
      }
 
      ```
@@ -173,7 +173,7 @@
 
      ```
      json = {
-     	'code' //200, 400(client error),  500(server error)
+      'code' //200, 400(client error),  500(server error)
      }
 
      ```
@@ -191,7 +191,7 @@
 
      ```
      json = {
-     	'code' //200, 204(댓글 지우기 실패) -> 수정 예정
+      'code' //200, 204(댓글 지우기 실패) -> 수정 예정
      }
 
      ```
@@ -206,7 +206,7 @@
 
      ```
      json = {
-     	'code' //200(첫 출석 & 포인트 반영), 201(출석 & 포인트 반영x), 400(client error), 500(server error)
+      'code' //200(첫 출석 & 포인트 반영), 201(출석 & 포인트 반영x), 400(client error), 500(server error)
      }
 
      ```
@@ -241,7 +241,7 @@
 
      ```
      json = {
-     	'code' : 200(ok), 400(client error), 500(server error)
+      'code' : 200(ok), 400(client error), 500(server error)
      }
 
      ```
@@ -257,8 +257,8 @@
 
      ```
      json = {
-     	'code' : 200, 201(첫출석 아님), 400(client error), 500(server error)
-       'id'
+      'code' : 200, 201(첫출석 아님), 400(client error), 500(server error)
+      'id'
      }
 
      ```
@@ -276,7 +276,7 @@
 
      ```
      json = {
-     	'code' : 200 or 400(빈 값, 일치하는 이메일 x) or 500(서버에러)
+      'code' : 200 or 400(빈 값, 일치하는 이메일 x) or 500(서버에러)
      }
 
      ```
@@ -292,7 +292,7 @@
 
      ```
      json = {
-     	'code' : 200 or 400(일치하는 이메일x, login_id 없음) or 500(서버에러)
+      'code' : 200 or 400(일치하는 이메일x, login_id 없음) or 500(서버에러)
      }
 
      ```
@@ -310,11 +310,11 @@
 
      ```
      json = {
-     	'code', //응답코드
-     	'followerCnt',  //팔로워 수
-     	'followCnt',  //팔로우 수
-     	'postInfo', //게시글 정보 -> image, postId
-     	'profileInfo'  //프로필 정보 -> profile_image, intro, sns, userId
+      'code', //응답코드
+      'followerCnt',  //팔로워 수
+      'followCnt',  //팔로우 수
+      'postInfo', //게시글 정보 -> image, postId
+      'profileInfo'  //프로필 정보 -> profile_image, intro, sns, userId
      }
 
      ```
@@ -330,7 +330,7 @@
 
      ```
      json = {
-     	'code'
+      'code'
      }
 
      ```
@@ -346,7 +346,7 @@
 
      ```
      json = {
-     	'code'
+      'code'
      }
 
      ```
@@ -361,8 +361,8 @@
 
      ```
      json = {
-       'code',
-     	'followinfo' //팔로우 정보 -> image, userId
+      'code',
+      'followinfo' //팔로우 정보 -> image, userId
      }
 
      ```
@@ -378,9 +378,9 @@
 
      ```
      json = {
-       'code',
-       'loginFollowInfo', -> userId
-     	'userFollowInfo'  //팔로우 정보 -> image, userId
+      'code',
+      'loginFollowInfo', -> userId
+      'userFollowInfo'  //팔로우 정보 -> image, userId
      }
 
      ```
@@ -396,9 +396,9 @@
 
      ```
      json = {
-       'code',
-       'followingInfo', -> userId
-     	 'followerInfo'  //팔로워 정보 -> image, userId
+      'code',
+      'followingInfo', -> userId
+      'followerInfo'  //팔로워 정보 -> image, userId
      }
 
      ```
@@ -413,9 +413,9 @@
 
      ```
      json = {
-       'code',
-     	'keepInfo', //보관정보 -> image, postId
-     	'keepCnt', //보관개수
+      'code',
+      'keepInfo', //보관정보 -> image, postId
+      'keepCnt', //보관개수
       'profileImg'
      }
 
@@ -433,7 +433,7 @@
    
      ```
      json = {
-     	'code'
+      'code'
      }
 
      ```
@@ -449,7 +449,7 @@
    
      ```
      json = {
-     	'code'
+      'code'
      }
 
      ```
@@ -469,7 +469,7 @@
 
       ```
       json = {
-     	 'code'
+        'code'
       }
 
       ```
@@ -484,7 +484,7 @@
 
       ```
       json = {
-      	'code'
+        'code'
       }
 
       ```
@@ -509,29 +509,24 @@
 
      ```
      json = {
-     	'code', //상태코드
-     				  // 상태코드는 ok(200), server error(500)으로 나뉜다.
-     	'data'  = {
-     		'id',  //post id
-     		'image',
-     		'text',
-     		'post_time',
-     		'post_data',
-     		'user_id',
-             'ccl_cc',
-             'ccl_a',
-             'ccl_nc',
-             'ccl_nd',
-             'ccl_sa'
-     	}
+      'code', //상태코드는 ok(200), server error(500)으로 나뉜다.
+      'data'  = {
+        'id',  //post id
+        'image',
+        'text',
+        'post_time',
+        'post_data',
+        'user_id',
+        'ccl_cc',
+        'ccl_a',
+        'ccl_nc',
+        'ccl_nd',
+        'ccl_sa'
+       }
      }
      **//data의 경우, 오류가 발생했을 때, undefined(null)로 넘어온다.**
 
      ```
-
-   - 예시
-
-     ![https://user-images.githubusercontent.com/59648372/117537009-545df400-b039-11eb-9fb6-e8857bf6b306.png](https://user-images.githubusercontent.com/59648372/117537009-545df400-b039-11eb-9fb6-e8857bf6b306.png)
 
 2. 팔로우 게시글 불러오기
 
@@ -541,44 +536,39 @@
        - 가장 최신 게시글을 20개씩 불러온다.
      - 이후에 게시글을 계속해서 불러오는 경우
        - /post/feeds?userid=2&offset=44
-       - 게시글을 20개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
-       - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 20개의 게시글을 긁어온다.
+       - 게시글을 10개씩 불러오기 위해서는 이전 data의 마지막 게시글 id(offset)값이 필요
+       - 쿼리문으로 offset값이 넘어오면 해당 offset을 기준으로 10개의 게시글을 긁어온다.
    - method : GET
    - 전달받아야 하는 데이터
-     - 쿼리 offset값
+     - userid (로그인한 본인의 아이디)
+     - offset
    - 응답 데이터
 
      ```
      json = {
-     	'code', //상태코드
-     			// 상태코드는 ok(200), client error(400), server error(500)으로 나뉜다.
-     	'data'  = {
-     		'post' : {
-     			'id',  //post id
-     			'image',
-     			'text',
-     			'post_time',
-     			'post_data'
-     		},
-     		'user' : {
-     			'user_id',
-     			'login_id',
-     			'img_profile'
-     		},
-     		'commentsNum',
-     		'likeNum',
-     		'likeOnset',
-     		'keepOnset'
-     	}
+      'code',// 상태코드는 ok(200), client error(400), server error(500)으로 나뉜다.
+      'data'  = {
+        'post' : {
+          'id',  //post id
+          'image',
+          'text',
+          'post_time',
+          'post_data'
+         },
+         'user' : {
+          'user_id',
+          'login_id',
+          'img_profile'
+         },
+         'commentsNum',
+         'likeNum',
+         'likeOnset',
+         'keepOnset'
+       }
      }
      **//data의 경우, 오류가 발생했을 때는 null(혹은 undefined)로 넘어올 수 있다.**
 
      ```
-
-   - 예시
-
-     ![https://user-images.githubusercontent.com/59648372/112144953-1a699780-8c1d-11eb-8463-b9ef1bbc9191.png](https://user-images.githubusercontent.com/59648372/112144953-1a699780-8c1d-11eb-8463-b9ef1bbc9191.png)
-
 3. 검색하기
 
    - api : “/post/search?method=?&keyword=?&offset=?"
@@ -588,10 +578,10 @@
          - method=id // 계정 검색
        - keyword : 검색할 키워드
        - offset
-         - tag검색의 경우, 게시판 게시글, 피드 게시글과 마찬가지로 이전 data의 마지막 게시글 id를 offset 값으로 받는다.
+         - tag검색의 경우, 게시판 게시글, 피드 게시글과 마찬가지로 이전 data의 마지막 게시글 id(primary key)를 offset 값으로 받는다.
            - 처음 검색결과를 불러오는 경우 : /post/search?method=tag&keyword=calli
            - 이후에 계속해서 검색결과를 불러오는 경우 : /post/search?method=tag&keyword=calli&offset=44
-         - id검색의 경우, 이전 data의 마지막 user id를 offset값으로 받는다.
+         - id검색의 경우, 이전 data의 마지막 user id(primary key)를 offset값으로 받는다.
            - 처음 검색결과를 불러오는 경우 : /post/search?method=id&keyword=aaa
            - 이후에 계속해서 검색결과를 불러오는 경우 : /post/search?method=id&keyword=aaa&offset=10
    - method : GET
@@ -655,7 +645,7 @@
 
        ![https://user-images.githubusercontent.com/59648372/117537122-f978cc80-b039-11eb-85cd-195696cded0e.png](https://user-images.githubusercontent.com/59648372/117537122-f978cc80-b039-11eb-85cd-195696cded0e.png)
 
-4. **특정 게시글 불러오기**
+4. 특정 게시글 불러오기
 
    - api : “/post/:id?userid=?”
    - method : GET
@@ -668,8 +658,8 @@
      json = {
      	'code', // 200, 400(client error), 500(server error)
      	'data' : {
-     		'post', //게시글 정보,
-     		'user', //게시글 작성자 정보,
+     		'post', //게시글 정보(id, image, text, time, ccl, ...), 객체로 반환
+     		'user', //게시글 작성자 정보(id, img_profile), 객체로 반환
      		'hashTags', //배열
      		'itemTags', //배열
      		'likeNum', //좋아요 갯수,
@@ -716,18 +706,20 @@
        - hprice
        - url
        - picture
-     - ccl 정보
+       - brand
+       - category1
+       - category2
+     - ccl 정보(현재는 int형 5개짜리 ccl 배열이 넘어오는 것을 가정해서 구현되어 있다. 추후에 넘어오는 데이터 구조에 따라 수정 가능.)
        - ccl_cc
        - ccl_a
        - ccl_nc
        - ccl_nd
        - ccl_sa
-         현재는 int형 5개짜리 ccl 배열이 넘어오는 것을 가정해서 구현되어 있다. 추후에 넘어오는 데이터 구조에 따라 수정 가능.
    - 응답데이터
 
      ```
      json = {
-     	'code', //200, 400, 500
+      'code', //200, 400, 500
      }
 
      ```
@@ -754,7 +746,7 @@
 
      ```
      json = {
-     	'code', //200, 400, 500
+      'code', //200, 400, 500
      }
 
      ```
@@ -770,7 +762,7 @@
 
      ```
      json = {
-     	'code', //200, 400, 500
+      'code', //200, 400, 500
      }
 
      ```
@@ -785,15 +777,15 @@
 
      ```
      json = {
-     'code', //상태코드
-     					// 상태코드는 ok(200), server error(500)으로 나뉜다.
-     	'data' : {
-     		'img_path' : file
-     	}
+      'code', // 상태코드는 ok(200), server error(500)으로 나뉜다.
+      'data' : {
+        'img_path' : file
+       }
+      }
 
      ```
 
-## Market Router
+### Market Router
 
 1. 마켓 메인화면
 
@@ -802,7 +794,7 @@
 
      ```
      json = {
-     	'code',
+      'code',
       'marketItem' // 마켓 sticker 정보 --> id, image, name, price
      }
 
@@ -819,7 +811,7 @@
 
      ```
      json = {
-     	'code',
+      'code',
       'stickerDetail', // sticker 상세 정보 --> image, name, price, text
       'sellerInfo', // 판매자 정보 --> profileImage, userId
       'userPoint' // 사용자 포인트
@@ -838,7 +830,7 @@
 
      ```
      json = {
-     	'code'
+      'code'
      }
 
      ```
@@ -853,7 +845,7 @@
 
      ```
      json = {
-     	'code',
+      'code',
       'marketItem' // 검색한 sticker --> id, image, name, price
      }
 
@@ -869,7 +861,7 @@
 
      ```
      json = {
-     	'code',
+      'code',
       'marketItem' // 검색한 sticker --> id, image, name, price
      }
 
@@ -885,7 +877,7 @@
 
      ```
      json = {
-     	'code',
+      'code',
       'marketItem' // 검색한 sticker --> id, image, name, price
      }
 
