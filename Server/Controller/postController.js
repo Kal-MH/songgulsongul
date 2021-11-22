@@ -8,9 +8,8 @@ const s3 = require("../config/s3");
 
 const postController = {
     getPostDetail: function (req, res) {
-        const loggedUser = req.query.userid; // 현재 로그인한 사용자 id(loginId가 아님)
+        const loggedUser = req.query.userid; //현재 로그인한 사용자 id
         const postId = req.params.id; // 게시글의 id
-       // const postId = req.query.id; // 게시글의 id
 
         if (loggedUser == undefined || loggedUser == "" || postId == undefined || postId == "") {
             res.json({
@@ -86,15 +85,14 @@ const postController = {
                     })
                 } else if (result.length == 0) { // 팔로우하는 사람이 없는 경우
                     //통신에는 성공했으므로 일단 OK로 상태코드 저장
-                    //상태코드 NO가 추가됨 -> 추후에 OK에서 NO로 변경 가능함.
                     res.json({
                         'code': statusCode.OK,
                         'data': result
                     })
                 } else {
                     //팔로우한 유저의 게시글 아이디 가져오기
-                    //처음 불러온 것이라면 최근 게시글에서 20개를 가져옴.
-                    //offset이 지정된 경우, offset값을 기준으로 20개 가져옴
+                    //처음 불러온 것이라면 최근 게시글에서 10개를 가져옴.
+                    //offset이 지정된 경우, offset값을 기준으로 10개 가져옴
                     var selectPostSql = `select id from post where (`;
                     for (var i = 0; i < result.length - 1; i++) {
                         selectPostSql += `user_id = ${result[i].follow_target_id} or `
@@ -153,7 +151,7 @@ const postController = {
     getCommunity: function (req, res) {
         const offset = req.query.offset;
 
-        //offset값을 기준으로 20개 가져옴 -> offset이 지정되어 있지 않다면 최근 게시글 기준으로 20개 가져옴
+        //offset값을 기준으로 10개 가져옴 -> offset이 지정되어 있지 않다면 최근 게시글 기준으로 10개 가져옴
         var selectPostSql;
         if (offset == undefined || offset == 0)
             selectPostSql = `select * from post order by post_date desc, post_time desc, id desc limit ${db_config.limitation};`
@@ -221,12 +219,9 @@ const postController = {
         3. client error 에러 처리
             -> 값 유효성 에러 처리
             -> db connection 이후, result == 0 인 경우에 대한 에러 처리
-     */
-    postUpload: function (req, res) {
-        /*
-         * 현재 넘겨받는 데이터의 임시 구조
-         * 추후에 안드로이드와 연결하는 부분에서 수정사항 발생할 수 있다.
-         * req.body =  {
+        4. 현재 넘겨받는 데이터의 임시 구조
+           추후에 안드로이드와 연결하는 부분에서 수정사항 발생할 수 있다.
+           req.body =  {
             user_id: '2',
             text: '',
             hash_tag: '',
@@ -249,7 +244,8 @@ const postController = {
             item_category1: [ '휴대폰케이스', '휴대폰케이스' ],
             item_category2: [ '기타케이스', '기타케이스' ]
             }
-         */
+     */
+    postUpload: function (req, res) {
         var loggedUser = req.body.user_id * 1;
         var text = req.body.text;
         var ccl = req.body.ccl;
@@ -306,6 +302,23 @@ const postController = {
         }
 
     },
+     /*
+     ** req.body.item_tag: [
+            {
+            brand: '',
+            category1: '휴대폰케이스',
+            category2: '기타케이스',
+            hprice: '',
+            id: 0,
+            lprice: '6550',
+            name: '갤럭시 A51 SM-A516N 잇item 모던 기본 폰케이스',
+            picture: 'https://shopping-phinf.pstatic.net/main_2770180/27701808406.jpg',
+            post_id: 0,
+            url: 'https://search.shopping.naver.com/gate.nhn?id=27701808406'
+            }
+        ]
+     */
+
     postUpdate: function (req, res) {
         var postId = req.body.post_id;
         var loggedUser = req.body.user_id;
@@ -348,23 +361,6 @@ const postController = {
                             var deleteItemTagSql = `delete from item_tag where post_id=${postId};`;
                             var insertItemSql = "";
                             var insertItemParams = [];
-
-                            /*
-                             * req.body.item_tag: [
-                                    {
-                                    brand: '',
-                                    category1: '휴대폰케이스',
-                                    category2: '기타케이스',
-                                    hprice: '',
-                                    id: 0,
-                                    lprice: '6550',
-                                    name: '갤럭시 A51 SM-A516N 잇item 모던 기본 폰케이스',
-                                    picture: 'https://shopping-phinf.pstatic.net/main_2770180/27701808406.jpg',
-                                    post_id: 0,
-                                    url: 'https://search.shopping.naver.com/gate.nhn?id=27701808406'
-                                    }
-                                ]
-                             */
 
                             if (req.body.item_tag.length > 0) {
                                 for (var i = 0; i < req.body.item_tag.length; i++) {
