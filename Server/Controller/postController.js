@@ -213,37 +213,30 @@ const postController = {
     },
 
     /*
-        확인 사항
-        1. 넘어오는 데이터 구조
-        2. 데이터 필드 이름
-        3. client error 에러 처리
-            -> 값 유효성 에러 처리
-            -> db connection 이후, result == 0 인 경우에 대한 에러 처리
-        4. 현재 넘겨받는 데이터의 임시 구조
-           추후에 안드로이드와 연결하는 부분에서 수정사항 발생할 수 있다.
-           req.body =  {
-            user_id: '2',
-            text: '',
-            hash_tag: '',
-            ccl: [ '1', '1', '1', '1', '1' ],
-            item_name: [
-                '갤럭시 A51 SM-A516N 잇item 모던 기본 폰케이스',
-                '[BEST ITEM] 김혜수 핸드폰줄 아르노폰스트랩 노트 갤럭시 카드수납 지갑 목걸이핸드폰'
-            ],
-            item_lowprice: [ '6550', '10800' ],
-            item_highprice: [ '', '' ],
-            item_link: [
-                'https://search.shopping.naver.com/gate.nhn?id=27701808406',
-                'https://search.shopping.naver.com/gate.nhn?id=82462722047'
-            ],
-            item_img: [
-                'https://shopping-phinf.pstatic.net/main_2770180/27701808406.jpg',
-                'https://shopping-phinf.pstatic.net/main_8246272/82462722047.8.jpg'
-            ],
-            item_brand: [ '', '' ],
-            item_category1: [ '휴대폰케이스', '휴대폰케이스' ],
-            item_category2: [ '기타케이스', '기타케이스' ]
-            }
+       1. 현재 넘겨받는 데이터의 임시 구조
+       req.body =  {
+        user_id: '2',
+        text: '',
+        hash_tag: '',
+        ccl: [ '1', '1', '1', '1', '1' ],
+        item_name: [
+            '갤럭시 A51 SM-A516N 잇item 모던 기본 폰케이스',
+            '[BEST ITEM] 김혜수 핸드폰줄 아르노폰스트랩 노트 갤럭시 카드수납 지갑 목걸이핸드폰'
+        ],
+        item_lowprice: [ '6550', '10800' ],
+        item_highprice: [ '', '' ],
+        item_link: [
+            'https://search.shopping.naver.com/gate.nhn?id=27701808406',
+            'https://search.shopping.naver.com/gate.nhn?id=82462722047'
+        ],
+        item_img: [
+            'https://shopping-phinf.pstatic.net/main_2770180/27701808406.jpg',
+            'https://shopping-phinf.pstatic.net/main_8246272/82462722047.8.jpg'
+        ],
+        item_brand: [ '', '' ],
+        item_category1: [ '휴대폰케이스', '휴대폰케이스' ],
+        item_category2: [ '기타케이스', '기타케이스' ]
+        }
      */
     postUpload: function (req, res) {
         var loggedUser = req.body.user_id * 1;
