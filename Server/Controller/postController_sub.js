@@ -148,17 +148,6 @@ const postController_subFunc = {
         }
     },
     /* item 구조 객체
-     * item 지정 x
-        items = {
-        name: undefined,
-        lowprice: undefined,
-        highprice: undefined,
-        itemLink: undefined,
-        itemImg: undefined,
-        brand: undefined,
-        category1: undefined,
-        category2: undefined
-        }
      * item 1개
          items = {
         name: '갤럭시 A51 SM-A516N 잇item 모던 기본 폰케이스',
